@@ -1,0 +1,16 @@
+{
+  "name": "gaver",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ASPNETCORE_ENVIRONMENT=Development cd Gaver.Web && dotnet run",
+    "watch": "ASPNETCORE_ENVIRONMENT=Development cd Gaver.Web && dotnet watch"
+  },
+  "author": "Geir Sagberg",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.9.0",
+    "webpack": "^1.13.1"
+  }
+}
