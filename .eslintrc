@@ -1,0 +1,15 @@
+{
+  "parser": "babel-eslint",
+  "extends": "standard",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "modules": true
+    }
+  },
+  "rules": {
+    "eol-last": 0
+  },
+  "ignore": [
+    "bundle.js"
+  ]
+}

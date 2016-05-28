@@ -3,28 +3,13 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gaver</title>
 </head>
 
 <body>
-  <script src="https://cdn.auth0.com/js/lock-passwordless-1.0.min.js"></script>
-  <script type="text/javascript">
-    var clientID = 'q57tZFsUo6359RyFzmzB0VYrmCeLVrBi';
-  var domain = 'sagberg.eu.auth0.com';
-
-  var lock = new Auth0LockPasswordless(clientID, domain);
-
-  function open() {
-    lock.magiclink({
-      callbackURL: 'http://localhost:3000/',
-      authParams: {
-        scope: 'openid email' // Learn about scopes: https://auth0.com/docs/scopes 
-      }
-    });
-  }
-
-  </script>
-  <button onclick="window.open();">Magic Link</button> Hello
+  
+  <script src="/dist/bundle.js"></script>
 </body>
 
 </html>
