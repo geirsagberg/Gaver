@@ -25,6 +25,7 @@ namespace Gaver.Web
         {
             // Add framework services.
             services.AddMvc();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +36,7 @@ namespace Gaver.Web
             
             app.UseFileServer();
             app.UseMvc();
+            app.UseSignalR();
         }
     }
 }

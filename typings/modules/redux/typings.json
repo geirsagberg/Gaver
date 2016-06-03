@@ -1,0 +1,11 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/andrew-w-ross/typings-redux/2e0b57e18c6240d17fde045573d74e649762437b/typings.json",
+    "raw": "registry:npm/redux#3.0.6+20160214194820",
+    "main": "redux.d.ts",
+    "global": false,
+    "name": "redux",
+    "type": "typings"
+  }
+}

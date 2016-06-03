@@ -1,15 +1,20 @@
 {
   "parser": "babel-eslint",
-  "extends": "standard",
+  "extends": ["standard", "plugin:react/recommended"],
   "parserOptions": {
     "ecmaFeatures": {
       "modules": true
     }
   },
   "rules": {
-    "eol-last": 0
+    "eol-last": 0,
+    "no-unused-vars": 1,
+    "jsx-quotes": ["warn", "prefer-double"]
   },
   "ignore": [
     "bundle.js"
+  ],
+  "plugins": [
+    "react"
   ]
 }
