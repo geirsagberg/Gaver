@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "auth0-lock-passwordless": "^2.2.3",
+    "babel-polyfill": "^6.9.1",
     "immutable": "^3.8.1",
     "jquery": "^2.2.4",
     "lodash": "^4.13.1",

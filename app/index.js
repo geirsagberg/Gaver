@@ -1,17 +1,15 @@
-import { IndexRoute, Route, Router } from 'react-router'
+import 'babel-polyfill'
+import { hashHistory, Route, Router } from 'react-router'
 import { render } from 'react-dom'
 import React from 'react'
+import { Provider } from 'redux'
 
-const Home = () => (
-  <div className="home">
-    <h1>Gaver</h1>
-  </div>
+const Root = () => (
+  <Provider>
+    <Router history={hashHistory}>
+      <Route path="/" component={App} />
+    </Router>
+  </Provider>
 )
 
-const App = () => (
-  <Router>
-    <Route path="/" component={Home} />
-  </Router>
-)
-
-render(<App />, document.getElementById('main'))
+render(<Root store={store} history={hashHistory} />, document.getElementById('root'))
