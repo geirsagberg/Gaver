@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ASPNETCORE_ENVIRONMENT=Development cd Gaver.Web && dotnet run",
-    "watch": "ASPNETCORE_ENVIRONMENT=Development cd Gaver.Web && dotnet watch"
+    "start": "cd Gaver.Web && ASPNETCORE_ENVIRONMENT=Development dotnet run",
+    "watch": "cd Gaver.Web && ASPNETCORE_ENVIRONMENT=Development dotnet watch"
   },
   "author": "Geir Sagberg",
   "license": "MIT",

@@ -8,7 +8,7 @@
   "tasks": [
     {
       "taskName": "build",
-      "args": [ "Gaver.Web" ],
+      "args": [ ],
       "isBuildCommand": true,
       "showOutput": "silent",
       "problemMatcher": "$msCompile"
