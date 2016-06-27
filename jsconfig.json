@@ -4,7 +4,8 @@
 	"compilerOptions": {
 		"target": "es6",
 		"module": "es6",
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true
 	},
 	"exclude": [
 		"node_modules",
