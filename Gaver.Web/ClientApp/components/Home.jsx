@@ -1,27 +1,49 @@
-import * as React from 'react'
-export default class Home extends React.Component {
+import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
+import * as currentListActions from '../store/currentList'
+
+class Home extends React.Component {
+  onKeyUp (e) {
+    if (e.which === 13) {
+      this.addWish()
+    }
+  }
+
+  addWish () {
+    if (this.wishInput.value) {
+      this.props.addWish(this.wishInput.value)
+      this.wishInput.value = ''
+    }
+  }
+
   render () {
     return (
     <div>
-      <h1>Hello, Geirr!</h1>
-      <p>
-        Welcome to your new single-page application, built with:
-      </p>
-      <ul>
-        <li>
-          <a href="https://get.asp.net/">ASP.NET Core</a> and <a href="https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx">C#</a> for cross-platform server-side
-          code
-        </li>
-        <li>
-          <a href="https://facebook.github.io/react/">React</a>, <a href="http://redux.js.org">Redux</a>, and <a href="http://www.typescriptlang.org/">TypeScript</a>      for client-side code
-        </li>
-        <li>
-          <a href="https://webpack.github.io/">Webpack</a> for building and bundling client-side resources
-        </li>
-        <li>
-          <a href="http://getbootstrap.com/">Bootstrap</a> for layout and styling
-        </li>
+      <h1>Mine ønsker</h1>
+      <div className="input-group">
+        <input className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={::this.onKeyUp} ref={el => (this.wishInput = el)} />
+        <span className="input-group-btn">
+          <button className="btn btn-default" type="button" onClick={::this.addWish}>Legg til</button>
+        </span>
+      </div>
+      <ul className="list-group">
+        {this.props.currentList.map(wish =>
+          <li className="list-group-item">{wish}</li>
+          )}
       </ul>
-    </div>)
+    </div>
+    )
   }
 }
+
+Home.propTypes = {
+  addWish: PropTypes.func,
+  currentList: PropTypes.array
+}
+
+const mapStateToProps = state => ({
+  currentList: state.currentList
+})
+
+export default connect(mapStateToProps, currentListActions)(Home)
+
