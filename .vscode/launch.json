@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceRoot}/Gaver.Web/bin/Debug/netcoreapp1.0/Gaver.Web.dll",
+      "program": "${workspaceRoot}/src/Gaver.Web/bin/Debug/netcoreapp1.0/Gaver.Web.dll",
       "args": [],
       "cwd": "${workspaceRoot}",
       "stopAtEntry": false
