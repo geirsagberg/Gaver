@@ -11,6 +11,7 @@ namespace Gaver.Data
 
         public GaverContext(DbContextOptions<GaverContext> options) : base(options)
         {
+         
             
         }
 

@@ -5,16 +5,6 @@ export const LOAD_DATA = actionNamespace + 'LOAD_DATA'
 export const DATA_LOADED = actionNamespace + 'DATA_LOADED'
 export const WISH_ADDED = actionNamespace + 'WISH_ADDED'
 
-export default (state = [], action) => {
-  switch (action.type) {
-    case WISH_ADDED:
-      return [
-        ...state,
-        action.wish
-      ]
-  }
-  return state
-}
 
 export function addWish (wish) {
   return {

@@ -1,7 +1,7 @@
 import { takeLatest, takeEvery } from 'redux-saga'
 import { call, put, fork, take } from 'redux-saga/effects'
-import * as Api from './listApi'
-import { fetchDataSuccess, wishAdded, LOAD_DATA, ADD_WISH, WISH_ADDED } from './store/currentList'
+import * as Api from './api'
+import { fetchDataSuccess, wishAdded, LOAD_DATA, ADD_WISH, WISH_ADDED } from './actions'
 
 function * fetchWishData () {
   try {

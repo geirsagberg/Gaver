@@ -8,7 +8,7 @@ using Gaver.Data;
 namespace Gaver.Web.Migrations
 {
     [DbContext(typeof(GaverContext))]
-    [Migration("20160702221816_Initial")]
+    [Migration("20160704203652_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,9 +23,32 @@ namespace Gaver.Web.Migrations
 
                     b.Property<string>("Title");
 
+                    b.Property<int?>("WishListId");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("WishListId");
+
                     b.ToTable("Wishes");
+                });
+
+            modelBuilder.Entity("Gaver.Data.Entities.WishList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WishLists");
+                });
+
+            modelBuilder.Entity("Gaver.Data.Entities.Wish", b =>
+                {
+                    b.HasOne("Gaver.Data.Entities.WishList")
+                        .WithMany("Wishes")
+                        .HasForeignKey("WishListId");
                 });
         }
     }

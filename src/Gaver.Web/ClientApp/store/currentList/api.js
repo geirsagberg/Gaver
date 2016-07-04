@@ -1,4 +1,4 @@
-import { getJson, postJson } from './ajax'
+import { getJson, postJson } from 'utils/ajax'
 
 export function fetchWishData () {
   return getJson('/api/Wish')

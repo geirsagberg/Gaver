@@ -22,5 +22,12 @@ namespace Gaver.Data
             }
             return builder.ToString();
         }
+
+        // public static dynamic GetSchemaJson(IModel model) {
+        //     foreach (var entityType in model.GetEntityTypes().OrderBy(t => t.Name))
+        //     {
+                
+        //     }
+        // }
     }
 }

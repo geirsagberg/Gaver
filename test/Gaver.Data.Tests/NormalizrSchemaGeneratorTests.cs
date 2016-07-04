@@ -32,7 +32,13 @@ namespace Gaver.Data.Tests
             output.Should().Be("import { Schema, arryaOf } from 'normalizr'\n"
                 + "export const Wish = new Schema('wishes')\n"
                 + "export const WishList = new Schema('wishLists')\n");
-                
         }
+
+        // [Fact]
+        // public void Can_generate_normalizr_schema_json() {
+        //     var model = context.Model;
+
+        //     var output = NormalizrSchemaGenerator.GetSchemaJson(model);
+        // }
     }
 }

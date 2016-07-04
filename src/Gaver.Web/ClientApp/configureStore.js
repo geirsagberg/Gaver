@@ -3,7 +3,6 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import * as Store from './store'
 import createSagaMiddleware from 'redux-saga'
-import rootSaga from './sagas'
 
 export default function configureStore (initialState) {
   // Build middleware. These are functions that can process the actions before they reach the store.
@@ -16,7 +15,7 @@ export default function configureStore (initialState) {
   const allReducers = buildRootReducer(Store.reducers)
   const store = createStoreWithMiddleware(allReducers, initialState)
 
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(Store.rootSaga)
 
   // Enable Webpack hot module replacement for reducers
   if (module.hot) {
