@@ -17,5 +17,8 @@
   ],
   "plugins": [
     "react"
-  ]
+  ],
+  "globals": {
+    "fetch": false
+  }
 }

@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import './css/site.css'
 import 'bootstrap'
 import * as React from 'react'

@@ -12,6 +12,13 @@
       "isBuildCommand": true,
       "showOutput": "silent",
       "problemMatcher": "$msCompile"
+    },
+    {
+      "taskName": "test",
+      "args": [
+         "test/Gaver.Data.Tests"
+      ],
+      "isTestCommand": true
     }
   ]
 }

@@ -5,11 +5,16 @@ namespace Gaver.Data
 {
     public class GaverContext : DbContext
     {
-        public GaverContext()
+        public GaverContext() {
+
+        }
+
+        public GaverContext(DbContextOptions<GaverContext> options) : base(options)
         {
             
         }
 
-        public DbSet<Wish> MyProperty { get; set; }
+        public DbSet<Wish> Wishes { get; set; }
+        public DbSet<WishList> WishLists {get;set; }
     }
 }

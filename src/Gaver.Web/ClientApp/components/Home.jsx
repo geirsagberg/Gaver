@@ -3,6 +3,10 @@ import { connect } from 'react-redux'
 import * as currentListActions from '../store/currentList'
 
 class Home extends React.Component {
+  componentDidMount () {
+    this.props.loadData()
+  }
+
   onKeyUp (e) {
     if (e.which === 13) {
       this.addWish()
@@ -38,6 +42,7 @@ class Home extends React.Component {
 
 Home.propTypes = {
   addWish: PropTypes.func,
+  loadData: PropTypes.func,
   currentList: PropTypes.array
 }
 

@@ -23,12 +23,14 @@
     "babel-core": "^6.10.4",
     "babel-plugin-transform-function-bind": "^6.8.0",
     "domain-task": "^1.0.1",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
     "react-router": "^2.5.1",
     "react-router-redux": "^4.0.5",
     "redux": "^3.5.2",
+    "redux-saga": "^0.10.5",
     "redux-thunk": "^2.1.0",
     "webpack-externals-plugin": "^1.0.0"
   }

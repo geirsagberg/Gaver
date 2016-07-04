@@ -1,8 +1,10 @@
 using System.IO;
+using System.Reflection;
 using Gaver.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -14,10 +16,12 @@ namespace Gaver.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            var connectionString = "Data Source=MyDb.db";
             services
                 .AddEntityFrameworkSqlite()
-                .AddDbContext<GaverContext>()
-            ;
+                .AddDbContext<GaverContext>((serviceProvider, options) => {
+                    options.UseSqlite(connectionString, b => b.MigrationsAssembly(this.GetType().GetTypeInfo().Assembly.FullName));
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

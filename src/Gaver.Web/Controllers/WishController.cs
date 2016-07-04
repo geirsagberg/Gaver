@@ -3,6 +3,7 @@ using System.Linq;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,6 +22,7 @@ namespace Gaver.Web.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            var tableName = gaverContext.Model.GetEntityTypes().First().Relational().TableName;
             return gaverContext.Set<Wish>().Select(w => w.Title);
         }
 
@@ -33,8 +35,14 @@ namespace Gaver.Web.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public Wish Post([FromBody]string title)
         {
+            var wish = new Wish {
+                Title = title
+            };
+            var entry = gaverContext.Set<Wish>().Add(wish);
+            gaverContext.SaveChanges();
+            return wish;
         }
 
         // PUT api/values/5
