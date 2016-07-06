@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "gaver",
   "version": "0.0.0",
   "devDependencies": {
@@ -20,11 +21,19 @@
   "dependencies": {
     "aspnet-prerendering": "^1.0.2",
     "aspnet-webpack": "^1.0.3",
+    "auth0-lock-passwordless": "^2.2.3",
     "babel-core": "^6.10.4",
     "babel-plugin-transform-function-bind": "^6.8.0",
+    "babel-polyfill": "^6.9.1",
     "domain-task": "^1.0.1",
+    "immutable": "^3.8.1",
     "isomorphic-fetch": "^2.2.1",
-    "react": "^15.1.0",
+    "jquery": "^2.2.4",
+    "lodash": "^4.13.1",
+    "ms-signalr-client": "^2.2.2",
+    "react": "^15.2.0",
+    "react-addons-css-transition-group": "^15.1.0",
+    "react-addons-transition-group": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
     "react-router": "^2.5.1",

@@ -7,6 +7,8 @@ export function reducer (state = [], action) {
         ...state,
         action.wish
       ]
+    case actions.DATA_LOADED:
+      return action.data
   }
   return state
 }

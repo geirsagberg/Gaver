@@ -19,9 +19,9 @@ namespace Gaver.Web.Controllers
 
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Wish> Get()
         {
-            return gaverContext.Set<Wish>().Select(w => w.Title);
+            return gaverContext.Set<Wish>();
         }
 
         // GET api/values/5

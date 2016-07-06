@@ -32,7 +32,7 @@ class Home extends React.Component {
       </div>
       <ul className="list-group">
         {this.props.currentList.map(wish =>
-          <li className="list-group-item">{wish}</li>
+          <li className="list-group-item">{wish.title}</li>
           )}
       </ul>
     </div>
