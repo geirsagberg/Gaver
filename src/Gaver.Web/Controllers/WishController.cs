@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +52,8 @@ namespace Gaver.Web.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            gaverContext.Delete<Wish>(id);
+            gaverContext.SaveChanges();
         }
     }
 }

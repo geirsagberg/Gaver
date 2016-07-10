@@ -10,9 +10,6 @@ var extractCSS = new ExtractTextPlugin('site.css')
 module.exports = merge({
   resolve: {
     root: path.join(__dirname, 'ClientApp'),
-    alias: {
-      utils: 'utils'
-    },
     extensions: [ '', '.js', '.jsx', '.ts', '.tsx' ]
   },
   module: {

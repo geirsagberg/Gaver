@@ -13,7 +13,8 @@
     "comma-dangle": 0
   },
   "ignore": [
-    "bundle.js"
+    "bundle.js",
+    "**/node_modules/*"
   ],
   "plugins": [
     "react"

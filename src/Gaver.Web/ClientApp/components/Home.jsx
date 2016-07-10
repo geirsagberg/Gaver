@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import * as currentListActions from '../store/currentList'
+import * as currentListActions from 'store/currentList'
 
 class Home extends React.Component {
   componentDidMount () {
@@ -32,7 +32,10 @@ class Home extends React.Component {
       </div>
       <ul className="list-group">
         {this.props.currentList.map(wish =>
-          <li className="list-group-item">{wish.title}</li>
+          <li className="list-group-item">
+            <span>{wish.title}</span>
+           <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish(wish.id)}>Delete</button>
+          </li>
           )}
       </ul>
     </div>
@@ -43,7 +46,8 @@ class Home extends React.Component {
 Home.propTypes = {
   addWish: PropTypes.func,
   loadData: PropTypes.func,
-  currentList: PropTypes.array
+  currentList: PropTypes.array,
+  deleteWish: PropTypes.func
 }
 
 const mapStateToProps = state => ({

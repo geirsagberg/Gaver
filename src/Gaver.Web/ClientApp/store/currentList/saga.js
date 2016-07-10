@@ -1,43 +1,51 @@
 import { takeLatest, takeEvery } from 'redux-saga'
 import { call, put, fork, take } from 'redux-saga/effects'
 import * as Api from './api'
-import { fetchDataSuccess, wishAdded, LOAD_DATA, ADD_WISH, WISH_ADDED } from './actions'
+import * as actions from './actions'
 
 function * fetchWishData () {
   try {
     const data = yield call(Api.fetchWishData)
-    yield put(fetchDataSuccess(data))
+    yield put(actions.fetchDataSuccess(data))
   } catch (error) {
-    yield put({
-      type: 'FETCH_FAILED',
-      error
-    })
+    yield put(actions.fetchFailed(error))
   }
 }
 
 function * addWish (action) {
   try {
     const wish = yield call(Api.addWish, action.wish)
-    yield put(wishAdded(wish))
+    yield put(actions.wishAdded(wish))
   } catch (error) {
-    yield put({
-      type: 'FETCH_FAILED',
-      error
-    })
+    yield put(actions.fetchFailed(error))
   }
 }
 
-export function * watchFetchData () {
-  yield * takeLatest(LOAD_DATA, fetchWishData)
+function * deleteWish (action) {
+  try {
+    yield call(Api.deleteWish, action.id)
+    yield put(actions.wishDeleted(action.id))
+  } catch (error) {
+    yield put(actions.fetchFailed(error))
+  }
+}
+
+export function * fetchDataSaga () {
+  yield * takeLatest(actions.LOAD_DATA, fetchWishData)
 }
 
 export function * addWishSaga () {
-  yield * takeEvery(ADD_WISH, addWish)
+  yield * takeEvery(actions.ADD_WISH, addWish)
 }
 
-export default function * rootSaga () {
-  yield [
+export function * deleteWishSaga () {
+  yield * takeLatest(actions.DELETE_WISH, deleteWish)
+}
+
+export default function rootSaga () {
+  return [
     fork(addWishSaga),
-    fork(watchFetchData)
+    fork(fetchDataSaga),
+    fork(deleteWishSaga)
   ]
 }

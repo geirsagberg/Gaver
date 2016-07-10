@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Gaver.Data.Entities
 {
-    public class WishList
+    public class WishList : IEntityWithId
     {
         public int Id { get; set; }
         public string Title { get; set; }

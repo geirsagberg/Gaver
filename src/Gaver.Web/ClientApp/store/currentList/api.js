@@ -1,4 +1,4 @@
-import { getJson, postJson } from 'utils/ajax'
+import { getJson, postJson, deleteJson } from 'utils/ajax'
 
 export function fetchWishData () {
   return getJson('/api/Wish')
@@ -6,4 +6,8 @@ export function fetchWishData () {
 
 export function addWish (wish) {
   return postJson('/api/Wish', wish)
+}
+
+export function deleteWish (id) {
+  return deleteJson('/api/Wish/' + id)
 }
