@@ -1,11 +1,12 @@
 import { getJson, postJson, deleteJson } from 'utils/ajax'
+import * as schemas from 'schemas'
 
 export function fetchWishData () {
-  return getJson('/api/Wish')
+  return getJson('/api/Wish', schemas.wishes)
 }
 
 export function addWish (wish) {
-  return postJson('/api/Wish', wish)
+  return postJson('/api/Wish', wish, schemas.wish)
 }
 
 export function deleteWish (id) {

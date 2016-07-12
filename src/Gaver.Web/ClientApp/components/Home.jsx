@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import * as currentListActions from 'store/currentList'
+import Immutable from 'seamless-immutable'
+import map from 'lodash/map'
 
 class Home extends React.Component {
   componentDidMount () {
@@ -31,10 +33,10 @@ class Home extends React.Component {
         </span>
       </div>
       <ul className="list-group">
-        {this.props.currentList.map(wish =>
+        {map(this.props.wishes, wish =>
           <li className="list-group-item">
             <span>{wish.title}</span>
-           <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish(wish.id)}>Delete</button>
+            <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish(wish.id)}>Delete</button>
           </li>
           )}
       </ul>
@@ -46,12 +48,12 @@ class Home extends React.Component {
 Home.propTypes = {
   addWish: PropTypes.func,
   loadData: PropTypes.func,
-  currentList: PropTypes.array,
+  wishes: PropTypes.array,
   deleteWish: PropTypes.func
 }
 
 const mapStateToProps = state => ({
-  currentList: state.currentList
+  wishes: state.currentList.wishes || Immutable([])
 })
 
 export default connect(mapStateToProps, currentListActions)(Home)

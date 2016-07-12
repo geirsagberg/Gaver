@@ -52,6 +52,6 @@ export function wishDeleted (id) {
 export function fetchFailed (error) {
   return {
     type: FETCH_FAILED,
-    error
+    error: error.toString()
   }
 }

@@ -1,3 +1,3 @@
 module.exports = {
-  devtool: 'eval-source-map'
+  devtool: 'inline-source-map'
 }

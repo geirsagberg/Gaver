@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
-// import thunkModule from 'redux-thunk'
 import { routerReducer } from 'react-router-redux'
 import * as Store from './store'
 import createSagaMiddleware from 'redux-saga'
+import Immutable from 'seamless-immutable'
 
 export default function configureStore (initialState) {
   // Build middleware. These are functions that can process the actions before they reach the store.
@@ -13,7 +13,8 @@ export default function configureStore (initialState) {
   const createStoreWithMiddleware = compose(applyMiddleware(sagaMiddleware), devToolsExtension ? devToolsExtension() : f => f)(createStore)
   // Combine all reducers and instantiate the app-wide store instance
   const allReducers = buildRootReducer(Store.reducers)
-  const store = createStoreWithMiddleware(allReducers, initialState)
+  const immutableInitialState = Immutable(initialState)
+  const store = createStoreWithMiddleware(allReducers, immutableInitialState)
 
   sagaMiddleware.run(Store.rootSaga)
 
@@ -27,5 +28,8 @@ export default function configureStore (initialState) {
   return store
 }
 function buildRootReducer (allReducers) {
-  return combineReducers(Object.assign({}, allReducers, { routing: routerReducer }))
+  return combineReducers({
+    ...allReducers,
+    routing: routerReducer
+  })
 }

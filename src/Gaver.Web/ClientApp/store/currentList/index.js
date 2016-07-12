@@ -1,17 +1,22 @@
 import * as actions from './actions'
-import { List } from 'immutable'
+import Immutable from 'seamless-immutable'
+import { combineReducers } from 'redux'
 
-export function reducer (state = List(), action) {
+function wishReducer (state = Immutable({}), action) {
   switch (action.type) {
     case actions.WISH_ADDED:
-      return state.push(action.wish)
+      return state.set(action.wish.id, action.wish)
     case actions.DATA_LOADED:
-      return action.data
+      return state.merge(action.data.entities.wishes)
     case actions.WISH_DELETED:
-      return state
+      return state.without(action.id)
   }
   return state
 }
+
+export const reducer = combineReducers({
+  wishes: wishReducer
+})
 
 export { default as saga } from './saga'
 

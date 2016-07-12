@@ -14,8 +14,8 @@ function * fetchWishData () {
 
 function * addWish (action) {
   try {
-    const wish = yield call(Api.addWish, action.wish)
-    yield put(actions.wishAdded(wish))
+    const data = yield call(Api.addWish, action.wish)
+    yield put(actions.fetchDataSuccess(data))
   } catch (error) {
     yield put(actions.fetchFailed(error))
   }
