@@ -52,6 +52,7 @@ export default function rootSaga () {
   return [
     takeLatest(actions.LOAD_DATA, fetchWishData),
     takeEvery(actions.ADD_WISH, addWish),
-    takeLatest(actions.DELETE_WISH, deleteWish)
+    takeLatest(actions.DELETE_WISH, deleteWish),
+    fork(shareList)
   ]
 }

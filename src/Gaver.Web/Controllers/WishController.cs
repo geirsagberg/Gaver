@@ -23,13 +23,6 @@ namespace Gaver.Web.Controllers
             return gaverContext.Set<Wish>();
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/values
         [HttpPost]
         public Wish Post([FromBody]string title)
@@ -54,6 +47,12 @@ namespace Gaver.Web.Controllers
         {
             gaverContext.Delete<Wish>(id);
             gaverContext.SaveChanges();
+            
+        }
+
+        [HttpPost("Share")]
+        public void ShareList() {
+            
         }
     }
 }

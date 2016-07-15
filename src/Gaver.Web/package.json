@@ -26,6 +26,7 @@
     "babel-plugin-transform-function-bind": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "babel-polyfill": "^6.9.1",
+    "bootbox": "^4.4.0",
     "domain-task": "^2.0.1",
     "imports-loader": "^0.6.5",
     "isomorphic-fetch": "^2.2.1",
@@ -44,7 +45,6 @@
     "redux-saga": "^0.11.0",
     "redux-thunk": "^2.1.0",
     "seamless-immutable": "^6.1.1",
-    "vex-js": "^2.3.4",
     "webpack-externals-plugin": "^1.0.0"
   }
 }

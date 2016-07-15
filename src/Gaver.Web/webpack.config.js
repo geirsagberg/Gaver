@@ -10,14 +10,10 @@ var extractCSS = new ExtractTextPlugin('site.css')
 module.exports = merge({
   resolve: {
     root: path.join(__dirname, 'ClientApp'),
-    extensions: [ '', '.js', '.jsx', '.ts', '.tsx' ],
-    alias: {
-      vex: 'vex-js'
-    }
+    extensions: [ '', '.js', '.jsx', '.ts', '.tsx' ]
   },
   module: {
     loaders: [
-      { test: /vex\.js/, loader: 'imports?define=>false' },
       { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel-loader' },
       { test: /\.css/, loader: extractCSS.extract(['css']) }
     ]

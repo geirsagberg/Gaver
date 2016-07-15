@@ -39,7 +39,7 @@ class Home extends React.Component {
       </div>
       <ul className="list-group">
         {map(this.props.wishes, wish =>
-          <li className="list-group-item">
+          <li className="list-group-item" key={wish.id}>
             <span>{wish.title}</span>
             <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish(wish.id)}>Fjern</button>
           </li>
@@ -53,7 +53,7 @@ class Home extends React.Component {
 Home.propTypes = {
   addWish: PropTypes.func,
   loadData: PropTypes.func,
-  wishes: PropTypes.array,
+  wishes: PropTypes.object,
   deleteWish: PropTypes.func,
   shareList: PropTypes.func
 }

@@ -562,6 +562,11 @@
         }
       }
     },
+    "bootbox": {
+      "version": "4.4.0",
+      "from": "bootbox@latest",
+      "resolved": "https://registry.npmjs.org/bootbox/-/bootbox-4.4.0.tgz"
+    },
     "brace-expansion": {
       "version": "1.1.5",
       "from": "brace-expansion@>=1.0.0 <2.0.0",
@@ -3170,11 +3175,6 @@
       "version": "1.0.1",
       "from": "vary@>=1.0.1 <1.1.0",
       "resolved": "https://registry.npmjs.org/vary/-/vary-1.0.1.tgz"
-    },
-    "vex-js": {
-      "version": "2.3.4",
-      "from": "vex-js@latest",
-      "resolved": "https://registry.npmjs.org/vex-js/-/vex-js-2.3.4.tgz"
     },
     "vhost": {
       "version": "3.0.2",
