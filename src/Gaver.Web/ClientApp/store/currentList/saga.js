@@ -2,6 +2,7 @@ import { takeLatest, takeEvery } from 'redux-saga'
 import { call, put, fork, take } from 'redux-saga/effects'
 import * as Api from './api'
 import * as actions from './actions'
+import { showPrompt } from 'utils/dialogs'
 
 function * fetchWishData () {
   try {
@@ -30,22 +31,27 @@ function * deleteWish (action) {
   }
 }
 
-export function * fetchDataSaga () {
-  yield * takeLatest(actions.LOAD_DATA, fetchWishData)
-}
-
-export function * addWishSaga () {
-  yield * takeEvery(actions.ADD_WISH, addWish)
-}
-
-export function * deleteWishSaga () {
-  yield * takeLatest(actions.DELETE_WISH, deleteWish)
+function * shareList () {
+  while (true) {
+    yield take(actions.SHARE_LIST)
+    const emails = yield call(showPrompt, {
+      message: 'Skriv inn epostadressen til de du vil dele listen med',
+      placeholder: 'eksempel@epost.com, ...'
+    })
+    if (emails !== false) {
+      // TODO: Validation
+      const emailList = emails.split(',').map(email => email.trim())
+      yield call(Api.shareList, {
+        emails: emailList
+      })
+    }
+  }
 }
 
 export default function rootSaga () {
   return [
-    fork(addWishSaga),
-    fork(fetchDataSaga),
-    fork(deleteWishSaga)
+    takeLatest(actions.LOAD_DATA, fetchWishData),
+    takeEvery(actions.ADD_WISH, addWish),
+    takeLatest(actions.DELETE_WISH, deleteWish)
   ]
 }

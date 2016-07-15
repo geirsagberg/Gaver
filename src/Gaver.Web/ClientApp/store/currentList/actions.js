@@ -7,6 +7,7 @@ export const WISH_ADDED = actionNamespace + 'WISH_ADDED'
 export const DELETE_WISH = actionNamespace + 'DELETE_WISH'
 export const WISH_DELETED = actionNamespace + 'WISH_DELETED'
 export const FETCH_FAILED = actionNamespace + 'FETCH_FAILED'
+export const SHARE_LIST = actionNamespace + 'SHARE_LIST'
 
 export function addWish (wish) {
   return {
@@ -53,5 +54,11 @@ export function fetchFailed (error) {
   return {
     type: FETCH_FAILED,
     error: error.toString()
+  }
+}
+
+export function shareList () {
+  return {
+    type: SHARE_LIST
   }
 }

@@ -25,7 +25,12 @@ class Home extends React.Component {
   render () {
     return (
     <div>
-      <h1>Mine ønsker</h1>
+      <h1>
+        Mine ønsker
+        <div className="btn-group pull-right">
+          <button type="button" className="btn btn-default" onClick={this.props.shareList}><span className="glyphicon glyphicon-share"></span> Del</button>
+        </div>
+      </h1>
       <div className="input-group">
         <input className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={::this.onKeyUp} ref={el => (this.wishInput = el)} />
         <span className="input-group-btn">
@@ -36,7 +41,7 @@ class Home extends React.Component {
         {map(this.props.wishes, wish =>
           <li className="list-group-item">
             <span>{wish.title}</span>
-            <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish(wish.id)}>Delete</button>
+            <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish(wish.id)}>Fjern</button>
           </li>
           )}
       </ul>
@@ -49,7 +54,8 @@ Home.propTypes = {
   addWish: PropTypes.func,
   loadData: PropTypes.func,
   wishes: PropTypes.array,
-  deleteWish: PropTypes.func
+  deleteWish: PropTypes.func,
+  shareList: PropTypes.func
 }
 
 const mapStateToProps = state => ({

@@ -27,8 +27,9 @@
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
     "babel-polyfill": "^6.9.1",
     "domain-task": "^2.0.1",
+    "imports-loader": "^0.6.5",
     "isomorphic-fetch": "^2.2.1",
-    "jquery": "^2.2.4",
+    "jquery": "^3.1.0",
     "lodash": "^4.13.1",
     "ms-signalr-client": "^2.2.3",
     "normalizr": "^2.1.0",
@@ -43,6 +44,7 @@
     "redux-saga": "^0.11.0",
     "redux-thunk": "^2.1.0",
     "seamless-immutable": "^6.1.1",
+    "vex-js": "^2.3.4",
     "webpack-externals-plugin": "^1.0.0"
   }
 }
