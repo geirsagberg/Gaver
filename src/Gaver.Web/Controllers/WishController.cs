@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Gaver.Data;
 using Gaver.Data.Entities;
+using Gaver.Logic;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,9 +12,11 @@ namespace Gaver.Web.Controllers
     public class WishController : Controller
     {
         private readonly GaverContext gaverContext;
+        private readonly IMailSender mailSender;
 
-        public WishController(GaverContext gaverContext) {
+        public WishController(GaverContext gaverContext, IMailSender mailSender) {
             this.gaverContext = gaverContext;
+            this.mailSender = mailSender;
         }
 
         // GET api/values
@@ -51,8 +54,15 @@ namespace Gaver.Web.Controllers
         }
 
         [HttpPost("Share")]
-        public void ShareList() {
-            
+        public void ShareList(string[] emails) {
+            var mail = new Mail {
+                To = emails,
+                From = "noreply@sagberg.net",
+                Subject = "Noen har delt en ønskeliste med deg",
+                Content = @"<h1>Noen har delt en ønskeliste med deg!</h1>
+                <p><a href='http://localhost/5000'>Klikk her for å se listen.</a></p>" 
+            };
+            mailSender.Send(mail);
         }
     }
 }

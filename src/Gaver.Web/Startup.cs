@@ -1,10 +1,12 @@
 using System.IO;
 using System.Reflection;
 using Gaver.Data;
+using Gaver.Logic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -12,9 +14,28 @@ namespace Gaver.Web
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        public Startup(IHostingEnvironment hostingEnvironment) {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostingEnvironment.ContentRootPath)
+                .AddJsonFile("config.json");
+
+            if (hostingEnvironment.IsDevelopment()) {
+                builder.AddUserSecrets();
+            }
+            builder.AddEnvironmentVariables();
+
+
+            Configuration = builder.Build();
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<MailOptions>(Configuration.GetSection("mail"));
+
             services.AddMvc();
             var connectionString = "Data Source=MyDb.db";
             services
