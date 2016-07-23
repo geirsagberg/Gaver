@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Gaver.Data;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web
@@ -19,15 +22,17 @@ namespace Gaver.Web
         public Startup(IHostingEnvironment hostingEnvironment) {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("config.json");
+                // .AddJsonFile("config.json")
+                ;
 
             if (hostingEnvironment.IsDevelopment()) {
                 builder.AddUserSecrets();
             }
             builder.AddEnvironmentVariables();
 
-
             Configuration = builder.Build();
+
+            var apiKey = Configuration.GetValue<string>("SendGridApiKey");
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -36,13 +41,16 @@ namespace Gaver.Web
             services.AddOptions();
             services.Configure<MailOptions>(Configuration.GetSection("mail"));
 
-            services.AddMvc();
+            services.AddMvc(o => o.Filters.Add(new CustomExceptionFilterAttribute()));
             var connectionString = "Data Source=MyDb.db";
             services
                 .AddEntityFrameworkSqlite()
                 .AddDbContext<GaverContext>((serviceProvider, options) => {
                     options.UseSqlite(connectionString, b => b.MigrationsAssembly(this.GetType().GetTypeInfo().Assembly.FullName));
                 });
+
+            services.AddAssembly("Gaver.Logic");
+            services.AddSingleton<IMapperService, MapperService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

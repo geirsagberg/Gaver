@@ -11,8 +11,7 @@ namespace Gaver.Data
 
         public GaverContext(DbContextOptions<GaverContext> options) : base(options)
         {
-         
-            
+
         }
 
         public DbSet<Wish> Wishes { get; set; }

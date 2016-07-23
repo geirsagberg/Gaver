@@ -4,7 +4,8 @@
   "dependencies": {
     "NETStandard.Library": "1.6.0",
     "Microsoft.Extensions.Options": "1.0.0",
-    "Flurl.Http": "1.0.0-beta8"
+    "Flurl.Http": "1.0.0-beta8",
+    "AutoMapper": "5.0.2"
   },
 
   "frameworks": {

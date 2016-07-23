@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;
@@ -50,19 +51,19 @@ namespace Gaver.Web.Controllers
         {
             gaverContext.Delete<Wish>(id);
             gaverContext.SaveChanges();
-            
+
         }
 
         [HttpPost("Share")]
-        public void ShareList(string[] emails) {
+        public async Task ShareList(string[] emails) {
             var mail = new Mail {
                 To = emails,
                 From = "noreply@sagberg.net",
                 Subject = "Noen har delt en ønskeliste med deg",
                 Content = @"<h1>Noen har delt en ønskeliste med deg!</h1>
-                <p><a href='http://localhost/5000'>Klikk her for å se listen.</a></p>" 
+                <p><a href='http://localhost/5000'>Klikk her for å se listen.</a></p>"
             };
-            mailSender.Send(mail);
+            await mailSender.SendAsync(mail);
         }
     }
 }
