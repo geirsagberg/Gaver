@@ -43,7 +43,10 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0-*",
     "Microsoft.AspNetCore.ReactServices": "1.0.0-*",
     "Microsoft.EntityFrameworkCore.Sqlite": "1.0.0",
-    "Microsoft.EntityFrameworkCore.Design": "1.0.0-preview2-final"
+    "Microsoft.EntityFrameworkCore.Design": "1.0.0-preview2-final",
+    "Swashbuckle": "6.0.0-beta901",
+    "MediatR": "2.1.0",
+    "LightInject.Microsoft.DependencyInjection": "1.0.1"
   },
   "frameworks": {
     "netcoreapp1.0": {

@@ -1,17 +1,22 @@
 using System;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Gaver.Data;
 using Gaver.Logic;
+using LightInject;
+using LightInject.Microsoft.DependencyInjection;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Gaver.Web
 {
@@ -22,7 +27,7 @@ namespace Gaver.Web
         public Startup(IHostingEnvironment hostingEnvironment) {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
-                // .AddJsonFile("config.json")
+                .AddJsonFile("config.json")
                 ;
 
             if (hostingEnvironment.IsDevelopment()) {
@@ -31,17 +36,18 @@ namespace Gaver.Web
             builder.AddEnvironmentVariables();
 
             Configuration = builder.Build();
-
-            var apiKey = Configuration.GetValue<string>("SendGridApiKey");
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
             services.Configure<MailOptions>(Configuration.GetSection("mail"));
 
-            services.AddMvc(o => o.Filters.Add(new CustomExceptionFilterAttribute()));
+            services.AddMvc(o => {
+                o.Filters.Add(new CustomExceptionFilterAttribute());
+                o.Filters.Add(new ValidateModelAttribute());
+            });
             var connectionString = "Data Source=MyDb.db";
             services
                 .AddEntityFrameworkSqlite()
@@ -49,8 +55,16 @@ namespace Gaver.Web
                     options.UseSqlite(connectionString, b => b.MigrationsAssembly(this.GetType().GetTypeInfo().Assembly.FullName));
                 });
 
-            services.AddAssembly("Gaver.Logic");
             services.AddSingleton<IMapperService, MapperService>();
+            // services.AddSwaggerGen();
+
+            var container = new ServiceContainer();
+            container.RegisterAssembly<IMediator>();
+            container.RegisterAssembly<ILogicAssembly>();
+            container.Register<SingleInstanceFactory>(factory => type => factory.GetInstance(type), new PerContainerLifetime());
+            container.Register<MultiInstanceFactory>(factory => type => factory.GetAllInstances(type), new PerContainerLifetime());
+            container.RegisterAssembly<Startup>();
+            return container.CreateServiceProvider(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +81,8 @@ namespace Gaver.Web
 
             app.UseStaticFiles();
             loggerFactory.AddConsole();
+            // app.UseSwagger();
+            // app.UseSwaggerUi();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -76,6 +92,7 @@ namespace Gaver.Web
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
+
             });
         }
 

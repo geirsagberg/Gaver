@@ -38,7 +38,7 @@ function * shareList () {
       message: 'Skriv inn epostadressen til de du vil dele listen med',
       placeholder: 'eksempel@epost.com, ...'
     })
-    if (emails !== false) {
+    if (emails !== null) {
       // TODO: Validation
       const emailList = emails.split(',').map(email => email.trim())
       yield call(Api.shareList, {

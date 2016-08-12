@@ -1,4 +1,6 @@
 using Xunit;
+using Gaver.Logic;
+using AutoMapper;
 
 namespace Gaver.Logic.Tests
 {
@@ -6,7 +8,7 @@ namespace Gaver.Logic.Tests
     {
         [Fact]
         public void Mapping_is_valid() {
-            var service = new MapperService();
+            var service = new MapperService(new Profile[0]);
 
             service.ValidateMappings();
         }

@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;
+using Gaver.Web.Features.WishList;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,10 +17,13 @@ namespace Gaver.Web.Controllers
     {
         private readonly GaverContext gaverContext;
         private readonly IMailSender mailSender;
+        private readonly IMediator mediator;
 
-        public WishController(GaverContext gaverContext, IMailSender mailSender) {
+        public WishController(GaverContext gaverContext, IMailSender mailSender, IMediator mediator)
+        {
             this.gaverContext = gaverContext;
             this.mailSender = mailSender;
+            this.mediator = mediator;
         }
 
         // GET api/values
@@ -31,7 +37,8 @@ namespace Gaver.Web.Controllers
         [HttpPost]
         public Wish Post([FromBody]string title)
         {
-            var wish = new Wish {
+            var wish = new Wish
+            {
                 Title = title
             };
             var entry = gaverContext.Set<Wish>().Add(wish);
@@ -51,19 +58,12 @@ namespace Gaver.Web.Controllers
         {
             gaverContext.Delete<Wish>(id);
             gaverContext.SaveChanges();
-
         }
 
         [HttpPost("Share")]
-        public async Task ShareList(string[] emails) {
-            var mail = new Mail {
-                To = emails,
-                From = "noreply@sagberg.net",
-                Subject = "Noen har delt en ønskeliste med deg",
-                Content = @"<h1>Noen har delt en ønskeliste med deg!</h1>
-                <p><a href='http://localhost/5000'>Klikk her for å se listen.</a></p>"
-            };
-            await mailSender.SendAsync(mail);
+        public async Task ShareList([FromBody]ShareListRequest request)
+        {
+            await mediator.SendAsync(request);
         }
     }
 }

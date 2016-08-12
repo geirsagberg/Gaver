@@ -1,6 +1,5 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using AutoMapper;
 
 namespace Gaver.Logic
@@ -8,7 +7,7 @@ namespace Gaver.Logic
     public class MapperService : IMapperService
     {
         private readonly IMapper mapper;
-        public MapperService()
+        public MapperService(IEnumerable<Profile> profiles)
         {
             var mapperConfig = new MapperConfiguration(config =>
             {
@@ -16,15 +15,26 @@ namespace Gaver.Logic
                 config.CreateMap<Mail, SendGridMail>()
                     .MapMember(m => m.From, m => new SendGridAddress
                     {
-                        Email = m.From
+                        Email = m.From,
+                        Name = "Gaver"
                     })
-                    .MapMember(m => m.Personalizations, m => new SendGridPersonalization
-                    {
-                        To = m.To.Select(to => new SendGridAddress
-                        {
-                            Email = to
-                        }).ToList()
+                    .MapMember(m => m.Content, m => new[] {
+                        new SendGridContent {
+                            Value = m.Content,
+                            Type = "text/html"
+                        }
+                    })
+                    .MapMember(m => m.Personalizations, m => new[] {
+                        new SendGridPersonalization {
+                            To = m.To.Select(to => new SendGridAddress {
+                                Email = to
+                            }).ToList()
+                        }
                     });
+                foreach (var profile in profiles)
+                {
+                    config.AddProfile(profile);
+                }
             });
             mapper = mapperConfig.CreateMapper();
         }
