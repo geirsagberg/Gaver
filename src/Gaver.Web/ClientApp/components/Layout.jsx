@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { NavMenu } from './NavMenu'
+import { connect } from 'react-redux'
 
-export class Layout extends React.Component {
+class Layout extends React.Component {
   render () {
     return (
     <div className="container-fluid">
@@ -21,3 +22,5 @@ export class Layout extends React.Component {
 Layout.propTypes = {
   children: React.PropTypes.element
 }
+
+export default connect()(Layout)
