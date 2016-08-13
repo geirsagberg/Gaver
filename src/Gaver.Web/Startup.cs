@@ -24,13 +24,15 @@ namespace Gaver.Web
     {
         public IConfiguration Configuration { get; }
 
-        public Startup(IHostingEnvironment hostingEnvironment) {
+        public Startup(IHostingEnvironment hostingEnvironment)
+        {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
                 .AddJsonFile("config.json")
                 ;
 
-            if (hostingEnvironment.IsDevelopment()) {
+            if (hostingEnvironment.IsDevelopment())
+            {
                 builder.AddUserSecrets();
             }
             builder.AddEnvironmentVariables();
@@ -44,18 +46,24 @@ namespace Gaver.Web
             services.AddOptions();
             services.Configure<MailOptions>(Configuration.GetSection("mail"));
 
-            services.AddMvc(o => {
+            services.AddMvc(o =>
+            {
                 o.Filters.Add(new CustomExceptionFilterAttribute());
                 o.Filters.Add(new ValidateModelAttribute());
             });
             var connectionString = "Data Source=MyDb.db";
             services
                 .AddEntityFrameworkSqlite()
-                .AddDbContext<GaverContext>((serviceProvider, options) => {
+                .AddDbContext<GaverContext>((serviceProvider, options) =>
+                {
                     options.UseSqlite(connectionString, b => b.MigrationsAssembly(this.GetType().GetTypeInfo().Assembly.FullName));
                 });
 
             services.AddSingleton<IMapperService, MapperService>();
+            services.AddSignalR(options =>
+            {
+                options.Hubs.EnableDetailedErrors = true;
+            });
             // services.AddSwaggerGen();
 
             var container = new ServiceContainer();
@@ -70,17 +78,23 @@ namespace Gaver.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
+            loggerFactory.AddConsole();
+
             app.UseDeveloperExceptionPage();
 
-            if (env.IsDevelopment()) {
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+            if (env.IsDevelopment())
+            {
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });
             }
 
-            app.UseStaticFiles();
-            loggerFactory.AddConsole();
+            app.UseFileServer();
+            app.UseWebSockets();
+            app.UseSignalR();
+
             // app.UseSwagger();
             // app.UseSwaggerUi();
             app.UseMvc(routes =>
