@@ -1,5 +1,4 @@
 import 'babel-polyfill'
-import './css/site.css'
 import 'bootstrap'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
@@ -9,10 +8,13 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import routes from './routes'
 import configureStore from './configureStore'
 
+import 'bootswatch/darkly/bootstrap.css'
+import './css/site.css'
+
 // Setup SignalR
-import $ from 'jquery'
-window.$ = window.jQuery = $
-import 'ms-signalr-client'
+// import $ from 'jquery'
+// window.$ = window.jQuery = $
+// import 'ms-signalr-client'
 
 // Get the application-wide store instance, prepopulating with state from the server where available.
 const initialState = window.initialReduxState

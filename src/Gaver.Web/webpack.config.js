@@ -5,7 +5,6 @@ var merge = require('extendify')({ isDeep: true, arrays: 'concat' })
 var devConfig = require('./webpack.config.dev')
 var prodConfig = require('./webpack.config.prod')
 var isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
-var extractCSS = new ExtractTextPlugin('site.css')
 
 module.exports = merge({
   resolve: {
@@ -16,6 +15,7 @@ module.exports = merge({
     loaders: [
       { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel-loader' },
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap') }
     ]
   },
   entry: {
@@ -27,7 +27,7 @@ module.exports = merge({
     publicPath: '/dist/'
   },
   plugins: [
-    extractCSS,
+    new ExtractTextPlugin('site.css'),
     new webpack.ProvidePlugin({ 'window.jQuery': 'jquery', $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
   // new webpack.DllReferencePlugin({
   //   context: __dirname,
