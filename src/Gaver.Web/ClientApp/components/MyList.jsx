@@ -7,6 +7,7 @@ import map from 'lodash/map'
 class MyList extends React.Component {
   componentDidMount () {
     this.props.loadData()
+    this.props.initializeListUpdates()
   }
 
   onKeyUp (e) {
@@ -55,7 +56,8 @@ MyList.propTypes = {
   loadData: PropTypes.func,
   wishes: PropTypes.object,
   deleteWish: PropTypes.func,
-  shareList: PropTypes.func
+  shareList: PropTypes.func,
+  initializeListUpdates: PropTypes.func
 }
 
 const mapStateToProps = state => ({

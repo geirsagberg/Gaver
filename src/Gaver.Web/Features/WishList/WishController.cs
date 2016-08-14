@@ -7,6 +7,8 @@ using Gaver.Logic;
 using Gaver.Web.Features.WishList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Infrastructure;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,12 +20,14 @@ namespace Gaver.Web.Controllers
         private readonly GaverContext gaverContext;
         private readonly IMailSender mailSender;
         private readonly IMediator mediator;
+        private readonly IHubContext hub;
 
-        public WishController(GaverContext gaverContext, IMailSender mailSender, IMediator mediator)
+        public WishController(GaverContext gaverContext, IMailSender mailSender, IMediator mediator, IConnectionManager signalRManager)
         {
             this.gaverContext = gaverContext;
             this.mailSender = mailSender;
             this.mediator = mediator;
+            hub = signalRManager.GetHubContext<ListHub>();
         }
 
         // GET api/values
@@ -58,6 +62,7 @@ namespace Gaver.Web.Controllers
         {
             gaverContext.Delete<Wish>(id);
             gaverContext.SaveChanges();
+            hub.Clients.All.hello("World!");
         }
 
         [HttpPost("Share")]

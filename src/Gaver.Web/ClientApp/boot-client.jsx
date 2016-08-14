@@ -12,9 +12,9 @@ import 'bootswatch/darkly/bootstrap.css'
 import './css/site.css'
 
 // Setup SignalR
-// import $ from 'jquery'
-// window.$ = window.jQuery = $
-// import 'ms-signalr-client'
+import $ from 'jquery'
+window.$ = window.jQuery = $
+import 'ms-signalr-client'
 
 // Get the application-wide store instance, prepopulating with state from the server where available.
 const initialState = window.initialReduxState
