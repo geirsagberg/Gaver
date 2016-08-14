@@ -15,7 +15,7 @@ module.exports = merge({
   module: {
     loaders: [
       { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel-loader' },
-      { test: /\.css/, loader: extractCSS.extract(['css']) }
+      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
     ]
   },
   entry: {
@@ -28,9 +28,10 @@ module.exports = merge({
   },
   plugins: [
     extractCSS,
-    new webpack.DllReferencePlugin({
-      context: __dirname,
-      manifest: require('./wwwroot/dist/vendor-manifest.json')
-    })
+    new webpack.ProvidePlugin({ 'window.jQuery': 'jquery', $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+  // new webpack.DllReferencePlugin({
+  //   context: __dirname,
+  //   manifest: require('./wwwroot/dist/vendor-manifest.json')
+  // }),
   ]
 }, isDevelopment ? devConfig : prodConfig)

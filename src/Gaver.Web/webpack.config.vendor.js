@@ -15,7 +15,7 @@ module.exports = {
     ]
   },
   entry: {
-    vendor: ['bootstrap', 'bootswatch/darkly/bootstrap.css', 'react', 'react-dom', 'react-router', 'style-loader', 'jquery'],
+    vendor: ['bootstrap', 'bootswatch/darkly/bootstrap.css', 'react', 'react-dom', 'react-router', 'style-loader'],
   },
   output: {
     path: path.join(__dirname, 'wwwroot', 'dist'),
@@ -24,7 +24,7 @@ module.exports = {
   },
   plugins: [
     extractCSS,
-    new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+    // new webpack.ProvidePlugin({ 'window.jQuery': 'jquery', $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DllPlugin({
       path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),

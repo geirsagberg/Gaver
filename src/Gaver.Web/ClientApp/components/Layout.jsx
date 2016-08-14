@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { NavMenu } from './NavMenu'
 import { connect } from 'react-redux'
+import 'bootswatch/darkly/bootstrap.css'
 
 class Layout extends React.Component {
   render () {

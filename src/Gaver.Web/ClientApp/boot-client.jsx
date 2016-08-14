@@ -8,6 +8,12 @@ import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
 import routes from './routes'
 import configureStore from './configureStore'
+
+// Setup SignalR
+import $ from 'jquery'
+window.$ = window.jQuery = $
+import 'ms-signalr-client'
+
 // Get the application-wide store instance, prepopulating with state from the server where available.
 const initialState = window.initialReduxState
 const store = configureStore(initialState)

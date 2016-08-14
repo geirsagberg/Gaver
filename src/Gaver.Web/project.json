@@ -2,7 +2,11 @@
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "compile": {
+      "include": ["**/*.cs"],
+      "exclude": ["node_modules", "obj"]
+    }
   },
   "runtimeOptions": {
     "gcServer": true

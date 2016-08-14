@@ -3,6 +3,7 @@ import { call, put, fork, take } from 'redux-saga/effects'
 import * as Api from './api'
 import * as actions from './actions'
 import { showPrompt } from 'utils/dialogs'
+import $ from 'jquery'
 
 function * fetchWishData () {
   try {
@@ -48,11 +49,20 @@ function * shareList () {
   }
 }
 
+function * initializeListUpdates () {
+  const connection = $.hubConnection()
+  const proxy = connection.createHubProxy('listHub')
+  proxy.on('hello', data => console.log(data))
+  connection.logging = process.env.NODE_ENV === 'Development'
+  yield call(connection.start)
+}
+
 export default function rootSaga () {
   return [
     takeLatest(actions.LOAD_DATA, fetchWishData),
     takeEvery(actions.ADD_WISH, addWish),
     takeLatest(actions.DELETE_WISH, deleteWish),
+    takeEvery(actions.INITIALIZE_LIST_UPDATES, initializeListUpdates),
     fork(shareList)
   ]
 }
