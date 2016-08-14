@@ -7,21 +7,23 @@ import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
 import routes from './routes'
 import configureStore from './configureStore'
-
+import $script from 'scriptjs'
 import 'bootswatch/darkly/bootstrap.css'
 import './css/site.css'
 
 // Setup SignalR
-import $ from 'jquery'
-window.$ = window.jQuery = $
 import 'ms-signalr-client'
 
 // Get the application-wide store instance, prepopulating with state from the server where available.
 const initialState = window.initialReduxState
 const store = configureStore(initialState)
 const history = syncHistoryWithStore(browserHistory, store)
-// This code starts up the React app when it runs in a browser. It sets up the routing configuration
-// and injects the app into a DOM element.
-ReactDOM.render(<Provider store={store}>
-                  <Router history={history} children={routes} />
-                </Provider>, document.getElementById('react-app'))
+
+$script('/signalr/hubs', () => {
+  // This code starts up the React app when it runs in a browser. It sets up the routing configuration
+  // and injects the app into a DOM element.
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router history={history} children={routes} />
+    </Provider>, document.getElementById('react-app'))
+})

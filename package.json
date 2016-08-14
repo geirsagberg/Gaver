@@ -20,5 +20,8 @@
     "eslint-plugin-standard": "^2.0.0",
     "foreach-cli": "^1.2.2",
     "watch-cli": "^0.2.1"
+  },
+  "dependencies": {
+    "scriptjs": "^2.5.8"
   }
 }

@@ -9,10 +9,11 @@ var isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
 module.exports = merge({
   resolve: {
     root: path.join(__dirname, 'ClientApp'),
-    extensions: [ '', '.js', '.jsx', '.ts', '.tsx' ]
+    extensions: ['', '.js', '.jsx', '.ts', '.tsx']
   },
   module: {
     loaders: [
+      { test: /jquery\.js$/, loader: 'expose?jQuery!expose?$' },
       { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel-loader' },
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
       { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap') }
@@ -28,10 +29,13 @@ module.exports = merge({
   },
   plugins: [
     new ExtractTextPlugin('site.css'),
-    new webpack.ProvidePlugin({ 'window.jQuery': 'jquery', $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
-  // new webpack.DllReferencePlugin({
-  //   context: __dirname,
-  //   manifest: require('./wwwroot/dist/vendor-manifest.json')
-  // }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production')
+    }),
+    new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+    // new webpack.DllReferencePlugin({
+    //   context: __dirname,
+    //   manifest: require('./wwwroot/dist/vendor-manifest.json')
+    // }),
   ]
 }, isDevelopment ? devConfig : prodConfig)

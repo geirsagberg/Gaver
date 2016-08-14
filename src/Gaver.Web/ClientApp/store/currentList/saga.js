@@ -53,8 +53,9 @@ function * initializeListUpdates () {
   const connection = $.hubConnection()
   const proxy = connection.createHubProxy('listHub')
   proxy.on('hello', data => console.log(data))
-  connection.logging = process.env.NODE_ENV === 'Development'
+  connection.logging = process.env.NODE_ENV === 'development'
   yield call(() => connection.start())
+  proxy.invoke('Subscribe', data => console.log(data))
 }
 
 export default function rootSaga () {
