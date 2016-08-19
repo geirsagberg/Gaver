@@ -50,12 +50,12 @@ function * shareList () {
 }
 
 function * initializeListUpdates () {
-  const connection = $.hubConnection()
-  const proxy = connection.createHubProxy('listHub')
-  proxy.on('hello', data => console.log(data))
-  connection.logging = process.env.NODE_ENV === 'development'
-  yield call(() => connection.start())
-  proxy.invoke('Subscribe', data => console.log(data))
+  const listHub = $.connection.listHub
+  listHub.client.hello = data => console.log(data)
+  $.connection.hub.logging = process.env.NODE_ENV === 'development'
+  yield call(() => $.connection.hub.start())
+  listHub.server.lol()
+  listHub.server.subscribe().then(console.log)
 }
 
 export default function rootSaga () {

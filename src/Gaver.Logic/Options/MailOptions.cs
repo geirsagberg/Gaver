@@ -1,4 +1,4 @@
-namespace Gaver.Logic
+﻿namespace Gaver.Logic
 {
     public class MailOptions
     {

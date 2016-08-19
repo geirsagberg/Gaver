@@ -27,6 +27,7 @@ namespace Gaver.Logic
                 var response = await options.SendGridUrl
                     .WithOAuthBearerToken(options.SendGridApiKey)
                     .PostJsonAsync(sendGridMail);
+                logger.LogInformation("Mail sent to {To}", mail.To);
             }
             catch (Exception e)
             {

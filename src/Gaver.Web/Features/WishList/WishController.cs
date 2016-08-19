@@ -66,7 +66,7 @@ namespace Gaver.Web.Controllers
         }
 
         [HttpPost("Share")]
-        public async Task ShareList([FromBody]ShareListRequest request)
+        public async Task ShareList(ShareListRequest request)
         {
             await mediator.SendAsync(request);
         }

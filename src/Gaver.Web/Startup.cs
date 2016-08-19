@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Gaver.Data;
 using Gaver.Logic;
@@ -9,14 +8,16 @@ using LightInject.Microsoft.DependencyInjection;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Serilog;
+using Serilog.Events;
+using WebApiContrib.Core;
+using WebApiContrib.Core.Filters;
 
 namespace Gaver.Web
 {
@@ -28,8 +29,7 @@ namespace Gaver.Web
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("config.json")
-                ;
+                .AddJsonFile("config.json");
 
             if (hostingEnvironment.IsDevelopment())
             {
@@ -49,41 +49,58 @@ namespace Gaver.Web
             services.AddMvc(o =>
             {
                 o.Filters.Add(new CustomExceptionFilterAttribute());
-                o.Filters.Add(new ValidateModelAttribute());
+                o.Filters.Add(new ValidationAttribute());
+                o.UseFromBodyBinding();
             });
             var connectionString = "Data Source=MyDb.db";
             services
                 .AddEntityFrameworkSqlite()
                 .AddDbContext<GaverContext>((serviceProvider, options) =>
                 {
-                    options.UseSqlite(connectionString, b => b.MigrationsAssembly(this.GetType().GetTypeInfo().Assembly.FullName));
+                    options.UseSqlite(connectionString,
+                        b => b.MigrationsAssembly(this.GetType().GetTypeInfo().Assembly.FullName));
                 });
 
             services.AddSingleton<IMapperService, MapperService>();
-            services.AddSignalR(options =>
-            {
-                options.Hubs.EnableDetailedErrors = true;
-            });
-            // services.AddSwaggerGen();
+            services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
+            services.AddSwaggerGen();
 
             var container = new ServiceContainer();
             container.RegisterAssembly<IMediator>();
             container.RegisterAssembly<ILogicAssembly>();
-            container.Register<SingleInstanceFactory>(factory => type => factory.GetInstance(type), new PerContainerLifetime());
-            container.Register<MultiInstanceFactory>(factory => type => factory.GetAllInstances(type), new PerContainerLifetime());
+            container.Register<SingleInstanceFactory>(factory => type => factory.GetInstance(type),
+                new PerContainerLifetime());
+            container.Register<MultiInstanceFactory>(factory => type => factory.GetAllInstances(type),
+                new PerContainerLifetime());
             container.RegisterAssembly<Startup>();
-            return container.CreateServiceProvider(services);
+            container.Register<IContractResolver, SignalRContractResolver>(new PerContainerLifetime());
+            var provider = container.CreateServiceProvider(services);
+
+            return provider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole();
-
-            app.UseDeveloperExceptionPage();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.LiterateConsole()
+                .CreateLogger();
 
             if (env.IsDevelopment())
             {
+                loggerFactory
+                    .WithFilter(new FilterLoggerSettings
+                    {
+                        {"Microsoft", LogLevel.Warning},
+                        {"System", LogLevel.Warning}
+                    })
+                    .AddSerilog();
+
+                app.UseDeveloperExceptionPage();
+
+
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true,
@@ -95,8 +112,8 @@ namespace Gaver.Web
             app.UseWebSockets();
             app.UseSignalR();
 
-            // app.UseSwagger();
-            // app.UseSwaggerUi();
+            app.UseSwagger();
+            app.UseSwaggerUi();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -105,8 +122,7 @@ namespace Gaver.Web
 
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
-
+                    defaults: new {controller = "Home", action = "Index"});
             });
         }
 
