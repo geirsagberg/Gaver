@@ -10,6 +10,8 @@ function wishReducer (state = Immutable({}), action) {
       return state.merge(action.data.entities.wishes || {})
     case actions.WISH_DELETED:
       return state.without(action.id)
+    case actions.SET_COUNT:
+      return state.merge(action.count)
   }
   return state
 }

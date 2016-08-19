@@ -9,6 +9,7 @@ export const WISH_DELETED = actionNamespace + 'WISH_DELETED'
 export const FETCH_FAILED = actionNamespace + 'FETCH_FAILED'
 export const SHARE_LIST = actionNamespace + 'SHARE_LIST'
 export const INITIALIZE_LIST_UPDATES = actionNamespace + 'INITIALIZE_LIST_UPDATES'
+export const SET_COUNT = actionNamespace + 'SET_COUNT'
 
 export function addWish (wish) {
   return {
@@ -67,5 +68,11 @@ export function shareList () {
 export function initializeListUpdates () {
   return {
     type: INITIALIZE_LIST_UPDATES
+  }
+}
+export function setCount (count) {
+  return {
+    type: SET_COUNT,
+    count
   }
 }

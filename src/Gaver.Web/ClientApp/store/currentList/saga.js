@@ -4,6 +4,7 @@ import * as Api from './api'
 import * as actions from './actions'
 import { showPrompt } from 'utils/dialogs'
 import $ from 'jquery'
+import Immutable from 'immutable'
 
 function * fetchWishData () {
   try {
@@ -54,8 +55,8 @@ function * initializeListUpdates () {
   listHub.client.hello = data => console.log(data)
   $.connection.hub.logging = process.env.NODE_ENV === 'development'
   yield call(() => $.connection.hub.start())
-  listHub.server.lol()
-  listHub.server.subscribe().then(console.log)
+  const count = yield call(listHub.server.subscribe())
+  yield put(actions.setCount(Immutable(count)))
 }
 
 export default function rootSaga () {

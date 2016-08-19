@@ -11,6 +11,7 @@ namespace Gaver.Web
             if (context.HttpContext.Request.Path.ToUriComponent().Contains("/api/"))
             {
                 context.Result = new JsonResult(context.Exception.Message);
+                context.HttpContext.Response.StatusCode = 500;
             }
         }
     }
