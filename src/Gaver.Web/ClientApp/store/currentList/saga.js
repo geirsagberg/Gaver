@@ -1,4 +1,4 @@
-import { takeLatest, takeEvery } from 'redux-saga'
+import { takeLatest, takeEvery, eventChannel } from 'redux-saga'
 import { call, put, fork, take } from 'redux-saga/effects'
 import * as Api from './api'
 import * as actions from './actions'
@@ -50,10 +50,27 @@ function * shareList () {
   }
 }
 
+function createSignalrChannel (connection) {
+  const client = connection.listHub
+  return eventChannel(emit => {
+    client.updateUsers = users => emit(users)
+
+    // unsubscribe
+    return () => {
+      delete client.updateUsers
+    }
+  })
+}
+
+function doStuff (users) {
+  console.log(users)
+}
+
 function * initializeListUpdates () {
-  const listHub = $.connection.listHub
-  listHub.client.hello = data => console.log(data)
   $.connection.hub.logging = process.env.NODE_ENV === 'development'
+  const listHub = $.connection.listHub
+  const signalrChannel = yield call(createSignalrChannel, $.connection)
+  signalrChannel.take(doStuff)
   yield call(() => $.connection.hub.start())
   const users = yield call(listHub.server.subscribe)
   yield put(actions.setUsers(Immutable(users)))

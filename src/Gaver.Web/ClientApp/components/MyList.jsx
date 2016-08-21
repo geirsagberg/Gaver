@@ -56,7 +56,7 @@ class MyList extends React.Component {
 
 MyList.propTypes = {
   wishes: PropTypes.object,
-  count: PropTypes.int,
+  count: PropTypes.number,
   addWish: PropTypes.func,
   loadData: PropTypes.func,
   deleteWish: PropTypes.func,
