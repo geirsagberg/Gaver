@@ -27,6 +27,4 @@ export const reducer = combineReducers({
   users
 })
 
-export { default as saga } from './saga'
-
 export * from './actions'

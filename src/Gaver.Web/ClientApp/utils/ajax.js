@@ -1,6 +1,7 @@
 import 'isomorphic-fetch'
 import Immutable from 'seamless-immutable'
 import { normalize, Schema } from 'normalizr'
+import Promise from 'bluebird'
 
 const headers = {
   'Accept': 'application/json',
@@ -10,9 +11,17 @@ const headers = {
 const handleResponse = schema => response => {
   var contentType = response.headers.get('content-type')
   if (contentType && contentType.indexOf('application/json') !== -1) {
-    return response.json().then(json => Immutable(normalize(json, schema)))
+    return Promise.resolve(response.json()).then(data => {
+      if (!response.ok) {
+        const message = Array.isArray(data)
+          ? data.map(d => d.message).join()
+          : data.message
+        throw new Error(message)
+      }
+      return Immutable(normalize(data, schema))
+    })
   } else {
-    return Promise.resolve()
+    return response.ok ? Promise.resolve() : Promise.reject('Something went wrong')
   }
 }
 

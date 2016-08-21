@@ -1,3 +1,10 @@
+import * as Api from './api'
+import { showPrompt } from 'utils/dialogs'
+import { showSuccess, showError } from 'utils/notifications'
+import { isDevelopment } from 'utils'
+import $ from 'jquery'
+import Immutable from 'seamless-immutable'
+
 const actionNamespace = 'gaver/currentList/'
 
 export const ADD_WISH = actionNamespace + 'ADD_WISH'
@@ -11,11 +18,57 @@ export const SHARE_LIST = actionNamespace + 'SHARE_LIST'
 export const INITIALIZE_LIST_UPDATES = actionNamespace + 'INITIALIZE_LIST_UPDATES'
 export const SET_USERS = actionNamespace + 'SET_COUNT'
 
-export function addWish (wish) {
-  return {
-    type: ADD_WISH,
-    wish
+export const loadData = () => async dispatch => {
+  try {
+    const data = await Api.fetchWishData()
+    dispatch(fetchDataSuccess(data))
+  } catch (error) {
+    dispatch(fetchFailed(error))
   }
+}
+
+export const addWish = wish => async dispatch => {
+  try {
+    const data = await Api.addWish(wish)
+    dispatch(fetchDataSuccess(data))
+  } catch (error) {
+    dispatch(fetchFailed(error))
+  }
+}
+
+export const deleteWish = id => async dispatch => {
+  try {
+    await Api.deleteWish(id)
+    dispatch(wishDeleted(id))
+  } catch (error) {
+    dispatch(fetchFailed(error))
+  }
+}
+
+export const shareList = () => async dispatch => {
+  const input = await showPrompt({
+    message: 'Skriv inn epostadressen til de du vil dele listen med',
+    placeholder: 'eksempel@epost.com, ...'
+  })
+  if (input !== null) {
+    // TODO: Validation
+    const emails = input.split(',').map(email => email.trim())
+    try {
+      await Api.shareList({
+        emails
+      })
+      showSuccess('Ønskeliste delt!')
+    } catch (error) {
+      showError(error)
+    }
+  }
+}
+
+export const initializeListUpdates = () => async dispatch => {
+  $.connection.hub.logging = isDevelopment
+  const listHub = $.connection.listHub
+  listHub.updateUsers = users => dispatch(setUsers(Immutable(users)))
+  await $.connection.hub.start()
 }
 
 export function wishAdded (wish) {
@@ -25,23 +78,10 @@ export function wishAdded (wish) {
   }
 }
 
-export function loadData () {
-  return {
-    type: LOAD_DATA
-  }
-}
-
 export function fetchDataSuccess (data) {
   return {
     type: DATA_LOADED,
     data
-  }
-}
-
-export function deleteWish (id) {
-  return {
-    type: DELETE_WISH,
-    id
   }
 }
 
@@ -56,18 +96,6 @@ export function fetchFailed (error) {
   return {
     type: FETCH_FAILED,
     error: error.toString()
-  }
-}
-
-export function shareList () {
-  return {
-    type: SHARE_LIST
-  }
-}
-
-export function initializeListUpdates () {
-  return {
-    type: INITIALIZE_LIST_UPDATES
   }
 }
 export function setUsers (users) {

@@ -85,7 +85,7 @@ namespace Gaver.Web
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
                 .Enrich.FromLogContext()
-                .WriteTo.LiterateConsole()
+                .WriteTo.ColoredConsole()
                 .CreateLogger();
 
             if (env.IsDevelopment())
@@ -96,7 +96,7 @@ namespace Gaver.Web
                         {"Microsoft", LogLevel.Warning},
                         {"System", LogLevel.Warning}
                     })
-                    .AddSerilog();
+                    .AddConsole(LogLevel.Debug);
 
                 app.UseDeveloperExceptionPage();
 

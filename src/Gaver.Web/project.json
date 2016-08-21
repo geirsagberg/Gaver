@@ -57,7 +57,8 @@
     "LightInject.Microsoft.DependencyInjection": "1.0.1",
     "Serilog": "2.1.0",
     "Serilog.Extensions.Logging": "1.2.0",
-    "Serilog.Sinks.Literate": "2.0.0"
+    "Serilog.Sinks.Literate": "2.0.0",
+    "Serilog.Sinks.ColoredConsole": "2.0.0"
   },
   "frameworks": {
     "netcoreapp1.0": {
