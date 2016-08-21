@@ -25,8 +25,12 @@ const handleResponse = schema => response => {
   }
 }
 
+const handleError = () => {
+  throw new Error('Could not reach server')
+}
+
 export function getJson (url, schema = new Schema('item')) {
-  return fetch(url).then(handleResponse(schema))
+  return fetch(url).then(handleResponse(schema), handleError)
 }
 
 export function postJson (url, data, schema = new Schema('item')) {
@@ -34,7 +38,7 @@ export function postJson (url, data, schema = new Schema('item')) {
     method: 'POST',
     headers,
     body: JSON.stringify(data)
-  }).then(handleResponse(schema))
+  }).then(handleResponse(schema), handleError)
 }
 
 export function deleteJson (url, data, schema = new Schema('item')) {
@@ -42,5 +46,5 @@ export function deleteJson (url, data, schema = new Schema('item')) {
     method: 'DELETE',
     headers,
     body: JSON.stringify(data)
-  }).then(handleResponse(schema))
+  }).then(handleResponse(schema), handleError)
 }

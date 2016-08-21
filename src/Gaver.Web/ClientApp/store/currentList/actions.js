@@ -13,7 +13,6 @@ export const DATA_LOADED = actionNamespace + 'DATA_LOADED'
 export const WISH_ADDED = actionNamespace + 'WISH_ADDED'
 export const DELETE_WISH = actionNamespace + 'DELETE_WISH'
 export const WISH_DELETED = actionNamespace + 'WISH_DELETED'
-export const FETCH_FAILED = actionNamespace + 'FETCH_FAILED'
 export const SHARE_LIST = actionNamespace + 'SHARE_LIST'
 export const INITIALIZE_LIST_UPDATES = actionNamespace + 'INITIALIZE_LIST_UPDATES'
 export const SET_USERS = actionNamespace + 'SET_COUNT'
@@ -23,7 +22,7 @@ export const loadData = () => async dispatch => {
     const data = await Api.fetchWishData()
     dispatch(fetchDataSuccess(data))
   } catch (error) {
-    dispatch(fetchFailed(error))
+    showError(error)
   }
 }
 
@@ -32,7 +31,7 @@ export const addWish = wish => async dispatch => {
     const data = await Api.addWish(wish)
     dispatch(fetchDataSuccess(data))
   } catch (error) {
-    dispatch(fetchFailed(error))
+    showError(error)
   }
 }
 
@@ -41,7 +40,7 @@ export const deleteWish = id => async dispatch => {
     await Api.deleteWish(id)
     dispatch(wishDeleted(id))
   } catch (error) {
-    dispatch(fetchFailed(error))
+    showError(error)
   }
 }
 
