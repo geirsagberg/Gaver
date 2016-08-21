@@ -26,12 +26,15 @@ class MyList extends React.Component {
   render () {
     return (
     <div>
-      <h1>
-        Mine ønsker
-        <div className="btn-group pull-right">
-          <button type="button" className="btn btn-default" onClick={this.props.shareList}><span className="glyphicon glyphicon-share"></span> Del</button>
+      <header style={{display: 'flex', alignItems: 'center'}}>
+        <h1 style={{flex: 1}}>Mine ønsker</h1>
+        <div>
+          {this.props.count} <span className="icon-users" />
         </div>
-      </h1>
+        <div className="btn-group">
+          <button type="button" className="btn btn-default" onClick={this.props.shareList}><span className="icon-share2"></span> Del</button>
+        </div>
+      </header>
       <div className="input-group">
         <input className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={::this.onKeyUp} ref={el => (this.wishInput = el)} />
         <span className="input-group-btn">
@@ -52,16 +55,18 @@ class MyList extends React.Component {
 }
 
 MyList.propTypes = {
+  wishes: PropTypes.object,
+  count: PropTypes.int,
   addWish: PropTypes.func,
   loadData: PropTypes.func,
-  wishes: PropTypes.object,
   deleteWish: PropTypes.func,
   shareList: PropTypes.func,
   initializeListUpdates: PropTypes.func
 }
 
 const mapStateToProps = state => ({
-  wishes: state.currentList.wishes || Immutable([])
+  wishes: state.currentList.wishes || Immutable([]),
+  count: state.currentList.users.count || 0
 })
 
 export default connect(mapStateToProps, currentListActions)(MyList)
