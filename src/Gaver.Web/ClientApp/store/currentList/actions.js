@@ -2,8 +2,10 @@ import * as Api from './api'
 import { showPrompt } from 'utils/dialogs'
 import { showSuccess, showError } from 'utils/notifications'
 import { isDevelopment } from 'utils'
+import { normalize, Schema } from 'normalizr'
 import $ from 'jquery'
 import Immutable from 'seamless-immutable'
+import mapValues from 'lodash/mapValues'
 
 const actionNamespace = 'gaver/currentList/'
 
@@ -29,7 +31,7 @@ export const loadData = () => async dispatch => {
 export const addWish = wish => async dispatch => {
   try {
     const data = await Api.addWish(wish)
-    dispatch(fetchDataSuccess(data))
+    // dispatch(fetchDataSuccess(data))
   } catch (error) {
     showError(error)
   }
@@ -65,9 +67,16 @@ export const shareList = () => async dispatch => {
 
 export const initializeListUpdates = () => async dispatch => {
   $.connection.hub.logging = isDevelopment
-  const listHub = $.connection.listHub
-  listHub.updateUsers = users => dispatch(setUsers(Immutable(users)))
+  const { client, server } = $.connection.listHub
+
+  $.extend(client, {
+    updateUsers: users => dispatch(Immutable(setUsers(users))),
+    refresh: data => dispatch(loadData())
+  })
+
   await $.connection.hub.start()
+  const users = await server.subscribe()
+  client.updateUsers(users)
 }
 
 export function wishAdded (wish) {
@@ -91,12 +100,6 @@ export function wishDeleted (id) {
   }
 }
 
-export function fetchFailed (error) {
-  return {
-    type: FETCH_FAILED,
-    error: error.toString()
-  }
-}
 export function setUsers (users) {
   return {
     type: SET_USERS,

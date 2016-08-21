@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Data.Entities;
@@ -20,14 +19,14 @@ namespace Gaver.Web.Controllers
         private readonly GaverContext gaverContext;
         private readonly IMailSender mailSender;
         private readonly IMediator mediator;
-        private readonly IHubContext hub;
+        private readonly IHubContext<ListHub, IListHubClient> hub;
 
         public WishController(GaverContext gaverContext, IMailSender mailSender, IMediator mediator, IConnectionManager signalRManager)
         {
             this.gaverContext = gaverContext;
             this.mailSender = mailSender;
             this.mediator = mediator;
-            hub = signalRManager.GetHubContext<ListHub>();
+            hub = signalRManager.GetHubContext<ListHub, IListHubClient>();
         }
 
         // GET api/values
@@ -45,8 +44,9 @@ namespace Gaver.Web.Controllers
             {
                 Title = title
             };
-            var entry = gaverContext.Set<Wish>().Add(wish);
+            gaverContext.Set<Wish>().Add(wish);
             gaverContext.SaveChanges();
+            RefreshData();
             return wish;
         }
 
@@ -56,13 +56,15 @@ namespace Gaver.Web.Controllers
         {
         }
 
+        public void RefreshData() => hub.Clients.Group(ListHub.ListGroup).Refresh(Get());
+
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
             gaverContext.Delete<Wish>(id);
             gaverContext.SaveChanges();
-            hub.Clients.All.hello("World!");
+            RefreshData();
         }
 
         [HttpPost("Share")]

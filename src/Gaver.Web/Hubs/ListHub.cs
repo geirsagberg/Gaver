@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Gaver.Data.Entities;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Hubs;
 using Microsoft.Extensions.Logging;
@@ -14,13 +15,14 @@ namespace Gaver.Web
             this.logger = logger;
         }
 
-        private const string ListGroup = "list";
+        public const string ListGroup = "list";
         private readonly ILogger<ListHub> logger;
         private static readonly HashSet<string> connections = new HashSet<string>();
 
-        public void Lol()
+        public string Ping(string value)
         {
-            logger.LogDebug("Yo");
+            logger.LogDebug("Ping called: {value)", value);
+            return value;
         }
 
         public SubscriptionStatus Subscribe()
@@ -39,7 +41,7 @@ namespace Gaver.Web
         {
             connections.Remove(Context.ConnectionId);
             Groups.Remove(Context.ConnectionId, ListGroup);
-            Clients.Group(ListGroup).UpdateUsers(new SubscriptionStatus{Count = connections.Count});
+            Clients.Group(ListGroup).UpdateUsers(new SubscriptionStatus {Count = connections.Count});
             return base.OnDisconnected(stopCalled);
         }
     }
@@ -47,6 +49,8 @@ namespace Gaver.Web
     public interface IListHubClient
     {
         void UpdateUsers(SubscriptionStatus status);
+        void HeartBeat();
+        void Refresh(IEnumerable<Wish> get);
     }
 
     public class SubscriptionStatus

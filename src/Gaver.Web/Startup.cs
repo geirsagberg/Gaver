@@ -52,7 +52,7 @@ namespace Gaver.Web
                 o.Filters.Add(new ValidationAttribute());
                 o.UseFromBodyBinding();
             });
-            var connectionString = "Data Source=MyDb.db";
+            const string connectionString = "Data Source=MyDb.db";
             services
                 .AddEntityFrameworkSqlite()
                 .AddDbContext<GaverContext>((serviceProvider, options) =>

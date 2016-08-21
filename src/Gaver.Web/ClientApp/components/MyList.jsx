@@ -28,7 +28,7 @@ class MyList extends React.Component {
     <div>
       <header style={{display: 'flex', alignItems: 'center'}}>
         <h1 style={{flex: 1}}>Mine ønsker</h1>
-        <div>
+        <div style={{margin: '1rem'}}>
           {this.props.count} <span className="icon-users" />
         </div>
         <div className="btn-group">
