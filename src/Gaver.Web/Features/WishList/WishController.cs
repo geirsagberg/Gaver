@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Data.Entities;
@@ -8,8 +9,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Gaver.Web.Controllers
 {
@@ -29,14 +28,12 @@ namespace Gaver.Web.Controllers
             hub = signalRManager.GetHubContext<ListHub, IListHubClient>();
         }
 
-        // GET api/values
         [HttpGet]
         public IEnumerable<Wish> Get()
         {
             return gaverContext.Set<Wish>();
         }
 
-        // POST api/values
         [HttpPost]
         public Wish Post([FromBody]string title)
         {
@@ -50,15 +47,14 @@ namespace Gaver.Web.Controllers
             return wish;
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]string title)
         {
+            var wish = gaverContext.GetOrDie<Wish>(id);
+            wish.Title = title;
+            gaverContext.SaveChanges();
         }
 
-        public void RefreshData() => hub.Clients.Group(ListHub.ListGroup).Refresh(Get());
-
-        // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
@@ -72,5 +68,7 @@ namespace Gaver.Web.Controllers
         {
             await mediator.SendAsync(request);
         }
+
+        private void RefreshData() => hub.Clients.Group(ListHub.ListGroup).Refresh(Get());
     }
 }

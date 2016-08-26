@@ -6,6 +6,7 @@ import { normalize, Schema } from 'normalizr'
 import $ from 'jquery'
 import Immutable from 'seamless-immutable'
 import mapValues from 'lodash/mapValues'
+import { compose } from 'redux'
 
 const actionNamespace = 'gaver/currentList/'
 
@@ -65,14 +66,20 @@ export const shareList = () => async dispatch => {
   }
 }
 
+const normalizeImmutableThenDispatch = (dispatch, func, schema) => compose(dispatch, Immutable, data => normalize(data, schema), func)
+
 export const initializeListUpdates = () => async dispatch => {
   $.connection.hub.logging = isDevelopment
   const { client, server } = $.connection.listHub
 
-  $.extend(client, {
-    updateUsers: users => dispatch(Immutable(setUsers(users))),
-    refresh: data => dispatch(loadData())
-  })
+  let functions = {
+    updateUsers: users => Immutable(setUsers(users)),
+    refresh: data => loadData()
+  }
+
+  functions = mapValues(functions, func => compose(dispatch, func))
+
+  $.extend(client, functions)
 
   await $.connection.hub.start()
   const users = await server.subscribe()
