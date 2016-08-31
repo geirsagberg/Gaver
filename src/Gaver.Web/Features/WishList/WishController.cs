@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 
-namespace Gaver.Web.Controllers
+namespace Gaver.Web.Features.WishList
 {
     [Route("api/[controller]")]
     public class WishController : Controller
@@ -31,7 +31,7 @@ namespace Gaver.Web.Controllers
         [HttpGet]
         public IEnumerable<Wish> Get()
         {
-            return gaverContext.Set<Wish>();
+            return mediator.Send(new GetWishesRequest());
         }
 
         [HttpPost]
