@@ -36,6 +36,8 @@ namespace Gaver.Web
                 builder.AddUserSecrets();
             }
             builder.AddEnvironmentVariables();
+            var nodeDir = Path.Combine(hostingEnvironment.ContentRootPath, "../../node_modules");
+            Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
 
             Configuration = builder.Build();
         }
@@ -58,7 +60,7 @@ namespace Gaver.Web
                 .AddDbContext<GaverContext>((serviceProvider, options) =>
                 {
                     options.UseSqlite(connectionString,
-                        b => b.MigrationsAssembly(this.GetType().GetTypeInfo().Assembly.FullName));
+                        b => b.MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName));
                 });
 
             services.AddSingleton<IMapperService, MapperService>();
