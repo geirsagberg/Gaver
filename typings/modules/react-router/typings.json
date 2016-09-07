@@ -1,16 +1,15 @@
 {
   "resolution": "main",
   "tree": {
-    "src": "https://raw.githubusercontent.com/typed-typings/npm-react-router/5d1691d5406392867926587830c2b20645eabd46/typings.json",
-    "raw": "registry:npm/react-router#2.4.0+20160628165748",
+    "src": "https://raw.githubusercontent.com/types/npm-react-router/cc3c871e66e2a36046c10462ee23a97fb14aed49/typings.json",
+    "raw": "registry:npm/react-router#2.4.0+20160811060709",
     "main": "react-router.d.ts",
-    "global": false,
+    "version": "2.4.0",
     "dependencies": {
       "history": {
-        "src": "https://raw.githubusercontent.com/andrew-w-ross/typings-history/master/typings.json",
-        "raw": "github:andrew-w-ross/typings-history",
+	"src": "https://raw.githubusercontent.com/andrew-w-ross/typings-history/e707e86a79544dcefbe5632d4e80ccee5bb6f0e3/typings.json",
+	"raw": "registry:npm/history#2.0.0+20160607172317",
         "main": "history.d.ts",
-        "global": false,
         "name": "history",
         "type": "typings"
       }

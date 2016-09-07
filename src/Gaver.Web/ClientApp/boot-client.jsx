@@ -2,9 +2,7 @@ import 'babel-polyfill'
 import 'bootstrap'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { browserHistory, Router } from 'react-router'
 import { Provider } from 'react-redux'
-import routes from './routes'
 import configureStore from './configureStore'
 import $script from 'scriptjs'
 import setupProgress from 'utils/progress'
@@ -12,6 +10,7 @@ import 'bootswatch/darkly/bootstrap.css'
 import 'toastr/build/toastr.css'
 import 'nprogress/nprogress.css'
 import './css/site.css'
+import App from './App'
 
 // Setup SignalR
 import 'ms-signalr-client'
@@ -29,6 +28,6 @@ $script('/signalr/hubs', () => {
   // and injects the app into a DOM element.
   ReactDOM.render(
     <Provider store={store}>
-      <Router history={browserHistory} children={routes} />
+      <App />
     </Provider>, document.getElementById('react-app'))
 })
