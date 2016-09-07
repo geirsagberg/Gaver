@@ -79,8 +79,7 @@
   },
   "scripts": {
     "prepare": [
-      "npm install",
-      "webpack --config webpack.config.vendor.js"
+      "npm install"
     ],
     "prepublish": [
       "webpack"
