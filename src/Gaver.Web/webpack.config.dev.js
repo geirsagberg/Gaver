@@ -1,5 +1,5 @@
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'cheap-module-eval-source-map',
   module: {
     loaders: [
       // { test: /\.css$/, loader: 'style-loader!css-loader' }
