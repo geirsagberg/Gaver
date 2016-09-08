@@ -5,8 +5,8 @@
   "scripts": {
     "test": "foreach -g 'test/**/project.json' -x 'cd #{dir} && dotnet test'",
     "test:watch": "npm test && watch -p '**/*.cs' -c 'npm test'",
-    "start": "cd src/Gaver.Web && ASPNETCORE_ENVIRONMENT=Development dotnet run",
-    "watch": "cd src/Gaver.Web && ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
+    "start": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet run",
+    "watch": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
     "build": "dotnet build **/project.json"
   },
   "author": "Geir Sagberg",
@@ -22,6 +22,7 @@
     "watch-cli": "^0.2.1"
   },
   "dependencies": {
+    "cross-env": "^2.0.0",
     "scriptjs": "^2.5.8"
   }
 }
