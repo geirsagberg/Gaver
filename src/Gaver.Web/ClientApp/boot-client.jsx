@@ -10,7 +10,7 @@ import 'bootswatch/darkly/bootstrap.css'
 import 'toastr/build/toastr.css'
 import 'nprogress/nprogress.css'
 import './css/site.css'
-import App from './App'
+import createRoutes from './createRoutes'
 
 // Setup SignalR
 import 'ms-signalr-client'
@@ -21,6 +21,7 @@ setupProgress()
 const initialState = window.initialReduxState
 const store = configureStore(initialState)
 
+const Router = createRoutes(store)
 
 // Ensure the dynamic SignalR script is loaded before rendering
 $script('/signalr/hubs', () => {
@@ -28,6 +29,7 @@ $script('/signalr/hubs', () => {
   // and injects the app into a DOM element.
   ReactDOM.render(
     <Provider store={store}>
-      <App />
-    </Provider>, document.getElementById('react-app'))
+      {Router}
+    </Provider>, document.getElementById('react-app')
+  )
 })

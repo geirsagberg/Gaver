@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;
-using Gaver.Web.Features.WishList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;

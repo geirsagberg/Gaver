@@ -5,7 +5,8 @@ namespace Gaver.Data
 {
     public class GaverContext : DbContext
     {
-        public GaverContext() {
+	public GaverContext()
+	{
 
         }
 
@@ -15,6 +16,7 @@ namespace Gaver.Data
         }
 
         public DbSet<Wish> Wishes { get; set; }
-        public DbSet<WishList> WishLists {get;set; }
+	public DbSet<WishList> WishLists { get; set; }
+	public DbSet<User> Users { get; set; }
     }
 }
