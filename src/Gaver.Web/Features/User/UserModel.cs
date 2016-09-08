@@ -1,8 +1,11 @@
-﻿namespace Gaver.Web.Features
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Gaver.Web.Features
 {
     public class UserModel
     {
-	public int Id { get; set; }
-	public string Name { get; set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }
