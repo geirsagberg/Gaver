@@ -82,7 +82,7 @@ namespace Gaver.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env, GaverContext gaverContext)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
@@ -95,13 +95,13 @@ namespace Gaver.Web
                 loggerFactory
                     .WithFilter(new FilterLoggerSettings
                     {
+                        {"Microsoft.EntityFrameworkCore", LogLevel.Information},
                         {"Microsoft", LogLevel.Warning},
                         {"System", LogLevel.Warning}
                     })
                     .AddConsole(LogLevel.Debug);
 
                 app.UseDeveloperExceptionPage();
-
 
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
@@ -126,6 +126,8 @@ namespace Gaver.Web
                     name: "spa-fallback",
                     defaults: new {controller = "Home", action = "Index"});
             });
+
+            gaverContext.Database.EnsureCreated();
         }
 
         public static void Main(string[] args)

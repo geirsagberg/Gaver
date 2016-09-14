@@ -1,6 +1,6 @@
 import Immutable from 'seamless-immutable'
 import * as Api from './api'
-import showError from 'utils/dialogs'
+import { showError } from 'utils/notifications'
 
 const namespace = 'gaver/user/'
 
