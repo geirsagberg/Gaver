@@ -1,6 +1,6 @@
 import 'isomorphic-fetch'
 import Immutable from 'seamless-immutable'
-import { normalize, Schema } from 'normalizr'
+import { normalize } from 'normalizr'
 import Promise from 'bluebird'
 
 const headers = {
@@ -18,7 +18,8 @@ const handleResponse = schema => response => {
           : data.message
         throw new Error(message)
       }
-      return Immutable(normalize(data, schema))
+
+      return Immutable(schema ? normalize(data, schema) : data)
     })
   } else {
     return response.ok ? Promise.resolve() : Promise.reject('Something went wrong')
@@ -29,11 +30,11 @@ const handleError = () => {
   throw new Error('Could not reach server')
 }
 
-export function getJson (url, schema = new Schema('item')) {
+export function getJson (url, schema) {
   return fetch(url).then(handleResponse(schema), handleError)
 }
 
-export function postJson (url, data, schema = new Schema('item')) {
+export function postJson (url, data, schema) {
   return fetch(url, {
     method: 'POST',
     headers,
@@ -41,7 +42,7 @@ export function postJson (url, data, schema = new Schema('item')) {
   }).then(handleResponse(schema), handleError)
 }
 
-export function deleteJson (url, data, schema = new Schema('item')) {
+export function deleteJson (url, data, schema) {
   return fetch(url, {
     method: 'DELETE',
     headers,

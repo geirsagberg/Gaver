@@ -7,7 +7,7 @@ function wishes (state = Immutable({}), action) {
     // case actions.WISH_ADDED:
     //   return state.set(action.wish.id, action.wish)
     case actions.DATA_LOADED:
-      return action.data.entities.wishes
+      return action.data.entities.wishes || Immutable({})
     // case actions.WISH_DELETED:
     //   return state.without(action.id)
   }

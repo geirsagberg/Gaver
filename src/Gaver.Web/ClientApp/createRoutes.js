@@ -8,8 +8,8 @@ function requireAuth (store) {
   return function (nextState, replace) {
     if (!store.getState().user.isLoggedIn) {
       replace({
-	pathname: '/login',
-	state: { nextPathname: nextState.location.pathname }
+        pathname: '/login',
+        state: { nextPathname: nextState.location.pathname }
       })
     }
   }
@@ -18,9 +18,9 @@ function requireAuth (store) {
 export default function createRoutes (store) {
   return (
     <Router history={browserHistory}>
-      <Route path="/" component={Layout}>
-	<IndexRoute component={MyList} onEnter={requireAuth(store)} />
-	<Route path="login" component={Login} />
+      <Route path='/' component={Layout}>
+        <IndexRoute component={MyList} onEnter={requireAuth(store)} />
+        <Route path='login' component={Login} />
       </Route>
     </Router>
   )

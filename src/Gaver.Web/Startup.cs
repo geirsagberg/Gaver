@@ -55,8 +55,7 @@ namespace Gaver.Web
                 o.UseFromBodyBinding();
             });
             const string connectionString = "Data Source=MyDb.db";
-            services
-                .AddEntityFrameworkSqlite()
+            services.AddEntityFrameworkSqlite()
                 .AddDbContext<GaverContext>((serviceProvider, options) =>
                 {
                     options.UseSqlite(connectionString,

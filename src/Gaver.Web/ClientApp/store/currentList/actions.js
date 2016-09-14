@@ -7,6 +7,7 @@ import $ from 'jquery'
 import Immutable from 'seamless-immutable'
 import mapValues from 'lodash/mapValues'
 import { compose } from 'redux'
+import { wishes } from 'schemas'
 
 const actionNamespace = 'gaver/currentList/'
 
@@ -41,7 +42,7 @@ export const addWish = wish => async dispatch => {
 export const deleteWish = id => async dispatch => {
   try {
     await Api.deleteWish(id)
-    dispatch(wishDeleted(id))
+    // dispatch(wishDeleted(id))
   } catch (error) {
     showError(error)
   }
@@ -73,8 +74,8 @@ export const initializeListUpdates = () => async dispatch => {
   const { client, server } = $.connection.listHub
 
   let functions = {
-    updateUsers: users => Immutable(setUsers(users)),
-    refresh: data => loadData()
+    updateUsers: users => setUsers(Immutable(users)),
+    refresh: data => fetchDataSuccess(Immutable(normalize(data, wishes)))
   }
 
   functions = mapValues(functions, func => compose(dispatch, func))

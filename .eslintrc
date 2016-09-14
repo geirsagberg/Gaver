@@ -9,7 +9,6 @@
   "rules": {
     "eol-last": 0,
     "no-unused-vars": 1,
-    "jsx-quotes": ["warn", "prefer-double"],
     "comma-dangle": 0
   },
   "ignore": [

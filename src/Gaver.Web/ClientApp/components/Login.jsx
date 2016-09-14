@@ -8,27 +8,42 @@ class Login extends React.Component {
     return result
   }
 
+  static get contextTypes () {
+    return {
+      router: React.PropTypes.object.isRequired,
+      store: React.PropTypes.object
+    }
+  }
+
   logIn () {
     if (this.nameInput) {
-      this.props.logIn(this.nameInput.value)
+      this.props.logIn(this.nameInput.value, () => {
+        const { location } = this.props
+        const { router } = this.context
+        if (location.state && location.state.nextPathname) {
+          router.replace(location.state.nextPathname)
+        } else {
+          router.replace('/')
+        }
+      })
     }
   }
 
   render () {
     return (
       <div className="container">
-	<div className="well col-sm-6 col-centered">
-	  <h1>Gaver</h1>
-	  <div className="form-group">
-	    <label htmlFor="nameInput" className="control-label">
-	      Navn
-	    </label>
-	    <input ref={el => { this.nameInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn() } />
-	  </div>
-	  <button className="btn btn-primary" onClick={::this.logIn}>
-	    Logg inn
-	  </button>
-	</div>
+        <div className="well col-sm-6 col-centered">
+          <h1>Gaver</h1>
+          <div className="form-group">
+            <label htmlFor="nameInput" className="control-label">
+              Navn
+            </label>
+            <input ref={el => { this.nameInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn() } />
+          </div>
+          <button className="btn btn-primary" onClick={() => this.logIn()}>
+            Logg inn
+          </button>
+        </div>
       </div>
     )
   }

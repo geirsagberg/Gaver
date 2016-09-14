@@ -50,7 +50,7 @@ namespace Gaver.Web
     {
         void UpdateUsers(SubscriptionStatus status);
         void HeartBeat();
-        void Refresh(IEnumerable<Wish> get);
+        void Refresh(IEnumerable<Wish> wishes);
     }
 
     public class SubscriptionStatus
