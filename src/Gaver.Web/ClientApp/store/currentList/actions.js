@@ -32,7 +32,7 @@ export const loadData = () => async dispatch => {
 
 export const addWish = wish => async dispatch => {
   try {
-    const data = await Api.addWish(wish)
+    await Api.addWish(wish)
     // dispatch(fetchDataSuccess(data))
   } catch (error) {
     showError(error)
@@ -67,48 +67,44 @@ export const shareList = () => async dispatch => {
   }
 }
 
-const normalizeImmutableThenDispatch = (dispatch, func, schema) => compose(dispatch, Immutable, data => normalize(data, schema), func)
+const createCaller = dispatch =>
+  (func, schema) =>
+    data =>
+      compose(dispatch, func, Immutable, data => schema ? normalize(data, schema) : data)(data)
 
 export const initializeListUpdates = () => async dispatch => {
   $.connection.hub.logging = isDevelopment
-  const { client, server } = $.connection.listHub
-
-  let functions = {
-    updateUsers: users => setUsers(Immutable(users)),
-    refresh: data => fetchDataSuccess(Immutable(normalize(data, wishes)))
+  const { client } = $.connection.listHub
+  const call = createCaller(dispatch)
+  const functions = {
+    updateUsers: call(setUsers),
+    refresh: call(fetchDataSuccess, wishes)
   }
-
-  functions = mapValues(functions, func => compose(dispatch, func))
-
   $.extend(client, functions)
-
-  await $.connection.hub.start()
-  const users = await server.subscribe()
-  client.updateUsers(users)
 }
 
-export function wishAdded (wish) {
+export function wishAdded(wish) {
   return {
     type: WISH_ADDED,
     wish
   }
 }
 
-export function fetchDataSuccess (data) {
+export function fetchDataSuccess(data) {
   return {
     type: DATA_LOADED,
     data
   }
 }
 
-export function wishDeleted (id) {
+export function wishDeleted(id) {
   return {
     type: WISH_DELETED,
     id
   }
 }
 
-export function setUsers (users) {
+export function setUsers(users) {
   return {
     type: SET_USERS,
     users

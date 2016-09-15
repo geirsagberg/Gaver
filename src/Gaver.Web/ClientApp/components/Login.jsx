@@ -1,35 +1,45 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'store/user'
+import Cookies from 'js-cookie'
 
 class Login extends React.Component {
-  static get propTypes () {
+  componentDidMount() {
+    const name = Cookies.get('user')
+    if (name) {
+      this.props.logIn(name, ::this.redirect)
+    }
+  }
+
+  static get propTypes() {
     const result = {}
     return result
   }
 
-  static get contextTypes () {
+  static get contextTypes() {
     return {
       router: React.PropTypes.object.isRequired,
       store: React.PropTypes.object
     }
   }
 
-  logIn () {
-    if (this.nameInput) {
-      this.props.logIn(this.nameInput.value, () => {
-        const { location } = this.props
-        const { router } = this.context
-        if (location.state && location.state.nextPathname) {
-          router.replace(location.state.nextPathname)
-        } else {
-          router.replace('/')
-        }
-      })
+  redirect() {
+    const { location } = this.props
+    const { router } = this.context
+    if (location.state && location.state.nextPathname) {
+      router.replace(location.state.nextPathname)
+    } else {
+      router.replace('/')
     }
   }
 
-  render () {
+  logIn() {
+    if (this.nameInput) {
+      this.props.logIn(this.nameInput.value, ::this.redirect)
+    }
+  }
+
+  render() {
     return (
       <div className="container">
         <div className="well col-sm-6 col-centered">
@@ -40,7 +50,7 @@ class Login extends React.Component {
             </label>
             <input ref={el => { this.nameInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn() } />
           </div>
-          <button className="btn btn-primary" onClick={() => this.logIn()}>
+          <button className="btn btn-primary" onClick={() => this.logIn() }>
             Logg inn
           </button>
         </div>

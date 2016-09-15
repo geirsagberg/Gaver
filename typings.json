@@ -3,6 +3,7 @@
   "globalDependencies": {
     "history": "github:DefinitelyTyped/DefinitelyTyped/react-router/history.d.ts#9f0f926a12026287b5a4a229e5672c01e7549313",
     "isomorphic-fetch": "registry:dt/isomorphic-fetch#0.0.0+20160524142046",
+    "js-cookie": "registry:dt/js-cookie#2.0.0+20160317120654",
     "normalizr": "registry:dt/normalizr#2.0.1+20160501130729",
     "redux": "registry:dt/redux#3.5.2+20160703092728",
     "source-map": "github:DefinitelyTyped/DefinitelyTyped/source-map/source-map.d.ts#9f0f926a12026287b5a4a229e5672c01e7549313",

@@ -13,7 +13,6 @@ export default function configureStore (initialState) {
   const immutableInitialState = Immutable(initialState)
   const store = createStoreWithMiddleware(allReducers, immutableInitialState)
 
-
   // Enable Webpack hot module replacement for reducers
   if (module.hot) {
     module.hot.accept('./store', () => {

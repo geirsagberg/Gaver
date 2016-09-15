@@ -1,23 +1,39 @@
 import Immutable from 'seamless-immutable'
 import * as Api from './api'
 import { showError } from 'utils/notifications'
+import Cookies from 'js-cookie'
+import { browserHistory } from 'react-router'
+import $ from 'jquery'
 
 const namespace = 'gaver/user/'
 
-const LOG_OUT = namespace + 'LOG_OUT'
+const LOGGED_OUT = namespace + 'LOGGED_OUT'
 const LOG_IN_SUCCESSFUL = namespace + 'LOG_IN_SUCCESSFUL'
 
-export function reducer (state = Immutable({}), action) {
+const initialState = Immutable({})
+
+export function reducer (state = initialState, action = {}) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
       return action.user.merge({isLoggedIn: true})
+    case LOGGED_OUT:
+      return initialState
   }
   return state
 }
 
-export function logOut () {
+function loggedOut () {
   return {
-    type: LOG_OUT
+    type: LOGGED_OUT
+  }
+}
+
+export const logOut = () => dispatch => {
+  Cookies.remove('user')
+  dispatch(loggedOut())
+  browserHistory.push('/login')
+  return {
+    type: LOGGED_OUT
   }
 }
 
@@ -32,7 +48,12 @@ export const logIn = (name, redirect) => async dispatch => {
   try {
     var user = await Api.logIn(name)
     dispatch(logInSuccessful(user))
+    Cookies.set('user', user.name)
+    const { server, client } = $.connection.listHub
     redirect()
+    await $.connection.hub.start()
+    const users = await server.subscribe(user.name)
+    client.updateUsers(users)
   } catch (error) {
     showError(error)
   }

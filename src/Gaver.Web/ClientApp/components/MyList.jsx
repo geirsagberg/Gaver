@@ -3,6 +3,18 @@ import { connect } from 'react-redux'
 import * as currentListActions from 'store/currentList'
 import Immutable from 'seamless-immutable'
 import map from 'lodash/map'
+import { logOut } from 'store/user'
+import ReactTooltip from 'react-tooltip'
+
+const defaultMarginSize = '1rem'
+
+const defaultMargin = {
+  margin: defaultMarginSize
+}
+
+const flex = {
+  display: 'flex'
+}
 
 class MyList extends React.Component {
   componentDidMount () {
@@ -26,14 +38,16 @@ class MyList extends React.Component {
   render () {
     return (
     <div>
-      <header style={{display: 'flex', alignItems: 'center'}}>
+      <header style={{...flex, alignItems: 'center'}}>
         <h1 style={{flex: 1}}>Mine ønsker</h1>
-        <div style={{margin: '1rem'}}>
+        {this.props.userName && <div style={defaultMargin}>
+          {this.props.userName}
+        </div>}
+        <div style={defaultMargin} data-tip={this.props.users.join(', ')}>
           {this.props.count} <span className="icon-users" />
         </div>
-        <div className="btn-group">
-          <button type="button" className="btn btn-default" onClick={this.props.shareList}><span className="icon-share2"></span> Del</button>
-        </div>
+        <button className="btn btn-default" style={defaultMargin} onClick={this.props.shareList}><span className="icon-share2 icon-before" ></span>Del</button>
+        <button className="btn btn-default" style={{...defaultMargin, marginRight: 0}} onClick={this.props.logOut}><span className="icon-exit icon-before" />Logg ut</button>
       </header>
       <div className="input-group">
         <input className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={::this.onKeyUp} ref={el => (this.wishInput = el)} />
@@ -49,6 +63,7 @@ class MyList extends React.Component {
           </li>
           )}
       </ul>
+      <ReactTooltip />
     </div>
     )
   }
@@ -61,13 +76,23 @@ MyList.propTypes = {
   loadData: PropTypes.func,
   deleteWish: PropTypes.func,
   shareList: PropTypes.func,
-  initializeListUpdates: PropTypes.func
+  userName: PropTypes.string,
+  initializeListUpdates: PropTypes.func,
+  logOut: PropTypes.func,
+  users: PropTypes.array
 }
 
 const mapStateToProps = state => ({
-  wishes: state.currentList.wishes || Immutable([]),
-  count: state.currentList.users.count || 0
+  wishes: state.currentList.wishes || Immutable({}),
+  users: state.currentList.users.names || Immutable([]),
+  count: state.currentList.users.count || 0,
+  userName: state.user.name
 })
 
-export default connect(mapStateToProps, currentListActions)(MyList)
+const actions = {
+  ...currentListActions,
+  logOut
+}
+
+export default connect(mapStateToProps, actions)(MyList)
 

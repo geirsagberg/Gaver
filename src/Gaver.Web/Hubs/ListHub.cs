@@ -17,7 +17,7 @@ namespace Gaver.Web
 
         public const string ListGroup = "list";
         private readonly ILogger<ListHub> logger;
-        private static readonly HashSet<string> connections = new HashSet<string>();
+        private static readonly Dictionary<string, string> connections = new Dictionary<string, string>();
 
         public string Ping(string value)
         {
@@ -25,23 +25,34 @@ namespace Gaver.Web
             return value;
         }
 
-        public SubscriptionStatus Subscribe()
+        public SubscriptionStatus Subscribe(string name)
         {
-            connections.Add(Context.ConnectionId);
+            connections[Context.ConnectionId] = name;
             Groups.Add(Context.ConnectionId, ListGroup);
-            var status = new SubscriptionStatus
-            {
-                Count = connections.Count
-            };
+            var status = GetStatus();
             Clients.OthersInGroup(ListGroup).UpdateUsers(status);
             return status;
         }
 
-        public override Task OnDisconnected(bool stopCalled)
+        public void Unsubscribe()
         {
             connections.Remove(Context.ConnectionId);
             Groups.Remove(Context.ConnectionId, ListGroup);
-            Clients.Group(ListGroup).UpdateUsers(new SubscriptionStatus {Count = connections.Count});
+            Clients.Group(ListGroup).UpdateUsers(GetStatus());
+        }
+
+        private static SubscriptionStatus GetStatus()
+        {
+            return new SubscriptionStatus
+            {
+                Count = connections.Count,
+                Names = connections.Values
+            };
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            Unsubscribe();
             return base.OnDisconnected(stopCalled);
         }
     }
@@ -56,5 +67,6 @@ namespace Gaver.Web
     public class SubscriptionStatus
     {
         public int Count { get; set; }
+        public IEnumerable<string> Names { get; set; }
     }
 }

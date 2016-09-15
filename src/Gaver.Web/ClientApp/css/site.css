@@ -6,3 +6,11 @@
     float: none;
     margin: 0 auto;
 }
+
+.icon-before:before {
+  margin-right: 1rem;
+}
+
+.icon-after:before {
+  margin-left: 1rem;
+}

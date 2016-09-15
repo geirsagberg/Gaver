@@ -9,7 +9,8 @@
   "rules": {
     "eol-last": 0,
     "no-unused-vars": 1,
-    "comma-dangle": 0
+    "comma-dangle": 0,
+    "space-before-function-paren": 0
   },
   "ignore": [
     "bundle.js",
