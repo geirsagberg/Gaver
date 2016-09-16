@@ -2,10 +2,9 @@ import * as Api from './api'
 import { showPrompt } from 'utils/dialogs'
 import { showSuccess, showError } from 'utils/notifications'
 import { isDevelopment } from 'utils'
-import { normalize, Schema } from 'normalizr'
+import { normalize } from 'normalizr'
 import $ from 'jquery'
 import Immutable from 'seamless-immutable'
-import mapValues from 'lodash/mapValues'
 import { compose } from 'redux'
 import { wishes } from 'schemas'
 
@@ -33,7 +32,6 @@ export const loadData = () => async dispatch => {
 export const addWish = wish => async dispatch => {
   try {
     await Api.addWish(wish)
-    // dispatch(fetchDataSuccess(data))
   } catch (error) {
     showError(error)
   }
@@ -42,7 +40,6 @@ export const addWish = wish => async dispatch => {
 export const deleteWish = id => async dispatch => {
   try {
     await Api.deleteWish(id)
-    // dispatch(wishDeleted(id))
   } catch (error) {
     showError(error)
   }
@@ -69,8 +66,7 @@ export const shareList = () => async dispatch => {
 
 const createCaller = dispatch =>
   (func, schema) =>
-    data =>
-      compose(dispatch, func, Immutable, data => schema ? normalize(data, schema) : data)(data)
+      compose(dispatch, func, Immutable, data => schema ? normalize(data, schema) : data)
 
 export const initializeListUpdates = () => async dispatch => {
   $.connection.hub.logging = isDevelopment
