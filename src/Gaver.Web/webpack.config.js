@@ -5,6 +5,8 @@ var merge = require('extendify')({ isDeep: true, arrays: 'concat' })
 var devConfig = require('./webpack.config.dev')
 var prodConfig = require('./webpack.config.prod')
 var isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
+var autoPrefixer = require('autoprefixer')
+var precss = require('precss')
 
 module.exports = merge({
   resolve: {
@@ -16,8 +18,11 @@ module.exports = merge({
       { test: /jquery\.js$/, loader: 'expose?jQuery!expose?$' },
       { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel-loader' },
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap') }
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader?sourceMap=inline') }
     ]
+  },
+  postcss: function () {
+    return [autoPrefixer, precss]
   },
   entry: {
     main: ['./ClientApp/boot-client.jsx']

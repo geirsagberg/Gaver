@@ -1,0 +1,13 @@
+.header {
+  display: flex;
+  align-items: center;
+
+  &_item {
+    margin: 0 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+

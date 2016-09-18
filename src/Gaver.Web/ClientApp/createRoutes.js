@@ -3,6 +3,7 @@ import { browserHistory, Router, IndexRoute, Route } from 'react-router'
 import Layout from './components/Layout'
 import MyList from './components/MyList'
 import Login from './components/Login'
+import SharedList from './components/SharedList'
 
 function requireAuth (store) {
   return function (nextState, replace) {
@@ -20,6 +21,7 @@ export default function createRoutes (store) {
     <Router history={browserHistory}>
       <Route path='/' component={Layout}>
         <IndexRoute component={MyList} onEnter={requireAuth(store)} />
+        <Route path='list/:id' component={SharedList} onEnter={requireAuth(store)} />
         <Route path='login' component={Login} />
       </Route>
     </Router>
