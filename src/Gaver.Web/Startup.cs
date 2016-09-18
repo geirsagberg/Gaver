@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Claims;
 using Gaver.Data;
 using Gaver.Logic;
 using LightInject;
@@ -108,6 +109,17 @@ namespace Gaver.Web
                     ReactHotModuleReplacement = true
                 });
             }
+
+            app.Use(async (context, next) => {
+                string user;
+                if (context.Request.Cookies.TryGetValue("user", out user)) {
+                    context.User = new ClaimsPrincipal(new ClaimsIdentity(new[] {
+                        new Claim(ClaimTypes.Name, user)
+                    }, "Custom"));
+                }
+
+                await next.Invoke();
+            });
 
             app.UseFileServer();
             app.UseWebSockets();

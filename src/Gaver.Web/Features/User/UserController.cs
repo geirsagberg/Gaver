@@ -16,7 +16,8 @@ namespace Gaver.Web.Features
         [HttpPost("LogIn")]
         public UserModel LogIn(LogInRequest request)
         {
-            return mediator.Send(request);
+            var userModel = mediator.Send(request);
+            return userModel;
         }
     }
 }

@@ -29,6 +29,8 @@ namespace Gaver.Web.Features.WishList
         [HttpGet]
         public IEnumerable<Wish> Get()
         {
+            var user = User;
+            var name = user.Identity.Name;
             return mediator.Send(new GetWishesRequest());
         }
 
