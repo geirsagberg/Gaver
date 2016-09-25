@@ -120,6 +120,7 @@ namespace Gaver.Web
             });
 
             app.UseFileServer();
+            app.UseWebSockets();
             app.UseSignalR();
 
             app.UseSwagger();
