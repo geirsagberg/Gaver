@@ -1,18 +1,25 @@
-﻿<!DOCTYPE html>
+﻿@using Newtonsoft.Json
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewData["Title"] - Gaver.Web</title>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>@ViewData["Title"] - Gaver.Web</title>
 
-        <!--<link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />-->
-        <link rel="stylesheet" href="~/icomoon/style.css" asp-append-version="true" />
-	<link rel="stylesheet" href="~/dist/styles.css" asp-append-version="true" />
-    </head>
-    <body>
-        @RenderBody()
-
-        <!--<script src="~/dist/vendor.js" asp-append-version="true"></script>-->
-        @RenderSection("scripts", required: false)
-    </body>
+  <link rel="stylesheet" href="~/icomoon/style.css" asp-append-version="true"/>
+  <link rel="stylesheet" href="~/dist/styles.css" asp-append-version="true"/>
+</head>
+<body>
+  @RenderBody()
+  
+  <script>
+    window.initialReduxState = @Json.Serialize(new {
+                                 User = new {
+                                   User.Identity.Name,
+                                   User.Identity.IsAuthenticated
+                                 }
+                               })
+  </script>
+  @RenderSection("scripts", false)
+</body>
 </html>

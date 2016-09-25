@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Logic;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -11,17 +10,16 @@ using Microsoft.AspNetCore.SignalR.Infrastructure;
 namespace Gaver.Web.Features.WishList
 {
     [Route("api/[controller]")]
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class WishController : Controller
     {
         private readonly GaverContext gaverContext;
-        private readonly IMailSender mailSender;
-        private readonly IMediator mediator;
         private readonly IHubContext<ListHub, IListHubClient> hub;
+        private readonly IMediator mediator;
 
-        public WishController(GaverContext gaverContext, IMailSender mailSender, IMediator mediator, IConnectionManager signalRManager)
+        public WishController(GaverContext gaverContext, IMediator mediator, IConnectionManager signalRManager)
         {
             this.gaverContext = gaverContext;
-            this.mailSender = mailSender;
             this.mediator = mediator;
             hub = signalRManager.GetHubContext<ListHub, IListHubClient>();
         }
@@ -35,20 +33,19 @@ namespace Gaver.Web.Features.WishList
         }
 
         [HttpPost]
-        public Wish Post([FromBody]string title)
+        public Wish Post([FromBody] string title)
         {
-            var wish = new Wish
-            {
+            var wish = new Wish {
                 Title = title
             };
-            gaverContext.Set<Wish>().Add(wish);
+            gaverContext.Add(wish);
             gaverContext.SaveChanges();
             RefreshData();
             return wish;
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string title)
+        public void Put(int id, [FromBody] string title)
         {
             var wish = gaverContext.GetOrDie<Wish>(id);
             wish.Title = title;

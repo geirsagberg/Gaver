@@ -28,8 +28,9 @@ function loggedOut () {
   }
 }
 
-export const logOut = () => dispatch => {
+export const logOut = () => async dispatch => {
   Cookies.remove('user')
+  await Api.logOut()
   dispatch(loggedOut())
   browserHistory.push('/login')
   return {

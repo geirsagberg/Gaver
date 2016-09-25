@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features
@@ -14,10 +17,20 @@ namespace Gaver.Web.Features
         }
 
         [HttpPost("LogIn")]
-        public UserModel LogIn(LogInRequest request)
+        public async Task<UserModel> LogIn(LogInRequest request)
         {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new[] {
+                new Claim(ClaimTypes.Name, request.Name)
+            }, CookieAuthenticationDefaults.AuthenticationScheme));
+            await HttpContext.Authentication.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user);
             var userModel = mediator.Send(request);
             return userModel;
+        }
+
+        [HttpPost("LogOut")]
+        public async Task LogOut()
+        {
+            await HttpContext.Authentication.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

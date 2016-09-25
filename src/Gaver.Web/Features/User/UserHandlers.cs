@@ -2,6 +2,7 @@ using System.Linq;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;
+using Gaver.Logic.Contracts;
 using MediatR;
 
 namespace Gaver.Web.Features

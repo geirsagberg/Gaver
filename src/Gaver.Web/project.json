@@ -52,13 +52,14 @@
     "Microsoft.EntityFrameworkCore.Sqlite": "1.0.*",
     "Microsoft.EntityFrameworkCore.Design": "1.0.0-preview2-final",
     "WebApiContrib.Core": "1.0.*",
-    "Swashbuckle": "6.0.0-beta902",
-    "MediatR": "3.0.0-geir",
+    "Swashbuckle": "6.0.0-beta*",
+    "MediatR": "2.1.0",
     "LightInject.Microsoft.DependencyInjection": "1.0.1",
     "Serilog": "2.1.0",
     "Serilog.Extensions.Logging": "1.2.0",
     "Serilog.Sinks.Literate": "2.0.0",
-    "Serilog.Sinks.ColoredConsole": "2.0.0"
+    "Serilog.Sinks.ColoredConsole": "2.0.0",
+    "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0"
   },
   "frameworks": {
     "netcoreapp1.0": {

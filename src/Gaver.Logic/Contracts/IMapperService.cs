@@ -1,6 +1,7 @@
-namespace Gaver.Logic
+namespace Gaver.Logic.Contracts
 {
-    public interface IMapperService {
+    public interface IMapperService
+    {
         TTo Map<TFrom, TTo>(TFrom source);
     }
 }

@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;
+using Gaver.Logic.Contracts;
 using MediatR;
 
 namespace Gaver.Web.Features.WishList
@@ -24,7 +24,7 @@ namespace Gaver.Web.Features.WishList
         }
     }
 
-    public class ShareListHandler : IAsyncRequestHandler<ShareListRequest>
+    public class ShareListHandler : IAsyncRequestHandler<ShareListRequest, Unit>
     {
         private readonly IMailSender mailSender;
 
@@ -33,10 +33,9 @@ namespace Gaver.Web.Features.WishList
             this.mailSender = mailSender;
         }
 
-        public async Task Handle(ShareListRequest message)
+        public async Task<Unit> Handle(ShareListRequest message)
         {
-            var mail = new Mail
-            {
+            var mail = new Mail {
                 To = message.Emails,
                 From = "noreply@sagberg.net",
                 Subject = "Noen har delt en ønskeliste med deg",
@@ -44,6 +43,7 @@ namespace Gaver.Web.Features.WishList
                 <p><a href='http://localhost/5000'>Klikk her for å se listen.</a></p>"
             };
             await mailSender.SendAsync(mail);
+            return Unit.Value;
         }
     }
 }

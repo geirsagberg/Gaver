@@ -1,10 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Gaver.Logic.Contracts;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Gaver.Logic
+namespace Gaver.Logic.Services
 {
     public class MailSender : IMailSender
     {

@@ -31,13 +31,16 @@ const handleError = () => {
 }
 
 export function getJson (url, schema) {
-  return fetch(url).then(handleResponse(schema), handleError)
+  return fetch(url, {
+    credentials: 'include'
+  }).then(handleResponse(schema), handleError)
 }
 
 export function postJson (url, data, schema) {
   return fetch(url, {
     method: 'POST',
     headers,
+    credentials: 'include',
     body: JSON.stringify(data)
   }).then(handleResponse(schema), handleError)
 }
@@ -46,6 +49,7 @@ export function deleteJson (url, data, schema) {
   return fetch(url, {
     method: 'DELETE',
     headers,
+    credentials: 'include',
     body: JSON.stringify(data)
   }).then(handleResponse(schema), handleError)
 }

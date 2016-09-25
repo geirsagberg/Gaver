@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Security.Claims;
 using Gaver.Data;
 using Gaver.Logic;
+using Gaver.Logic.Contracts;
+using Gaver.Logic.Services;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 using MediatR;
@@ -47,6 +49,8 @@ namespace Gaver.Web
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
+            services.AddAuthentication();
+            services.AddAuthorization();
             services.Configure<MailOptions>(Configuration.GetSection("mail"));
 
             services.AddMvc(o =>
@@ -82,7 +86,7 @@ namespace Gaver.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env, GaverContext gaverContext)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
@@ -110,19 +114,12 @@ namespace Gaver.Web
                 });
             }
 
-            app.Use(async (context, next) => {
-                string user;
-                if (context.Request.Cookies.TryGetValue("user", out user)) {
-                    context.User = new ClaimsPrincipal(new ClaimsIdentity(new[] {
-                        new Claim(ClaimTypes.Name, user)
-                    }, "Custom"));
-                }
-
-                await next.Invoke();
+            app.UseCookieAuthentication(new CookieAuthenticationOptions {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = false
             });
 
             app.UseFileServer();
-            app.UseWebSockets();
             app.UseSignalR();
 
             app.UseSwagger();
@@ -137,8 +134,6 @@ namespace Gaver.Web
                     name: "spa-fallback",
                     defaults: new {controller = "Home", action = "Index"});
             });
-
-            gaverContext.Database.EnsureCreated();
         }
 
         public static void Main(string[] args)
@@ -149,6 +144,10 @@ namespace Gaver.Web
                 .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();
+
+            using (var context = host.Services.GetRequiredService<GaverContext>()) {
+                context.Database.EnsureCreated();
+            }
 
             host.Run();
         }

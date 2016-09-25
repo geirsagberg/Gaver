@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Gaver.Logic.Contracts;
 
-namespace Gaver.Logic
+namespace Gaver.Logic.Services
 {
     public class MapperService : IMapperService
     {
