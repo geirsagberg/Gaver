@@ -24,6 +24,10 @@ using WebApiContrib.Core.Filters;
 
 namespace Gaver.Web
 {
+    public class GaverPrincipal : ClaimsPrincipal {
+	public GaverPrincipal(ClaimsIdentity identity) : base(identity) {}
+    }
+
     public class Startup
     {
         public IConfiguration Configuration { get; }
