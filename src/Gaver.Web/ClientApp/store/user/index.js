@@ -12,7 +12,7 @@ const LOG_IN_SUCCESSFUL = namespace + 'LOG_IN_SUCCESSFUL'
 
 const initialState = Immutable({})
 
-export function reducer (state = initialState, action = {}) {
+export default function reducer (state = initialState, action = {}) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
       return action.user.merge({isLoggedIn: true})

@@ -100,10 +100,11 @@ namespace Gaver.Web
                     .WithFilter(new FilterLoggerSettings
                     {
                         {"Microsoft.EntityFrameworkCore", LogLevel.Information},
+                        {"Microsoft.AspNetCore.NodeServices",
+                        LogLevel.Information},
                         {"Microsoft", LogLevel.Warning},
                         {"System", LogLevel.Warning}
                     })
-                    // .AddSerilog()
                     .AddConsole(LogLevel.Debug);
 
                 app.UseDeveloperExceptionPage();

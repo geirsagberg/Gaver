@@ -11,6 +11,10 @@ class SharedList extends React.Component {
     return result
   }
 
+  componentDidMount() {
+    this.props.loadData()
+  }
+
   render () {
     return (
       <div>
@@ -47,9 +51,9 @@ class SharedList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  wishes: state.currentList.wishes || Immutable({}),
-  users: state.currentList.users.names || Immutable([]),
-  count: state.currentList.users.count || 0,
+  wishes: state.myList.wishes || Immutable({}),
+  users: state.myList.users.names || Immutable([]),
+  count: state.myList.users.count || 0,
   userName: state.user.name
 })
 

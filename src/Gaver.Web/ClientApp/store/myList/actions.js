@@ -8,7 +8,7 @@ import Immutable from 'seamless-immutable'
 import { compose } from 'redux'
 import { wishes } from 'schemas'
 
-const actionNamespace = 'gaver/currentList/'
+const actionNamespace = 'gaver/myList/'
 
 export const ADD_WISH = actionNamespace + 'ADD_WISH'
 export const LOAD_DATA = actionNamespace + 'LOAD_DATA'
@@ -20,7 +20,7 @@ export const SHARE_LIST = actionNamespace + 'SHARE_LIST'
 export const INITIALIZE_LIST_UPDATES = actionNamespace + 'INITIALIZE_LIST_UPDATES'
 export const SET_USERS = actionNamespace + 'SET_COUNT'
 
-export const loadData = () => async dispatch => {
+export const loadMyList = () => async dispatch => {
   try {
     const data = await Api.fetchWishData()
     dispatch(fetchDataSuccess(data))

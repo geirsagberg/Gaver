@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import * as currentListActions from 'store/currentList'
+import * as myListActions from 'store/myList'
 import Immutable from 'seamless-immutable'
 import map from 'lodash/map'
 import { logOut } from 'store/user'
@@ -10,7 +10,7 @@ import classNames from 'classnames'
 
 class MyList extends React.Component {
   componentDidMount() {
-    this.props.loadData()
+    this.props.loadMyList()
   }
 
   onKeyUp(e) {
@@ -69,20 +69,20 @@ MyList.propTypes = {
   wishes: PropTypes.object,
   count: PropTypes.number,
   addWish: PropTypes.func,
-  loadData: PropTypes.func,
+  loadMyList: PropTypes.func,
   deleteWish: PropTypes.func,
   shareList: PropTypes.func,
   userName: PropTypes.string,
-  logOut: PropTypes.func,
+  logOut: PropTypes.func
 }
 
 const mapStateToProps = state => ({
-  wishes: state.currentList.wishes || Immutable({}),
+  wishes: state.myList.wishes || Immutable({}),
   userName: state.user.name
 })
 
 const actions = {
-  ...currentListActions,
+  ...myListActions,
   logOut
 }
 
