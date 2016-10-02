@@ -52,9 +52,9 @@ export const logIn = (name, redirect) => async dispatch => {
     Cookies.set('user', user.name)
     const { server, client } = $.connection.listHub
     redirect()
-    await $.connection.hub.start()
-    const users = await server.subscribe(user.name)
-    client.updateUsers(users)
+    // await $.connection.hub.start()
+    // const users = await server.subscribe(user.name)
+    // client.updateUsers(users)
   } catch (error) {
     showError(error)
   }

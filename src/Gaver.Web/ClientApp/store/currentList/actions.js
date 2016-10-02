@@ -29,9 +29,10 @@ export const loadData = () => async dispatch => {
   }
 }
 
-export const addWish = wish => async dispatch => {
+export const addWish = title => async dispatch => {
   try {
-    await Api.addWish(wish)
+    const wish = await Api.addWish(title)
+    dispatch(wishAdded(wish))
   } catch (error) {
     showError(error)
   }
@@ -40,6 +41,7 @@ export const addWish = wish => async dispatch => {
 export const deleteWish = id => async dispatch => {
   try {
     await Api.deleteWish(id)
+    dispatch(wishDeleted(id))
   } catch (error) {
     showError(error)
   }
@@ -65,8 +67,8 @@ export const shareList = () => async dispatch => {
 }
 
 const createCaller = dispatch =>
-  (func, schema) =>
-      compose(dispatch, func, Immutable, data => schema ? normalize(data, schema) : data)
+  (action, schema) =>
+      compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
 
 export const initializeListUpdates = () => async dispatch => {
   $.connection.hub.logging = isDevelopment
@@ -82,7 +84,7 @@ export const initializeListUpdates = () => async dispatch => {
 export function wishAdded(wish) {
   return {
     type: WISH_ADDED,
-    wish
+    data: wish
   }
 }
 

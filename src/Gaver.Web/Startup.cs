@@ -24,10 +24,6 @@ using WebApiContrib.Core.Filters;
 
 namespace Gaver.Web
 {
-    public class GaverPrincipal : ClaimsPrincipal {
-	public GaverPrincipal(ClaimsIdentity identity) : base(identity) {}
-    }
-
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -107,6 +103,7 @@ namespace Gaver.Web
                         {"Microsoft", LogLevel.Warning},
                         {"System", LogLevel.Warning}
                     })
+                    // .AddSerilog()
                     .AddConsole(LogLevel.Debug);
 
                 app.UseDeveloperExceptionPage();

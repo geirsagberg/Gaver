@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Gaver.Data.Entities;
+using Gaver.Web.Features.WishList;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Hubs;
 using Microsoft.Extensions.Logging;
@@ -15,9 +16,9 @@ namespace Gaver.Web
             this.logger = logger;
         }
 
-        public const string ListGroup = "list";
         private readonly ILogger<ListHub> logger;
-        private static readonly Dictionary<string, string> connections = new Dictionary<string, string>();
+        private static readonly HashSet<UserListConnection> userListConnections
+            = new HashSet<UserListConnection>();
 
         public string Ping(string value)
         {
@@ -25,28 +26,46 @@ namespace Gaver.Web
             return value;
         }
 
-        public SubscriptionStatus Subscribe(string name)
+        public static string GetGroup(int listId) => $"List-{listId}";
+
+        [Authorize]
+        public SubscriptionStatus Subscribe(int listId)
         {
-            connections[Context.ConnectionId] = name;
-            Groups.Add(Context.ConnectionId, ListGroup);
-            var status = GetStatus();
-            Clients.OthersInGroup(ListGroup).UpdateUsers(status);
+            var userName = Context.User.Identity.Name;
+            var connectionId = Context.ConnectionId;
+            userListConnections.Add(new UserListConnection
+            {
+                UserName = userName,
+                ListId = listId,
+                ConnectionId = connectionId
+            });
+            var group = GetGroup(listId);
+            Groups.Add(Context.ConnectionId, group);
+            var status = GetStatus(listId);
+            Clients.OthersInGroup(group).UpdateUsers(status);
             return status;
         }
 
+        [Authorize]
         public void Unsubscribe()
         {
-            connections.Remove(Context.ConnectionId);
-            Groups.Remove(Context.ConnectionId, ListGroup);
-            Clients.Group(ListGroup).UpdateUsers(GetStatus());
+            var listIds = userListConnections
+                .Where(c => c.ConnectionId == Context.ConnectionId)
+                .Select(c => c.ListId);
+            userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
+            foreach (var listId in listIds)
+            {
+                Clients.Group(GetGroup(listId)).UpdateUsers(GetStatus(listId));
+            }
         }
 
-        private static SubscriptionStatus GetStatus()
+        private static SubscriptionStatus GetStatus(int listId)
         {
+            var connections = userListConnections.Where(c => c.ListId == listId).ToList();
             return new SubscriptionStatus
             {
                 Count = connections.Count,
-                Names = connections.Values
+                Names = connections.Select(c => c.UserName)
             };
         }
 
@@ -57,11 +76,24 @@ namespace Gaver.Web
         }
     }
 
+    public static class ListHubExtensions {
+
+        public static void RefreshData(this IHubContext<ListHub, IListHubClient> hub, int listId, SharedListModel model)
+            => hub.Clients.Group(ListHub.GetGroup(listId)).Refresh(model);
+    }
+
+    public class UserListConnection
+    {
+        public string UserName { get; set; }
+        public int ListId { get; set; }
+        public string ConnectionId { get; set; }
+    }
+
     public interface IListHubClient
     {
         void UpdateUsers(SubscriptionStatus status);
         void HeartBeat();
-        void Refresh(IEnumerable<Wish> wishes);
+        void Refresh(SharedListModel model);
     }
 
     public class SubscriptionStatus

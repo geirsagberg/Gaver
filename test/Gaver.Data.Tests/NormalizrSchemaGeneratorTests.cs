@@ -30,6 +30,7 @@ namespace Gaver.Data.Tests
             var output = NormalizrSchemaGenerator.GetSchema(model);
 
             output.Should().Be("import { Schema, arryaOf } from 'normalizr'\n"
+                + "export const User = new Schema('users')\n"
                 + "export const Wish = new Schema('wishes')\n"
                 + "export const WishList = new Schema('wishLists')\n");
         }

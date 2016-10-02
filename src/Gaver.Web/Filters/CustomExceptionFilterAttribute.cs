@@ -9,18 +9,11 @@ namespace Gaver.Web
 {
     public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        // private readonly ILogger logger;
-
-        public CustomExceptionFilterAttribute()
-        {
-            // this.logger = logger;
-        }
-
         public override void OnException(ExceptionContext context)
         {
-            // logger.LogError(EventIds.ApiError, context.Exception, "Error in " + context.HttpContext.Request.Path);
-
-            // Console.Error.WriteLine(context.Exception);
+            var loggerFactory = (ILoggerFactory) context.HttpContext.RequestServices.GetService(typeof(ILoggerFactory));
+            var logger = loggerFactory.CreateLogger("API Error");
+            logger.LogError(EventIds.ApiError, context.Exception, "Error in " + context.HttpContext.Request.Path);
 
             if (context.HttpContext.Request.Path.ToUriComponent().Contains("/api/"))
             {

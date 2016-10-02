@@ -8,9 +8,10 @@ using Gaver.Data;
 namespace Gaver.Web.Migrations
 {
     [DbContext(typeof(GaverContext))]
-    partial class GaverContextModelSnapshot : ModelSnapshot
+    [Migration("20161001162843_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1");

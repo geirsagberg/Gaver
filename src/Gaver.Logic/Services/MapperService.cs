@@ -40,9 +40,9 @@ namespace Gaver.Logic.Services
             mapper = mapperConfig.CreateMapper();
         }
 
-        public TTo Map<TFrom, TTo>(TFrom source)
+        public TTo Map<TTo>(object source)
         {
-            return mapper.Map<TFrom, TTo>(source);
+            return mapper.Map<TTo>(source);
         }
 
         public void ValidateMappings() => mapper.ConfigurationProvider.AssertConfigurationIsValid();

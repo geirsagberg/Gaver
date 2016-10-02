@@ -22,7 +22,7 @@ namespace Gaver.Logic.Services
 
         public async Task SendAsync(Mail mail)
         {
-            var sendGridMail = mapper.Map<Mail, SendGridMail>(mail);
+            var sendGridMail = mapper.Map<SendGridMail>(mail);
             try
             {
                 var response = await options.SendGridUrl

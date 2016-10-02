@@ -11,7 +11,6 @@ import classNames from 'classnames'
 class MyList extends React.Component {
   componentDidMount() {
     this.props.loadData()
-    this.props.initializeListUpdates()
   }
 
   onKeyUp(e) {
@@ -35,9 +34,6 @@ class MyList extends React.Component {
           {this.props.userName && <div className="header_item">
             {this.props.userName}
           </div>}
-          <div className="header_item" data-tip={this.props.users.join(', ') }>
-            {this.props.count} <span className="icon-users" />
-          </div>
           <button className={classNames('btn btn-default header_item')} onClick={this.props.shareList}>
             <span className="icon-share2 icon-before" />
             Del
@@ -60,7 +56,7 @@ class MyList extends React.Component {
                 <span>{wish.title}</span>
                 <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish(wish.id) }>Fjern</button>
               </li>
-            ) }
+            )}
           </ul>
         </div>
         <ReactTooltip />
@@ -77,15 +73,11 @@ MyList.propTypes = {
   deleteWish: PropTypes.func,
   shareList: PropTypes.func,
   userName: PropTypes.string,
-  initializeListUpdates: PropTypes.func,
   logOut: PropTypes.func,
-  users: PropTypes.array
 }
 
 const mapStateToProps = state => ({
   wishes: state.currentList.wishes || Immutable({}),
-  users: state.currentList.users.names || Immutable([]),
-  count: state.currentList.users.count || 0,
   userName: state.user.name
 })
 

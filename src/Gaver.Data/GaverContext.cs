@@ -20,6 +20,9 @@ namespace Gaver.Data
             modelBuilder.Entity<User>(entity => {
                 entity.HasIndex(u => u.Name).IsUnique();
             });
+            modelBuilder.Entity<WishList>(entity => {
+                entity.HasMany(wl => wl.Wishes).WithOne(w => w.WishList).HasForeignKey(w => w.WishListId).IsRequired();
+            });
         }
 
         public DbSet<Wish> Wishes { get; set; }

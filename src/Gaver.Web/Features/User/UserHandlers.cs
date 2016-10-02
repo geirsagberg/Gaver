@@ -7,12 +7,12 @@ using MediatR;
 
 namespace Gaver.Web.Features
 {
-    public class LogInRequestHandler : IRequestHandler<LogInRequest, UserModel>
+    public class LogInHandler : IRequestHandler<LogInRequest, UserModel>
     {
         private readonly GaverContext context;
         private readonly IMapperService mapper;
 
-        public LogInRequestHandler(GaverContext context, IMapperService mapper)
+        public LogInHandler(GaverContext context, IMapperService mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -31,7 +31,16 @@ namespace Gaver.Web.Features
                 context.Users.Add(user);
                 context.SaveChanges();
             }
-            return mapper.Map<User, UserModel>(user);
+            var wishList = context.WishLists.FirstOrDefault(l => l.UserId == user.Id);
+            if (wishList == null) {
+                wishList = new Data.Entities.WishList
+                {
+                    UserId = user.Id
+                };
+                context.WishLists.Add(wishList);
+                context.SaveChanges();
+            }
+            return mapper.Map<UserModel>(user);
         }
     }
 }
