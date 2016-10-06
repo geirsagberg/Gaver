@@ -8,9 +8,11 @@ namespace Gaver.Logic.Services
     public class MapperService : IMapperService
     {
         private readonly IMapper mapper;
+        public IConfigurationProvider MapperConfiguration { get; }
+
         public MapperService(IEnumerable<Profile> profiles)
         {
-            var mapperConfig = new MapperConfiguration(config =>
+            MapperConfiguration = new MapperConfiguration(config =>
             {
                 config.CreateMissingTypeMaps = true;
                 config.CreateMap<Mail, SendGridMail>()
@@ -37,7 +39,7 @@ namespace Gaver.Logic.Services
                     config.AddProfile(profile);
                 }
             });
-            mapper = mapperConfig.CreateMapper();
+            mapper = MapperConfiguration.CreateMapper();
         }
 
         public TTo Map<TTo>(object source)

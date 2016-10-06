@@ -4,6 +4,8 @@ import map from 'lodash/map'
 import ReactTooltip from 'react-tooltip'
 import { connect } from 'react-redux'
 import Immutable from 'seamless-immutable'
+import * as sharedListActions from 'store/sharedList'
+import _get from 'lodash/get'
 
 class SharedList extends React.Component {
   static get propTypes() {
@@ -12,14 +14,14 @@ class SharedList extends React.Component {
   }
 
   componentDidMount() {
-    this.props.loadData()
+    this.props.loadSharedList(this.props.params.id)
   }
 
   render () {
     return (
       <div>
         <header className="header">
-          <h1 style={{ flex: 1 }}>Mine ønsker</h1>
+          <h1 style={{ flex: 1 }}>{this.props.owner} sine ønsker</h1>
           {this.props.userName && <div className="header_item">
             {this.props.userName}
           </div>}
@@ -51,10 +53,11 @@ class SharedList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  wishes: state.myList.wishes || Immutable({}),
-  users: state.myList.users.names || Immutable([]),
-  count: state.myList.users.count || 0,
+  wishes: _get(state, 'sharedList.wishes', Immutable({})),
+  users: _get(state, 'sharedList.users.names', Immutable([])),
+  count: _get(state, 'sharedList.users.count', 0),
+  owner: _get(state, 'sharedList.owner', ''),
   userName: state.user.name
 })
 
-export default connect(mapStateToProps)(SharedList)
+export default connect(mapStateToProps, sharedListActions)(SharedList)

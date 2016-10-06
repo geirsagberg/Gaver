@@ -22,7 +22,7 @@ const handleResponse = schema => response => {
       return Immutable(schema ? normalize(data, schema) : data)
     })
   } else {
-    return response.ok ? Promise.resolve() : Promise.reject('Something went wrong')
+    return response.ok ? Promise.resolve() : Promise.reject(new Error('Something went wrong'))
   }
 }
 

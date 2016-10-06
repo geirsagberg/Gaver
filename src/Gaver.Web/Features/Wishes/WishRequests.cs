@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using MediatR;
 
-namespace Gaver.Web.Features.WishList
+namespace Gaver.Web.Features.Wishes
 {
     public class GetMyListRequest : IRequest<MyListModel>
     {
@@ -30,10 +30,12 @@ namespace Gaver.Web.Features.WishList
     public class AuthenticatedAddWishRequest : AddWishRequest, IRequest<WishModel>
     {
         public string UserName { get; set; }
+        public int WishListId { get; set; }
     }
 
     public class DeleteWishRequest : IRequest
     {
         public int WishId { get; set; }
+        public int WishListId { get; set; }
     }
 }

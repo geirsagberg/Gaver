@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.Execution;
+using AutoMapper.QueryableExtensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;
 using Gaver.Logic.Contracts;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Gaver.Web.Features.WishList
+namespace Gaver.Web.Features.Wishes
 {
     public class GetMyListHandler : IRequestHandler<GetMyListRequest, MyListModel>
     {
@@ -22,12 +25,33 @@ namespace Gaver.Web.Features.WishList
 
         public MyListModel Handle(GetMyListRequest message)
         {
-            var wishes = context.Set<Wish>().Where(w => w.WishList.User.Name == message.UserName);
-            var wishModels = mapperService.Map<IList<WishModel>>(wishes);
+            var wishList = context.Set<WishList>().Include(wl => wl.Wishes).Single(wl => wl.User.Name == message.UserName);
+            var wishModels = mapperService.Map<IList<WishModel>>(wishList.Wishes);
             return new MyListModel
             {
+                Id = wishList.Id,
+                Title = wishList.Title,
                 Wishes = wishModels
             };
+        }
+    }
+
+    public class GetSharedListHandler : IRequestHandler<GetSharedListRequest, SharedListModel> {
+        private readonly GaverContext context;
+        private readonly IMapperService mapperService;
+
+        public GetSharedListHandler(GaverContext context, IMapperService mapperService)
+        {
+            this.context = context;
+            this.mapperService = mapperService;
+        }
+
+        public SharedListModel Handle(GetSharedListRequest message)
+        {
+            var wishList = context.Set<WishList>().Where(wl => wl.Id == message.ListId)
+                .ProjectTo<SharedListModel>(mapperService.MapperConfiguration).Single();
+
+            return wishList;
         }
     }
 

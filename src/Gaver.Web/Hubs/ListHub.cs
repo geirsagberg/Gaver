@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Gaver.Web.Features.WishList;
+using Gaver.Web.Features.Wishes;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Hubs;
 using Microsoft.Extensions.Logging;

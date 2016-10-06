@@ -1,24 +1,24 @@
 using System.Threading.Tasks;
 using Gaver.Data;
-using Gaver.Data.Entities;
 using Gaver.Logic.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 
-namespace Gaver.Web.Features.WishList
+namespace Gaver.Web.Features.Wishes
 {
     [Route("api/[controller]")]
     [Microsoft.AspNetCore.Authorization.Authorize]
-    public class WishController : Controller
+    public class WishListController : Controller
     {
         private readonly GaverContext gaverContext;
         private readonly IHubContext<ListHub, IListHubClient> hub;
         private readonly IMediator mediator;
         private readonly IMapperService mapperService;
 
-        public WishController(GaverContext gaverContext, IMediator mediator, IConnectionManager signalRManager, IMapperService mapperService)
+        public WishListController(GaverContext gaverContext, IMediator mediator, IConnectionManager signalRManager,
+            IMapperService mapperService)
         {
             this.gaverContext = gaverContext;
             this.mediator = mediator;
@@ -29,27 +29,28 @@ namespace Gaver.Web.Features.WishList
         [HttpGet]
         public MyListModel Get()
         {
-            return mediator.Send(new GetMyListRequest { UserName = User.Identity.Name });
+            return mediator.Send(new GetMyListRequest {UserName = User.Identity.Name});
         }
 
-        [HttpGet("/listId:int")]
+        [HttpGet("{listId:int}")]
         public SharedListModel Get(int listId)
         {
-            return mediator.Send(new GetSharedListRequest { ListId = listId });
+            return mediator.Send(new GetSharedListRequest {ListId = listId});
         }
 
-        [HttpPost]
-        public WishModel Post(AddWishRequest request)
+        [HttpPost("{listId:int}")]
+        public WishModel Post(int listId, AddWishRequest request)
         {
             var authenticatedRequest = mapperService.Map<AuthenticatedAddWishRequest>(request);
             authenticatedRequest.UserName = User.Identity.Name;
+            authenticatedRequest.WishListId = listId;
             return mediator.Send(authenticatedRequest);
         }
 
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{listId:int}/{wishId:int}")]
+        public void Delete(int listId, int wishId)
         {
-            mediator.Send(new DeleteWishRequest { WishId = id });
+            mediator.Send(new DeleteWishRequest {WishId = wishId, WishListId = listId});
         }
 
         [HttpPost("Share")]
@@ -57,6 +58,5 @@ namespace Gaver.Web.Features.WishList
         {
             await mediator.SendAsync(request);
         }
-
     }
 }

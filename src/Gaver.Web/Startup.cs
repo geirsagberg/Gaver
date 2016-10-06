@@ -6,6 +6,7 @@ using Gaver.Data;
 using Gaver.Logic;
 using Gaver.Logic.Contracts;
 using Gaver.Logic.Services;
+using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 using MediatR;
@@ -72,6 +73,7 @@ namespace Gaver.Web
             services.AddSwaggerGen();
 
             var container = new ServiceContainer();
+            container.PropertyDependencySelector = new PropertyInjectionDisabler();
             container.RegisterAssembly<IMediator>();
             container.RegisterAssembly<ILogicAssembly>();
             container.Register<SingleInstanceFactory>(factory => type => factory.GetInstance(type),
@@ -147,6 +149,8 @@ namespace Gaver.Web
                 .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();
+
+            host.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
             using (var context = host.Services.GetRequiredService<GaverContext>()) {
                 context.Database.EnsureCreated();

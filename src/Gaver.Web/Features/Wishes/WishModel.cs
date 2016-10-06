@@ -1,4 +1,4 @@
-namespace Gaver.Web.Features.WishList
+namespace Gaver.Web.Features.Wishes
 {
     public class WishModel
     {

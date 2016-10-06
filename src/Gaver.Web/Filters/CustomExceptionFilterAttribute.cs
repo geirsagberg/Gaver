@@ -15,7 +15,7 @@ namespace Gaver.Web
             var logger = loggerFactory.CreateLogger("API Error");
             logger.LogError(EventIds.ApiError, context.Exception, "Error in " + context.HttpContext.Request.Path);
 
-            if (context.HttpContext.Request.Path.ToUriComponent().Contains("/api/"))
+            if (context.HttpContext.Request.Path.ToUriComponent().ToLowerInvariant().Contains("/api/"))
             {
                 context.Result = new ObjectResult(new {
                     context.Exception.Message
