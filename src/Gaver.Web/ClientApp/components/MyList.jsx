@@ -34,7 +34,7 @@ class MyList extends React.Component {
           {this.props.userName && <div className="header_item">
             {this.props.userName}
           </div>}
-          <button className={classNames('btn btn-default header_item')} onClick={this.props.shareList}>
+          <button className={classNames('btn btn-default header_item')} onClick={this.props.shareList.bind(this, this.props.listId)}>
             <span className="icon-share2 icon-before" />
             Del
           </button>
@@ -73,12 +73,14 @@ MyList.propTypes = {
   deleteWish: PropTypes.func,
   shareList: PropTypes.func,
   userName: PropTypes.string,
-  logOut: PropTypes.func
+  logOut: PropTypes.func,
+  listId: PropTypes.number
 }
 
 const mapStateToProps = state => ({
   wishes: state.myList.wishes || Immutable({}),
-  userName: state.user.name
+  userName: state.user.name,
+  listId: state.myList.listId
 })
 
 const actions = {

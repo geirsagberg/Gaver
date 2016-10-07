@@ -13,6 +13,8 @@ namespace Gaver.Web.Features.Wishes
         [Required]
         [MinLength(1)]
         public string[] Emails { get; set; }
+
+        public int WishListId { get; set; }
     }
 
     public class GetSharedListRequest : IRequest<SharedListModel>

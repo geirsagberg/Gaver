@@ -4,21 +4,20 @@ import { combineReducers } from 'redux'
 
 const initialState = Immutable({})
 
-function wishes (state = initialState, action) {
+function reducer (state = initialState, action) {
   switch (action.type) {
     case actions.WISH_ADDED:
-      return state.merge(action.data.entities.wishes)
+      state = state.merge(action.data.entities)
+      return state
     case actions.DATA_LOADED:
-      return action.data.entities.wishes || initialState
+      state = state.merge(action.data.entities)
+      state = state.set('listId', action.data.result)
+      return state
     case actions.WISH_DELETED:
       return state.without(action.id)
   }
   return state
 }
-
-const reducer = combineReducers({
-  wishes
-})
 
 export default reducer
 

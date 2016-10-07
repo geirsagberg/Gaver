@@ -134,7 +134,7 @@ namespace Gaver.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
+                routes.MapRoute("API 404", "api/{*anything}", new { controller = "Error", action = "NotFound"});
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new {controller = "Home", action = "Index"});

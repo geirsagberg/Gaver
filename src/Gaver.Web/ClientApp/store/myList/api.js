@@ -16,5 +16,5 @@ export function deleteWish (id) {
 }
 
 export function shareList ({listId, emails}) {
-  return postJson(`/api/WishList/{listId}/Share`, {emails})
+  return postJson(`/api/WishList/${listId}/Share`, {emails})
 }

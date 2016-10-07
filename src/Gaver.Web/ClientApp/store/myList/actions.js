@@ -47,7 +47,7 @@ export const deleteWish = id => async dispatch => {
   }
 }
 
-export const shareList = () => async dispatch => {
+export const shareList = listId => async dispatch => {
   const input = await showPrompt({
     message: 'Skriv inn epostadressen til de du vil dele listen med',
     placeholder: 'eksempel@epost.com, ...'
@@ -57,6 +57,7 @@ export const shareList = () => async dispatch => {
     const emails = input.split(',').map(email => email.trim())
     try {
       await Api.shareList({
+        listId,
         emails
       })
       showSuccess('Ønskeliste delt!')

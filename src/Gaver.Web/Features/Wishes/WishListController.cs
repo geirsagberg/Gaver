@@ -53,9 +53,10 @@ namespace Gaver.Web.Features.Wishes
             mediator.Send(new DeleteWishRequest {WishId = wishId, WishListId = listId});
         }
 
-        [HttpPost("Share")]
-        public async Task ShareList(ShareListRequest request)
+        [HttpPost("{listId:int}/Share")]
+        public async Task ShareList(int listId, ShareListRequest request)
         {
+            request.WishListId = listId;
             await mediator.SendAsync(request);
         }
     }
