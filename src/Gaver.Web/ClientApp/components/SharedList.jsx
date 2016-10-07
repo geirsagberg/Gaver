@@ -17,29 +17,29 @@ class SharedList extends React.Component {
     this.props.loadSharedList(this.props.params.id)
   }
 
-  render () {
+  render() {
     return (
       <div>
         <header className="header">
-          <h1 style={{ flex: 1 }}>{this.props.owner} sine ønsker</h1>
+          <h1 style={{ flex: 1 }}>{this.props.owner}sine ønsker</h1>
           {this.props.userName && <div className="header_item">
             {this.props.userName}
           </div>}
-          <div className="header_item" data-tip={this.props.users.join(', ') }>
+          <div className="header_item" data-tip={this.props.users.join(', ')}>
             {this.props.count} <span className="icon-users" />
           </div>
           <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
             <span className="icon-exit icon-before" />
             Logg ut
           </button>
-        </header >
+        </header>
         <div className="wishList">
           <ul className="list-group">
             {map(this.props.wishes, wish =>
               <li className="list-group-item" key={wish.id}>
                 <span>{wish.title}</span>
               </li>
-            ) }
+            )}
           </ul>
         </div>
         <ReactTooltip />

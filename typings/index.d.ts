@@ -1,5 +1,6 @@
 /// <reference path="globals/history/index.d.ts" />
 /// <reference path="globals/isomorphic-fetch/index.d.ts" />
+/// <reference path="globals/jquery/index.d.ts" />
 /// <reference path="globals/js-cookie/index.d.ts" />
 /// <reference path="globals/normalizr/index.d.ts" />
 /// <reference path="globals/react-dom/index.d.ts" />
