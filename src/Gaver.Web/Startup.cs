@@ -12,6 +12,8 @@ using LightInject.Microsoft.DependencyInjection;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +24,7 @@ using Serilog;
 using Serilog.Events;
 using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Gaver.Web
 {
@@ -69,6 +72,7 @@ namespace Gaver.Web
                 });
 
             services.AddSingleton<IMapperService, MapperService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
             services.AddSwaggerGen();
 
@@ -118,7 +122,8 @@ namespace Gaver.Web
                 });
             }
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions {
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = false
             });
@@ -134,10 +139,10 @@ namespace Gaver.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new { controller = "Error", action = "NotFound"});
+                routes.MapRoute("API 404", "api/{*anything}", new { controller = "Error", action = "NotFound" });
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new {controller = "Home", action = "Index"});
+                    defaults: new { controller = "Home", action = "Index" });
             });
         }
 
@@ -152,7 +157,8 @@ namespace Gaver.Web
 
             host.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
-            using (var context = host.Services.GetRequiredService<GaverContext>()) {
+            using (var context = host.Services.GetRequiredService<GaverContext>())
+            {
                 context.Database.EnsureCreated();
             }
 

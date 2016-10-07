@@ -5,14 +5,14 @@ export function fetchWishData () {
   return getJson('/api/WishList', schemas.wishList)
 }
 
-export function addWish (title) {
-  return postJson('/api/Wish', {
+export function addWish ({listId, title}) {
+  return postJson('/api/WishList/' + listId, {
     title
   }, schemas.wish)
 }
 
-export function deleteWish (id) {
-  return deleteJson('/api/Wish/' + id)
+export function deleteWish ({listId, wishId}) {
+  return deleteJson(`/api/WishList/${listId}/${wishId}`)
 }
 
 export function shareList ({listId, emails}) {

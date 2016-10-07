@@ -41,10 +41,9 @@ namespace Gaver.Web.Features.Wishes
         [HttpPost("{listId:int}")]
         public WishModel Post(int listId, AddWishRequest request)
         {
-            var authenticatedRequest = mapperService.Map<AuthenticatedAddWishRequest>(request);
-            authenticatedRequest.UserName = User.Identity.Name;
-            authenticatedRequest.WishListId = listId;
-            return mediator.Send(authenticatedRequest);
+            request.UserName = User.Identity.Name;
+            request.WishListId = listId;
+            return mediator.Send(request);
         }
 
         [HttpDelete("{listId:int}/{wishId:int}")]
@@ -57,6 +56,7 @@ namespace Gaver.Web.Features.Wishes
         public async Task ShareList(int listId, ShareListRequest request)
         {
             request.WishListId = listId;
+            request.UserName = User.Identity.Name;
             await mediator.SendAsync(request);
         }
     }

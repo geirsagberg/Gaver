@@ -1,11 +1,17 @@
 import Immutable from 'seamless-immutable'
 import * as api from './api'
 import {showError} from 'utils/notifications'
+import { compose } from 'redux'
+import $ from 'jquery'
+import { isDevelopment } from 'utils'
+import { normalize } from 'normalizr'
+import * as schemas from 'schemas'
 
 const initialState = Immutable({})
 
 const namespace = 'gaver/sharedList/'
 const DATA_LOADED = namespace + 'DATA_LOADED'
+const SET_USERS = namespace + 'SET_COUNT'
 
 function dataLoaded(data) {
   return {
@@ -31,5 +37,24 @@ export const loadSharedList = listId => async dispatch => {
     dispatch(dataLoaded(data))
   } catch (error) {
     showError(error)
+  }
+}
+
+const createCaller = dispatch =>
+  (action, schema) =>
+      compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
+
+export const initializeListUpdates = listId => async dispatch => {
+  $.connection.hub.logging = isDevelopment
+  const call = createCaller(dispatch)
+  const { client } = $.connection.listHub
+  client.updateUsers = call(setUsers)
+  client.refresh = call(() => loadSharedList(listId), schemas.wishes)
+}
+
+export function setUsers(users) {
+  return {
+    type: SET_USERS,
+    users
   }
 }

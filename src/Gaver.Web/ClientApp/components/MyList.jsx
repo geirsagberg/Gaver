@@ -21,7 +21,7 @@ class MyList extends React.Component {
 
   addWish() {
     if (this.wishInput.value) {
-      this.props.addWish(this.wishInput.value)
+      this.props.addWish({listId: this.props.listId, title: this.wishInput.value})
       this.wishInput.value = ''
     }
   }
@@ -34,7 +34,7 @@ class MyList extends React.Component {
           {this.props.userName && <div className="header_item">
             {this.props.userName}
           </div>}
-          <button className={classNames('btn btn-default header_item')} onClick={this.props.shareList.bind(this, this.props.listId)}>
+          <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>
             <span className="icon-share2 icon-before" />
             Del
           </button>
@@ -42,19 +42,19 @@ class MyList extends React.Component {
             <span className="icon-exit icon-before" />
             Logg ut
           </button>
-        </header >
+        </header>
         <div className="wishList">
           <div className="input-group">
             <input className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={:: this.onKeyUp} ref={el => (this.wishInput = el) } />
             <span className="input-group-btn">
               <button className="btn btn-default" type="button" onClick={:: this.addWish}>Legg til</button>
             </span>
-          </div >
+          </div>
           <ul className="list-group">
             {map(this.props.wishes, wish =>
               <li className="list-group-item" key={wish.id}>
                 <span>{wish.title}</span>
-                <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish(wish.id) }>Fjern</button>
+                <button className="btn btn-link pull-right no-padding" onClick={() => this.props.deleteWish({listId: this.props.listId, wishId: wish.id}) }>Fjern</button>
               </li>
             )}
           </ul>

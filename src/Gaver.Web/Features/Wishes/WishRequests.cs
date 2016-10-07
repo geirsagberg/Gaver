@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -14,7 +16,11 @@ namespace Gaver.Web.Features.Wishes
         [MinLength(1)]
         public string[] Emails { get; set; }
 
+        [JsonIgnore]
         public int WishListId { get; set; }
+
+        [JsonIgnore]
+        public string UserName { get; set; }
     }
 
     public class GetSharedListRequest : IRequest<SharedListModel>
@@ -22,16 +28,16 @@ namespace Gaver.Web.Features.Wishes
         public int ListId { get; set; }
     }
 
-    public class AddWishRequest
+    public class AddWishRequest : IRequest<WishModel>
     {
         [Required]
         [MinLength(1)]
         public string Title { get; set; }
-    }
 
-    public class AuthenticatedAddWishRequest : AddWishRequest, IRequest<WishModel>
-    {
+        [JsonIgnore]
         public string UserName { get; set; }
+
+        [JsonIgnore]
         public int WishListId { get; set; }
     }
 

@@ -5,7 +5,7 @@ import ReactTooltip from 'react-tooltip'
 import { connect } from 'react-redux'
 import Immutable from 'seamless-immutable'
 import * as sharedListActions from 'store/sharedList'
-import _get from 'lodash/get'
+import { getIn } from 'utils/immutableExtensions'
 
 class SharedList extends React.Component {
   static get propTypes() {
@@ -28,10 +28,6 @@ class SharedList extends React.Component {
           <div className="header_item" data-tip={this.props.users.join(', ') }>
             {this.props.count} <span className="icon-users" />
           </div>
-          <button className={classNames('btn btn-default header_item')} onClick={this.props.shareList}>
-            <span className="icon-share2 icon-before" />
-            Del
-          </button>
           <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
             <span className="icon-exit icon-before" />
             Logg ut
@@ -53,10 +49,10 @@ class SharedList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  wishes: _get(state, 'sharedList.wishes', Immutable({})),
-  users: _get(state, 'sharedList.users.names', Immutable([])),
-  count: _get(state, 'sharedList.users.count', 0),
-  owner: _get(state, 'sharedList.owner', ''),
+  wishes: state.wishes || Immutable({}),
+  users: state::getIn('sharedList.users.names', Immutable([])),
+  count: state::getIn('sharedList.users.count', 0),
+  owner: state::getIn('sharedList.owner', ''),
   userName: state.user.name
 })
 

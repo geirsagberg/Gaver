@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper.Execution;
 using AutoMapper.QueryableExtensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Logic;
 using Gaver.Logic.Contracts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -55,7 +53,7 @@ namespace Gaver.Web.Features.Wishes
         }
     }
 
-    public class AddWishHandler : IRequestHandler<AuthenticatedAddWishRequest, WishModel>
+    public class AddWishHandler : IRequestHandler<AddWishRequest, WishModel>
     {
 
         private readonly GaverContext context;
@@ -67,7 +65,7 @@ namespace Gaver.Web.Features.Wishes
             this.mapperService = mapperService;
         }
 
-        public WishModel Handle(AuthenticatedAddWishRequest message)
+        public WishModel Handle(AddWishRequest message)
         {
             var wishListId = context.Users.Where(u => u.Name == message.UserName).Select(u => u.WishLists.Single().Id).Single();
             var wish = new Wish
@@ -95,30 +93,6 @@ namespace Gaver.Web.Features.Wishes
         {
             context.Delete<Wish>(message.WishId);
             context.SaveChanges();
-            return Unit.Value;
-        }
-    }
-
-    public class ShareListHandler : IAsyncRequestHandler<ShareListRequest, Unit>
-    {
-        private readonly IMailSender mailSender;
-
-        public ShareListHandler(IMailSender mailSender)
-        {
-            this.mailSender = mailSender;
-        }
-
-        public async Task<Unit> Handle(ShareListRequest message)
-        {
-            var mail = new Mail
-            {
-                To = message.Emails,
-                From = "noreply@sagberg.net",
-                Subject = "Noen har delt en ønskeliste med deg",
-                Content = @"<h1>Noen har delt en ønskeliste med deg!</h1>
-                <p><a href='http://localhost/5000'>Klikk her for å se listen.</a></p>"
-            };
-            await mailSender.SendAsync(mail);
             return Unit.Value;
         }
     }
