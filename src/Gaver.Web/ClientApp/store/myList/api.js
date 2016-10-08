@@ -1,4 +1,4 @@
-import { getJson, postJson, deleteJson } from 'utils/ajax'
+import { getJson, postJson, deleteJson, putJson } from 'utils/ajax'
 import * as schemas from 'schemas'
 
 export function fetchWishData () {
@@ -17,4 +17,8 @@ export function deleteWish ({listId, wishId}) {
 
 export function shareList ({listId, emails}) {
   return postJson(`/api/WishList/${listId}/Share`, {emails})
+}
+
+export function setUrl ({listId, wishId, url}) {
+  return putJson(`/api/WishList/${listId}/${wishId}/SetUrl`, {url}, schemas.wish)
 }

@@ -54,6 +54,18 @@ export function postJson (url, data, schema) {
   .finally(() => PubSub.publish(topics.AJAX_STOP))
 }
 
+export function putJson (url, data, schema) {
+  PubSub.publish(topics.AJAX_START)
+  return Promise.try(() => fetch(url, {
+    method: 'PUT',
+    headers,
+    credentials: 'include',
+    body: JSON.stringify(data)
+  }))
+  .then(handleResponse(schema), handleError)
+  .finally(() => PubSub.publish(topics.AJAX_STOP))
+}
+
 export function deleteJson (url, data, schema) {
   PubSub.publish(topics.AJAX_START)
   return Promise.try(() => fetch(url, {

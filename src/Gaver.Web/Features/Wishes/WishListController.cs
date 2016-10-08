@@ -46,6 +46,14 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(request);
         }
 
+        [HttpPut("{listId:int}/{wishId:int}/SetUrl")]
+        public WishModel SetUrl(int listId, int wishId, SetUrlRequest request)
+        {
+            request.WishListId = listId;
+            request.WishId = wishId;
+            return mediator.Send(request);
+        }
+
         [HttpDelete("{listId:int}/{wishId:int}")]
         public void Delete(int listId, int wishId)
         {

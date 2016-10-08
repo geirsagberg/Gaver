@@ -1,3 +1,9 @@
+$brand-primary:         #375a7f;
+$brand-success:         #00bc8c;
+$brand-info:            #3498DB;
+$brand-warning:         #F39C12;
+$brand-danger:          #E74C3C;
+
 .header {
   display: flex;
   align-items: center;
@@ -8,5 +14,25 @@
     &:last-child {
       margin-right: 0;
     }
+  }
+}
+
+.wish {
+  display: flex;
+  align-items: center;
+
+  &_btn {
+    margin: 0 2rem;
+    padding: 0;
+
+    &-right {
+      margin-left: auto;
+      margin-right: 0;
+    }
+  }
+
+  &_url {
+    margin: 0 2rem;
+    color: $brand-info;
   }
 }

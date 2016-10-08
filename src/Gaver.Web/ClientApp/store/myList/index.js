@@ -1,20 +1,32 @@
 import * as actions from './actions'
 import Immutable from 'seamless-immutable'
-import { deepMerge } from 'utils/immutableExtensions'
+import { combineReducers } from 'redux-seamless-immutable'
 
 const initialState = Immutable({})
 
-function reducer (state = initialState, action) {
+function wishes (state = initialState, action) {
   switch (action.type) {
     case actions.WISH_ADDED:
-      state = state::deepMerge(action.data.entities)
-      return state
+      return state.merge(action.data.entities.wishes)
     case actions.DATA_LOADED:
-      state = state.merge(action.data.entities)
-      state = state.set('listId', action.data.result)
-      return state
+      return action.data.entities.wishes || initialState
     case actions.WISH_DELETED:
-      return state.update('wishes', wishes => wishes.without(action.id))
+      return state.without(action.id)
+    case actions.WISH_UPDATED:
+      return state.merge(action.data.entities.wishes)
+  }
+  return state
+}
+
+const combinedReducer = combineReducers({
+  wishes
+})
+
+function reducer (state = initialState, action) {
+  state = combinedReducer(state, action)
+  switch (action.type) {
+    case actions.DATA_LOADED:
+      return state.set('listId', action.data.result)
   }
   return state
 }

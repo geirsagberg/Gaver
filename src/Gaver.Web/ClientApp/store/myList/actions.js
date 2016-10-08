@@ -13,6 +13,7 @@ export const DELETE_WISH = actionNamespace + 'DELETE_WISH'
 export const WISH_DELETED = actionNamespace + 'WISH_DELETED'
 export const SHARE_LIST = actionNamespace + 'SHARE_LIST'
 export const INITIALIZE_LIST_UPDATES = actionNamespace + 'INITIALIZE_LIST_UPDATES'
+export const WISH_UPDATED = actionNamespace + 'WISH_UPDATED'
 
 export const loadMyList = () => async dispatch => {
   try {
@@ -58,6 +59,33 @@ export const shareList = listId => async dispatch => {
     } catch (error) {
       showError(error)
     }
+  }
+}
+
+export const editUrl = ({listId, wishId}) => async dispatch => {
+  const url = await showPrompt({
+    message: 'Legg inn en lenke til gaven',
+    placeholder: 'http://eksempel.no'
+  })
+  if (url !== null) {
+    // TODO: Validation
+    try {
+      const wish = await Api.setUrl({
+        listId,
+        wishId,
+        url
+      })
+      dispatch(wishUpdated(wish))
+    } catch (error) {
+      showError(error)
+    }
+  }
+}
+
+export function wishUpdated(wish) {
+  return {
+    type: WISH_UPDATED,
+    data: wish
   }
 }
 
