@@ -88,8 +88,8 @@ const mapStateToProps = state => ({
   currentUsers: state::getIn('sharedList.currentUsers', Immutable([])),
   count: state::getIn('sharedList.currentUsers.count', 0),
   owner: state.sharedList.owner || '',
-  userName: state.user.name,
-  userId: state.user.id,
+  userName: state.user.name || '',
+  userId: state.user.id || 0,
 })
 
 const dispatchOptions = {

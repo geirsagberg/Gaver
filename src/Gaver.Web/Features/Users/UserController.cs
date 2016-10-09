@@ -23,8 +23,7 @@ namespace Gaver.Web.Features
                 new Claim(ClaimTypes.Name, request.Name)
             }, CookieAuthenticationDefaults.AuthenticationScheme));
             await HttpContext.Authentication.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user);
-            var userModel = mediator.Send(request);
-            return userModel;
+            return mediator.Send(request);
         }
 
         [HttpPost("LogOut")]

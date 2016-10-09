@@ -5,23 +5,31 @@ import MyList from './components/MyList'
 import Login from './components/Login'
 import SharedList from './components/SharedList'
 
-function requireAuth (store) {
-  return function (nextState, replace) {
+export default function createRoutes(store) {
+  const requireAuth = (nextState, replace) => {
     if (!store.getState().user.isLoggedIn) {
       replace({
         pathname: '/login',
         state: { nextPathname: nextState.location.pathname }
       })
+      return false
+    }
+    return true
+  }
+  const redirectIfOwner = (nextState, replace) => {
+    if (requireAuth(nextState, replace)) {
+      var listId = parseInt(nextState.params.id)
+      if (store.getState().user.wishListId === listId) {
+        replace('/')
+      }
     }
   }
-}
 
-export default function createRoutes (store) {
   return (
     <Router history={browserHistory}>
       <Route path='/' component={Layout}>
-        <IndexRoute component={MyList} onEnter={requireAuth(store)} />
-        <Route path='list/:id' component={SharedList} onEnter={requireAuth(store)} />
+        <IndexRoute component={MyList} onEnter={requireAuth} />
+        <Route path='list/:id' component={SharedList} onEnter={redirectIfOwner} />
         <Route path='login' component={Login} />
       </Route>
     </Router>

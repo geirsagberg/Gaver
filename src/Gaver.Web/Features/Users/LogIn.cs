@@ -1,12 +1,19 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Logic;
 using Gaver.Logic.Contracts;
 using MediatR;
 
 namespace Gaver.Web.Features
 {
+    public class LogInRequest : IRequest<UserModel>
+    {
+        [Required]
+        [MaxLength(40)]
+        public string Name { get; set; }
+    }
+
     public class LogInHandler : IRequestHandler<LogInRequest, UserModel>
     {
         private readonly GaverContext context;
@@ -33,14 +40,16 @@ namespace Gaver.Web.Features
             }
             var wishList = context.WishLists.FirstOrDefault(l => l.UserId == user.Id);
             if (wishList == null) {
-                wishList = new Data.Entities.WishList
+                wishList = new WishList
                 {
                     UserId = user.Id
                 };
                 context.WishLists.Add(wishList);
                 context.SaveChanges();
             }
-            return mapper.Map<UserModel>(user);
+            var userModel = mapper.Map<UserModel>(user);
+            userModel.WishListId = wishList.Id;
+            return userModel;
         }
     }
 }
