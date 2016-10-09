@@ -1,8 +1,15 @@
 import bootbox from 'bootbox'
+import Promise from 'bluebird'
 
 export function showPrompt (options) {
-  const { message, placeholder } = options
+  const { title, message, placeholder, value } = options
   return new Promise((resolve, reject) => {
-    bootbox.prompt(message, resolve)
+    bootbox.prompt({
+      title,
+      message,
+      callback: resolve,
+      value,
+      backdrop: true
+    })
   })
 }

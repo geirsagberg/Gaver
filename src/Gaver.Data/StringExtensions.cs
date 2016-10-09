@@ -9,5 +9,9 @@ namespace Gaver.Data
 
             return str.Substring(0, 1).ToLower() + str.Substring(1);
         }
+
+        public static bool IsNullOrEmpty(this string str) {
+            return string.IsNullOrEmpty(str);
+        }
     }
 }

@@ -32,7 +32,8 @@ $brand-danger:          #E74C3C;
   }
 
   &_url {
-    margin: 0 2rem;
+    margin-left: 2rem;
+    margin-right: 1rem;
     color: $brand-info;
   }
 }

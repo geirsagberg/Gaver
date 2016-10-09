@@ -44,7 +44,7 @@ export const deleteWish = ({listId, wishId}) => async dispatch => {
 
 export const shareList = listId => async dispatch => {
   const input = await showPrompt({
-    message: 'Skriv inn epostadressen til de du vil dele listen med',
+    title: 'Skriv inn epostadressen til de du vil dele listen med',
     placeholder: 'eksempel@epost.com, ...'
   })
   if (input !== null) {
@@ -62,10 +62,11 @@ export const shareList = listId => async dispatch => {
   }
 }
 
-export const editUrl = ({listId, wishId}) => async dispatch => {
+export const editUrl = ({listId, wishId}) => async (dispatch, getState) => {
   const url = await showPrompt({
-    message: 'Legg inn en lenke til gaven',
-    placeholder: 'http://eksempel.no'
+    title: 'Legg inn en lenke til gaven',
+    placeholder: 'http://eksempel.no',
+    value: getState().myList.wishes[wishId].url
   })
   if (url !== null) {
     // TODO: Validation

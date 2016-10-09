@@ -38,12 +38,24 @@ namespace Gaver.Web.Features.Wishes
             if (wish.WishListId != message.WishListId)
                 throw new FriendlyException(EventIds.WrongList, $"Wish {message.WishId} does not belong to list {message.WishListId}");
 
-            Uri uri;
-            if (!Uri.TryCreate(message.Url, UriKind.Absolute, out uri))
+            var urlString = message.Url;
+
+            if (urlString.IsNullOrEmpty())
             {
-                throw new FriendlyException(EventIds.InvalidUrl, "Ugyldig lenke");
+                wish.Url = null;
             }
-            wish.Url = uri.ToString();
+            else
+            {
+                if (!urlString.StartsWith("http"))
+                    urlString = $"http://{urlString}";
+
+                Uri uri;
+                if (!Uri.TryCreate(urlString, UriKind.Absolute, out uri))
+                    throw new FriendlyException(EventIds.InvalidUrl, "Ugyldig lenke");
+
+                wish.Url = uri.ToString();
+            }
+
             context.SaveChanges();
 
             return mapper.Map<WishModel>(wish);
