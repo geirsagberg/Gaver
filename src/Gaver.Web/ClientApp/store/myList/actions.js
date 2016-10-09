@@ -1,7 +1,7 @@
 import * as Api from './api'
 import { showPrompt } from 'utils/dialogs'
-import { showSuccess, showError } from 'utils/notifications'
-import $ from 'jquery'
+import { showSuccess } from 'utils/notifications'
+import { tryOrNotify } from 'utils'
 
 const actionNamespace = 'gaver/myList/'
 
@@ -15,51 +15,38 @@ export const SHARE_LIST = actionNamespace + 'SHARE_LIST'
 export const INITIALIZE_LIST_UPDATES = actionNamespace + 'INITIALIZE_LIST_UPDATES'
 export const WISH_UPDATED = actionNamespace + 'WISH_UPDATED'
 
-export const loadMyList = () => async dispatch => {
-  try {
-    const data = await Api.fetchWishData()
-    dispatch(fetchDataSuccess(data))
-  } catch (error) {
-    showError(error)
-  }
-}
+export const loadMyList = () => async dispatch => tryOrNotify(async () => {
+  const data = await Api.fetchWishData()
+  dispatch(fetchDataSuccess(data))
+})
 
-export const addWish = ({listId, title}) => async dispatch => {
-  try {
-    const wish = await Api.addWish({listId, title})
-    dispatch(wishAdded(wish))
-  } catch (error) {
-    showError(error)
-  }
-}
+export const addWish = ({listId, title}) => async dispatch => tryOrNotify(async () => {
+  const wish = await Api.addWish({ listId, title })
+  dispatch(wishAdded(wish))
+})
 
-export const deleteWish = ({listId, wishId}) => async dispatch => {
-  try {
-    await Api.deleteWish({listId, wishId})
-    dispatch(wishDeleted(wishId))
-  } catch (error) {
-    showError(error)
-  }
-}
+export const deleteWish = ({listId, wishId}) => async dispatch => tryOrNotify(async () => {
+  await Api.deleteWish({ listId, wishId })
+  dispatch(wishDeleted(wishId))
+})
 
 export const shareList = listId => async dispatch => {
   const input = await showPrompt({
     title: 'Skriv inn epostadressen til de du vil dele listen med',
     placeholder: 'eksempel@epost.com, ...'
   })
-  if (input !== null) {
-    // TODO: Validation
-    const emails = input.split(',').map(email => email.trim())
-    try {
-      await Api.shareList({
-        listId,
-        emails
-      })
-      showSuccess('Ønskeliste delt!')
-    } catch (error) {
-      showError(error)
-    }
+  if (input === null) {
+    return
   }
+  // TODO: Validation
+  const emails = input.split(',').map(email => email.trim())
+  tryOrNotify(async () => {
+    await Api.shareList({
+      listId,
+      emails
+    })
+    showSuccess('Ønskeliste delt!')
+  })
 }
 
 export const editUrl = ({listId, wishId}) => async (dispatch, getState) => {
@@ -68,19 +55,18 @@ export const editUrl = ({listId, wishId}) => async (dispatch, getState) => {
     placeholder: 'http://eksempel.no',
     value: getState().myList.wishes[wishId].url
   })
-  if (url !== null) {
-    // TODO: Validation
-    try {
-      const wish = await Api.setUrl({
-        listId,
-        wishId,
-        url
-      })
-      dispatch(wishUpdated(wish))
-    } catch (error) {
-      showError(error)
-    }
+  if (url === null) {
+    return
   }
+  // TODO: Validation
+  tryOrNotify(async () => {
+    const wish = await Api.setUrl({
+      listId,
+      wishId,
+      url
+    })
+    dispatch(wishUpdated(wish))
+  })
 }
 
 export function wishUpdated(wish) {

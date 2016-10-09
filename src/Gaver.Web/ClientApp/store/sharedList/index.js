@@ -1,9 +1,8 @@
 import Immutable from 'seamless-immutable'
 import * as api from './api'
-import {showError} from 'utils/notifications'
+import { isDevelopment, tryOrNotify } from 'utils'
 import { compose } from 'redux'
 import $ from 'jquery'
-import { isDevelopment } from 'utils'
 import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
 
@@ -32,12 +31,14 @@ export default function reducer (state = initialState, action) {
 }
 
 export const loadSharedList = listId => async dispatch => {
-  try {
+  tryOrNotify(async () => {
     const data = await api.loadSharedList(listId)
     dispatch(dataLoaded(data))
-  } catch (error) {
-    showError(error)
-  }
+  })
+}
+
+export const setBought = ({listId, wishId}) => async dispatch => {
+
 }
 
 const createCaller = dispatch =>

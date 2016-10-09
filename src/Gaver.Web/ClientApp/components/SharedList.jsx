@@ -8,10 +8,30 @@ import * as sharedListActions from 'store/sharedList'
 import { getIn } from 'utils/immutableExtensions'
 import { logOut } from 'store/user'
 
+class Wish extends React.Component {
+  static get propTypes() {
+    return {
+      wish: PropTypes.object.isRequired,
+      setBought: PropTypes.func.isRequired
+    }
+  }
+
+  render() {
+    const { wish } = this.props
+    return (
+      <li className="list-group-item" key={wish.id}>
+        <span>{wish.title}</span>
+        <a href={wish.url} className="wish_url">{wish.url}</a>
+      </li>
+    )
+  }
+}
+
 class SharedList extends React.Component {
   static get propTypes() {
     const result = {
-      logOut: PropTypes.func.isRequired
+      logOut: PropTypes.func.isRequired,
+      setBought: PropTypes.func.isRequired
     }
     return result
   }
@@ -21,6 +41,7 @@ class SharedList extends React.Component {
   }
 
   render() {
+    const { setBought, logOut } = this.props
     return (
       <div>
         <header className="header">
@@ -31,19 +52,14 @@ class SharedList extends React.Component {
           <div className="header_item" data-tip={this.props.users.join(', ')}>
             {this.props.count} <span className="icon-users" />
           </div>
-          <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
+          <button className={classNames('btn btn-default header_item')} onClick={logOut}>
             <span className="icon-exit icon-before" />
             Logg ut
           </button>
         </header>
         <div className="wishList">
           <ul className="list-group">
-            {map(this.props.wishes, wish =>
-              <li className="list-group-item" key={wish.id}>
-                <span>{wish.title}</span>
-                <a href={wish.url} className="wish_url">{wish.url}</a>
-              </li>
-            )}
+            {map(this.props.wishes, wish => <Wish {...{wish, setBought}} key={wish.id} />)}
           </ul>
         </div>
         <ReactTooltip />
