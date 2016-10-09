@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;

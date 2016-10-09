@@ -1,3 +1,10 @@
+$gray-base:              #000;
+$gray-darker:            #222;
+$gray-dark:              #333;
+$gray:                   #464545;
+$gray-light:             #999;
+$gray-lighter:           #EBEBEB;
+
 $brand-primary:         #375a7f;
 $brand-success:         #00bc8c;
 $brand-info:            #3498DB;
@@ -21,13 +28,20 @@ $brand-danger:          #E74C3C;
   display: flex;
   align-items: center;
 
-  &_btn {
+  &_btn, &_detail {
     margin: 0 2rem;
     padding: 0;
 
     &-right {
       margin-left: auto;
       margin-right: 0;
+    }
+  }
+
+  &_title {
+    &-bought {
+      color: $gray-light;
+      text-decoration: line-through;
     }
   }
 

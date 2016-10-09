@@ -1,27 +1,40 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames'
-import map from 'lodash/map'
 import ReactTooltip from 'react-tooltip'
 import { connect } from 'react-redux'
 import Immutable from 'seamless-immutable'
 import * as sharedListActions from 'store/sharedList'
-import { getIn } from 'utils/immutableExtensions'
+import { getIn, map } from 'utils/immutableExtensions'
 import { logOut } from 'store/user'
 
 class Wish extends React.Component {
   static get propTypes() {
     return {
       wish: PropTypes.object.isRequired,
-      setBought: PropTypes.func.isRequired
+      setBought: PropTypes.func.isRequired,
+      userName: PropTypes.string.isRequired,
+      userId: PropTypes.number.isRequired,
+      users: PropTypes.object.isRequired
     }
   }
 
   render() {
-    const { wish } = this.props
+    const { wish, setBought, userId, users } = this.props
     return (
-      <li className="list-group-item" key={wish.id}>
-        <span>{wish.title}</span>
+      <li className="list-group-item wish">
+        <span className={classNames('wish_title', {
+          'wish_title-bought': !!wish.boughtByUser
+        })}>{wish.title}</span>
         <a href={wish.url} className="wish_url">{wish.url}</a>
+        {!wish.boughtByUser || wish.boughtByUser === userId
+          ? <span className="checkbox wish_detail wish_detail-right">
+            <label>
+              <input type="checkbox" checked={wish.boughtByUser === userId} onChange={() => setBought({ listId: wish.wishListId, wishId: wish.id, isBought: wish.boughtByUser !== userId })} />
+              <span>Jeg kjøper</span>
+            </label>
+          </span>
+          : <span className="wish_detail wish_detail-right">Kjøpt av {users[wish.boughtByUser].name}</span>
+        }
       </li>
     )
   }
@@ -31,7 +44,9 @@ class SharedList extends React.Component {
   static get propTypes() {
     const result = {
       logOut: PropTypes.func.isRequired,
-      setBought: PropTypes.func.isRequired
+      setBought: PropTypes.func.isRequired,
+      userName: PropTypes.string.isRequired,
+      userId: PropTypes.number.isRequired
     }
     return result
   }
@@ -41,7 +56,6 @@ class SharedList extends React.Component {
   }
 
   render() {
-    const { setBought, logOut } = this.props
     return (
       <div>
         <header className="header">
@@ -49,17 +63,17 @@ class SharedList extends React.Component {
           {this.props.userName && <div className="header_item">
             {this.props.userName}
           </div>}
-          <div className="header_item" data-tip={this.props.users.join(', ')}>
+          <div className="header_item" data-tip={this.props.currentUsers::map(id => this.props.users[id].name).join(', ')}>
             {this.props.count} <span className="icon-users" />
           </div>
-          <button className={classNames('btn btn-default header_item')} onClick={logOut}>
+          <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
             <span className="icon-exit icon-before" />
             Logg ut
           </button>
         </header>
         <div className="wishList">
           <ul className="list-group">
-            {map(this.props.wishes, wish => <Wish {...{wish, setBought}} key={wish.id} />)}
+            {this.props.wishes::map(wish => <Wish {...{...this.props, wish}} key={wish.id}/>)}
           </ul>
         </div>
         <ReactTooltip />
@@ -70,10 +84,12 @@ class SharedList extends React.Component {
 
 const mapStateToProps = state => ({
   wishes: state.sharedList.wishes || Immutable({}),
-  users: state::getIn('sharedList.users.names', Immutable([])),
-  count: state::getIn('sharedList.users.count', 0),
+  users: state::getIn('sharedList.users', Immutable({})),
+  currentUsers: state::getIn('sharedList.currentUsers', Immutable([])),
+  count: state::getIn('sharedList.currentUsers.count', 0),
   owner: state.sharedList.owner || '',
-  userName: state.user.name
+  userName: state.user.name,
+  userId: state.user.id,
 })
 
 const dispatchOptions = {

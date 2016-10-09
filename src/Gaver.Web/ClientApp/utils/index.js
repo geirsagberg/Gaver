@@ -9,9 +9,9 @@ export function bindArgsFromN (fn, n, ...boundArgs) {
   }
 }
 
-export function tryOrNotify (func) {
+export async function tryOrNotify (func) {
   try {
-    func()
+    await func()
   } catch (error) {
     showError(error)
   }

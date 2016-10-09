@@ -1,7 +1,8 @@
 import _get from 'lodash/get'
+import _map from 'lodash/map'
 
 export function deepMerge(input) {
-  return this.merge(input, {deep: true})
+  return this.merge(input, { deep: true })
 }
 
 export function getIn(path, fallback) {
@@ -11,4 +12,8 @@ export function getIn(path, fallback) {
     throw new Error('path must be string or array')
   }
   return _get(this, path, fallback)
+}
+
+export function map(func) {
+  return _map(this, func)
 }

@@ -12,5 +12,6 @@ namespace Gaver.Data.Entities
         public string Name { get; set; }
 
         public virtual ISet<WishList> WishLists { get; set; } = new HashSet<WishList>();
+        public virtual ISet<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
     }
 }

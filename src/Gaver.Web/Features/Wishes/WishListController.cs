@@ -54,6 +54,15 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(request);
         }
 
+        [HttpPut("{listId:int}/{wishId:int}/SetBought")]
+        public WishModel SetBought(int listId, int wishId, SetBoughtRequest request)
+        {
+            request.WishListId = listId;
+            request.WishId = wishId;
+            request.UserName = User.Identity.Name;
+            return mediator.Send(request);
+        }
+
         [HttpDelete("{listId:int}/{wishId:int}")]
         public void Delete(int listId, int wishId)
         {
