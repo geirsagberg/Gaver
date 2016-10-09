@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using AutoMapper;
-using Gaver.Data.Entities;
-using Gaver.Logic;
+﻿using AutoMapper;
 
 namespace Gaver.Web.Features
 {

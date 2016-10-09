@@ -13,5 +13,9 @@ namespace Gaver.Data
         public static bool IsNullOrEmpty(this string str) {
             return string.IsNullOrEmpty(str);
         }
+
+        public static int ToInt(this string str) {
+            return int.Parse(str);
+        }
     }
 }

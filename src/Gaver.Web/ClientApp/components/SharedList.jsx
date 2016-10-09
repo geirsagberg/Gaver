@@ -6,6 +6,8 @@ import Immutable from 'seamless-immutable'
 import * as sharedListActions from 'store/sharedList'
 import { getIn, map } from 'utils/immutableExtensions'
 import { logOut } from 'store/user'
+import './SharedList.css'
+import Chat from 'components/Chat'
 
 class Wish extends React.Component {
   static get propTypes() {
@@ -46,7 +48,8 @@ class SharedList extends React.Component {
       logOut: PropTypes.func.isRequired,
       setBought: PropTypes.func.isRequired,
       userName: PropTypes.string.isRequired,
-      userId: PropTypes.number.isRequired
+      userId: PropTypes.number.isRequired,
+      params: PropTypes.object.isRequired,
     }
     return result
   }
@@ -71,10 +74,15 @@ class SharedList extends React.Component {
             Logg ut
           </button>
         </header>
-        <div className="wishList">
-          <ul className="list-group">
-            {this.props.wishes::map(wish => <Wish {...{...this.props, wish}} key={wish.id}/>)}
-          </ul>
+        <div className="row">
+          <div className="wishList col-md-8">
+            <ul className="list-group">
+              {this.props.wishes::map(wish => <Wish {...{...this.props, wish}} key={wish.id}/>)}
+            </ul>
+          </div>
+          <div className="col-md-4">
+            <Chat />
+          </div>
         </div>
         <ReactTooltip />
       </div>

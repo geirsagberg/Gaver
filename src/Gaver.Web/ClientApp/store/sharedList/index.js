@@ -29,13 +29,13 @@ function setBoughtSuccess({wishId, isBought, userId}) {
   }
 }
 
-export default function reducer (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case DATA_LOADED:
-      state = state.merge(action.data.entities)
       var wishListId = action.data.result
-      state = state.set('owner', action.data.entities.wishLists[wishListId].owner)
-      return state
+      return state.merge(action.data.entities)
+        .set('owner', action.data.entities.wishLists[wishListId].owner)
+        .set('listId', wishListId)
     case SET_BOUGHT_SUCCESS:
       return state.setIn(['wishes', action.wishId, 'boughtByUser'], action.isBought ? action.userId : null)
   }
@@ -48,13 +48,13 @@ export const loadSharedList = listId => async dispatch => tryOrNotify(async () =
 })
 
 export const setBought = ({listId, wishId, isBought}) => async (dispatch, getState) => tryOrNotify(async () => {
-  await api.setBought({listId, wishId, isBought})
-  dispatch(setBoughtSuccess({wishId, isBought, userId: getState().user.id}))
+  await api.setBought({ listId, wishId, isBought })
+  dispatch(setBoughtSuccess({ wishId, isBought, userId: getState().user.id }))
 })
 
 const createCaller = dispatch =>
   (action, schema) =>
-      compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
+    compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
 
 export const initializeListUpdates = listId => async dispatch => {
   $.connection.hub.logging = isDevelopment

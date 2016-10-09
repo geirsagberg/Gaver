@@ -19,11 +19,13 @@ namespace Gaver.Web.Features
         [HttpPost("LogIn")]
         public async Task<UserModel> LogIn(LogInRequest request)
         {
+            var userModel = mediator.Send(request);
             var user = new ClaimsPrincipal(new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, request.Name)
+                new Claim(ClaimTypes.Name, userModel.Name),
+                new Claim(ClaimTypes.NameIdentifier, userModel.Id.ToString())
             }, CookieAuthenticationDefaults.AuthenticationScheme));
             await HttpContext.Authentication.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user);
-            return mediator.Send(request);
+            return userModel;
         }
 
         [HttpPost("LogOut")]

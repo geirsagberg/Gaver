@@ -1,0 +1,9 @@
+.chat {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+
+  &_messages {
+    flex: 1;
+  }
+}

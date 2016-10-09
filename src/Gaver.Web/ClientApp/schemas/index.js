@@ -14,3 +14,17 @@ export const user = new Schema('users')
 wish.define({
   boughtByUser: user
 })
+
+export const message = new Schema('messages')
+
+message.define({
+  user
+})
+
+export const messages = arrayOf(message)
+
+export const chat = new Schema('chat')
+
+chat.define({
+  messages
+})

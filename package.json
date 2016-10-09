@@ -5,9 +5,10 @@
   "scripts": {
     "test": "foreach -g 'test/**/project.json' -x 'cd #{dir} && dotnet test'",
     "test:watch": "npm test && watch -p '**/*.cs' -c 'npm test'",
+    "clean": "del src/**/obj/",
     "start": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet run",
     "start:prod": "cd src/Gaver.Web && webpack && dotnet run",
-    "watch": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
+    "watch": "cd src/Gaver.Web && del obj/ && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
     "build": "dotnet build **/project.json"
   },
   "author": "Geir Sagberg",
@@ -22,6 +23,7 @@
     "babel-preset-stage-3": "^6.11.0",
     "bootstrap": "^3.3.7",
     "css-loader": "^0.25.0",
+    "del-cli": "^0.2.0",
     "eslint": "^3.4.0",
     "eslint-config-standard": "^6.0.0",
     "eslint-plugin-promise": "^2.0.1",
