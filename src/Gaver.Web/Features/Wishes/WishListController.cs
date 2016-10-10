@@ -12,30 +12,27 @@ namespace Gaver.Web.Features.Wishes
     [Microsoft.AspNetCore.Authorization.Authorize]
     public class WishListController : Controller
     {
-        private readonly GaverContext gaverContext;
-        private readonly IHubContext<ListHub, IListHubClient> hub;
+        private readonly GetMyListHandler _getMyListHandler;
+        private readonly GetSharedListHandler _getSharedListHandler;
         private readonly IMediator mediator;
-        private readonly IMapperService mapperService;
 
-        public WishListController(GaverContext gaverContext, IMediator mediator, IConnectionManager signalRManager,
-            IMapperService mapperService)
+        public WishListController(GetMyListHandler getMyListHandler, GetSharedListHandler getSharedListHandler)
         {
-            this.gaverContext = gaverContext;
-            this.mediator = mediator;
-            this.mapperService = mapperService;
-            hub = signalRManager.GetHubContext<ListHub, IListHubClient>();
+            _getMyListHandler = getMyListHandler;
+            _getSharedListHandler = getSharedListHandler;
+//            hub = signalRManager.GetHubContext<ListHub, IListHubClient>();
         }
 
         [HttpGet]
         public MyListModel Get()
         {
-            return mediator.Send(new GetMyListRequest {UserName = User.Identity.Name});
+            return _getMyListHandler.Handle(new GetMyListRequest {UserName = User.Identity.Name});
         }
 
         [HttpGet("{listId:int}")]
         public SharedListModel Get(int listId)
         {
-            return mediator.Send(new GetSharedListRequest {ListId = listId});
+            return _getSharedListHandler.Handle(new GetSharedListRequest {ListId = listId});
         }
 
         [HttpPost("{listId:int}")]

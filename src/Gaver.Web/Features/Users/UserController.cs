@@ -9,17 +9,17 @@ namespace Gaver.Web.Features
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly IMediator mediator;
+        private readonly LogInHandler _handler;
 
-        public UserController(IMediator mediator)
+        public UserController(LogInHandler handler)
         {
-            this.mediator = mediator;
+            _handler = handler;
         }
 
         [HttpPost("LogIn")]
         public async Task<UserModel> LogIn(LogInRequest request)
         {
-            var userModel = mediator.Send(request);
+            var userModel = _handler.Handle(request);
             var user = new ClaimsPrincipal(new ClaimsIdentity(new[] {
                 new Claim(ClaimTypes.Name, userModel.Name),
                 new Claim(ClaimTypes.NameIdentifier, userModel.Id.ToString())

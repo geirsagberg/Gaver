@@ -11,11 +11,13 @@ namespace Gaver.Web.Features.Chatting
     [Authorize]
     public class ChatController : Controller
     {
-        private readonly IMediator mediator;
+        private readonly AddMessageHandler _addMessageHandler;
+        private readonly GetMessagesHandler _getMessagesHandler;
 
-        public ChatController(IMediator mediator)
+        public ChatController(AddMessageHandler addMessageHandler, GetMessagesHandler getMessagesHandler)
         {
-            this.mediator = mediator;
+            _addMessageHandler = addMessageHandler;
+            _getMessagesHandler = getMessagesHandler;
         }
 
         [HttpPost("{listId:int}")]
@@ -23,13 +25,13 @@ namespace Gaver.Web.Features.Chatting
         {
             request.WishListId = listId;
             request.UserId = User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value.ToInt();
-            return mediator.Send(request);
+            return _addMessageHandler.Handle(request);
         }
 
         [HttpGet("{listId:int}")]
         public ChatModel GetMessages(int listId)
         {
-            return mediator.Send(new GetMessagesRequest{WishListId = listId});
+            return _getMessagesHandler.Handle(new GetMessagesRequest{WishListId = listId});
         }
     }
 }

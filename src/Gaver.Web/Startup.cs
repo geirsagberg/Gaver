@@ -76,12 +76,12 @@ namespace Gaver.Web
 
             var container = new ServiceContainer();
             container.PropertyDependencySelector = new PropertyInjectionDisabler();
-            container.RegisterAssembly<IMediator>();
+//            container.RegisterAssembly<IMediator>();
             container.RegisterAssembly<ILogicAssembly>();
-            container.Register<SingleInstanceFactory>(factory => type => factory.GetInstance(type),
-                new PerContainerLifetime());
-            container.Register<MultiInstanceFactory>(factory => type => factory.GetAllInstances(type),
-                new PerContainerLifetime());
+//            container.Register<SingleInstanceFactory>(factory => type => factory.GetInstance(type),
+//                new PerContainerLifetime());
+//            container.Register<MultiInstanceFactory>(factory => type => factory.GetAllInstances(type),
+//                new PerContainerLifetime());
             container.RegisterAssembly<Startup>();
             container.Register<IContractResolver, SignalRContractResolver>(new PerContainerLifetime());
             var provider = container.CreateServiceProvider(services);
@@ -89,7 +89,6 @@ namespace Gaver.Web
             return provider;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
             Log.Logger = new LoggerConfiguration()
