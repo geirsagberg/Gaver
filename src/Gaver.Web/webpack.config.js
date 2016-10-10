@@ -16,9 +16,9 @@ module.exports = merge({
   module: {
     loaders: [
       { test: /jquery\.js$/, loader: 'expose?jQuery!expose?$' },
-      { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel-loader' },
-      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader?sourceMap=inline') }
+      { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel' },
+      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url?limit=100000' },
+      { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css!postcss?sourceMap=inline') }
     ]
   },
   postcss: function () {
