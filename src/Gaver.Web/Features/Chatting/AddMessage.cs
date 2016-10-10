@@ -2,12 +2,11 @@
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic.Contracts;
-using MediatR;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Chatting
 {
-    public class AddMessageRequest : IRequest<ChatMessageModel>
+    public class AddMessageRequest
     {
         [Required]
         [MinLength(1)]

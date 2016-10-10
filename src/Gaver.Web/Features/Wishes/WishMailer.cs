@@ -1,32 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Flurl;
 using Gaver.Logic;
 using Gaver.Logic.Contracts;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class ShareListRequest
-    {
-        [Required]
-        [MinLength(1)]
-        public string[] Emails { get; set; }
-
-        [JsonIgnore]
-        public int WishListId { get; set; }
-
-        [JsonIgnore]
-        public string UserName { get; set; }
-    }
-
-    public class ShareListHandler : IAsyncRequestHandler<ShareListRequest>
+    public class WishMailer : IAsyncRequestHandler<ShareListRequest>
     {
         private readonly IMailSender mailSender;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ShareListHandler(IMailSender mailSender, IHttpContextAccessor httpContextAccessor)
+        public WishMailer(IMailSender mailSender, IHttpContextAccessor httpContextAccessor)
         {
             this.mailSender = mailSender;
             _httpContextAccessor = httpContextAccessor;

@@ -8,7 +8,6 @@ using Gaver.Logic.Services;
 using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +27,7 @@ namespace Gaver.Web
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public Startup(IHostingEnvironment hostingEnvironment)
         {
@@ -74,14 +73,8 @@ namespace Gaver.Web
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
             services.AddSwaggerGen();
 
-            var container = new ServiceContainer();
-            container.PropertyDependencySelector = new PropertyInjectionDisabler();
-//            container.RegisterAssembly<IMediator>();
+            var container = new ServiceContainer {PropertyDependencySelector = new PropertyInjectionDisabler()};
             container.RegisterAssembly<ILogicAssembly>();
-//            container.Register<SingleInstanceFactory>(factory => type => factory.GetInstance(type),
-//                new PerContainerLifetime());
-//            container.Register<MultiInstanceFactory>(factory => type => factory.GetAllInstances(type),
-//                new PerContainerLifetime());
             container.RegisterAssembly<Startup>();
             container.Register<IContractResolver, SignalRContractResolver>(new PerContainerLifetime());
             var provider = container.CreateServiceProvider(services);

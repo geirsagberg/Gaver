@@ -4,12 +4,11 @@ using Gaver.Data.Entities;
 using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
-using MediatR;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class SetBoughtRequest : IRequest<WishModel>
+    public class SetBoughtRequest
     {
         public bool IsBought { get; set; }
 
@@ -20,7 +19,7 @@ namespace Gaver.Web.Features.Wishes
         [JsonIgnore]
         public string UserName { get; set; }
     }
-    
+
 
     public class SetBoughtHandler : IRequestHandler<SetBoughtRequest, WishModel>
     {

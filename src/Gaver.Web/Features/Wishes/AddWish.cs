@@ -3,12 +3,11 @@ using System.Linq;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic.Contracts;
-using MediatR;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class AddWishRequest : IRequest<WishModel>
+    public class AddWishRequest
     {
         [Required]
         [MinLength(1)]
@@ -23,7 +22,6 @@ namespace Gaver.Web.Features.Wishes
 
     public class AddWishHandler : IRequestHandler<AddWishRequest, WishModel>
     {
-
         private readonly GaverContext context;
         private readonly IMapperService mapperService;
 

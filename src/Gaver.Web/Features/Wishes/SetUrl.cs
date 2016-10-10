@@ -4,12 +4,11 @@ using Gaver.Data.Entities;
 using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
-using MediatR;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class SetUrlRequest : IRequest<WishModel>
+    public class SetUrlRequest
     {
         public string Url { get; set; }
 
