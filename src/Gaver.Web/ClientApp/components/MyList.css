@@ -1,3 +1,5 @@
+@import '../css/variables.css'
+
 $gray-base:              #000;
 $gray-darker:            #222;
 $gray-dark:              #333;

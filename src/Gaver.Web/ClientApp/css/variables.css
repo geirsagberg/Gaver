@@ -1,5 +1,3 @@
-@import '../css/variables.css'
-
 $gray-base:              #000;
 $gray-darker:            #222;
 $gray-dark:              #333;
@@ -12,18 +10,3 @@ $brand-success:         #00bc8c;
 $brand-info:            #3498DB;
 $brand-warning:         #F39C12;
 $brand-danger:          #E74C3C;
-
-.chat {
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-
-  &_messages {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: calc(100vh - 140px);
-    background: $gray-dark;
-    border: 1px solid $gray;
-  }
-}
