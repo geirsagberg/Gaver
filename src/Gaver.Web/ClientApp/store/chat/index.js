@@ -10,6 +10,15 @@ const namespace = 'gaver/chat/'
 const MESSAGES_LOADED = namespace + 'MESSAGES_LOADED'
 const MESSAGE_ADDED = namespace + 'MESSAGE_ADDED'
 
+function users(state = initialState, action) {
+  switch (action.type) {
+    case MESSAGES_LOADED:
+    case MESSAGE_ADDED:
+      return state.merge(action.data.entities.users)
+  }
+  return state
+}
+
 function messages(state = initialState, action) {
   switch (action.type) {
     case MESSAGES_LOADED:
@@ -21,7 +30,8 @@ function messages(state = initialState, action) {
 }
 
 export default combineReducers({
-  messages
+  messages,
+  users
 })
 
 function messagesLoaded(data) {

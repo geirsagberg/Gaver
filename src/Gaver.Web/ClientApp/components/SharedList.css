@@ -26,6 +26,11 @@ $brand-danger:          #E74C3C;
     background: $gray-dark;
     border: 1px solid $gray;
   }
+
+  &_message {
+    padding: 1rem;
+    border-bottom: 1px solid $gray;
+  }
 }
 
 @media(max-width:767px){}
