@@ -18,7 +18,7 @@ module.exports = merge({
       { test: /jquery\.js$/, loader: 'expose?jQuery!expose?$' },
       { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel' },
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url?limit=100000' },
-      { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css!postcss?sourceMap=inline') }
+      { test: /\.css$/, loader: 'style!css!postcss?sourceMap=inline' }
     ]
   },
   postcss: function () {
@@ -33,7 +33,7 @@ module.exports = merge({
     publicPath: '/dist/'
   },
   plugins: [
-    new ExtractTextPlugin('styles.css'),
+    // new ExtractTextPlugin('styles.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production')
     }),

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { map } from 'utils/immutableExtensions'
+import { map, size } from 'utils/immutableExtensions'
 import * as chatActions from 'store/chat'
 import Immutable from 'seamless-immutable'
 
@@ -32,6 +32,14 @@ class Chat extends React.Component {
     this.props.loadMessages(this.props.listId)
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (this.props.messages::size() !== nextProps.messages::size()) {
+      setTimeout(() => {
+        this.chatMessages.scrollTop = this.chatMessages.scrollHeight
+      }, 0)
+    }
+  }
+
   onKeyUp(e) {
     if (e.which === 13) {
       this.addMessage()
@@ -48,7 +56,7 @@ class Chat extends React.Component {
   render() {
     return (
       <div className="chat">
-        <div className="chat_messages">
+        <div className="chat_messages" ref={el => { this.chatMessages = el }}>
           {this.props.messages::map(message => <ChatMessage {...{message}} key={message.id} />)}
         </div>
         <div className="chat_input input-group">

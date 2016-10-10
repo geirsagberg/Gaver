@@ -22,8 +22,19 @@ $brand-danger:          #E74C3C;
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: calc(100vh - 140px);
+    max-height: calc(50vh - 45px);
     background: $gray-dark;
     border: 1px solid $gray;
   }
 }
+
+@media(max-width:767px){}
+@media(min-width:768px){}
+
+@media(min-width:992px){
+  .chat_messages {
+    max-height: calc(100vh - 140px);
+  }
+}
+
+@media(min-width:1200px){}

@@ -1,5 +1,6 @@
 import _get from 'lodash/get'
 import _map from 'lodash/map'
+import _size from 'lodash/size'
 
 export function deepMerge(input) {
   return this.merge(input, { deep: true })
@@ -16,4 +17,8 @@ export function getIn(path, fallback) {
 
 export function map(func) {
   return _map(this, func)
+}
+
+export function size() {
+  return _size(this)
 }
