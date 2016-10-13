@@ -1,22 +1,35 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { map, size } from 'utils/immutableExtensions'
+import { map, size, values } from 'utils/immutableExtensions'
 import * as chatActions from 'store/chat'
 import Immutable from 'seamless-immutable'
+import classNames from 'classnames'
+import './Chat.css'
 
 class ChatMessage extends React.Component {
   static get propTypes() {
     return {
       message: PropTypes.object.isRequired,
-      users: PropTypes.object.isRequired
+      users: PropTypes.object.isRequired,
+      userId: PropTypes.number.isRequired,
+      firstOfUser: PropTypes.bool.isRequired
     }
   }
 
   render() {
+    const isSelf = this.props.message.user === this.props.userId
+    const { firstOfUser } = this.props
     return (
-      <div className="chat_message">
-        <span className="chat_user">{this.props.users[this.props.message.user].name}:&nbsp;</span>
-        {this.props.message.text}
+      <div className={classNames('chat_message', {
+        'chat_message-first': firstOfUser,
+        'chat_message-self': isSelf
+      })}>
+        {firstOfUser && <span className="chat_user">{this.props.users[this.props.message.user].name}:&nbsp;</span>}
+        <div className={classNames('chat_innerMessage', {
+          [`chat-user-${(this.props.message.user % 5) + 1}`]: !isSelf
+        })}>
+          {this.props.message.text}
+        </div>
       </div>
     )
   }
@@ -29,7 +42,8 @@ class Chat extends React.Component {
       messages: PropTypes.object.isRequired,
       loadMessages: PropTypes.func.isRequired,
       listId: PropTypes.number.isRequired,
-      users: PropTypes.object.isRequired
+      users: PropTypes.object.isRequired,
+      userId: PropTypes.number.isRequired
     }
   }
 
@@ -59,11 +73,17 @@ class Chat extends React.Component {
   }
 
   render() {
-    const { users } = this.props
+    const { users, userId } = this.props
+    const messages = this.props.messages::values()
     return (
       <div className="chat">
         <div className="chat_messages" ref={el => { this.chatMessages = el }}>
-          {this.props.messages::map(message => <ChatMessage {...{message, users}} key={message.id} />)}
+          {messages::map((message, i) => <ChatMessage {...{
+            message,
+            users,
+            userId,
+            firstOfUser: i === 0 || message.user !== messages[i - 1].user
+          }} key={message.id} />)}
         </div>
         <div className="chat_input input-group">
           <input className="form-control" placeholder="Skriv en melding..." ref={el => { this.chatInput = el }} onKeyUp={::this.onKeyUp} />
@@ -79,7 +99,8 @@ class Chat extends React.Component {
 const mapStateToProps = state => ({
   messages: state.chat.messages || Immutable({}),
   listId: +window.location.pathname.match(/list\/([0-9]+)/i)[1],
-  users: state.chat.users || Immutable({})
+  users: state.chat.users || Immutable({}),
+  userId: state.user.id || 0
 })
 
 const dispatchActions = {

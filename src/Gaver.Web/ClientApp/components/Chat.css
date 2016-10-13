@@ -1,0 +1,86 @@
+@import '../css/variables.css'
+
+$gray-base:              #000;
+$gray-darker:            #222;
+$gray-dark:              #333;
+$gray:                   #464545;
+$gray-light:             #999;
+$gray-lighter:           #EBEBEB;
+
+$brand-primary:         #375a7f;
+$brand-success:         #00bc8c;
+$brand-info:            #3498DB;
+$brand-warning:         #F39C12;
+$brand-danger:          #E74C3C;
+
+$chat-1: #C97064;
+$chat-2: #D5573B;
+$chat-3: #777DA7;
+$chat-4: #68A357;
+$chat-5: #32965D;
+
+$chat-self: #22333B;
+
+.chat {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+
+  &-user-1 { background: $chat-1; border-color: color($chat-1 shade(10%)) }
+  &-user-2 { background: $chat-2; border-color: color($chat-2 shade(10%)) }
+  &-user-3 { background: $chat-3; border-color: color($chat-3 shade(10%)) }
+  &-user-4 { background: $chat-4; border-color: color($chat-4 shade(10%)) }
+  &-user-5 { background: $chat-5; border-color: color($chat-5 shade(10%)) }
+
+  &_user {
+    font-size: 90%;
+    font-style: italic;
+    color: $gray-light;
+  }
+
+  &_messages {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(50vh - 45px);
+    background: $gray-dark;
+    border: 1px solid $gray;
+  }
+
+  &_message {
+    margin: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &-first {
+      margin-top: 0.5rem;
+    }
+
+    &-self {
+      align-items: flex-end;
+
+      .chat_innerMessage {
+        background: $chat-self;
+        border-color: color($chat-self shade(20%));
+      }
+    }
+  }
+  &_innerMessage {
+    padding: 0.5rem 1rem;
+    border: 1px solid $gray;
+    border-radius: 3px;
+    display: inline-block;
+  }
+}
+
+@media(max-width:767px){}
+@media(min-width:768px){}
+
+@media(min-width:992px){
+  .chat_messages {
+    max-height: calc(100vh - 140px);
+  }
+}
+
+@media(min-width:1200px){}

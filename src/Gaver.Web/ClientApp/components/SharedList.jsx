@@ -6,7 +6,6 @@ import Immutable from 'seamless-immutable'
 import * as sharedListActions from 'store/sharedList'
 import { getIn, map } from 'utils/immutableExtensions'
 import { logOut } from 'store/user'
-import './SharedList.css'
 import Chat from 'components/Chat'
 
 class Wish extends React.Component {
