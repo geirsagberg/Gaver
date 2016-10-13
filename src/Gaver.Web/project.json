@@ -76,10 +76,5 @@
       "**.user",
       "**.vspscc"
     ]
-  },
-  "scripts": {
-    "prepublish": [
-      "npm run webpack"
-    ]
   }
 }
