@@ -78,14 +78,8 @@
     ]
   },
   "scripts": {
-    "prepare": [
-      "npm install"
-    ],
     "prepublish": [
-      "webpack"
-    ],
-    "postpublish": [
-      "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%"
+      "npm run webpack"
     ]
   }
 }
