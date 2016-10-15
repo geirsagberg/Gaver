@@ -5,16 +5,17 @@ using Gaver.Data.Entities;
 using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
+using Gaver.Web.Features.Wishes.Requests;
 
 namespace Gaver.Web.Features.Wishes
 {
     public class WishCommander :
         IRequestHandler<AddWishRequest, WishModel>,
         IRequestHandler<SetUrlRequest, WishModel>,
-        IRequestHandler<SetBoughtRequest, WishModel>,
+        IRequestHandler<SetBoughtRequest, SharedWishModel>,
+        IRequestHandler<SetDescriptionRequest, WishModel>,
         IRequestHandler<DeleteWishRequest>
     {
-
         private readonly GaverContext context;
         private readonly IMapperService mapper;
 
@@ -27,7 +28,7 @@ namespace Gaver.Web.Features.Wishes
 
         public WishModel Handle(AddWishRequest message)
         {
-            var wishListId = context.Users.Where(u => u.Name == message.UserName).Select(u => u.WishLists.Single().Id).Single();
+            var wishListId = context.WishLists.Single(wl => wl.UserId == message.UserId).Id;
             var wish = new Wish
             {
                 Title = message.Title,
@@ -38,12 +39,9 @@ namespace Gaver.Web.Features.Wishes
             return mapper.Map<WishModel>(wish);
         }
 
-
         public WishModel Handle(SetUrlRequest message)
         {
-            var wish = context.GetOrDie<Wish>(message.WishId);
-            if (wish.WishListId != message.WishListId)
-                throw new FriendlyException(EventIds.WrongList, $"Wish {message.WishId} does not belong to list {message.WishListId}");
+            var wish = GetWish(message.WishId, message.WishListId);
 
             var urlString = message.Url;
 
@@ -64,15 +62,29 @@ namespace Gaver.Web.Features.Wishes
             }
 
             context.SaveChanges();
-
             return mapper.Map<WishModel>(wish);
         }
 
-        public WishModel Handle(SetBoughtRequest message)
+        public WishModel Handle(SetDescriptionRequest message)
         {
-            var wish = context.GetOrDie<Wish>(message.WishId);
-            if (wish.WishListId != message.WishListId)
-                throw new FriendlyException(EventIds.WrongList, $"Wish {message.WishId} does not belong to list {message.WishListId}");
+            var wish = GetWish(message.WishId, message.WishListId);
+            wish.Description = message.Description;
+            context.SaveChanges();
+            return mapper.Map<WishModel>(wish);
+        }
+
+        private Wish GetWish(int wishId, int wishListId)
+        {
+            var wish = context.GetOrDie<Wish>(wishId);
+            if (wish.WishListId != wishListId)
+                throw new FriendlyException(EventIds.WrongList,
+                    $"Wish {wishId} does not belong to list {wishListId}");
+            return wish;
+        }
+
+        public SharedWishModel Handle(SetBoughtRequest message)
+        {
+            var wish = GetWish(message.WishId, message.WishListId);
 
             var userId = context.Set<User>().Single(u => u.Name == message.UserName).Id;
 
@@ -88,7 +100,7 @@ namespace Gaver.Web.Features.Wishes
                 wish.BoughtByUserId = null;
             }
             context.SaveChanges();
-            return mapper.Map<WishModel>(wish);
+            return mapper.Map<SharedWishModel>(wish);
         }
 
 

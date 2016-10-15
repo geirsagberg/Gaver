@@ -69,6 +69,24 @@ export const editUrl = ({listId, wishId}) => async (dispatch, getState) => {
   })
 }
 
+export const editDescription = ({listId, wishId}) => async (dispatch, getState) => {
+  const description = await showPrompt({
+    title: 'Legg inn beskrivelse og/eller pris',
+    value: getState().myList.wishes[wishId].description
+  })
+  if (description === null) {
+    return
+  }
+  tryOrNotify(async () => {
+    const wish = await Api.setDescription({
+      listId,
+      wishId,
+      description
+    })
+    dispatch(wishUpdated(wish))
+  })
+}
+
 export function wishUpdated(wish) {
   return {
     type: WISH_UPDATED,

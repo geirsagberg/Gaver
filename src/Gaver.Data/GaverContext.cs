@@ -16,13 +16,12 @@ namespace Gaver.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(entity => { entity.HasIndex(u => u.Name).IsUnique(); });
-            modelBuilder.Entity<ChatMessage>(
-                entity =>
-                {
-                    entity.Property(e => e.Created)
-                        .ValueGeneratedOnAdd()
-                        .ForSqliteHasDefaultValueSql("CURRENT_TIMESTAMP");
-                });
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                entity.Property(e => e.Created)
+                    .ValueGeneratedOnAdd()
+                    .ForSqliteHasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
         }
 
         public DbSet<Wish> Wishes { get; set; }

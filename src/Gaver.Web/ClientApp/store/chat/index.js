@@ -13,6 +13,7 @@ const MESSAGE_ADDED = namespace + 'MESSAGE_ADDED'
 function users(state = initialState, action) {
   switch (action.type) {
     case MESSAGES_LOADED:
+      return action.data.entities.users || initialState
     case MESSAGE_ADDED:
       return state.merge(action.data.entities.users)
   }

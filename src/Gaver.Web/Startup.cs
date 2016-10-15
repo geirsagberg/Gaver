@@ -62,11 +62,9 @@ namespace Gaver.Web
             });
             const string connectionString = "Data Source=MyDb.db";
             services.AddEntityFrameworkSqlite()
-                .AddDbContext<GaverContext>((serviceProvider, options) =>
-                {
-                    options.UseSqlite(connectionString,
-                        b => b.MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName));
-                });
+                .AddDbContext<GaverContext>(options => options
+                    .UseSqlite(connectionString, b => b
+                        .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)));
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

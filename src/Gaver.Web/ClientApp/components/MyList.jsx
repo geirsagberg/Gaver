@@ -14,16 +14,22 @@ class Wish extends React.Component {
       wish: PropTypes.object,
       deleteWish: PropTypes.func.isRequired,
       listId: PropTypes.number,
-      editUrl: PropTypes.func.isRequired
+      editUrl: PropTypes.func.isRequired,
+      editDescription: PropTypes.func.isRequired
     }
   }
 
   render() {
-    const { wish, listId, deleteWish, editUrl } = this.props
+    const { wish, listId, deleteWish, editUrl, editDescription } = this.props
     return (
       <li className="list-group-item wish">
-        <span>{wish.title}</span>
-        {wish.url ? <span><a href={wish.url} className="wish_url">{wish.url}</a><span className="icon-pencil clickable" onClick={() => editUrl({listId, wishId: wish.id})} /></span> : <button className="btn btn-link wish_btn" onClick={() => editUrl({listId, wishId: wish.id})}>Legg til lenke</button>}
+        <span className="wish_title">{wish.title}</span>
+        {wish.url
+          ? <span className="wish_url"><a href={wish.url} className="wish_urlLink">{wish.url}</a><span className="icon-pencil clickable wish_edit" onClick={() => editUrl({listId, wishId: wish.id})} /></span>
+          : <button className="btn btn-link wish_btn" onClick={() => editUrl({listId, wishId: wish.id})}>Legg til lenke</button>}
+        {wish.description
+          ? <span className="wish_description">{wish.description}<span className="icon-pencil clickable wish_edit" onClick={() => editDescription({listId, wishId: wish.id})} /></span>
+          : <button className="btn btn-link wish_btn" onClick={() => editDescription({listId, wishId: wish.id})}>Legg til beskrivelse</button>}
         <button className="btn btn-link wish_btn wish_btn-right" onClick={() => deleteWish({listId, wishId: wish.id}) }>Fjern</button>
       </li>
     )
@@ -42,7 +48,8 @@ class MyList extends React.Component {
       userName: PropTypes.string,
       logOut: PropTypes.func,
       listId: PropTypes.number,
-      editUrl: PropTypes.func
+      editUrl: PropTypes.func,
+      editDescription: PropTypes.func
     }
   }
 
@@ -64,7 +71,7 @@ class MyList extends React.Component {
   }
 
   render() {
-    const { listId, deleteWish, editUrl } = this.props
+    const { listId, deleteWish, editUrl, editDescription } = this.props
     return (
       <div>
         <header className="header">
@@ -89,7 +96,7 @@ class MyList extends React.Component {
             </span>
           </div>
           <ul className="list-group">
-            {map(this.props.wishes, wish => <Wish key={wish.id} {...{wish, listId, deleteWish, editUrl}} />)}
+            {map(this.props.wishes, wish => <Wish key={wish.id} {...{wish, listId, deleteWish, editUrl, editDescription}} />)}
           </ul>
         </div>
         <ReactTooltip />

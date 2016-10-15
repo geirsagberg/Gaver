@@ -42,17 +42,54 @@ namespace Gaver.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Autoincrement", true),
+                    Created = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    Text = table.Column<string>(maxLength: 255, nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    WishListId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_WishLists_WishListId",
+                        column: x => x.WishListId,
+                        principalTable: "WishLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Wishes",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Autoincrement", true),
-                    Title = table.Column<string>(nullable: true),
+                    BoughtByUserId = table.Column<int>(nullable: true),
+                    Description = table.Column<string>(maxLength: 4000, nullable: true),
+                    Title = table.Column<string>(maxLength: 255, nullable: false),
+                    Url = table.Column<string>(maxLength: 255, nullable: true),
                     WishListId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Wishes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Wishes_Users_BoughtByUserId",
+                        column: x => x.BoughtByUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Wishes_WishLists_WishListId",
                         column: x => x.WishListId,
@@ -62,10 +99,25 @@ namespace Gaver.Web.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_UserId",
+                table: "ChatMessages",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_WishListId",
+                table: "ChatMessages",
+                column: "WishListId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Name",
                 table: "Users",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wishes_BoughtByUserId",
+                table: "Wishes",
+                column: "BoughtByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wishes_WishListId",
@@ -80,6 +132,9 @@ namespace Gaver.Web.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ChatMessages");
+
             migrationBuilder.DropTable(
                 name: "Wishes");
 

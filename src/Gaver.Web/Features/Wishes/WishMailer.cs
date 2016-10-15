@@ -2,6 +2,7 @@
 using Flurl;
 using Gaver.Logic;
 using Gaver.Logic.Contracts;
+using Gaver.Web.Features.Wishes.Requests;
 using Microsoft.AspNetCore.Http;
 
 namespace Gaver.Web.Features.Wishes

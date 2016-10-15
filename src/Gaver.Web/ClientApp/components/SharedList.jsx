@@ -26,7 +26,8 @@ class Wish extends React.Component {
         <span className={classNames('wish_title', {
           'wish_title-bought': !!wish.boughtByUser
         })}>{wish.title}</span>
-        <a href={wish.url} className="wish_url">{wish.url}</a>
+        {wish.url && <a href={wish.url} className="wish_url">{wish.url}</a>}
+        {wish.description && <span className="wish_description">{wish.description}</span>}
         {!wish.boughtByUser || wish.boughtByUser === userId
           ? <span className="checkbox wish_detail wish_detail-right">
             <label>

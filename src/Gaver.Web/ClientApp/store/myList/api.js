@@ -22,3 +22,7 @@ export function shareList ({listId, emails}) {
 export function setUrl ({listId, wishId, url}) {
   return putJson(`/api/WishList/${listId}/${wishId}/SetUrl`, {url}, schemas.wish)
 }
+
+export function setDescription ({listId, wishId, description}) {
+  return putJson(`/api/WishList/${listId}/${wishId}/setDescription`, {description}, schemas.wish)
+}
