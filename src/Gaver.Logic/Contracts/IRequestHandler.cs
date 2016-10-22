@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Gaver.Logic.Contracts
+﻿namespace Gaver.Logic.Contracts
 {
     public interface IRequestHandler <in TRequest, out TReturn>
     {

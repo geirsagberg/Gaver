@@ -18,13 +18,13 @@ namespace Gaver.Web
         public ListHub(ILogger<ListHub> logger, GaverContext gaverContext, IMapperService mapper)
         {
             this.logger = logger;
-            _gaverContext = gaverContext;
-            _mapper = mapper;
+            this.gaverContext = gaverContext;
+            this.mapper = mapper;
         }
 
         private readonly ILogger<ListHub> logger;
-        private readonly GaverContext _gaverContext;
-        private readonly IMapperService _mapper;
+        private readonly GaverContext gaverContext;
+        private readonly IMapperService mapper;
 
         private static readonly HashSet<UserListConnection> userListConnections
             = new HashSet<UserListConnection>();
@@ -83,8 +83,8 @@ namespace Gaver.Web
         {
             var connections = userListConnections.Where(c => c.ListId == listId).ToList();
             var userIds = connections.Select(c => c.UserId).ToList();
-            var users = _gaverContext.Users.Where(u => userIds.Contains(u.Id));
-            var userModels = _mapper.Map<UserModel[]>(users);
+            var users = gaverContext.Users.Where(u => userIds.Contains(u.Id));
+            var userModels = mapper.Map<UserModel[]>(users);
             return new SubscriptionStatus
             {
                 CurrentUsers = userModels

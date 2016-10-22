@@ -1,7 +1,6 @@
 import Immutable from 'seamless-immutable'
 import * as api from './api'
 import { isDevelopment, tryOrNotify } from 'utils'
-import { compose } from 'redux'
 import $ from 'jquery'
 import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
@@ -59,23 +58,14 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
   dispatch(setBoughtSuccess({ wishId, isBought, userId: getState().user.id }))
 })
 
-// function creator that takes a dispatch function and gives a new function that can be called with an action creator, data and an optional schema to optionally normalize the data, then make it immutable, call an action creator on the result and finally dispatch the action.
-// const createCaller = dispatch =>
-//   (action, data, schema) =>
-//     compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
-
 export const subscribeList = listId => async dispatch => {
   $.connection.hub.logging = isDevelopment
   const { server, client } = $.connection.listHub
   client.updateUsers = data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
-  // client.refresh = data => dispatch(dataLoaded(Immutable(normalize(data.wishes, schemas.wishes))))
   client.refresh = () => {
     dispatch(loadSharedList(listId))
     dispatch(loadMessages(listId))
   }
-  // const call = createCaller(dispatch)
-  // client.updateUsers = data => call(setUsers, data.currentUsers, schemas.users)
-  // client.refresh = data => call(dataLoaded, data, schemas.wishList)
   await $.connection.hub.start()
   const users = await server.subscribe(listId)
   client.updateUsers(users)

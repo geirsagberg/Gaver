@@ -3,7 +3,6 @@ using System.Linq;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic.Contracts;
-using Gaver.Web.Features.Wishes;
 
 namespace Gaver.Web.Features
 {

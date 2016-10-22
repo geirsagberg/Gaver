@@ -10,7 +10,8 @@
     "start:prod": "cd src/Gaver.Web && webpack && dotnet run",
     "watch": "cd src/Gaver.Web && del obj/ && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
     "build": "dotnet build **/project.json",
-    "webpack": "cd src/Gaver.Web && webpack"
+    "webpack": "cd src/Gaver.Web && webpack",
+    "cloc": "cloc --exclude-dir=node_modules,typings,wwwroot,bin,obj --exclude-lang=JSON ."
   },
   "author": "Geir Sagberg",
   "license": "MIT",

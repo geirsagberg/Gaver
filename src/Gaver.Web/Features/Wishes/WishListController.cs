@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Gaver.Web.Extensions;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
 using Microsoft.AspNetCore.Mvc;
