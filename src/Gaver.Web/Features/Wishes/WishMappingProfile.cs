@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Gaver.Data.Entities;
 using Gaver.Logic;
+using Gaver.Web.Features.Wishes.Models;
 
 namespace Gaver.Web.Features.Wishes
 {

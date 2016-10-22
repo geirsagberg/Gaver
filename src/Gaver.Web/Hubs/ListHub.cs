@@ -61,12 +61,19 @@ namespace Gaver.Web
         }
 
         [Authorize]
-        public void Unsubscribe()
+        public void UnsubscribeList(int listId)
         {
+            userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
+            Clients.Group(GetGroup(listId)).UpdateUsers(GetStatus(listId));
+        }
+
+        [Authorize]
+        public void UnsubscribeAll()
+        {
+            userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
             var listIds = userListConnections
                 .Where(c => c.ConnectionId == Context.ConnectionId)
                 .Select(c => c.ListId);
-            userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
             foreach (var listId in listIds)
             {
                 Clients.Group(GetGroup(listId)).UpdateUsers(GetStatus(listId));
@@ -88,15 +95,20 @@ namespace Gaver.Web
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            Unsubscribe();
+            UnsubscribeAll();
             return base.OnDisconnected(stopCalled);
         }
     }
 
     public static class ListHubExtensions
     {
-        public static void RefreshData(this IHubContext<ListHub, IListHubClient> hub, int listId, SharedListModel model)
-            => hub.Clients.Group(ListHub.GetGroup(listId)).Refresh(model);
+        public static void RefreshData(this IHubContext<ListHub, IListHubClient> hub, int listId, int? excludeUserId = null)
+        {
+            var excludeConnectionIds = excludeUserId.HasValue
+                ? ListHub.GetConnectionIdsForUser(excludeUserId.Value)
+                : new string[0];
+            hub.Clients.Group(ListHub.GetGroup(listId), excludeConnectionIds).Refresh();
+        }
     }
 
     public class UserListConnection
@@ -110,7 +122,7 @@ namespace Gaver.Web
     {
         void UpdateUsers(SubscriptionStatus status);
         void HeartBeat();
-        void Refresh(SharedListModel model);
+        void Refresh();
     }
 
     public class SubscriptionStatus

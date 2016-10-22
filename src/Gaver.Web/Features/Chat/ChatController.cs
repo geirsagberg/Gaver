@@ -4,7 +4,7 @@ using Gaver.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Gaver.Web.Features.Chatting
+namespace Gaver.Web.Features.Chat
 {
     [Route("api/[controller]")]
     [Authorize]

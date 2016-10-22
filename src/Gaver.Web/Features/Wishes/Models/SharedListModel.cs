@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Gaver.Web.Features.Wishes
+namespace Gaver.Web.Features.Wishes.Models
 {
     public class SharedListModel
     {

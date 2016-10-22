@@ -5,9 +5,9 @@ using Gaver.Data.Entities;
 using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
+using Gaver.Web.Features.LiveUpdates;
+using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Infrastructure;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -20,15 +20,13 @@ namespace Gaver.Web.Features.Wishes
     {
         private readonly GaverContext context;
         private readonly IMapperService mapper;
-        private readonly IRequestHandler<GetSharedListRequest, SharedListModel> _sharedListHandler;
-        private readonly IHubContext<ListHub, IListHubClient> hub;
+        private readonly ClientNotifier _clientNotifier;
 
-        public WishCommander(GaverContext context, IMapperService mapper, IConnectionManager signalRManager, IRequestHandler<GetSharedListRequest, SharedListModel> sharedListHandler)
+        public WishCommander(GaverContext context, IMapperService mapper, ClientNotifier clientNotifier)
         {
             this.context = context;
             this.mapper = mapper;
-            _sharedListHandler = sharedListHandler;
-            hub = signalRManager.GetHubContext<ListHub, IListHubClient>();
+            _clientNotifier = clientNotifier;
         }
 
         public WishModel Handle(AddWishRequest message)
@@ -41,15 +39,8 @@ namespace Gaver.Web.Features.Wishes
             };
             context.Add(wish);
             context.SaveChanges();
-            RefreshList(wishListId);
+            _clientNotifier.RefreshList(wishListId, null);
             return mapper.Map<WishModel>(wish);
-        }
-
-        private void RefreshList(int wishListId, int? userId = null)
-        {
-            var sharedList = _sharedListHandler.Handle(new GetSharedListRequest {ListId = wishListId});
-            var connectionIdsForUser = userId == null ? new string[0] : ListHub.GetConnectionIdsForUser(userId.Value);
-            hub.Clients.Group(ListHub.GetGroup(wishListId), connectionIdsForUser).Refresh(sharedList);
         }
 
         public WishModel Handle(SetUrlRequest message)
@@ -75,7 +66,7 @@ namespace Gaver.Web.Features.Wishes
             }
 
             context.SaveChanges();
-            RefreshList(message.WishListId);
+            _clientNotifier.RefreshList(message.WishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -85,7 +76,7 @@ namespace Gaver.Web.Features.Wishes
             wish.Description = message.Description;
             context.SaveChanges();
 
-            RefreshList(message.WishListId);
+            _clientNotifier.RefreshList(message.WishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -115,7 +106,7 @@ namespace Gaver.Web.Features.Wishes
             }
             context.SaveChanges();
 
-            RefreshList(message.WishListId, message.UserId);
+            _clientNotifier.RefreshList(message.WishListId, message.UserId);
             return mapper.Map<SharedWishModel>(wish);
         }
 
@@ -123,7 +114,7 @@ namespace Gaver.Web.Features.Wishes
         {
             context.Delete<Wish>(message.WishId);
             context.SaveChanges();
-            RefreshList(message.WishListId);
+            _clientNotifier.RefreshList(message.WishListId, null);
         }
     }
 }

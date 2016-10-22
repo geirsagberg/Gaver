@@ -5,6 +5,8 @@ import { compose } from 'redux'
 import $ from 'jquery'
 import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
+import { loadMessages } from 'store/chat'
+import { deepMerge } from 'utils/immutableExtensions'
 
 const initialState = Immutable({})
 
@@ -34,14 +36,14 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case DATA_LOADED: {
       const wishListId = action.data.result
-      return state.merge(action.data.entities)
+      return state::deepMerge(action.data.entities)
           .set('owner', action.data.entities.wishLists[wishListId].owner)
           .set('listId', wishListId)
     }
     case SET_BOUGHT_SUCCESS:
       return state.setIn(['wishes', action.wishId, 'boughtByUser'], action.isBought ? action.userId : null)
     case SET_USERS:
-      return state.merge(action.data.entities)
+      return state::deepMerge(action.data.entities)
         .set('currentUsers', action.data.result)
   }
   return state
@@ -57,21 +59,26 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
   dispatch(setBoughtSuccess({ wishId, isBought, userId: getState().user.id }))
 })
 
+// function creator that takes a dispatch function and gives a new function that can be called with an action creator, data and an optional schema to optionally normalize the data, then make it immutable, call an action creator on the result and finally dispatch the action.
 // const createCaller = dispatch =>
-//   (action, schema) =>
+//   (action, data, schema) =>
 //     compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
 
 export const initializeListUpdates = listId => async dispatch => {
   $.connection.hub.logging = isDevelopment
   const { server, client } = $.connection.listHub
   client.updateUsers = data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
-  client.refresh = data => dispatch(dataLoaded(Immutable(normalize(data, schemas.wishList))))
+  // client.refresh = data => dispatch(dataLoaded(Immutable(normalize(data.wishes, schemas.wishes))))
+  client.refresh = () => {
+    dispatch(loadSharedList(listId))
+    dispatch(loadMessages(listId))
+  }
+  // const call = createCaller(dispatch)
+  // client.updateUsers = data => call(setUsers, data.currentUsers, schemas.users)
+  // client.refresh = data => call(dataLoaded, data, schemas.wishList)
   await $.connection.hub.start()
   const users = await server.subscribe(listId)
   client.updateUsers(users)
-  // const call = createCaller(dispatch)
-  // client.updateUsers = call(setUsers)
-  // client.refresh = call(dataLoaded, schemas.wishes)
 }
 
 export const unsubscribe = listId => async dispatch => {

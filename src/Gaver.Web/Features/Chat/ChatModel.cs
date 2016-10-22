@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Gaver.Web.Features.Chatting
+namespace Gaver.Web.Features.Chat
 {
     public class ChatModel
     {
