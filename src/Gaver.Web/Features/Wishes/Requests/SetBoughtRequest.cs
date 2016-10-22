@@ -11,6 +11,6 @@ namespace Gaver.Web.Features.Wishes.Requests
         [JsonIgnore]
         public int WishId { get; set; }
         [JsonIgnore]
-        public string UserName { get; set; }
+        public int UserId { get; set; }
     }
 }

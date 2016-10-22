@@ -6,6 +6,8 @@ using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Web.Features.Wishes.Requests;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Infrastructure;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -18,13 +20,16 @@ namespace Gaver.Web.Features.Wishes
     {
         private readonly GaverContext context;
         private readonly IMapperService mapper;
+        private readonly IRequestHandler<GetSharedListRequest, SharedListModel> _sharedListHandler;
+        private readonly IHubContext<ListHub, IListHubClient> hub;
 
-        public WishCommander(GaverContext context, IMapperService mapper)
+        public WishCommander(GaverContext context, IMapperService mapper, IConnectionManager signalRManager, IRequestHandler<GetSharedListRequest, SharedListModel> sharedListHandler)
         {
             this.context = context;
             this.mapper = mapper;
+            _sharedListHandler = sharedListHandler;
+            hub = signalRManager.GetHubContext<ListHub, IListHubClient>();
         }
-
 
         public WishModel Handle(AddWishRequest message)
         {
@@ -36,7 +41,15 @@ namespace Gaver.Web.Features.Wishes
             };
             context.Add(wish);
             context.SaveChanges();
+            RefreshList(wishListId);
             return mapper.Map<WishModel>(wish);
+        }
+
+        private void RefreshList(int wishListId, int? userId = null)
+        {
+            var sharedList = _sharedListHandler.Handle(new GetSharedListRequest {ListId = wishListId});
+            var connectionIdsForUser = userId == null ? new string[0] : ListHub.GetConnectionIdsForUser(userId.Value);
+            hub.Clients.Group(ListHub.GetGroup(wishListId), connectionIdsForUser).Refresh(sharedList);
         }
 
         public WishModel Handle(SetUrlRequest message)
@@ -62,6 +75,7 @@ namespace Gaver.Web.Features.Wishes
             }
 
             context.SaveChanges();
+            RefreshList(message.WishListId);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -70,6 +84,8 @@ namespace Gaver.Web.Features.Wishes
             var wish = GetWish(message.WishId, message.WishListId);
             wish.Description = message.Description;
             context.SaveChanges();
+
+            RefreshList(message.WishListId);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -85,9 +101,7 @@ namespace Gaver.Web.Features.Wishes
         public SharedWishModel Handle(SetBoughtRequest message)
         {
             var wish = GetWish(message.WishId, message.WishListId);
-
-            var userId = context.Set<User>().Single(u => u.Name == message.UserName).Id;
-
+            var userId = message.UserId;
             if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId)
                 throw new FriendlyException(EventIds.AlreadyBought, "Wish has already been bought by someone else");
 
@@ -100,14 +114,16 @@ namespace Gaver.Web.Features.Wishes
                 wish.BoughtByUserId = null;
             }
             context.SaveChanges();
+
+            RefreshList(message.WishListId, message.UserId);
             return mapper.Map<SharedWishModel>(wish);
         }
-
 
         public void Handle(DeleteWishRequest message)
         {
             context.Delete<Wish>(message.WishId);
             context.SaveChanges();
+            RefreshList(message.WishListId);
         }
     }
 }

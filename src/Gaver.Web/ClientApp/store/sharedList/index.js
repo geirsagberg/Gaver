@@ -9,6 +9,7 @@ import * as schemas from 'schemas'
 const initialState = Immutable({})
 
 const namespace = 'gaver/sharedList/'
+
 const DATA_LOADED = namespace + 'DATA_LOADED'
 const SET_USERS = namespace + 'SET_COUNT'
 const SET_BOUGHT_SUCCESS = namespace + 'SET_BOUGHT_SUCCESS'
@@ -31,11 +32,12 @@ function setBoughtSuccess({wishId, isBought, userId}) {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case DATA_LOADED:
-      var wishListId = action.data.result
+    case DATA_LOADED: {
+      const wishListId = action.data.result
       return state.merge(action.data.entities)
-        .set('owner', action.data.entities.wishLists[wishListId].owner)
-        .set('listId', wishListId)
+          .set('owner', action.data.entities.wishLists[wishListId].owner)
+          .set('listId', wishListId)
+    }
     case SET_BOUGHT_SUCCESS:
       return state.setIn(['wishes', action.wishId, 'boughtByUser'], action.isBought ? action.userId : null)
   }
@@ -52,16 +54,27 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
   dispatch(setBoughtSuccess({ wishId, isBought, userId: getState().user.id }))
 })
 
-const createCaller = dispatch =>
-  (action, schema) =>
-    compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
+// const createCaller = dispatch =>
+//   (action, schema) =>
+//     compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
 
 export const initializeListUpdates = listId => async dispatch => {
   $.connection.hub.logging = isDevelopment
-  const call = createCaller(dispatch)
-  const { client } = $.connection.listHub
-  client.updateUsers = call(setUsers)
-  client.refresh = call(() => loadSharedList(listId), schemas.wishes)
+  const { server, client } = $.connection.listHub
+  client.updateUsers = data => dispatch(setUsers(Immutable(data)))
+  client.refresh = data => dispatch(dataLoaded(Immutable(normalize(data, schemas.wishList))))
+  await $.connection.hub.start()
+  const users = await server.subscribe(listId)
+  client.updateUsers(users)
+  // const call = createCaller(dispatch)
+  // client.updateUsers = call(setUsers)
+  // client.refresh = call(dataLoaded, schemas.wishes)
+}
+
+export const unsubscribe = listId => async dispatch => {
+  const { server } = $.connection.listHub
+  await server.unsubscribe(listId)
+  await $.connection.hub.stop()
 }
 
 export function setUsers(users) {

@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using Serilog.Events;
@@ -64,7 +65,7 @@ namespace Gaver.Web
             services.AddEntityFrameworkSqlite()
                 .AddDbContext<GaverContext>(options => options
                     .UseSqlite(connectionString, b => b
-                        .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)));
+                        .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)), ServiceLifetime.Transient);
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -75,6 +76,10 @@ namespace Gaver.Web
             container.RegisterAssembly<ILogicAssembly>();
             container.RegisterAssembly<Startup>();
             container.Register<IContractResolver, SignalRContractResolver>(new PerContainerLifetime());
+            container.Register<JsonSerializer>(factory => new JsonSerializer
+            {
+                ContractResolver = new SignalRContractResolver()
+            }, new PerContainerLifetime());
             var provider = container.CreateServiceProvider(services);
 
             return provider;

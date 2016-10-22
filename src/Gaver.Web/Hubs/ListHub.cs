@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Gaver.Data;
+using Gaver.Web.Extensions;
 using Gaver.Web.Features.Wishes;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Hubs;
@@ -11,14 +14,20 @@ namespace Gaver.Web
     [HubName("listHub")]
     public class ListHub : Hub<IListHubClient>
     {
-        public ListHub(ILogger<ListHub> logger)
+        public ListHub(ILogger<ListHub> logger, GaverContext gaverContext)
         {
             this.logger = logger;
+            _gaverContext = gaverContext;
         }
 
         private readonly ILogger<ListHub> logger;
+        private readonly GaverContext _gaverContext;
+
         private static readonly HashSet<UserListConnection> userListConnections
             = new HashSet<UserListConnection>();
+
+        public static string[] GetConnectionIdsForUser(int userId)
+            => userListConnections.Where(ulc => ulc.UserId == userId).Select(ulc => ulc.ConnectionId).ToArray();
 
         public string Ping(string value)
         {
@@ -31,11 +40,12 @@ namespace Gaver.Web
         [Authorize]
         public SubscriptionStatus Subscribe(int listId)
         {
-            var userName = Context.User.Identity.Name;
+            var principal = (ClaimsPrincipal) Context.User;
+            var userId = principal.GetUserId();
             var connectionId = Context.ConnectionId;
             userListConnections.Add(new UserListConnection
             {
-                UserName = userName,
+                UserId = userId,
                 ListId = listId,
                 ConnectionId = connectionId
             });
@@ -59,13 +69,15 @@ namespace Gaver.Web
             }
         }
 
-        private static SubscriptionStatus GetStatus(int listId)
+        private SubscriptionStatus GetStatus(int listId)
         {
             var connections = userListConnections.Where(c => c.ListId == listId).ToList();
+            var userIds = connections.Select(c => c.UserId).ToList();
+            var userNamesById = _gaverContext.Users.Where(u => userIds.Contains(u.Id)).ToDictionary(u => u.Id, u => u.Name);
             return new SubscriptionStatus
             {
                 Count = connections.Count,
-                Names = connections.Select(c => c.UserName)
+                Names = userNamesById.Values.Distinct()
             };
         }
 
@@ -76,15 +88,15 @@ namespace Gaver.Web
         }
     }
 
-    public static class ListHubExtensions {
-
+    public static class ListHubExtensions
+    {
         public static void RefreshData(this IHubContext<ListHub, IListHubClient> hub, int listId, SharedListModel model)
             => hub.Clients.Group(ListHub.GetGroup(listId)).Refresh(model);
     }
 
     public class UserListConnection
     {
-        public string UserName { get; set; }
+        public int UserId { get; set; }
         public int ListId { get; set; }
         public string ConnectionId { get; set; }
     }

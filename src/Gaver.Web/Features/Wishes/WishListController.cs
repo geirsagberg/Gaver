@@ -61,7 +61,7 @@ namespace Gaver.Web.Features.Wishes
         {
             request.WishListId = listId;
             request.WishId = wishId;
-            request.UserName = User.Identity.Name;
+            request.UserId = UserId;
             return _wishCommander.Handle(request);
         }
 

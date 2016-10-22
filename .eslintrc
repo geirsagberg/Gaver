@@ -13,7 +13,8 @@
     "space-before-function-paren": 0,
     "no-trailing-spaces": [2, {
       "skipBlankLines": true
-    }]
+    }],
+    "prefer-const": 1
   },
   "ignore": [
     "bundle.js",

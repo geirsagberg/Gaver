@@ -3,17 +3,17 @@ import { showPrompt } from 'utils/dialogs'
 import { showSuccess } from 'utils/notifications'
 import { tryOrNotify } from 'utils'
 
-const actionNamespace = 'gaver/myList/'
+const namespace = 'gaver/myList/'
 
-export const ADD_WISH = actionNamespace + 'ADD_WISH'
-export const LOAD_DATA = actionNamespace + 'LOAD_DATA'
-export const DATA_LOADED = actionNamespace + 'DATA_LOADED'
-export const WISH_ADDED = actionNamespace + 'WISH_ADDED'
-export const DELETE_WISH = actionNamespace + 'DELETE_WISH'
-export const WISH_DELETED = actionNamespace + 'WISH_DELETED'
-export const SHARE_LIST = actionNamespace + 'SHARE_LIST'
-export const INITIALIZE_LIST_UPDATES = actionNamespace + 'INITIALIZE_LIST_UPDATES'
-export const WISH_UPDATED = actionNamespace + 'WISH_UPDATED'
+export const ADD_WISH = namespace + 'ADD_WISH'
+export const LOAD_DATA = namespace + 'LOAD_DATA'
+export const DATA_LOADED = namespace + 'DATA_LOADED'
+export const WISH_ADDED = namespace + 'WISH_ADDED'
+export const DELETE_WISH = namespace + 'DELETE_WISH'
+export const WISH_DELETED = namespace + 'WISH_DELETED'
+export const SHARE_LIST = namespace + 'SHARE_LIST'
+export const INITIALIZE_LIST_UPDATES = namespace + 'INITIALIZE_LIST_UPDATES'
+export const WISH_UPDATED = namespace + 'WISH_UPDATED'
 
 export const loadMyList = () => async dispatch => tryOrNotify(async () => {
   const data = await Api.fetchWishData()
