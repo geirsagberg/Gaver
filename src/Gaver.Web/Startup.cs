@@ -71,15 +71,15 @@ namespace Gaver.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
             services.AddSwaggerGen();
+            services.AddSingleton(factory => new JsonSerializer {
+                ContractResolver = new SignalRContractResolver()
+            });
 
-            var container = new ServiceContainer {PropertyDependencySelector = new PropertyInjectionDisabler()};
+            var container = new ServiceContainer {
+                PropertyDependencySelector = new PropertyInjectionDisabler()
+            };
             container.RegisterAssembly<ILogicAssembly>();
             container.RegisterAssembly<Startup>();
-            container.Register<IContractResolver, SignalRContractResolver>(new PerContainerLifetime());
-            container.Register<JsonSerializer>(factory => new JsonSerializer
-            {
-                ContractResolver = new SignalRContractResolver()
-            }, new PerContainerLifetime());
             var provider = container.CreateServiceProvider(services);
 
             return provider;
