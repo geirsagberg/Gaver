@@ -57,11 +57,11 @@ class SharedList extends React.Component {
   componentDidMount() {
     const listId = this.props.params.id
     this.props.loadSharedList(listId)
-    this.props.initializeListUpdates(listId)
+    this.props.subscribeList(listId)
   }
 
   componentWillUnmount() {
-    this.props.unsubscribe(this.props.params.id)
+    this.props.unsubscribeList(this.props.params.id)
   }
 
   render() {

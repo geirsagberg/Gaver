@@ -64,7 +64,7 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
 //   (action, data, schema) =>
 //     compose(dispatch, action, Immutable, data => schema ? normalize(data, schema) : data)
 
-export const initializeListUpdates = listId => async dispatch => {
+export const subscribeList = listId => async dispatch => {
   $.connection.hub.logging = isDevelopment
   const { server, client } = $.connection.listHub
   client.updateUsers = data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
@@ -81,7 +81,7 @@ export const initializeListUpdates = listId => async dispatch => {
   client.updateUsers(users)
 }
 
-export const unsubscribe = listId => async dispatch => {
+export const unsubscribeList = listId => async dispatch => {
   const { server } = $.connection.listHub
   await server.unsubscribeList(listId)
   await $.connection.hub.stop()

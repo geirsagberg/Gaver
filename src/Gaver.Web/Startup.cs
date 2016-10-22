@@ -17,7 +17,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Serilog;
 using Serilog.Events;
 using WebApiContrib.Core;
@@ -71,11 +70,13 @@ namespace Gaver.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
             services.AddSwaggerGen();
-            services.AddSingleton(factory => new JsonSerializer {
+            services.AddSingleton(factory => new JsonSerializer
+            {
                 ContractResolver = new SignalRContractResolver()
             });
 
-            var container = new ServiceContainer {
+            var container = new ServiceContainer
+            {
                 PropertyDependencySelector = new PropertyInjectionDisabler()
             };
             container.RegisterAssembly<ILogicAssembly>();
@@ -99,8 +100,8 @@ namespace Gaver.Web
                     .WithFilter(new FilterLoggerSettings
                     {
                         {"Microsoft.EntityFrameworkCore", LogLevel.Information},
-                        {"Microsoft.AspNetCore.NodeServices",
-                        LogLevel.Information},
+                        {"Microsoft.AspNetCore.NodeServices", LogLevel.Information},
+                        {"Microsoft.AspNetCore.SignalR", LogLevel.Information},
                         {"Microsoft", LogLevel.Warning},
                         {"System", LogLevel.Warning}
                     })
@@ -132,10 +133,10 @@ namespace Gaver.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new { controller = "Error", action = "NotFound" });
+                routes.MapRoute("API 404", "api/{*anything}", new {controller = "Error", action = "NotFound"});
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                    defaults: new {controller = "Home", action = "Index"});
             });
         }
 

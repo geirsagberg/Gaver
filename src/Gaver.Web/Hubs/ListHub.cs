@@ -6,7 +6,6 @@ using Gaver.Data;
 using Gaver.Logic.Contracts;
 using Gaver.Web.Extensions;
 using Gaver.Web.Features;
-using Gaver.Web.Features.Wishes;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Hubs;
 using Microsoft.Extensions.Logging;
@@ -70,13 +69,13 @@ namespace Gaver.Web
         [Authorize]
         public void UnsubscribeAll()
         {
-            userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
             var listIds = userListConnections
                 .Where(c => c.ConnectionId == Context.ConnectionId)
-                .Select(c => c.ListId);
+                .Select(c => c.ListId).ToList();
+            userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
             foreach (var listId in listIds)
             {
-                Clients.Group(GetGroup(listId)).UpdateUsers(GetStatus(listId));
+                Clients.OthersInGroup(GetGroup(listId)).UpdateUsers(GetStatus(listId));
             }
         }
 
@@ -84,7 +83,6 @@ namespace Gaver.Web
         {
             var connections = userListConnections.Where(c => c.ListId == listId).ToList();
             var userIds = connections.Select(c => c.UserId).ToList();
-
             var users = _gaverContext.Users.Where(u => userIds.Contains(u.Id));
             var userModels = _mapper.Map<UserModel[]>(users);
             return new SubscriptionStatus
@@ -95,6 +93,7 @@ namespace Gaver.Web
 
         public override Task OnDisconnected(bool stopCalled)
         {
+            logger.LogDebug("Connection {ConnectionId} disconnected", Context.ConnectionId);
             UnsubscribeAll();
             return base.OnDisconnected(stopCalled);
         }
