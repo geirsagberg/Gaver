@@ -48,7 +48,6 @@ namespace Gaver.Web.Features
                 context.SaveChanges();
             }
             var userModel = mapper.Map<UserModel>(user);
-            userModel.WishListId = wishList.Id;
             return userModel;
         }
     }

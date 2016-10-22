@@ -11,7 +11,7 @@ const initialState = Immutable({})
 const namespace = 'gaver/sharedList/'
 
 const DATA_LOADED = namespace + 'DATA_LOADED'
-const SET_USERS = namespace + 'SET_COUNT'
+const SET_USERS = namespace + 'SET_USERS'
 const SET_BOUGHT_SUCCESS = namespace + 'SET_BOUGHT_SUCCESS'
 
 function dataLoaded(data) {
@@ -40,6 +40,9 @@ export default function reducer(state = initialState, action) {
     }
     case SET_BOUGHT_SUCCESS:
       return state.setIn(['wishes', action.wishId, 'boughtByUser'], action.isBought ? action.userId : null)
+    case SET_USERS:
+      return state.merge(action.data.entities)
+        .set('currentUsers', action.data.result)
   }
   return state
 }
@@ -61,7 +64,7 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
 export const initializeListUpdates = listId => async dispatch => {
   $.connection.hub.logging = isDevelopment
   const { server, client } = $.connection.listHub
-  client.updateUsers = data => dispatch(setUsers(Immutable(data)))
+  client.updateUsers = data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
   client.refresh = data => dispatch(dataLoaded(Immutable(normalize(data, schemas.wishList))))
   await $.connection.hub.start()
   const users = await server.subscribe(listId)
@@ -77,9 +80,9 @@ export const unsubscribe = listId => async dispatch => {
   await $.connection.hub.stop()
 }
 
-export function setUsers(users) {
+export function setUsers(data) {
   return {
     type: SET_USERS,
-    users
+    data
   }
 }

@@ -9,7 +9,6 @@ namespace Gaver.Web.Utils
     {
         public IEnumerable<PropertyDependency> Execute(Type type)
         {
-            Console.WriteLine($"Requesting dependencies for type {type.Name}");
             return new PropertyDependency[0];
         }
     }

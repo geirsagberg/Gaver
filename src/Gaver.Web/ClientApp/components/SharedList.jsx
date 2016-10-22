@@ -72,7 +72,7 @@ class SharedList extends React.Component {
           {this.props.userName && <div className="header_item">
             {this.props.userName}
           </div>}
-          <div className="header_item" data-tip={this.props.currentUsers::map(id => this.props.users[id].name).join(', ')}>
+          <div className="header_item" data-tip={this.props.currentUsers.map(id => this.props.users[id].name).join(', ')}>
             {this.props.count} <span className="icon-users" />
           </div>
           <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
@@ -100,7 +100,7 @@ const mapStateToProps = state => ({
   wishes: state.sharedList.wishes || Immutable({}),
   users: state::getIn('sharedList.users', Immutable({})),
   currentUsers: state::getIn('sharedList.currentUsers', Immutable([])),
-  count: state::getIn('sharedList.currentUsers.count', 0),
+  count: state::getIn('sharedList.currentUsers.length', 0),
   owner: state.sharedList.owner || '',
   userName: state.user.name || '',
   userId: state.user.id || 0,

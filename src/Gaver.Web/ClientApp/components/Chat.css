@@ -23,7 +23,6 @@ $chat-self: #22333B;
 
 .chat {
   display: flex;
-  height: 100%;
   flex-direction: column;
 
   &-user-1 { background: $chat-1; border-color: color($chat-1 shade(10%)) }
@@ -42,6 +41,7 @@ $chat-self: #22333B;
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
+    height: 100vh;
     max-height: calc(50vh - 45px);
     background: $gray-dark;
     border: 1px solid $gray;

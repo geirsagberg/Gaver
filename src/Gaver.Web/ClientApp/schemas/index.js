@@ -11,6 +11,8 @@ wishList.define({
 
 export const user = new Schema('users')
 
+export const users = arrayOf(user)
+
 wish.define({
   boughtByUser: user
 })

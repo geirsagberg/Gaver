@@ -3,7 +3,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Gaver.Data;
+using Gaver.Logic.Contracts;
 using Gaver.Web.Extensions;
+using Gaver.Web.Features;
 using Gaver.Web.Features.Wishes;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Hubs;
@@ -14,14 +16,16 @@ namespace Gaver.Web
     [HubName("listHub")]
     public class ListHub : Hub<IListHubClient>
     {
-        public ListHub(ILogger<ListHub> logger, GaverContext gaverContext)
+        public ListHub(ILogger<ListHub> logger, GaverContext gaverContext, IMapperService mapper)
         {
             this.logger = logger;
             _gaverContext = gaverContext;
+            _mapper = mapper;
         }
 
         private readonly ILogger<ListHub> logger;
         private readonly GaverContext _gaverContext;
+        private readonly IMapperService _mapper;
 
         private static readonly HashSet<UserListConnection> userListConnections
             = new HashSet<UserListConnection>();
@@ -73,11 +77,12 @@ namespace Gaver.Web
         {
             var connections = userListConnections.Where(c => c.ListId == listId).ToList();
             var userIds = connections.Select(c => c.UserId).ToList();
-            var userNamesById = _gaverContext.Users.Where(u => userIds.Contains(u.Id)).ToDictionary(u => u.Id, u => u.Name);
+
+            var users = _gaverContext.Users.Where(u => userIds.Contains(u.Id));
+            var userModels = _mapper.Map<UserModel[]>(users);
             return new SubscriptionStatus
             {
-                Count = connections.Count,
-                Names = userNamesById.Values.Distinct()
+                CurrentUsers = userModels
             };
         }
 
@@ -110,7 +115,6 @@ namespace Gaver.Web
 
     public class SubscriptionStatus
     {
-        public int Count { get; set; }
-        public IEnumerable<string> Names { get; set; }
+        public IEnumerable<UserModel> CurrentUsers { get; set; }
     }
 }
