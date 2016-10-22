@@ -83,7 +83,7 @@ export const initializeListUpdates = listId => async dispatch => {
 
 export const unsubscribe = listId => async dispatch => {
   const { server } = $.connection.listHub
-  await server.unsubscribe(listId)
+  await server.unsubscribeList(listId)
   await $.connection.hub.stop()
 }
 
