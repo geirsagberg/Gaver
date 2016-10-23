@@ -76,6 +76,7 @@
       "**.xproj",
       "**.user",
       "**.vspscc"
-    ]
+    ],
+    "include": [ "wwwroot", "Views" ]
   }
 }
