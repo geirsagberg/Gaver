@@ -7,11 +7,13 @@
   <title>@ViewData["Title"] - Gaver.Web</title>
 
   <link rel="stylesheet" href="~/icomoon/style.css" asp-append-version="true"/>
-  <link rel="stylesheet" href="~/dist/styles.css" asp-append-version="true"/>
+  <environment names="Production">
+    <link rel="stylesheet" href="~/dist/styles.css" asp-append-version="true"/>
+  </environment>
 </head>
 <body>
   @RenderBody()
-  
+
   <script>
     window.initialReduxState = @Json.Serialize(new {
                                  User = new {

@@ -65,6 +65,12 @@ class SharedList extends React.Component {
   }
 
   render() {
+    if (!this.props.owner) {
+      return <div className="loading">
+        <div className="loading_icon" />
+      </div>
+    }
+
     return (
       <div>
         <header className="header">

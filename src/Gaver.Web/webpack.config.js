@@ -1,6 +1,5 @@
 var path = require('path')
 var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var merge = require('extendify')({ isDeep: true, arrays: 'concat' })
 var devConfig = require('./webpack.config.dev')
 var prodConfig = require('./webpack.config.prod')
@@ -33,7 +32,6 @@ module.exports = merge({
     publicPath: '/dist/'
   },
   plugins: [
-    // new ExtractTextPlugin('styles.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production')
     }),
