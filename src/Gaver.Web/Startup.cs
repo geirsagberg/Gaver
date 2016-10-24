@@ -35,13 +35,13 @@ namespace Gaver.Web
                 .SetBasePath(hostingEnvironment.ContentRootPath)
                 .AddJsonFile("config.json");
 
+            builder.AddEnvironmentVariables();
             if (hostingEnvironment.IsDevelopment())
             {
                 builder.AddUserSecrets();
+                var nodeDir = Path.Combine(hostingEnvironment.ContentRootPath, "../../node_modules");
+                Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
             }
-            builder.AddEnvironmentVariables();
-            var nodeDir = Path.Combine(hostingEnvironment.ContentRootPath, "../../node_modules");
-            Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
 
             Configuration = builder.Build();
         }
@@ -94,17 +94,18 @@ namespace Gaver.Web
                 .WriteTo.ColoredConsole()
                 .CreateLogger();
 
+            var filterLoggerSettings = new FilterLoggerSettings
+            {
+                {"Microsoft.EntityFrameworkCore", LogLevel.Information},
+                {"Microsoft.AspNetCore.NodeServices", LogLevel.Information},
+                {"Microsoft.AspNetCore.SignalR", LogLevel.Information},
+                {"Microsoft", LogLevel.Warning},
+                {"System", LogLevel.Warning}
+            };
             if (env.IsDevelopment())
             {
                 loggerFactory
-                    .WithFilter(new FilterLoggerSettings
-                    {
-                        {"Microsoft.EntityFrameworkCore", LogLevel.Information},
-                        {"Microsoft.AspNetCore.NodeServices", LogLevel.Information},
-                        {"Microsoft.AspNetCore.SignalR", LogLevel.Information},
-                        {"Microsoft", LogLevel.Warning},
-                        {"System", LogLevel.Warning}
-                    })
+                    .WithFilter(filterLoggerSettings)
                     .AddConsole(LogLevel.Debug);
 
                 app.UseDeveloperExceptionPage();
@@ -114,6 +115,12 @@ namespace Gaver.Web
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });
+            }
+            else
+            {
+                loggerFactory
+                    .WithFilter(filterLoggerSettings)
+                    .AddConsole(LogLevel.Information);
             }
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
@@ -133,10 +140,10 @@ namespace Gaver.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new {controller = "Error", action = "NotFound"});
+                routes.MapRoute("API 404", "api/{*anything}", new { controller = "Error", action = "NotFound" });
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
-                    defaults: new {controller = "Home", action = "Index"});
+                    defaults: new { controller = "Home", action = "Index" });
             });
         }
 
