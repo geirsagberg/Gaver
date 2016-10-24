@@ -6,4 +6,4 @@ Requires `yarn` (or use `npm install`), and [.NET Core SDK](https://dot.net).
 
     yarn
     dotnet restore
-    npm start
+    npm run start:prod
