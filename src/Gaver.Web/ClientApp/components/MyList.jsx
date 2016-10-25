@@ -75,18 +75,20 @@ class MyList extends React.Component {
     return (
       <div>
         <header className="header">
-          <h1 style={{ flex: 1 }}>Mine ønsker</h1>
-          {this.props.userName && <div className="header_item">
-            {this.props.userName}
-          </div>}
-          <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>
-            <span className="icon-share2 icon-before" />
-            Del
-          </button>
-          <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
-            <span className="icon-exit icon-before" />
-            Logg ut
-          </button>
+          <h1 className="header_title">Mine ønsker</h1>
+          <div className="header_items">
+            {this.props.userName && <div className="header_item">
+              {this.props.userName}
+            </div>}
+            <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>
+              <span className="icon-share2 icon-before" />
+              Del
+            </button>
+            <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
+              <span className="icon-exit icon-before" />
+              Logg ut
+            </button>
+          </div>
         </header>
         <div className="wishList">
           <div className="input-group">

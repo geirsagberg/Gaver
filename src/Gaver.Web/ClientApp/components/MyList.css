@@ -21,9 +21,26 @@ $brand-danger:          #E74C3C;
 .header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap-reverse;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  &_title {
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  &_items {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-left: auto;
+  }
 
   &_item {
     margin: 0 1rem;
+    white-space: nowrap;
 
     &:last-child {
       margin-right: 0;
@@ -46,6 +63,7 @@ $brand-danger:          #E74C3C;
   }
 
   &_title {
+    @extend overflowEllipsis;
     &-bought {
       color: $gray-light;
       text-decoration: line-through;
