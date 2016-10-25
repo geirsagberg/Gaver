@@ -8,6 +8,8 @@ using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
+using System.Net;
+using Gaver.Web.Utils;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -34,10 +36,16 @@ namespace Gaver.Web.Features.Wishes
 
         public SharedListModel Handle(GetSharedListRequest message)
         {
-            return context.Set<WishList>()
+            if (context.Set<WishList>().Any(wl => wl.Id == message.ListId && wl.UserId == message.UserId))
+            {
+                throw new FriendlyException(EventIds.OwnerAccessingSharedList, "Du kan ikke se din egen liste");
+            }
+
+            var sharedListModel = context.Set<WishList>()
                 .Where(wl => wl.Id == message.ListId)
                 .ProjectTo<SharedListModel>(mapper.MapperConfiguration)
                 .SingleOrThrow(new FriendlyException(EventIds.SharedListMissing, "Listen finnes ikke"));
+            return sharedListModel;
         }
     }
 }

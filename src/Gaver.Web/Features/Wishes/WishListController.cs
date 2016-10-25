@@ -29,7 +29,11 @@ namespace Gaver.Web.Features.Wishes
         [HttpGet("{listId:int}")]
         public SharedListModel Get(int listId)
         {
-            return _wishReader.Handle(new GetSharedListRequest {ListId = listId});
+            return _wishReader.Handle(new GetSharedListRequest
+            {
+                ListId = listId,
+                UserId = UserId
+            });
         }
 
         [HttpPost("{listId:int}")]

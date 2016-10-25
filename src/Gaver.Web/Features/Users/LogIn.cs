@@ -13,7 +13,7 @@ namespace Gaver.Web.Features
         public string Name { get; set; }
     }
 
-    public class LogInHandler : IRequestHandler<LogInRequest, UserModel>
+    public class LogInHandler : IRequestHandler<LogInRequest, LoginUserModel>
     {
         private readonly GaverContext context;
         private readonly IMapperService mapper;
@@ -24,7 +24,7 @@ namespace Gaver.Web.Features
             this.mapper = mapper;
         }
 
-        public UserModel Handle(LogInRequest message)
+        public LoginUserModel Handle(LogInRequest message)
         {
             var name = message.Name;
             var user = context.Users.SingleOrDefault(u => u.Name == name);
@@ -46,7 +46,8 @@ namespace Gaver.Web.Features
                 context.WishLists.Add(wishList);
                 context.SaveChanges();
             }
-            var userModel = mapper.Map<UserModel>(user);
+            var userModel = mapper.Map<LoginUserModel>(user);
+            userModel.WishListId = wishList.Id;
             return userModel;
         }
     }

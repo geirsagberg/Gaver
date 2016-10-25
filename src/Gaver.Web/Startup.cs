@@ -135,6 +135,8 @@ namespace Gaver.Web
 
             app.UseSwagger();
             app.UseSwaggerUi();
+
+            app.UseHttpException();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

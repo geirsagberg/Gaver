@@ -16,7 +16,7 @@ namespace Gaver.Web.Features
         }
 
         [HttpPost("LogIn")]
-        public async Task<UserModel> LogIn(LogInRequest request)
+        public async Task<LoginUserModel> LogIn(LogInRequest request)
         {
             var userModel = _handler.Handle(request);
             var user = new ClaimsPrincipal(new ClaimsIdentity(new[] {
