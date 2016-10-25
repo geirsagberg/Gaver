@@ -33,7 +33,7 @@ namespace Gaver.Web
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("config.json");
+                .AddJsonFile("config.json", false, true);
 
             builder.AddEnvironmentVariables();
             if (hostingEnvironment.IsDevelopment())

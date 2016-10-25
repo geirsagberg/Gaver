@@ -25,10 +25,10 @@ class Wish extends React.Component {
       <li className="list-group-item wish">
         <span className="wish_title">{wish.title}</span>
         {wish.url
-          ? <span className="wish_url"><a href={wish.url} className="wish_urlLink">{wish.url}</a><span className="icon-pencil clickable wish_edit" onClick={() => editUrl({listId, wishId: wish.id})} /></span>
+          ? <span className="wish_url"><span className="icon-pencil clickable wish_edit" onClick={() => editUrl({listId, wishId: wish.id})} /><a href={wish.url} className="wish_urlLink">{wish.url}</a></span>
           : <button className="btn btn-link wish_btn" onClick={() => editUrl({listId, wishId: wish.id})}>Legg til lenke</button>}
         {wish.description
-          ? <span className="wish_description">{wish.description}<span className="icon-pencil clickable wish_edit" onClick={() => editDescription({listId, wishId: wish.id})} /></span>
+          ? <span className="wish_description"><span className="icon-pencil clickable wish_edit" onClick={() => editDescription({listId, wishId: wish.id})} /><span className="wish_descriptionText">{wish.description}</span></span>
           : <button className="btn btn-link wish_btn" onClick={() => editDescription({listId, wishId: wish.id})}>Legg til beskrivelse</button>}
         <button className="btn btn-link wish_btn wish_btn-right" onClick={() => deleteWish({listId, wishId: wish.id}) }>Fjern</button>
       </li>

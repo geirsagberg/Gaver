@@ -4,6 +4,11 @@ import * as actions from 'store/user'
 import Cookies from 'js-cookie'
 
 class Login extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { isLoggingIn: !!Cookies.get('user') }
+  }
+
   componentDidMount() {
     const name = Cookies.get('user')
     if (name) {
@@ -42,18 +47,18 @@ class Login extends React.Component {
   render() {
     return (
       <div className="container">
-        <div className="well col-sm-6 col-centered">
+        {!this.state.isLoggingIn && <div className="well col-sm-6 col-centered">
           <h1>Gaver</h1>
           <div className="form-group">
             <label htmlFor="nameInput" className="control-label">
               Navn
             </label>
-            <input ref={el => { this.nameInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn() } />
+            <input ref={el => { this.nameInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn()} />
           </div>
-          <button className="btn btn-primary" onClick={() => this.logIn() }>
+          <button className="btn btn-primary" onClick={() => this.logIn()}>
             Logg inn
           </button>
-        </div>
+        </div>}
       </div>
     )
   }

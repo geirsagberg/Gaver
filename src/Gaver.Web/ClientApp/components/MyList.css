@@ -13,6 +13,11 @@ $brand-info:            #3498DB;
 $brand-warning:         #F39C12;
 $brand-danger:          #E74C3C;
 
+@define-extend overflowEllipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -50,21 +55,26 @@ $brand-danger:          #E74C3C;
   }
 
   &_url {
+    @extend overflowEllipsis;
     margin-left: 2rem;
     margin-right: 1rem;
-  }
-
-  &_description {
-    margin: 0 1rem;
-    color: $gray-light;
-    font-style: italic;
   }
 
   &_urlLink {
     color: $brand-info;
   }
 
+  &_description {
+    @extend overflowEllipsis;
+    margin: 0 1rem;
+  }
+
+  &_descriptionText {
+    color: $gray-light;
+    font-style: italic;
+  }
+
   &_edit {
-    margin-left: 1rem;
+    margin-right: 1rem;
   }
 }
