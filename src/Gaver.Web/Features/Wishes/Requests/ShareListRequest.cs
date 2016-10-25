@@ -7,12 +7,13 @@ namespace Gaver.Web.Features.Wishes.Requests
     {
         [Required]
         [MinLength(1)]
+        [MaxLength(10)]
         public string[] Emails { get; set; }
 
         [JsonIgnore]
         public int WishListId { get; set; }
 
         [JsonIgnore]
-        public string UserName { get; set; }
+        public int UserId { get; set; }
     }
 }

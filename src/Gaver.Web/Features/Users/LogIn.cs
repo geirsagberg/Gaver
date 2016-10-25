@@ -10,6 +10,7 @@ namespace Gaver.Web.Features
     {
         [Required]
         [MaxLength(40)]
+        [RegularExpression(@"^[\w\s]+$", ErrorMessage = "Ugyldige tegn i navnet")]
         public string Name { get; set; }
     }
 
@@ -26,7 +27,7 @@ namespace Gaver.Web.Features
 
         public LoginUserModel Handle(LogInRequest message)
         {
-            var name = message.Name;
+            var name = message.Name.TrimExtraWhitespace();
             var user = context.Users.SingleOrDefault(u => u.Name == name);
             if (user == null)
             {

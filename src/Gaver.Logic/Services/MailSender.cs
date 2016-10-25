@@ -26,7 +26,7 @@ namespace Gaver.Logic.Services
             var sendGridMail = mapper.Map<SendGridMail>(mail);
             try
             {
-                var response = await options.SendGridUrl
+                await options.SendGridUrl
                     .WithOAuthBearerToken(options.SendGridApiKey)
                     .PostJsonAsync(sendGridMail);
                 logger.LogInformation("Mail sent to {To}", mail.To);

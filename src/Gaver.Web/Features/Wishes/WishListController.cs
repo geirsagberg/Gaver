@@ -79,7 +79,7 @@ namespace Gaver.Web.Features.Wishes
         public async Task ShareList(int listId, ShareListRequest request)
         {
             request.WishListId = listId;
-            request.UserName = User.Identity.Name;
+            request.UserId = UserId;
             await _wishMailer.HandleAsync(request);
         }
     }
