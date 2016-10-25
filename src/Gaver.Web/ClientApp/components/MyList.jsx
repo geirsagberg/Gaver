@@ -92,7 +92,7 @@ class MyList extends React.Component {
         </header>
         <div className="wishList">
           <div className="input-group">
-            <input className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={:: this.onKeyUp} ref={el => (this.wishInput = el) } />
+            <input autoFocus className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={:: this.onKeyUp} ref={el => (this.wishInput = el) } />
             <span className="input-group-btn">
               <button className="btn btn-default" type="button" onClick={:: this.addWish}>Legg til</button>
             </span>

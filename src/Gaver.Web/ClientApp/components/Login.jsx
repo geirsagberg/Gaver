@@ -53,7 +53,7 @@ class Login extends React.Component {
             <label htmlFor="nameInput" className="control-label">
               Navn
             </label>
-            <input ref={el => { this.nameInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn()} />
+            <input autoFocus ref={el => { this.nameInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn()} />
           </div>
           <button className="btn btn-primary" onClick={() => this.logIn()}>
             Logg inn
