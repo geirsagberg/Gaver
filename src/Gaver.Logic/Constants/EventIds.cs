@@ -7,5 +7,7 @@ namespace Gaver.Logic.Constants
         public const int WrongList = 3;
         public const int InvalidUrl = 4;
         public const int AlreadyBought = 5;
+        public const int MyListMissing = 6;
+        public const int SharedListMissing = 7;
     }
 }

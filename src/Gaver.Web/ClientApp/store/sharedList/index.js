@@ -35,9 +35,10 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
     case DATA_LOADED: {
       const wishListId = action.data.result
-      return state::deepMerge(action.data.entities)
-          .set('owner', action.data.entities.wishLists[wishListId].owner)
-          .set('listId', wishListId)
+      return state.set('wishes', action.data.entities.wishes)
+        .update('users', users => users ? users.merge(action.data.entities.users || initialState) : action.data.entities.users)
+        .set('owner', action.data.entities.wishLists[wishListId].owner)
+        .set('listId', wishListId)
     }
     case SET_BOUGHT_SUCCESS:
       return state.setIn(['wishes', action.wishId, 'boughtByUser'], action.isBought ? action.userId : null)

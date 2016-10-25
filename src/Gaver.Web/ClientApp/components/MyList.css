@@ -52,6 +52,11 @@ $brand-danger:          #E74C3C;
   display: flex;
   align-items: center;
 
+  &-empty {
+    color: $gray-light;
+    font-style: italic;
+  }
+
   &_btn, &_detail {
     margin: 0 1rem;
     padding: 0;

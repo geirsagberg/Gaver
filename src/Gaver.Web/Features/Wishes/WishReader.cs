@@ -2,6 +2,9 @@
 using AutoMapper.QueryableExtensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
+using Gaver.Logic;
+using Gaver.Logic.Extensions;
+using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
@@ -26,7 +29,7 @@ namespace Gaver.Web.Features.Wishes
             return context.Set<WishList>()
                 .Where(wl => wl.UserId == message.UserId)
                 .ProjectTo<MyListModel>(mapper.MapperConfiguration)
-                .Single();
+                .SingleOrThrow(new FriendlyException(EventIds.MyListMissing, "Listen finnes ikke"));
         }
 
         public SharedListModel Handle(GetSharedListRequest message)
@@ -34,7 +37,7 @@ namespace Gaver.Web.Features.Wishes
             return context.Set<WishList>()
                 .Where(wl => wl.Id == message.ListId)
                 .ProjectTo<SharedListModel>(mapper.MapperConfiguration)
-                .Single();
+                .SingleOrThrow(new FriendlyException(EventIds.SharedListMissing, "Listen finnes ikke"));
         }
     }
 }

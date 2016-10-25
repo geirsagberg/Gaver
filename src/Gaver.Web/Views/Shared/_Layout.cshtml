@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>@ViewData["Title"] - Gaver.Web</title>
+  <title>@(ViewData["Title"] ?? "Gaver") - Gaver.Web</title>
 
   <link rel="stylesheet" href="~/icomoon/style.css" asp-append-version="true"/>
   <environment names="Production">

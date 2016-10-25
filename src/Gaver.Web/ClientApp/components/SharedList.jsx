@@ -4,7 +4,7 @@ import ReactTooltip from 'react-tooltip'
 import { connect } from 'react-redux'
 import Immutable from 'seamless-immutable'
 import * as sharedListActions from 'store/sharedList'
-import { getIn, map } from 'utils/immutableExtensions'
+import { getIn, map, size } from 'utils/immutableExtensions'
 import { logOut } from 'store/user'
 import Chat from 'components/Chat'
 
@@ -91,7 +91,9 @@ class SharedList extends React.Component {
         <div className="row">
           <div className="wishList col-md-8">
             <ul className="list-group">
-              {this.props.wishes::map(wish => <Wish {...{...this.props, wish}} key={wish.id}/>)}
+              {this.props.wishes::size() > 0
+                ? this.props.wishes::map(wish => <Wish {...{...this.props, wish}} key={wish.id}/>)
+                : <li className="list-group-item wish wish-empty">Ingen ønsker enda...</li>}
             </ul>
           </div>
           <div className="col-md-4">
