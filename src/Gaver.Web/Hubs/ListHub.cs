@@ -53,7 +53,7 @@ namespace Gaver.Web
                 ConnectionId = connectionId
             });
             var group = GetGroup(listId);
-            Groups.Add(Context.ConnectionId, group);
+            Groups.Add(connectionId, group);
             var status = GetStatus(listId);
             Clients.OthersInGroup(group).UpdateUsers(status);
             return status;
