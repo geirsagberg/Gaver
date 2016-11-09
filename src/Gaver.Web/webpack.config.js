@@ -4,7 +4,6 @@ var merge = require('extendify')({ isDeep: true, arrays: 'concat' })
 var devConfig = require('./webpack.config.dev')
 var prodConfig = require('./webpack.config.prod')
 var isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
-var autoPrefixer = require('autoprefixer')
 var precss = require('precss')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
@@ -18,11 +17,16 @@ module.exports = merge({
       { test: /jquery\.js$/, loader: 'expose?jQuery!expose?$' },
       { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel' },
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url?limit=100000' },
-      { test: /\.css$/, loader: isDevelopment ? 'style!css!postcss?sourceMap=inline' : ExtractTextPlugin.extract('style', 'css!postcss?sourceMap=inline') }
+      { test: /\.css$/, loader: isDevelopment ? 'style-loader!css-loader!postcss-loader?sourceMap=inline' : ExtractTextPlugin.extract('style', 'css-loader!postcss-loader?sourceMap=inline') }
     ]
   },
   postcss: function () {
-    return [autoPrefixer, precss]
+    return [
+      require('postcss-smart-import'),
+      require('postcss-nested'),
+      require('postcss-simple-vars'),
+      require('autoprefixer')
+    ]
   },
   entry: {
     main: ['./ClientApp/boot-client.jsx']

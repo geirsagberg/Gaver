@@ -8,7 +8,7 @@
     "clean": "del src/**/obj/ && del src/**/bin/",
     "start": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet run",
     "start:prod": "cd src/Gaver.Web && webpack && dotnet run",
-    "watch": "cd src/Gaver.Web && del obj/ && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
+    "watch": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
     "build": "dotnet build **/project.json",
     "webpack": "cd src/Gaver.Web && webpack",
     "cloc": "cloc --exclude-dir=node_modules,typings,wwwroot,bin,obj --exclude-lang=JSON ."
@@ -37,6 +37,9 @@
     "file-loader": "^0.9.0",
     "foreach-cli": "^1.6.1",
     "postcss-loader": "^0.13.0",
+    "postcss-nested": "^1.0.0",
+    "postcss-simple-vars": "^3.0.0",
+    "postcss-smart-import": "^0.5.0",
     "precss": "^1.4.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
@@ -47,7 +50,7 @@
   "dependencies": {
     "aspnet-prerendering": "^1.0.5",
     "aspnet-webpack": "^1.0.9",
-    "auth0-lock-passwordless": "github:collegevine/lock-passwordless",
+    "auth0": "^2.5.0",
     "babel-core": "^6.14.0",
     "babel-plugin-transform-function-bind": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
