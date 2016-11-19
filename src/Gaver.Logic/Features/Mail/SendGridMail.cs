@@ -13,8 +13,6 @@ namespace Gaver.Logic
     public class SendGridPersonalization
     {
         public IList<SendGridAddress> To { get; set; } = new List<SendGridAddress>();
-        // public IList<SendGridAddress> Cc { get; set; } = new List<SendGridAddress>();
-        // public IList<SendGridAddress> Bcc { get; set; } = new List<SendGridAddress>();
     }
 
     public class SendGridAddress

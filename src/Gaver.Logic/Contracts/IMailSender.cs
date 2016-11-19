@@ -4,6 +4,6 @@ namespace Gaver.Logic.Contracts
 {
     public interface IMailSender
     {
-        Task SendAsync(Mail mail);
+        Task SendAsync(MailModel mail);
     }
 }

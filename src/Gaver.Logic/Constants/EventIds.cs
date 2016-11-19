@@ -10,5 +10,6 @@ namespace Gaver.Logic.Constants
         public const int MyListMissing = 6;
         public const int SharedListMissing = 7;
         public const int OwnerAccessingSharedList = 8;
+        public const int SendGridApiKeyMissing = 9;
     }
 }

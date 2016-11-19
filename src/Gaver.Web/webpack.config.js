@@ -14,10 +14,11 @@ module.exports = merge({
   },
   module: {
     loaders: [
-      { test: /jquery\.js$/, loader: 'expose?jQuery!expose?$' },
-      { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel' },
-      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url?limit=100000' },
-      { test: /\.css$/, loader: isDevelopment ? 'style-loader!css-loader!postcss-loader?sourceMap=inline' : ExtractTextPlugin.extract('style', 'css-loader!postcss-loader?sourceMap=inline') }
+      { test: /jquery\.js$/, loader: 'expose-loader?jQuery!expose-loader?$' },
+      { test: /\.js(x?)$/, include: /ClientApp/, loader: 'babel-loader' },
+      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
+      { test: /\.css$/, loader: isDevelopment ? 'style-loader!css-loader!postcss-loader?sourceMap=inline' : ExtractTextPlugin.extract('style', 'css-loader!postcss-loader?sourceMap=inline') },
+      { test: /\.json$/, loader: 'json-loader' }
     ]
   },
   postcss: function () {
@@ -43,5 +44,11 @@ module.exports = merge({
     new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
   ].concat(isDevelopment ? [] : [
     new ExtractTextPlugin('styles.css')
-  ])
+  ]),
+  node: {
+    console: true,
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  }
 }, isDevelopment ? devConfig : prodConfig)

@@ -5,7 +5,10 @@
     "Flurl.Http": "1.0.3",
     "Microsoft.Extensions.Logging": "1.0.*",
     "Microsoft.Extensions.Options": "1.0.*",
-    "NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "1.6.0",
+    "Gaver.Data": {
+      "target": "project"
+    }
   },
   "frameworks": {
     "netstandard1.3": {

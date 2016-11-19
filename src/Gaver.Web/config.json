@@ -1,6 +1,6 @@
 {
   "mail": {
-    "SendGridApiKey": "SET_IN_USER_SECRETS",
+    "SendGridApiKey": "",
     "SendGridUrl": "https://api.sendgrid.com/v3/mail/send"
   }
 }

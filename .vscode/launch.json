@@ -13,6 +13,15 @@
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    {
+      "name": "Debug in Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "url": "http://localhost:5000/",
+      "webRoot": "${workspaceRoot}/src/Gaver.Web/wwwroot",
+      "sourceMaps": true,
+      "port": 9222
     }
   ]
 }

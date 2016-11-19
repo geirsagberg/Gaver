@@ -39,11 +39,16 @@ namespace Gaver.Web
             if (hostingEnvironment.IsDevelopment())
             {
                 builder.AddUserSecrets();
-                var nodeDir = Path.Combine(hostingEnvironment.ContentRootPath, "../../node_modules");
-                Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
+                UseRootNodeModules(hostingEnvironment);
             }
 
             Configuration = builder.Build();
+        }
+
+        private static void UseRootNodeModules(IHostingEnvironment hostingEnvironment)
+        {
+            var nodeDir = Path.Combine(hostingEnvironment.ContentRootPath, "../../node_modules");
+            Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.

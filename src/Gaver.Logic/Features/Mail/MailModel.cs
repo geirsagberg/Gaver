@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Gaver.Logic
 {
-    public class Mail
+    public class MailModel
     {
         public IList<string> To { get; set; }
         public string From { get; set; }

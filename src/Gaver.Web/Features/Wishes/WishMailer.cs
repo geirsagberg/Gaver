@@ -29,7 +29,7 @@ namespace Gaver.Web.Features.Wishes
             var request = _httpContextAccessor.HttpContext.Request;
 
             var url = Url.Combine(request.Scheme + "://" + request.Host, "list", message.WishListId.ToString());
-            var mail = new Mail
+            var mail = new MailModel
             {
                 To = message.Emails,
                 From = "noreply@sagberg.net",

@@ -4,7 +4,7 @@ import { showError } from 'utils/notifications'
 import Cookies from 'js-cookie'
 import { browserHistory } from 'react-router'
 import $ from 'jquery'
-import auth0 from 'auth0-'
+import auth0 from 'auth0'
 
 const auth0ClientId = 'q57tZFsUo6359RyFzmzB0VYrmCeLVrBi'
 const auth0Domain = 'sagberg.eu.auth0.com'
@@ -51,9 +51,11 @@ function logInSuccessful (user) {
 
 export const logIn = (name, redirect) => async dispatch => {
   try {
-    const lock = new Auth0LockPasswordless(auth0ClientId, auth0Domain)
+    debugger;
+    // const lock = new Auth0LockPasswordless(auth0ClientId, auth0Domain)
 
-    lock.magiclink()
+    // lock.magiclink()
+
     // var user = await Api.logIn(name)
     // dispatch(logInSuccessful(user))
     // Cookies.set('user', user.name)

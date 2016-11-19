@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Flurl.Http;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
+using Gaver.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -21,8 +22,10 @@ namespace Gaver.Logic.Services
             this.logger = logger;
         }
 
-        public async Task SendAsync(Mail mail)
+        public async Task SendAsync(MailModel mail)
         {
+            if (options.SendGridApiKey.IsNullOrEmpty())
+                throw new FriendlyException(EventIds.SendGridApiKeyMissing, "Mangler API-nøkkel for SendGrid");
             var sendGridMail = mapper.Map<SendGridMail>(mail);
             try
             {
