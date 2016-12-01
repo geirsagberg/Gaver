@@ -2,18 +2,22 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'store/user'
 import Cookies from 'js-cookie'
+import './Login.css'
 
 class Login extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { isLoggingIn: !!Cookies.get('user') }
+    this.state = { isLoggingIn: false
+      // !!Cookies.get('user')
+    }
   }
 
   componentDidMount() {
-    const name = Cookies.get('user')
-    if (name) {
-      this.props.logIn(name, ::this.redirect)
-    }
+
+    // const name = Cookies.get('user')
+    // if (name) {
+    //   this.props.logIn(name, ::this.redirect)
+    // }
   }
 
   static get propTypes() {
@@ -39,8 +43,8 @@ class Login extends React.Component {
   }
 
   logIn() {
-    if (this.nameInput) {
-      this.props.logIn(this.nameInput.value, ::this.redirect)
+    if (this.mailInput) {
+      this.props.logIn(this.mailInput.value, ::this.redirect)
     }
   }
 
@@ -48,12 +52,12 @@ class Login extends React.Component {
     return (
       <div className="container">
         {!this.state.isLoggingIn && <div className="well col-sm-6 col-centered">
-          <h1>Gaver</h1>
+          <h1 className="headline">Gaver</h1>
           <div className="form-group">
-            <label htmlFor="nameInput" className="control-label">
-              Navn
+            <label htmlFor="mailInput" className="control-label">
+              E-post
             </label>
-            <input autoFocus ref={el => { this.nameInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn()} />
+            <input placeholder="Skriv din e-postadresse" autoFocus ref={el => { this.mailInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn()} />
           </div>
           <button className="btn btn-primary" onClick={() => this.logIn()}>
             Logg inn

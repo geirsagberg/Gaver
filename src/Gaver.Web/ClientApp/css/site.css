@@ -22,3 +22,7 @@
 input[type=checkbox] {
   cursor: pointer;
 }
+
+.headline {
+  margin-bottom: 2rem;
+}

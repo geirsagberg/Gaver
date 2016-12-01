@@ -15,10 +15,18 @@
       }
     },
     {
-      "name": "Debug in Chrome",
+      "name": "Chrome (Attach)",
       "type": "chrome",
       "request": "attach",
-      "url": "http://localhost:5000/",
+      "url": "http://localhost:5000/login",
+      "webRoot": "${workspaceRoot}/src/Gaver.Web/wwwroot",
+      "sourceMaps": true,
+      "port": 9222
+    }, {
+      "name": "Chrome (Launch)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5000/login",
       "webRoot": "${workspaceRoot}/src/Gaver.Web/wwwroot",
       "sourceMaps": true,
       "port": 9222
