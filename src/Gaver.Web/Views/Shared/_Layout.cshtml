@@ -13,15 +13,6 @@
 </head>
 <body style="background: #222">
   @RenderBody()
-
-  <script>
-    window.initialReduxState = @Json.Serialize(new {
-                                 User = new {
-                                   User.Identity.Name,
-                                   User.Identity.IsAuthenticated
-                                 }
-                               })
-  </script>
   @RenderSection("scripts", false)
 </body>
 </html>

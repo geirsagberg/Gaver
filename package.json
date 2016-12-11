@@ -48,6 +48,7 @@
     "webpack-hot-middleware": "^2.12.2"
   },
   "dependencies": {
+    "@types/seamless-immutable": "^6.1.2",
     "aspnet-prerendering": "^1.0.5",
     "aspnet-webpack": "^1.0.9",
     "auth0-js": "^7.4.0",

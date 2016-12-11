@@ -15,5 +15,8 @@ namespace Gaver.Logic.Extensions
             }
             return result;
         }
+
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+            => enumerable == null || !enumerable.Any();
     }
 }

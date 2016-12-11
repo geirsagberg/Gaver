@@ -7,6 +7,7 @@ import { logOut } from 'store/user'
 import ReactTooltip from 'react-tooltip'
 import './MyList.css'
 import classNames from 'classnames'
+import AuthService from 'utils/authService'
 
 class Wish extends React.Component {
   static get propTypes() {
@@ -49,7 +50,8 @@ class MyList extends React.Component {
       logOut: PropTypes.func,
       listId: PropTypes.number,
       editUrl: PropTypes.func,
-      editDescription: PropTypes.func
+      editDescription: PropTypes.func,
+      auth: React.PropTypes.instanceOf(AuthService)
     }
   }
 
@@ -84,7 +86,7 @@ class MyList extends React.Component {
               <span className="icon-share2 icon-before" />
               Del
             </button>
-            <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
+            <button className={classNames('btn btn-default header_item')} onClick={this.props.auth.logout}>
               <span className="icon-exit icon-before" />
               Logg ut
             </button>

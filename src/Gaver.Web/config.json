@@ -2,5 +2,10 @@
   "mail": {
     "SendGridApiKey": "",
     "SendGridUrl": "https://api.sendgrid.com/v3/mail/send"
+  },
+  "auth0": {
+    "Domain": "sagberg.eu.auth0.com",
+    "ClientId": "q57tZFsUo6359RyFzmzB0VYrmCeLVrBi",
+    "ClientSecret": ""
   }
 }

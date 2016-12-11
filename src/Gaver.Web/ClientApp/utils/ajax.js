@@ -4,8 +4,9 @@ import { normalize } from 'normalizr'
 import Promise from 'bluebird'
 import PubSub from 'pubsub-js'
 import * as topics from 'constants/topics'
+import AuthService from 'utils/authService'
 
-const headers = {
+const jsonHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json'
 }
@@ -33,10 +34,20 @@ const handleError = error => {
   throw new Error('Could not reach server')
 }
 
+const getAuthHeader = () => ({
+  'Authorization': 'bearer ' + AuthService.getToken()
+})
+
+const getAllHeaders = () => ({
+  ...jsonHeaders,
+  ...getAuthHeader()
+})
+
 export function getJson (url, schema) {
   PubSub.publish(topics.AJAX_START)
   return Promise.try(() => fetch(url, {
-    credentials: 'include'
+    credentials: 'include',
+    headers: getAuthHeader()
   }))
   .then(handleResponse(schema), handleError)
   .finally(() => PubSub.publish(topics.AJAX_STOP))
@@ -46,7 +57,7 @@ export function postJson (url, data, schema) {
   PubSub.publish(topics.AJAX_START)
   return Promise.try(() => fetch(url, {
     method: 'POST',
-    headers,
+    headers: getAllHeaders(),
     credentials: 'include',
     body: JSON.stringify(data)
   }))
@@ -58,7 +69,7 @@ export function putJson (url, data, schema) {
   PubSub.publish(topics.AJAX_START)
   return Promise.try(() => fetch(url, {
     method: 'PUT',
-    headers,
+    headers: getAllHeaders(),
     credentials: 'include',
     body: JSON.stringify(data)
   }))
@@ -70,7 +81,7 @@ export function deleteJson (url, data, schema) {
   PubSub.publish(topics.AJAX_START)
   return Promise.try(() => fetch(url, {
     method: 'DELETE',
-    headers,
+    headers: getAllHeaders(),
     credentials: 'include',
     body: JSON.stringify(data)
   }))

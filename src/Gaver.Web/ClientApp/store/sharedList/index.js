@@ -6,6 +6,7 @@ import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
 import { loadMessages } from 'store/chat'
 import { deepMerge } from 'utils/immutableExtensions'
+import AuthService from 'utils/authService'
 
 const initialState = Immutable({})
 
@@ -61,6 +62,7 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
 
 export const subscribeList = listId => async dispatch => {
   $.connection.hub.logging = isDevelopment
+  $.connection.hub.qs = { id_token: AuthService.getToken() }
   const { server, client } = $.connection.listHub
   client.updateUsers = data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
   client.refresh = () => {

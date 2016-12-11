@@ -7,7 +7,7 @@ namespace Gaver.Web.Extensions
     {
         public static int GetUserId(this ClaimsPrincipal principal)
         {
-            var idClaim = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var idClaim = principal.Claims.SingleOrDefault(c => c.Type == "GaverUserId");
             int userId;
             int.TryParse(idClaim?.Value, out userId);
             return userId;

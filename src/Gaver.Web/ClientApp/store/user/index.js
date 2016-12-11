@@ -4,7 +4,7 @@ import { showError, showSuccess } from 'utils/notifications'
 import Cookies from 'js-cookie'
 import { browserHistory } from 'react-router'
 import $ from 'jquery'
-// import Auth0 from 'auth0-js'
+import Auth0Lock from 'auth0-lock'
 import AuthService from 'utils/authService'
 
 const auth0ClientId = 'q57tZFsUo6359RyFzmzB0VYrmCeLVrBi'
@@ -47,42 +47,5 @@ function logInSuccessful (user) {
   return {
     type: LOG_IN_SUCCESSFUL,
     user
-  }
-}
-
-const authService = new AuthService({
-  clientId: auth0ClientId,
-  domain: auth0Domain
-})
-
-export const logIn = (email, redirect) => async dispatch => {
-  try {
-    authService.login()
-    // const auth = new Auth0({
-    //   domain: auth0Domain,
-    //   clientID: auth0ClientId,
-    //   responseType: 'token',
-    //   callbackURL: '//' + window.location.host + '/login'
-    // })
-
-    // auth.requestMagicLink({
-    //   email
-    // }, error => {
-    //   if (error) {
-    //     showError(error)
-    //   } else {
-    //     showSuccess('En e-post har blitt sendt til ' + email + 'med lenke for innlogging')
-    //   }
-    // })
-    // const lock = new Auth0LockPasswordless(auth0ClientId, auth0Domain)
-
-    // lock.magiclink()
-
-    // var user = await Api.logIn(name)
-    // dispatch(logInSuccessful(user))
-    // Cookies.set('user', user.name)
-    // redirect()
-  } catch (error) {
-    showError(error)
   }
 }

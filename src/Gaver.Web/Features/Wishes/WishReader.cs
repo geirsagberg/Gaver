@@ -8,8 +8,6 @@ using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
-using System.Net;
-using Gaver.Web.Utils;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -28,10 +26,24 @@ namespace Gaver.Web.Features.Wishes
 
         public MyListModel Handle(GetMyListRequest message)
         {
+            var model = GetModel(message);
+            if (model == null)
+            {
+                context.Add(new WishList
+                {
+                    UserId = message.UserId
+                });
+                context.SaveChanges();
+            }
+            return GetModel(message);
+        }
+
+        private MyListModel GetModel(GetMyListRequest message)
+        {
             return context.Set<WishList>()
                 .Where(wl => wl.UserId == message.UserId)
                 .ProjectTo<MyListModel>(mapper.MapperConfiguration)
-                .SingleOrThrow(new FriendlyException(EventIds.MyListMissing, "Listen finnes ikke"));
+                .SingleOrDefault();
         }
 
         public SharedListModel Handle(GetSharedListRequest message)

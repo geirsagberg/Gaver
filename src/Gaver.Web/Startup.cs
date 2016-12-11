@@ -16,12 +16,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
 using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+using Gaver.Web.Extensions;
 
 namespace Gaver.Web
 {
@@ -58,6 +60,7 @@ namespace Gaver.Web
             services.AddAuthentication();
             services.AddAuthorization();
             services.Configure<MailOptions>(Configuration.GetSection("mail"));
+            services.Configure<Auth0Settings>(Configuration.GetSection("auth0"));
 
             services.AddMvc(o =>
             {
@@ -91,7 +94,7 @@ namespace Gaver.Web
             return provider;
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env, IOptions<Auth0Settings> auth0SettingsOptions)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
@@ -104,6 +107,7 @@ namespace Gaver.Web
                 {"Microsoft.EntityFrameworkCore", LogLevel.Information},
                 {"Microsoft.AspNetCore.NodeServices", LogLevel.Information},
                 {"Microsoft.AspNetCore.SignalR", LogLevel.Information},
+                {"Microsoft.AspNetCore.Authentication", LogLevel.Information},
                 {"Microsoft", LogLevel.Warning},
                 {"System", LogLevel.Warning}
             };
@@ -127,12 +131,8 @@ namespace Gaver.Web
                     .WithFilter(filterLoggerSettings)
                     .AddConsole(LogLevel.Information);
             }
-
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = false
-            });
+            var auth0Settings = auth0SettingsOptions.Value;
+            app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
             app.UseWebSockets();
@@ -153,6 +153,7 @@ namespace Gaver.Web
                     defaults: new { controller = "Home", action = "Index" });
             });
         }
+
 
         public static void Main(string[] args)
         {

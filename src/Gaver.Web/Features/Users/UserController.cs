@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features
@@ -19,18 +18,19 @@ namespace Gaver.Web.Features
         public async Task<LoginUserModel> LogIn(LogInRequest request)
         {
             var userModel = _handler.Handle(request);
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, userModel.Name),
-                new Claim(ClaimTypes.NameIdentifier, userModel.Id.ToString())
-            }, CookieAuthenticationDefaults.AuthenticationScheme));
-            await HttpContext.Authentication.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user);
+
+            // var user = new ClaimsPrincipal(new ClaimsIdentity(new[] {
+            //     new Claim(ClaimTypes.Name, userModel.Name),
+            //     new Claim(ClaimTypes.NameIdentifier, userModel.Id.ToString())
+            // }, CookieAuthenticationDefaults.AuthenticationScheme));
+            // await HttpContext.Authentication.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user);
             return userModel;
         }
 
         [HttpPost("LogOut")]
         public async Task LogOut()
         {
-            await HttpContext.Authentication.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            // await HttpContext.Authentication.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

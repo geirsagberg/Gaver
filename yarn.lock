@@ -16,6 +16,10 @@
     stream-to-observable "^0.1.0"
     strip-ansi "^3.0.1"
 
+"@types/seamless-immutable":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@types/seamless-immutable/-/seamless-immutable-6.1.2.tgz#2f3a1427ea2a1bbfb7ea48c2be94a0cce0725a18"
+
 abbrev@1:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.0.9.tgz#91b4792588a7738c25f35dd6f63752a2f8776135"

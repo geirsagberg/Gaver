@@ -1,27 +1,25 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'store/user'
-import Cookies from 'js-cookie'
 import './Login.css'
+import AuthService from 'utils/authService'
 
 class Login extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { isLoggingIn: false
-      // !!Cookies.get('user')
+    this.state = {
+      isLoggingIn: false
     }
   }
 
   componentDidMount() {
-
-    // const name = Cookies.get('user')
-    // if (name) {
-    //   this.props.logIn(name, ::this.redirect)
-    // }
   }
 
   static get propTypes() {
-    const result = {}
+    const result = {
+      location: React.PropTypes.object,
+      auth: React.PropTypes.instanceOf(AuthService)
+    }
     return result
   }
 
@@ -43,9 +41,7 @@ class Login extends React.Component {
   }
 
   logIn() {
-    if (this.mailInput) {
-      this.props.logIn(this.mailInput.value, ::this.redirect)
-    }
+    this.props.logIn()
   }
 
   render() {
@@ -53,13 +49,7 @@ class Login extends React.Component {
       <div className="container">
         {!this.state.isLoggingIn && <div className="well col-sm-6 col-centered">
           <h1 className="headline">Gaver</h1>
-          <div className="form-group">
-            <label htmlFor="mailInput" className="control-label">
-              E-post
-            </label>
-            <input placeholder="Skriv din e-postadresse" autoFocus ref={el => { this.mailInput = el } } type="text" className="form-control" onKeyDown={e => e.which === 13 && this.logIn()} />
-          </div>
-          <button className="btn btn-primary" onClick={() => this.logIn()}>
+          <button className="btn btn-primary" onClick={() => this.props.auth.login()}>
             Logg inn
           </button>
         </div>}

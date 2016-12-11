@@ -47,7 +47,7 @@
     "Microsoft.AspNetCore.Mvc.TagHelpers": "1.1.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
     "Microsoft.AspNetCore.StaticFiles": "1.1.0",
-    "Microsoft.AspNetCore.SignalR.Server": "0.1.0",
+    "Microsoft.AspNetCore.SignalR.Server": "0.2.0-rtm-22752",
     "Microsoft.AspNetCore.WebSockets.Server": "0.1.0",
     "Microsoft.Extensions.Configuration.Json": "1.1.0",
     "Microsoft.Extensions.Configuration.UserSecrets": "1.1.0",
@@ -55,7 +55,7 @@
     "Microsoft.Extensions.Logging.Filter": "1.1.0",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Microsoft.Extensions.Logging.Debug": "1.1.0",
-    "Microsoft.AspNetCore.ReactServices": "1.0.0-beta-000019",
+    "Microsoft.AspNetCore.ReactServices": "1.0.0-beta-000021",
     "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0",
     "Microsoft.EntityFrameworkCore.Design": "1.1.0",
     "WebApiContrib.Core": "1.0.0",
@@ -65,7 +65,7 @@
     "Serilog.Extensions.Logging": "1.3.0",
     "Serilog.Sinks.Literate": "2.0.0",
     "Serilog.Sinks.ColoredConsole": "2.0.0",
-    "Microsoft.AspNetCore.Authentication.Cookies": "1.1.0"
+    "Microsoft.AspNetCore.Authentication.JwtBearer": "1.1.0"
   },
   "frameworks": {
     "netcoreapp1.0": {
