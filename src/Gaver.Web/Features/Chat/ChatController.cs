@@ -8,7 +8,7 @@ namespace Gaver.Web.Features.Chat
 {
     [Route("api/[controller]")]
     [Authorize]
-    public class ChatController : Controller
+    public class ChatController : GaverControllerBase
     {
         private readonly AddMessageHandler _addMessageHandler;
         private readonly GetMessagesHandler _getMessagesHandler;
@@ -23,7 +23,7 @@ namespace Gaver.Web.Features.Chat
         public ChatMessageModel AddMessage(int listId, AddMessageRequest request)
         {
             request.WishListId = listId;
-            request.UserId = User.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value.ToInt();
+            request.UserId = UserId;
             return _addMessageHandler.Handle(request);
         }
 
