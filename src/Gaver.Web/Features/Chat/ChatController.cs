@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using Gaver.Data;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Chat
