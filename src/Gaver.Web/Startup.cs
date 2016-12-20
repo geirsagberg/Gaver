@@ -68,11 +68,11 @@ namespace Gaver.Web
                 o.Filters.Add(new ValidationAttribute());
                 o.UseFromBodyBinding();
             });
-            var connectionString = Configuration["connectionStrings:GaverContext"];
+            var connectionString = Configuration.GetConnectionString("GaverContext");
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GaverContext>(options => options
                     .UseNpgsql(connectionString, b => b
-                        .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)), ServiceLifetime.Transient);
+                        .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)));
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
