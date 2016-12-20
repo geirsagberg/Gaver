@@ -7,13 +7,13 @@ namespace Gaver.Web.Features.Chat
     [Authorize]
     public class ChatController : GaverControllerBase
     {
-        private readonly AddMessageHandler _addMessageHandler;
-        private readonly GetMessagesHandler _getMessagesHandler;
+        private readonly AddMessageHandler addMessageHandler;
+        private readonly GetMessagesHandler getMessagesHandler;
 
         public ChatController(AddMessageHandler addMessageHandler, GetMessagesHandler getMessagesHandler)
         {
-            _addMessageHandler = addMessageHandler;
-            _getMessagesHandler = getMessagesHandler;
+            this.addMessageHandler = addMessageHandler;
+            this.getMessagesHandler = getMessagesHandler;
         }
 
         [HttpPost("{listId:int}")]
@@ -21,13 +21,13 @@ namespace Gaver.Web.Features.Chat
         {
             request.WishListId = listId;
             request.UserId = UserId;
-            return _addMessageHandler.Handle(request);
+            return addMessageHandler.Handle(request);
         }
 
         [HttpGet("{listId:int}")]
         public ChatModel GetMessages(int listId)
         {
-            return _getMessagesHandler.Handle(new GetMessagesRequest{WishListId = listId});
+            return getMessagesHandler.Handle(new GetMessagesRequest{WishListId = listId});
         }
     }
 }

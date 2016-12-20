@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Gaver.Web.Migrations
 {
@@ -12,8 +14,10 @@ namespace Gaver.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
-                    Name = table.Column<string>(maxLength: 40, nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Email = table.Column<string>(maxLength: 255, nullable: false),
+                    Name = table.Column<string>(maxLength: 40, nullable: false),
+                    PrimaryIdentityId = table.Column<string>(maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -25,7 +29,7 @@ namespace Gaver.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Title = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
@@ -45,8 +49,8 @@ namespace Gaver.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
-                    Created = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Created = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "NOW()"),
                     Text = table.Column<string>(maxLength: 255, nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     WishListId = table.Column<int>(nullable: false)
@@ -73,7 +77,7 @@ namespace Gaver.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     BoughtByUserId = table.Column<int>(nullable: true),
                     Description = table.Column<string>(maxLength: 4000, nullable: true),
                     Title = table.Column<string>(maxLength: 255, nullable: false),
@@ -108,9 +112,9 @@ namespace Gaver.Web.Migrations
                 column: "WishListId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Name",
+                name: "IX_Users_PrimaryIdentityId",
                 table: "Users",
-                column: "Name",
+                column: "PrimaryIdentityId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

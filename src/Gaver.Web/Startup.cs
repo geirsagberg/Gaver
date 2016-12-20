@@ -68,10 +68,10 @@ namespace Gaver.Web
                 o.Filters.Add(new ValidationAttribute());
                 o.UseFromBodyBinding();
             });
-            const string connectionString = "Data Source=MyDb.db";
-            services.AddEntityFrameworkSqlite()
+            var connectionString = Configuration["connectionStrings:GaverContext"];
+            services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GaverContext>(options => options
-                    .UseSqlite(connectionString, b => b
+                    .UseNpgsql(connectionString, b => b
                         .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)), ServiceLifetime.Transient);
 
             services.AddSingleton<IMapperService, MapperService>();
@@ -166,10 +166,10 @@ namespace Gaver.Web
 
             host.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
-            using (var context = host.Services.GetRequiredService<GaverContext>())
-            {
-                context.Database.EnsureCreated();
-            }
+            // using (var context = host.Services.GetRequiredService<GaverContext>())
+            // {
+            //     context.Database.EnsureCreated();
+            // }
 
             host.Run();
         }

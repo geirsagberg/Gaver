@@ -22,7 +22,8 @@ namespace Gaver.Data
             {
                 entity.Property(e => e.Created)
                     .ValueGeneratedOnAdd()
-                    .ForSqliteHasDefaultValueSql("CURRENT_TIMESTAMP");
+                    .ForNpgsqlHasDefaultValueSql("NOW()")
+                    ;
             });
         }
 

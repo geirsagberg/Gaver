@@ -1,11 +1,11 @@
 ﻿{
   "version": "1.0.0",
   "dependencies": {
-    "AutoMapper": "5.1.1",
-    "Flurl.Http": "1.0.3",
-    "Microsoft.Extensions.Logging": "1.0.*",
-    "Microsoft.Extensions.Options": "1.0.*",
-    "NETStandard.Library": "1.6.0",
+    "AutoMapper": "5.2.0",
+    "Flurl.Http": "1.1.1",
+    "Microsoft.Extensions.Logging": "1.1.0",
+    "Microsoft.Extensions.Options": "1.1.0",
+    "NETStandard.Library": "1.6.1",
     "Gaver.Data": {
       "target": "project"
     }

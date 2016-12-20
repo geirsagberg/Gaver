@@ -14,7 +14,7 @@ namespace Gaver.Data
         public static string GetSchema(IModel model)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("import { Schema, arryaOf } from 'normalizr'");
+            builder.AppendLine("import { Schema, arrayOf } from 'normalizr'");
 
             foreach (var entityType in model.GetEntityTypes().OrderBy(t => t.Name))
             {
@@ -26,7 +26,7 @@ namespace Gaver.Data
         // public static dynamic GetSchemaJson(IModel model) {
         //     foreach (var entityType in model.GetEntityTypes().OrderBy(t => t.Name))
         //     {
-                
+
         //     }
         // }
     }

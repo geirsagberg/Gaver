@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Gaver.Data;
 
 namespace Gaver.Web.Migrations
@@ -12,7 +13,8 @@ namespace Gaver.Web.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.1");
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
             modelBuilder.Entity("Gaver.Data.Entities.ChatMessage", b =>
                 {
@@ -21,7 +23,7 @@ namespace Gaver.Web.Migrations
 
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("Sqlite:DefaultValueSql", "CURRENT_TIMESTAMP");
+                        .HasAnnotation("Npgsql:DefaultValueSql", "NOW()");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -45,13 +47,21 @@ namespace Gaver.Web.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 255);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 40);
 
+                    b.Property<string>("PrimaryIdentityId")
+                        .IsRequired()
+                        .HasAnnotation("MaxLength", 255);
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("PrimaryIdentityId")
                         .IsUnique();
 
                     b.ToTable("Users");

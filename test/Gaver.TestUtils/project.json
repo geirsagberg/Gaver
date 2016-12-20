@@ -1,13 +1,12 @@
 {
-  "version": "1.0.0-*",
+  "version": "1.0.0",
   "buildOptions": {
     "debugType": "portable"
   },
   "dependencies": {
-    "LightInject": "4.1.2",
-    "NSubstitute": "2.0.0-rc",
-    "Microsoft.EntityFrameworkCore": "1.0.1",
-    "Microsoft.EntityFrameworkCore.InMemory": "1.0.1",
+    "LightInject": "4.1.5",
+    "NSubstitute": "2.0.1-rc",
+    "Microsoft.EntityFrameworkCore.InMemory": "1.1.0",
     "Gaver.Data": {
       "target": "project"
     }
@@ -15,7 +14,7 @@
   "frameworks": {
     "netstandard1.5": {
       "dependencies": {
-        "NETStandard.Library": "1.6.0"
+        "NETStandard.Library": "1.6.1"
       }
     }
   }
