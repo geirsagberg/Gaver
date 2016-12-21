@@ -1,4 +1,5 @@
 import { showError } from './notifications'
+import Promise from 'bluebird'
 
 export const isDevelopment = process.env.NODE_ENV === 'development'
 
@@ -15,4 +16,5 @@ export async function tryOrNotify (func) {
   } catch (error) {
     showError(error)
   }
+  return Promise.resolve()
 }

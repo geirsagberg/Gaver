@@ -2,23 +2,27 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import * as actions from 'store/user'
 import './Login.css'
-import AuthService from 'utils/authService'
+import Loading from './Loading'
 
 class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isLoggingIn: false
+      isLoggingIn: this.props.isLoggedIn
     }
   }
 
   componentDidMount() {
+    if (this.props.isLoggedIn) {
+      this.redirect()
+    }
   }
 
   static get propTypes() {
     const result = {
       location: React.PropTypes.object,
-      auth: React.PropTypes.instanceOf(AuthService)
+      logIn: React.PropTypes.func.isRequired,
+      isLoggedIn: React.PropTypes.bool
     }
     return result
   }
@@ -47,9 +51,11 @@ class Login extends React.Component {
   render() {
     return (
       <div className="container">
-        {!this.state.isLoggingIn && <div className="well col-sm-6 col-centered">
+        {this.state.isLoggingIn
+        ? <Loading />
+        : <div className="well col-sm-6 col-centered">
           <h1 className="headline">Gaver</h1>
-          <button className="btn btn-primary" onClick={() => this.props.auth.login()}>
+          <button className="btn btn-primary" onClick={() => this.props.logIn()}>
             Logg inn
           </button>
         </div>}
@@ -58,4 +64,8 @@ class Login extends React.Component {
   }
 }
 
-export default connect(null, actions)(Login)
+const mapStateToProps = state => ({
+  isLoggedIn: state.user.isLoggedIn
+})
+
+export default connect(mapStateToProps, actions)(Login)

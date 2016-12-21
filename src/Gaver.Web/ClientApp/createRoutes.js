@@ -4,50 +4,40 @@ import Layout from './components/Layout'
 import MyList from './components/MyList'
 import Login from './components/Login'
 import SharedList from './components/SharedList'
-import AuthService from 'utils/authService'
-import { loadingStarted, loadingStopped } from './store/ui'
-
-const auth0ClientId = 'q57tZFsUo6359RyFzmzB0VYrmCeLVrBi'
-const auth0Domain = 'sagberg.eu.auth0.com'
-
-const auth = new AuthService({
-  clientId: auth0ClientId,
-  domain: auth0Domain,
-  redirectUrl: `${window.location.protocol}//${window.location.host}/login`
-})
+import { setUrlAfterLogin, loadUserInfo } from 'store/user'
 
 export default function createRoutes(store) {
-  auth.on('loadingStarted', () => {
-    store.dispatch(loadingStarted())
-  })
+  const {getState, dispatch} = store
 
-  auth.on('loadingStopped', () => {
-    store.dispatch(loadingStopped())
-  })
-
-  const requireAuth = (nextState, replace) => {
-    if (!auth.loggedIn()) {
-      auth.setUrlAfterLogin(window.location)
-      replace({
-        pathname: '/login'
-      })
-      return false
+  const requireAuth = async (nextState, replace, next) => {
+    if (!getState().user.isLoggedIn) {
+      dispatch(setUrlAfterLogin(window.location))
+      replace('/login')
+    } else if (!getState().user.wishListId) {
+      await dispatch(loadUserInfo())
     }
-    return true
+    next()
   }
 
-  const redirectIfOwner = (nextState, replace) => {
-    if (requireAuth(nextState, replace)) {
-      var listId = parseInt(nextState.params.id)
-      if (store.getState().user.wishListId === listId) {
+  const redirectIfOwner = async (nextState, replace, next) => {
+    if (!getState().user.isLoggedIn) {
+      dispatch(setUrlAfterLogin(window.location))
+      replace('/login')
+    } else {
+      if (!getState().user.wishListId) {
+        await dispatch(loadUserInfo())
+      }
+      const listId = parseInt(nextState.params.id)
+      if (getState().user.wishListId === listId) {
         replace('/')
       }
     }
+    next()
   }
 
   return (
     <Router history={browserHistory}>
-      <Route path='/' component={Layout} auth={auth}>
+      <Route path='/' component={Layout}>
         <IndexRoute component={MyList} onEnter={requireAuth} />
         <Route path='list/:id' component={SharedList} onEnter={redirectIfOwner} />
         <Route path='login' component={Login} />

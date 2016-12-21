@@ -4,7 +4,7 @@ import { normalize } from 'normalizr'
 import Promise from 'bluebird'
 import PubSub from 'pubsub-js'
 import * as topics from 'constants/topics'
-import AuthService from 'utils/authService'
+import { loadToken } from 'utils/auth'
 
 const jsonHeaders = {
   'Accept': 'application/json',
@@ -35,7 +35,7 @@ const handleError = error => {
 }
 
 const getAuthHeader = () => ({
-  'Authorization': 'bearer ' + AuthService.getToken()
+  'Authorization': 'bearer ' + loadToken()
 })
 
 const getAllHeaders = () => ({

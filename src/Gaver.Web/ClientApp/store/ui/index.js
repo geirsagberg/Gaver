@@ -10,9 +10,9 @@ const initialState = Immutable({})
 export default function reducer (state = initialState, action = {}) {
   switch (action.type) {
     case LOADING_STARTED:
-      return state.set('isLoading', true)
+      return state.update('isLoading', x => (x || 0) + 1)
     case LOADING_STOPPED:
-      return state.set('isLoading', false)
+      return state.update('isLoading', x => (x - 1) || 0)
   }
   return state
 }

@@ -1,51 +1,97 @@
 import Immutable from 'seamless-immutable'
 import * as Api from './api'
-import { showError, showSuccess } from 'utils/notifications'
-import Cookies from 'js-cookie'
 import { browserHistory } from 'react-router'
-import $ from 'jquery'
 import Auth0Lock from 'auth0-lock'
-import AuthService from 'utils/authService'
+import * as auth from 'utils/auth'
+import { tryOrNotify } from 'utils'
 
 const auth0ClientId = 'q57tZFsUo6359RyFzmzB0VYrmCeLVrBi'
 const auth0Domain = 'sagberg.eu.auth0.com'
+const redirectUrl = `${window.location.protocol}//${window.location.host}/login`
 
 const namespace = 'gaver/user/'
 
 const LOGGED_OUT = namespace + 'LOGGED_OUT'
 const LOG_IN_SUCCESSFUL = namespace + 'LOG_IN_SUCCESSFUL'
+const USER_INFO_LOADED = namespace + 'USER_INFO_LOADED'
 
 const initialState = Immutable({})
 
-export default function reducer (state = initialState, action = {}) {
+const lock = new Auth0Lock(auth0ClientId, auth0Domain, {
+  auth: {
+    redirectUrl,
+    responseType: 'token'
+  }
+})
+
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
-      return action.user.merge({isLoggedIn: true})
+      return state.set('isLoggedIn', true)
     case LOGGED_OUT:
       return initialState
+    case USER_INFO_LOADED:
+      return state.merge(action.data)
   }
   return state
 }
 
-function loggedOut () {
+function userInfoLoaded(data) {
+  return {
+    type: USER_INFO_LOADED,
+    data
+  }
+}
+
+function loggedOut() {
   return {
     type: LOGGED_OUT
   }
+}
+
+function logInSuccessful(user) {
+  return {
+    type: LOG_IN_SUCCESSFUL
+  }
+}
+
+function redirectAfterLogin() {
+  const urlAfterLogin = auth.loadUrlAfterLogin()
+  if (urlAfterLogin) {
+    auth.clearUrlAfterLogin()
+    browserHistory.push(urlAfterLogin)
+  }
+}
+
+export const loadUserInfo = () => dispatch => tryOrNotify(async () => {
+  const userInfo = await Api.loadUserInfo()
+  dispatch(userInfoLoaded(userInfo))
+})
+
+export const setUrlAfterLogin = url => () => {
+  const a = document.createElement('a')
+  a.href = url
+  auth.saveUrlAfterLogin(`${a.pathname}${a.hash}${a.search}`)
 }
 
 export const logOut = () => async dispatch => {
-  Cookies.remove('user')
-  await Api.logOut()
+  auth.clearToken()
   dispatch(loggedOut())
-  browserHistory.push('/login')
-  return {
-    type: LOGGED_OUT
+  browserHistory.replace('/login')
+}
+
+export const initAuth = () => dispatch => {
+  lock.on('authenticated', authResult => {
+    auth.saveToken(authResult.idToken)
+    dispatch(logInSuccessful())
+    redirectAfterLogin()
+  })
+  if (auth.loadToken()) {
+    dispatch(logInSuccessful())
+    redirectAfterLogin()
   }
 }
 
-function logInSuccessful (user) {
-  return {
-    type: LOG_IN_SUCCESSFUL,
-    user
-  }
+export const logIn = () => async dispatch => {
+  lock.show()
 }

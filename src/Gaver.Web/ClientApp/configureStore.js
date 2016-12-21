@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
 import * as Store from './store'
 import Immutable from 'seamless-immutable'
+import { initAuth } from './store/user'
 
 export default function configureStore (initialState) {
   // Build middleware. These are functions that can process the actions before they reach the store.
@@ -20,6 +21,7 @@ export default function configureStore (initialState) {
       store.replaceReducer(buildRootReducer(nextRootReducer.reducers))
     })
   }
+  store.dispatch(initAuth())
   return store
 }
 function buildRootReducer (allReducers) {

@@ -1,4 +1,4 @@
-import { postJson } from 'utils/ajax'
+import { postJson, getJson } from 'utils/ajax'
 import * as schemas from 'schemas'
 
 export function logIn (name) {
@@ -7,4 +7,8 @@ export function logIn (name) {
 
 export function logOut () {
   return postJson('/api/User/Logout')
+}
+
+export function loadUserInfo () {
+  return getJson('/api/User')
 }

@@ -15,17 +15,17 @@ export const SHARE_LIST = namespace + 'SHARE_LIST'
 export const INITIALIZE_LIST_UPDATES = namespace + 'INITIALIZE_LIST_UPDATES'
 export const WISH_UPDATED = namespace + 'WISH_UPDATED'
 
-export const loadMyList = () => async dispatch => tryOrNotify(async () => {
+export const loadMyList = () => dispatch => tryOrNotify(async () => {
   const data = await Api.fetchWishData()
   dispatch(fetchDataSuccess(data))
 })
 
-export const addWish = ({listId, title}) => async dispatch => tryOrNotify(async () => {
+export const addWish = ({listId, title}) => dispatch => tryOrNotify(async () => {
   const wish = await Api.addWish({ listId, title })
   dispatch(wishAdded(wish))
 })
 
-export const deleteWish = ({listId, wishId}) => async dispatch => tryOrNotify(async () => {
+export const deleteWish = ({listId, wishId}) => dispatch => tryOrNotify(async () => {
   await Api.deleteWish({ listId, wishId })
   dispatch(wishDeleted(wishId))
 })

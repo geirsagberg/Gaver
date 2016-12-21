@@ -3,11 +3,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Gaver.Data;
-using Gaver.Data.Entities;
 using Gaver.Logic;
 using Gaver.Logic.Extensions;
+using Gaver.Web.Features.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,35 +51,17 @@ namespace Gaver.Web.Extensions
         private static async Task OnTokenValidatedAsync(TokenValidatedContext tokenContext, Auth0Settings settings)
         {
             var identity = tokenContext.Ticket.Principal.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                var providerIdClaim = identity.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                if (providerIdClaim != null)
-                {
-                    var providerId = providerIdClaim.Value;
-                    var gaverContext = tokenContext.HttpContext.RequestServices.GetRequiredService<GaverContext>();
-                    var user = gaverContext.Users.SingleOrDefault(u => u.PrimaryIdentityId == providerId);
-                    if (user == null)
-                    {
-                        var jwtToken = (JwtSecurityToken)tokenContext.SecurityToken;
-                        dynamic userInfo = await $"https://{settings.Domain}/tokeninfo".PostJsonAsync(new
-                        {
-                            id_token = jwtToken.RawData
-                        }).ReceiveJson();
-                        string name = userInfo.name;
-                        string email = userInfo.email;
-                        user = new User
-                        {
-                            PrimaryIdentityId = providerId,
-                            Name = name,
-                            Email = email
-                        };
-                        gaverContext.Users.Add(user);
-                        await gaverContext.SaveChangesAsync();
-                    }
-                    identity.AddClaim(new Claim("GaverUserId", user.Id.ToString(), ClaimValueTypes.Integer32));
-                }
-            }
+            if (identity == null) return;
+            var providerId = identity.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (providerId == null) return;
+
+            var jwtToken = (JwtSecurityToken)tokenContext.SecurityToken;
+            var idToken = jwtToken.RawData;
+            var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
+
+            var user = await userHandler.EnsureUserAsync(providerId, idToken);
+
+            identity.AddClaim(new Claim("GaverUserId", user.Id.ToString(), ClaimValueTypes.Integer32));
         }
     }
 }
