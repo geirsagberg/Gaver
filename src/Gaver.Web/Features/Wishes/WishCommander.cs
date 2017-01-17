@@ -8,6 +8,7 @@ using Gaver.Logic.Contracts;
 using Gaver.Web.Features.LiveUpdates;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
+using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -20,26 +21,27 @@ namespace Gaver.Web.Features.Wishes
     {
         private readonly GaverContext context;
         private readonly IMapperService mapper;
-        private readonly ClientNotifier _clientNotifier;
+        private readonly ClientNotifier clientNotifier;
+        private readonly ILogger<WishCommander> logger;
 
-        public WishCommander(GaverContext context, IMapperService mapper, ClientNotifier clientNotifier)
+        public WishCommander(GaverContext context, IMapperService mapper, ClientNotifier clientNotifier, ILogger<WishCommander> logger)
         {
             this.context = context;
             this.mapper = mapper;
-            _clientNotifier = clientNotifier;
+            this.clientNotifier = clientNotifier;
+            this.logger = logger;
         }
 
         public WishModel Handle(AddWishRequest message)
         {
             var wishListId = context.WishLists.Single(wl => wl.UserId == message.UserId).Id;
-            var wish = new Wish
-            {
+            var wish = new Wish {
                 Title = message.Title,
                 WishListId = wishListId
             };
             context.Add(wish);
             context.SaveChanges();
-            _clientNotifier.RefreshList(wishListId, null);
+            clientNotifier.RefreshList(wishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -49,12 +51,9 @@ namespace Gaver.Web.Features.Wishes
 
             var urlString = message.Url;
 
-            if (urlString.IsNullOrEmpty())
-            {
+            if (urlString.IsNullOrEmpty()) {
                 wish.Url = null;
-            }
-            else
-            {
+            } else {
                 if (!urlString.StartsWith("http"))
                     urlString = $"http://{urlString}";
 
@@ -66,7 +65,7 @@ namespace Gaver.Web.Features.Wishes
             }
 
             context.SaveChanges();
-            _clientNotifier.RefreshList(message.WishListId, null);
+            clientNotifier.RefreshList(message.WishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -76,7 +75,7 @@ namespace Gaver.Web.Features.Wishes
             wish.Description = message.Description;
             context.SaveChanges();
 
-            _clientNotifier.RefreshList(message.WishListId, null);
+            clientNotifier.RefreshList(message.WishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -96,17 +95,14 @@ namespace Gaver.Web.Features.Wishes
             if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId)
                 throw new FriendlyException(EventIds.AlreadyBought, "Wish has already been bought by someone else");
 
-            if (message.IsBought)
-            {
+            if (message.IsBought) {
                 wish.BoughtByUserId = userId;
-            }
-            else
-            {
+            } else {
                 wish.BoughtByUserId = null;
             }
             context.SaveChanges();
 
-            _clientNotifier.RefreshList(message.WishListId, message.UserId);
+            clientNotifier.RefreshList(message.WishListId, message.UserId);
             return mapper.Map<SharedWishModel>(wish);
         }
 
@@ -114,7 +110,28 @@ namespace Gaver.Web.Features.Wishes
         {
             context.Delete<Wish>(message.WishId);
             context.SaveChanges();
-            _clientNotifier.RefreshList(message.WishListId, null);
+            clientNotifier.RefreshList(message.WishListId);
+        }
+
+        public void Handle(RegisterTokenRequest request)
+        {
+            if (context.Invitations.Any(i => i.WishListId == request.WishListId && i.UserId == request.UserId)) {
+                logger.LogInformation("User {UserId} already has access to {WishListId}", request.UserId, request.WishListId);
+                return;
+            }
+            var token = context.Find<InvitationToken>(request.Token);
+            if (token == null)
+                throw new FriendlyException(EventIds.UnknownToken, "Unknown token");
+            if (token.Accepted != null)
+                throw new FriendlyException(EventIds.TokenAlreadyAccepted, "Token already accepted");
+
+            var invitation = new Invitation {
+                UserId = request.UserId,
+                WishListId = request.WishListId
+            };
+            context.Add(invitation);
+            token.Accepted = DateTimeOffset.Now;
+            context.SaveChanges();
         }
     }
 }

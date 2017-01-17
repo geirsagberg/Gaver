@@ -8,3 +8,7 @@ export function loadSharedList (listId) {
 export function setBought ({listId, wishId, isBought}) {
   return putJson(`/api/WishList/${listId}/${wishId}/SetBought`, {isBought})
 }
+
+export function registerToken (listId, token) {
+  return postJson(`/api/WishList/${listId}/RegisterToken`, {token})
+}

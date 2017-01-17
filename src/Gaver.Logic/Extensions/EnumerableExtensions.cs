@@ -18,5 +18,10 @@ namespace Gaver.Logic.Extensions
 
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
             => enumerable == null || !enumerable.Any();
+
+        public static string ToJoinedString<T>(this IEnumerable<T> enumerable, string separator = ", ")
+        {
+            return string.Join(separator, enumerable);
+        }
     }
 }

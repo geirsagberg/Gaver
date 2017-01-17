@@ -9,6 +9,7 @@ namespace Gaver.Web.Features.Users
     public class UserController : GaverControllerBase
     {
         private readonly UserHandler userHandler;
+
         public UserController(UserHandler userHandler)
         {
             this.userHandler = userHandler;
@@ -17,7 +18,7 @@ namespace Gaver.Web.Features.Users
         [HttpGet]
         public Task<LoginUserModel> GetUserInfo()
         {
-            return userHandler.HandleAsync(new GetUserInfoRequest{
+            return userHandler.HandleAsync(new GetUserInfoRequest {
                 UserId = UserId
             });
         }

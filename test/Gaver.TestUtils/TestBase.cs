@@ -10,7 +10,7 @@ namespace Gaver.TestUtils
     {
         protected readonly IServiceContainer Container;
 
-        public TestBase()
+        protected TestBase()
         {
             Container = new ServiceContainer();
             Container.RegisterFallback((type, name) => true, request => Substitute.For(new[] { request.ServiceType }, null), new PerContainerLifetime());
@@ -22,7 +22,7 @@ namespace Gaver.TestUtils
         private readonly Lazy<TSut> _testSubject;
         protected TSut TestSubject => _testSubject.Value;
 
-        public TestBase()
+        protected TestBase()
         {
             _testSubject = new Lazy<TSut>(() => Container.Create<TSut>());
         }
@@ -30,7 +30,7 @@ namespace Gaver.TestUtils
 
     public abstract class DbTestBase<TSut> : TestBase<TSut> where TSut : class
     {
-        public DbTestBase()
+        protected DbTestBase()
         {
             var options = new DbContextOptionsBuilder<GaverContext>()
                 .UseInMemoryDatabase().Options;

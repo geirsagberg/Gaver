@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Flurl;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;
+using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
+using Gaver.Logic.Extensions;
 using Gaver.Web.Features.Wishes.Requests;
 using Microsoft.AspNetCore.Http;
 
@@ -13,31 +16,51 @@ namespace Gaver.Web.Features.Wishes
     public class WishMailer : IAsyncRequestHandler<ShareListRequest>
     {
         private readonly IMailSender mailSender;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly GaverContext _gaverContext;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly GaverContext gaverContext;
 
         public WishMailer(IMailSender mailSender, IHttpContextAccessor httpContextAccessor, GaverContext gaverContext)
         {
             this.mailSender = mailSender;
-            _httpContextAccessor = httpContextAccessor;
-            _gaverContext = gaverContext;
+            this.httpContextAccessor = httpContextAccessor;
+            this.gaverContext = gaverContext;
         }
 
         public async Task HandleAsync(ShareListRequest message)
         {
-            var userName = _gaverContext.Set<User>().Where(u => u.Id == message.UserId).Select(u => u.Name).Single();
-            var request = _httpContextAccessor.HttpContext.Request;
+            ValidateEmails(message.Emails);
+            var userName = gaverContext.Users.Where(u => u.Id == message.UserId).Select(u => u.Name).Single();
+            var request = httpContextAccessor.HttpContext.Request;
 
-            var url = Url.Combine(request.Scheme + "://" + request.Host, "list", message.WishListId.ToString());
-            var mail = new MailModel
-            {
-                To = message.Emails,
-                From = "noreply@sagberg.net",
-                Subject = $"{userName} har delt en ønskeliste med deg",
-                Content = $@"<h1>{userName} har delt en ønskeliste med deg!</h1>
+            var mailTasks = new List<Task>();
+            foreach (var email in message.Emails) {
+                var token = new InvitationToken {
+                    WishListId = message.WishListId
+                };
+                gaverContext.InvitationTokens.Add(token);
+
+                var url = Url.Combine(request.Scheme + "://" + request.Host, "list", message.WishListId.ToString(), "?token=" + token.Id.ToString());
+                var mail = new MailModel {
+                    To = new[] {email},
+                    From = "noreply@sagberg.net",
+                    Subject = $"{userName} har delt en ønskeliste med deg",
+                    Content = $@"<h1>{userName} har delt en ønskeliste med deg!</h1>
                 <p><a href='{url}'>Klikk her for å se listen.</a></p>"
-            };
-            await mailSender.SendAsync(mail);
+                };
+                mailTasks.Add(mailSender.SendAsync(mail));
+            }
+
+            await gaverContext.SaveChangesAsync();
+
+            await Task.WhenAll(mailTasks);
+        }
+
+        private static void ValidateEmails(IEnumerable<string> emails)
+        {
+            var invalidEmails = emails.Where(e => !e.IsValidEmail()).ToList();
+            if (invalidEmails.Any()) {
+                throw new FriendlyException(EventIds.InvalidEmail, "Ugyldig e-postformat: " + invalidEmails.ToJoinedString());
+            }
         }
     }
 }

@@ -22,19 +22,19 @@ namespace Gaver.Data.Tests
             context = new GaverContext(builder.Options);
         }
 
-        [Fact]
-        public void Can_generate_normalizr_schema()
-        {
-            var model = context.Model;
+        // [Fact]
+        // public void Can_generate_normalizr_schema()
+        // {
+        //     var model = context.Model;
 
-            var output = NormalizrSchemaGenerator.GetSchema(model);
+        //     var output = NormalizrSchemaGenerator.GetSchema(model);
 
-            output.Should().Be("import { Schema, arrayOf } from 'normalizr'\n"
-                + "export const ChatMessage = new Schema('chatMessages')\n"
-                + "export const User = new Schema('users')\n"
-                + "export const Wish = new Schema('wishes')\n"
-                + "export const WishList = new Schema('wishLists')\n");
-        }
+        //     output.Should().Be("import { Schema, arrayOf } from 'normalizr'\n"
+        //         + "export const ChatMessage = new Schema('chatMessages')\n"
+        //         + "export const User = new Schema('users')\n"
+        //         + "export const Wish = new Schema('wishes')\n"
+        //         + "export const WishList = new Schema('wishLists')\n");
+        // }
 
         // [Fact]
         // public void Can_generate_normalizr_schema_json() {

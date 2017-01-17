@@ -1,6 +1,6 @@
 import Immutable from 'seamless-immutable'
 import * as api from './api'
-import { isDevelopment, tryOrNotify } from 'utils'
+import { isDevelopment, tryOrNotify, getQueryVariable } from 'utils'
 import $ from 'jquery'
 import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
@@ -60,8 +60,14 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
   dispatch(setBoughtSuccess({ wishId, isBought, userId: getState().user.id }))
 })
 
-export const subscribeList = listId => async dispatch => {
+export const subscribeList = listId => async dispatch => tryOrNotify(async () => {
+  const token = getQueryVariable('token')
+  if (token) {
+    await api.registerToken(listId, token)
+  }
+  dispatch(loadSharedList(listId))
   $.connection.hub.logging = isDevelopment
+  // Setting id_token in query string is currently only way to perform bearer authentication for SignalR
   $.connection.hub.qs = { id_token: loadToken() }
   const { server, client } = $.connection.listHub
   client.updateUsers = data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
@@ -72,7 +78,7 @@ export const subscribeList = listId => async dispatch => {
   await $.connection.hub.start()
   const users = await server.subscribe(listId)
   client.updateUsers(users)
-}
+})
 
 export const unsubscribeList = listId => async dispatch => {
   const { server } = $.connection.listHub

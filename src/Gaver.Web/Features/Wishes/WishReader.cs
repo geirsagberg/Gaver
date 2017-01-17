@@ -17,11 +17,13 @@ namespace Gaver.Web.Features.Wishes
     {
         private readonly GaverContext context;
         private readonly IMapperService mapper;
+        private readonly IAccessChecker accessChecker;
 
-        public WishReader(GaverContext context, IMapperService mapper)
+        public WishReader(GaverContext context, IMapperService mapper, IAccessChecker accessChecker)
         {
             this.context = context;
             this.mapper = mapper;
+            this.accessChecker = accessChecker;
         }
 
         public MyListModel Handle(GetMyListRequest message)
@@ -52,6 +54,7 @@ namespace Gaver.Web.Features.Wishes
             {
                 throw new FriendlyException(EventIds.OwnerAccessingSharedList, "Du kan ikke se din egen liste");
             }
+            accessChecker.CheckWishListInvitations(message.ListId, message.UserId);
 
             var sharedListModel = context.Set<WishList>()
                 .Where(wl => wl.Id == message.ListId)

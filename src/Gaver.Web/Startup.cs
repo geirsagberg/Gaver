@@ -72,7 +72,7 @@ namespace Gaver.Web
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GaverContext>(options => options
                     .UseNpgsql(connectionString, b => b
-                        .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)));
+                        .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)), ServiceLifetime.Transient);
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -166,10 +166,10 @@ namespace Gaver.Web
 
             host.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
-            // using (var context = host.Services.GetRequiredService<GaverContext>())
-            // {
-            //     context.Database.EnsureCreated();
-            // }
+            using (var context = host.Services.GetRequiredService<GaverContext>())
+            {
+                context.Database.Migrate();
+            }
 
             host.Run();
         }

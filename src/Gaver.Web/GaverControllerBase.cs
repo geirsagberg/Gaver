@@ -5,6 +5,6 @@ namespace Gaver.Web
 {
     public abstract class GaverControllerBase : Controller
     {
-        public int UserId => User.GetUserId();
+        protected int UserId => User.GetUserId();
     }
 }

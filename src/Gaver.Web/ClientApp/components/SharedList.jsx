@@ -56,7 +56,7 @@ class SharedList extends React.Component {
 
   componentDidMount() {
     const listId = this.props.params.id
-    this.props.loadSharedList(listId)
+    // this.props.loadSharedList(listId)
     this.props.subscribeList(listId)
   }
 

@@ -14,5 +14,10 @@ namespace Gaver.Logic.Constants
         public const int MissingName = 10;
         public const int MissingEmail = 11;
         public const int UnknownUserId = 12;
+        public const int InvalidEmail = 13;
+        public const int UnknownToken = 14;
+        public const int TokenAlreadyAccepted = 15;
+        public const int MissingInvitation = 16;
+        public const int AuthenticationError = 17;
     }
 }

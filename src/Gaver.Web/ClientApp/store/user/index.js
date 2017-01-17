@@ -20,6 +20,9 @@ const initialState = Immutable({})
 const lock = new Auth0Lock(auth0ClientId, auth0Domain, {
   auth: {
     redirectUrl,
+    params: {
+      scope: 'openid name email'
+    },
     responseType: 'token'
   }
 })

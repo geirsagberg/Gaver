@@ -11,5 +11,7 @@ namespace Gaver.Data.Entities
         public virtual User User { get; set; }
         public virtual ISet<Wish> Wishes { get; set; } = new HashSet<Wish>();
         public virtual ISet<ChatMessage> ChatMessages { get; set; } = new HashSet<ChatMessage>();
+        public virtual ISet<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
+        public virtual ISet<InvitationToken> InvitationTokens { get; set; } = new HashSet<InvitationToken>();
     }
 }

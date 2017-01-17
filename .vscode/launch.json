@@ -15,6 +15,12 @@
       }
     },
     {
+      "name": ".NET Core Attach",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command.pickProcess}"
+    },
+    {
       "name": "Chrome (Attach)",
       "type": "chrome",
       "request": "attach",
@@ -22,7 +28,8 @@
       "webRoot": "${workspaceRoot}/src/Gaver.Web/wwwroot",
       "sourceMaps": true,
       "port": 9222
-    }, {
+    },
+    {
       "name": "Chrome (Launch)",
       "type": "chrome",
       "request": "launch",

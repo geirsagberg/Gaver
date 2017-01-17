@@ -19,12 +19,10 @@ namespace Gaver.Web.Extensions
     {
         public static IApplicationBuilder UseJwtAuthentication(this IApplicationBuilder app, Auth0Settings auth0Settings)
         {
-            app.Use(async (context, next) =>
-            {
+            app.Use(async (context, next) => {
                 StringValues values;
                 if (context.Request.Headers["Authorization"].IsNullOrEmpty()
-                    && context.Request.Query.TryGetValue("id_token", out values))
-                {
+                    && context.Request.Query.TryGetValue("id_token", out values)) {
                     var idToken = values.Single();
                     context.Request.Headers.Add("Authorization", $"Bearer {idToken}");
                 }
@@ -34,28 +32,25 @@ namespace Gaver.Web.Extensions
 
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(auth0Settings.ClientSecret));
 
-            return app.UseJwtBearerAuthentication(new JwtBearerOptions
-            {
+            return app.UseJwtBearerAuthentication(new JwtBearerOptions {
                 Audience = auth0Settings.ClientId,
                 Authority = $"https://{auth0Settings.Domain}",
                 TokenValidationParameters = {
                     IssuerSigningKey = key
                 },
-                Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = context => OnTokenValidatedAsync(context, auth0Settings)
+                Events = new JwtBearerEvents {
+                    OnTokenValidated = context => OnTokenValidatedAsync(context)
                 }
             });
         }
 
-        private static async Task OnTokenValidatedAsync(TokenValidatedContext tokenContext, Auth0Settings settings)
+        private static async Task OnTokenValidatedAsync(TokenValidatedContext tokenContext)
         {
             var identity = tokenContext.Ticket.Principal.Identity as ClaimsIdentity;
-            if (identity == null) return;
-            var providerId = identity.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var providerId = identity?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (providerId == null) return;
 
-            var jwtToken = (JwtSecurityToken)tokenContext.SecurityToken;
+            var jwtToken = (JwtSecurityToken) tokenContext.SecurityToken;
             var idToken = jwtToken.RawData;
             var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
 

@@ -8,9 +8,10 @@ using Gaver.Data;
 namespace Gaver.Web.Migrations
 {
     [DbContext(typeof(GaverContext))]
-    partial class GaverContextModelSnapshot : ModelSnapshot
+    [Migration("20170101212030_Add_Invitation")]
+    partial class Add_Invitation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
