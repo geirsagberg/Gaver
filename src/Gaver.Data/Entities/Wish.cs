@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Gaver.Data.Contracts;
 
 namespace Gaver.Data.Entities
 {

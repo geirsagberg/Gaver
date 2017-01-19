@@ -89,5 +89,14 @@ namespace Gaver.Web.Features.Wishes
             request.UserId = UserId;
             wishCommander.Handle(request);
         }
+
+        [HttpGet("{listId:int}/Access")]
+        public Task<ListAccessStatus> CheckSharedListAccess(int listId)
+        {
+            return wishReader.HandleAsync(new CheckSharedListAccessRequest {
+                UserId = UserId,
+                WishListId = listId
+            });
+        }
     }
 }

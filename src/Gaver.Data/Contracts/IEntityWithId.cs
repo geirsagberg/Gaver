@@ -1,4 +1,4 @@
-namespace Gaver.Data
+namespace Gaver.Data.Contracts
 {
     public interface IEntityWithId
     {

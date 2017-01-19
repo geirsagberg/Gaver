@@ -13,18 +13,21 @@ using Microsoft.Extensions.Logging;
 namespace Gaver.Web
 {
     [HubName("listHub")]
+    [Authorize]
     public class ListHub : Hub<IListHubClient>
     {
-        public ListHub(ILogger<ListHub> logger, GaverContext gaverContext, IMapperService mapper)
+        public ListHub(ILogger<ListHub> logger, GaverContext gaverContext, IMapperService mapper, IAccessChecker accessChecker)
         {
             this.logger = logger;
             this.gaverContext = gaverContext;
             this.mapper = mapper;
+            this.accessChecker = accessChecker;
         }
 
         private readonly ILogger<ListHub> logger;
         private readonly GaverContext gaverContext;
         private readonly IMapperService mapper;
+        private readonly IAccessChecker accessChecker;
 
         private static readonly HashSet<UserListConnection> userListConnections
             = new HashSet<UserListConnection>();
@@ -40,11 +43,11 @@ namespace Gaver.Web
 
         public static string GetGroup(int listId) => $"List-{listId}";
 
-        [Authorize]
         public SubscriptionStatus Subscribe(int listId)
         {
             var principal = (ClaimsPrincipal) Context.User;
             var userId = principal.GetUserId();
+            accessChecker.CheckWishListInvitations(listId, userId);
             var connectionId = Context.ConnectionId;
             userListConnections.Add(new UserListConnection
             {
@@ -59,14 +62,12 @@ namespace Gaver.Web
             return status;
         }
 
-        [Authorize]
         public void UnsubscribeList(int listId)
         {
             userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
             Clients.Group(GetGroup(listId)).UpdateUsers(GetStatus(listId));
         }
 
-        [Authorize]
         public void UnsubscribeAll()
         {
             var listIds = userListConnections

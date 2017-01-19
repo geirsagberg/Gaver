@@ -1,6 +1,6 @@
 import Immutable from 'seamless-immutable'
 import * as api from './api'
-import { isDevelopment, tryOrNotify, getQueryVariable } from 'utils'
+import { isDevelopment, tryOrNotify } from 'utils'
 import $ from 'jquery'
 import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
@@ -61,10 +61,6 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
 })
 
 export const subscribeList = listId => async dispatch => tryOrNotify(async () => {
-  const token = getQueryVariable('token')
-  if (token) {
-    await api.registerToken(listId, token)
-  }
   dispatch(loadSharedList(listId))
   $.connection.hub.logging = isDevelopment
   // Setting id_token in query string is currently only way to perform bearer authentication for SignalR

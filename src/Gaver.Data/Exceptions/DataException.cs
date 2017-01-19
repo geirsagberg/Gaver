@@ -1,4 +1,4 @@
-namespace Gaver.Data
+namespace Gaver.Data.Exceptions
 {
     public class DataException : System.Exception
     {

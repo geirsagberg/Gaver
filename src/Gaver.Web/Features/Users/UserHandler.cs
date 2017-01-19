@@ -24,7 +24,7 @@ namespace Gaver.Web.Features.Users
         public string ProviderId { get; set; }
     }
 
-    public class UserHandler : IAsyncRequestHandler<GetUserInfoRequest, LoginUserModel>
+    public class UserHandler : IAsyncRequestHandler<GetUserInfoRequest, UserModel>
     {
         private readonly GaverContext context;
         private readonly Auth0Settings auth0Settings;
@@ -37,7 +37,7 @@ namespace Gaver.Web.Features.Users
             auth0Settings = options.Value;
         }
 
-        public async Task<LoginUserModel> HandleAsync(GetUserInfoRequest request)
+        public async Task<UserModel> HandleAsync(GetUserInfoRequest request)
         {
             var user = await context.Users.Where(u => u.PrimaryIdentityId == request.ProviderId)
                 .Include(u => u.WishLists)
@@ -67,9 +67,7 @@ namespace Gaver.Web.Features.Users
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
             }
-            var loginUserModel = mapper.Map<LoginUserModel>(user);
-            loginUserModel.WishListId = user.WishLists.First().Id;
-            return loginUserModel;
+            return mapper.Map<UserModel>(user);
         }
 
         public async Task<int?> GetUserIdOrNullAsync(string providerId)

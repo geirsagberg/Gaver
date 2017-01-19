@@ -11,7 +11,7 @@ namespace Gaver.Web.Extensions
         {
             var idClaim = principal.Claims.SingleOrDefault(c => c.Type == "GaverUserId");
             int userId;
-            if (int.TryParse(idClaim?.Value, out userId)) {
+            if (!int.TryParse(idClaim?.Value, out userId)) {
                 throw new FriendlyException(EventIds.UserNotRegistered, "Bruker-ID mangler. Vennligst last siden på nytt.");
             }
             return userId;

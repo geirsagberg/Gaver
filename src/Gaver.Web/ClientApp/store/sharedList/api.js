@@ -12,3 +12,7 @@ export function setBought ({listId, wishId, isBought}) {
 export function registerToken (listId, token) {
   return postJson(`/api/WishList/${listId}/RegisterToken`, {token})
 }
+
+export function checkSharedListAccess (listId) {
+  return getJson(`/api/WishList/${listId}/Access`)
+}

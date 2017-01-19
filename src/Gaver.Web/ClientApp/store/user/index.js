@@ -13,7 +13,6 @@ const namespace = 'gaver/user/'
 
 const LOGGED_OUT = namespace + 'LOGGED_OUT'
 const LOG_IN_SUCCESSFUL = namespace + 'LOG_IN_SUCCESSFUL'
-const USER_INFO_LOADED = namespace + 'USER_INFO_LOADED'
 
 const initialState = Immutable({})
 
@@ -30,20 +29,11 @@ const lock = new Auth0Lock(auth0ClientId, auth0Domain, {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
-      return state.set('isLoggedIn', true)
+      return state.merge(action.data).set('isLoggedIn', true)
     case LOGGED_OUT:
       return initialState
-    case USER_INFO_LOADED:
-      return state.merge(action.data)
   }
   return state
-}
-
-function userInfoLoaded(data) {
-  return {
-    type: USER_INFO_LOADED,
-    data
-  }
 }
 
 function loggedOut() {
@@ -52,9 +42,10 @@ function loggedOut() {
   }
 }
 
-function logInSuccessful(user) {
+function logInSuccessful(data) {
   return {
-    type: LOG_IN_SUCCESSFUL
+    type: LOG_IN_SUCCESSFUL,
+    data
   }
 }
 
@@ -65,15 +56,6 @@ function redirectAfterLogin() {
     browserHistory.push(urlAfterLogin)
   }
 }
-
-export const loadUserInfo = () => dispatch => tryOrNotify(async () => {
-  const accessToken = auth.loadAccessToken()
-  if (!accessToken) {
-    throw new Error('Access token is missing. Please refresh and try again.')
-  }
-  const userInfo = await Api.loadUserInfo(accessToken)
-  dispatch(userInfoLoaded(userInfo))
-})
 
 export const setUrlAfterLogin = url => () => {
   const a = document.createElement('a')
@@ -87,15 +69,22 @@ export const logOut = () => async dispatch => {
   browserHistory.replace('/login')
 }
 
-export const initAuth = () => dispatch => {
-  lock.on('authenticated', authResult => {
+const completeLogin = async (dispatch, accessToken) => tryOrNotify(async () => {
+  const userInfo = await Api.loadUserInfo(accessToken)
+  dispatch(logInSuccessful(userInfo))
+})
+
+export const initAuth = () => async dispatch => {
+  lock.on('authenticated', async authResult => {
     auth.saveIdToken(authResult.idToken)
     auth.saveAccessToken(authResult.accessToken)
-    dispatch(logInSuccessful())
+    await completeLogin(dispatch, authResult.accessToken)
     redirectAfterLogin()
   })
-  if (auth.loadIdToken()) {
-    dispatch(logInSuccessful())
+  const accessToken = auth.loadAccessToken()
+  // Calling loadIdToken to check whether JWT is still valid
+  if (accessToken && auth.loadIdToken()) {
+    await completeLogin(dispatch, accessToken)
     redirectAfterLogin()
   }
 }

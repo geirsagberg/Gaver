@@ -20,14 +20,16 @@ namespace Gaver.Web.Features.Users
         }
 
         [HttpGet]
-        public Task<LoginUserModel> GetUserInfo(GetUserInfoRequest request)
+        public Task<UserModel> GetUserInfo([FromQuery] string accessToken)
         {
             var providerId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (providerId == null) {
                 throw new HttpException(HttpStatusCode.Unauthorized);
             }
-            request.ProviderId = providerId;
-            return userHandler.HandleAsync(request);
+            return userHandler.HandleAsync(new GetUserInfoRequest {
+                AccessToken = accessToken,
+                ProviderId = providerId
+            });
         }
     }
 }
