@@ -6,7 +6,7 @@ import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
 import { loadMessages } from 'store/chat'
 import { deepMerge } from 'utils/immutableExtensions'
-import { loadToken } from 'utils/auth'
+import { loadIdToken } from 'utils/auth'
 
 const initialState = Immutable({})
 
@@ -68,7 +68,7 @@ export const subscribeList = listId => async dispatch => tryOrNotify(async () =>
   dispatch(loadSharedList(listId))
   $.connection.hub.logging = isDevelopment
   // Setting id_token in query string is currently only way to perform bearer authentication for SignalR
-  $.connection.hub.qs = { id_token: loadToken() }
+  $.connection.hub.qs = { id_token: loadIdToken() }
   const { server, client } = $.connection.listHub
   client.updateUsers = data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
   client.refresh = () => {

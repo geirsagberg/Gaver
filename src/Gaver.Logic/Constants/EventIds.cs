@@ -19,5 +19,6 @@ namespace Gaver.Logic.Constants
         public const int TokenAlreadyAccepted = 15;
         public const int MissingInvitation = 16;
         public const int AuthenticationError = 17;
+        public const int UserNotRegistered = 18;
     }
 }

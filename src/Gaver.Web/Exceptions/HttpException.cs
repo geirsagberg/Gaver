@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Gaver.Web.Utils
+namespace Gaver.Web.Exceptions
 {
     public class HttpException : Exception
     {

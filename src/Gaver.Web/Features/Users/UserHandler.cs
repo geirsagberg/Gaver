@@ -1,23 +1,27 @@
-using System;
 using System.Collections.Generic;
-using System.Dynamic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
 using Flurl.Http;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
+using Gaver.Logic.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Users
 {
     public class GetUserInfoRequest
     {
-        public int UserId { get; set; }
+        [Required]
+        public string AccessToken { get; set; }
+
+        [JsonIgnore]
+        public string ProviderId { get; set; }
     }
 
     public class UserHandler : IAsyncRequestHandler<GetUserInfoRequest, LoginUserModel>
@@ -33,14 +37,15 @@ namespace Gaver.Web.Features.Users
             auth0Settings = options.Value;
         }
 
-        public async Task<UserModel> EnsureUserAsync(string providerId, string idToken)
+        public async Task<LoginUserModel> HandleAsync(GetUserInfoRequest request)
         {
-            var user = context.Users.SingleOrDefault(u => u.PrimaryIdentityId == providerId);
+            var user = await context.Users.Where(u => u.PrimaryIdentityId == request.ProviderId)
+                .Include(u => u.WishLists)
+                .SingleOrDefaultAsync();
             if (user == null) {
-                var result = await $"https://{auth0Settings.Domain}/tokeninfo".PostJsonAsync(new {
-                        id_token = idToken
-                    })
-                    .ReceiveJson();
+                var result = await $"https://{auth0Settings.Domain}/userinfo"
+                    .WithOAuthBearerToken(request.AccessToken)
+                    .GetJsonAsync();
                 var userInfo = result as IDictionary<string, object>;
                 if (userInfo == null)
                     throw new FriendlyException(EventIds.AuthenticationError, "Noe gikk galt ved innloggingen");
@@ -52,27 +57,26 @@ namespace Gaver.Web.Features.Users
                     throw new FriendlyException(EventIds.MissingEmail, "E-post mangler");
 
                 user = new User {
-                    PrimaryIdentityId = providerId,
+                    PrimaryIdentityId = request.ProviderId,
                     Name = name.ToString(),
-                    Email = email.ToString()
+                    Email = email.ToString(),
+                    WishLists = {
+                        new WishList()
+                    }
                 };
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
             }
-            return mapper.Map<UserModel>(user);
+            var loginUserModel = mapper.Map<LoginUserModel>(user);
+            loginUserModel.WishListId = user.WishLists.First().Id;
+            return loginUserModel;
         }
 
-        public async Task<LoginUserModel> HandleAsync(GetUserInfoRequest request)
+        public async Task<int?> GetUserIdOrNullAsync(string providerId)
         {
-            var user = await context.Users.Where(u => u.Id == request.UserId)
-                .ProjectTo<LoginUserModel>(mapper.MapperConfiguration)
+            var userId = await context.Users.Where(u => u.PrimaryIdentityId == providerId).Select(u => u.Id)
                 .SingleOrDefaultAsync();
-            if (user == null)
-                throw new FriendlyException(EventIds.UnknownUserId, "Ukjent bruker");
-            user.WishListId = await context.WishLists.Where(wl => wl.UserId == request.UserId)
-                .Select(wl => wl.Id)
-                .FirstOrDefaultAsync();
-            return user;
+            return userId == 0 ? (int?) null : userId;
         }
     }
 }

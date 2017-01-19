@@ -1,4 +1,5 @@
 using System;
+using Gaver.Logic.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace Gaver.Logic

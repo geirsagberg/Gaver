@@ -4,6 +4,7 @@ using Flurl.Http;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Data;
+using Gaver.Logic.Exceptions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 

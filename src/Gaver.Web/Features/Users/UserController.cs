@@ -1,4 +1,8 @@
+using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Gaver.Web.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +20,14 @@ namespace Gaver.Web.Features.Users
         }
 
         [HttpGet]
-        public Task<LoginUserModel> GetUserInfo()
+        public Task<LoginUserModel> GetUserInfo(GetUserInfoRequest request)
         {
-            return userHandler.HandleAsync(new GetUserInfoRequest {
-                UserId = UserId
-            });
+            var providerId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (providerId == null) {
+                throw new HttpException(HttpStatusCode.Unauthorized);
+            }
+            request.ProviderId = providerId;
+            return userHandler.HandleAsync(request);
         }
     }
 }

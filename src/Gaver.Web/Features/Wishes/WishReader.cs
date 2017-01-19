@@ -6,6 +6,7 @@ using Gaver.Logic;
 using Gaver.Logic.Extensions;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
+using Gaver.Logic.Exceptions;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
 

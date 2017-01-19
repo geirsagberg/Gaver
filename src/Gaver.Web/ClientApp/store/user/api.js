@@ -9,6 +9,6 @@ export function logOut () {
   return postJson('/api/User/Logout')
 }
 
-export function loadUserInfo () {
-  return getJson('/api/User')
+export function loadUserInfo (accessToken) {
+  return getJson('/api/User?accessToken=' + accessToken)
 }

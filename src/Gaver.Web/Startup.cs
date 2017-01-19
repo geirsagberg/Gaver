@@ -94,7 +94,8 @@ namespace Gaver.Web
             return provider;
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env, IOptions<Auth0Settings> auth0SettingsOptions)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env,
+            IOptions<Auth0Settings> auth0SettingsOptions)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)

@@ -2,6 +2,7 @@
 using Gaver.Data;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
+using Gaver.Logic.Exceptions;
 using JetBrains.Annotations;
 
 namespace Gaver.Logic.Services

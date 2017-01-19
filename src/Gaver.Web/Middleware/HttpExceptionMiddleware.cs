@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Gaver.Web.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 
-namespace Gaver.Web.Utils
+namespace Gaver.Web.Middleware
 {
     internal class HttpExceptionMiddleware
     {
@@ -15,12 +16,9 @@ namespace Gaver.Web.Utils
 
         public async Task Invoke(HttpContext context)
         {
-            try
-            {
-                await next.Invoke(context);
-            }
-            catch (HttpException httpException)
-            {
+            try {
+                await next(context);
+            } catch (HttpException httpException) {
                 context.Response.StatusCode = httpException.StatusCode;
                 var responseFeature = context.Features.Get<IHttpResponseFeature>();
                 responseFeature.ReasonPhrase = httpException.Message;

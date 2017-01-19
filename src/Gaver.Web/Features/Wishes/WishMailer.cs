@@ -7,6 +7,7 @@ using Gaver.Data.Entities;
 using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
+using Gaver.Logic.Exceptions;
 using Gaver.Logic.Extensions;
 using Gaver.Web.Features.Wishes.Requests;
 using Microsoft.AspNetCore.Http;

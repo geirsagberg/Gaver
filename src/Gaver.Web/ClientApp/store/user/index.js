@@ -67,7 +67,11 @@ function redirectAfterLogin() {
 }
 
 export const loadUserInfo = () => dispatch => tryOrNotify(async () => {
-  const userInfo = await Api.loadUserInfo()
+  const accessToken = auth.loadAccessToken()
+  if (!accessToken) {
+    throw new Error('Access token is missing. Please refresh and try again.')
+  }
+  const userInfo = await Api.loadUserInfo(accessToken)
   dispatch(userInfoLoaded(userInfo))
 })
 
@@ -78,18 +82,19 @@ export const setUrlAfterLogin = url => () => {
 }
 
 export const logOut = () => async dispatch => {
-  auth.clearToken()
+  auth.clearTokens()
   dispatch(loggedOut())
   browserHistory.replace('/login')
 }
 
 export const initAuth = () => dispatch => {
   lock.on('authenticated', authResult => {
-    auth.saveToken(authResult.idToken)
+    auth.saveIdToken(authResult.idToken)
+    auth.saveAccessToken(authResult.accessToken)
     dispatch(logInSuccessful())
     redirectAfterLogin()
   })
-  if (auth.loadToken()) {
+  if (auth.loadIdToken()) {
     dispatch(logInSuccessful())
     redirectAfterLogin()
   }

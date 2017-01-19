@@ -2,7 +2,7 @@
 using Gaver.Data.Entities;
 using Gaver.Logic;
 
-namespace Gaver.Web.Features
+namespace Gaver.Web.Features.Users
 {
     public class UserMappingProfile : Profile
     {
