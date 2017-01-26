@@ -4,7 +4,6 @@ using AutoMapper.QueryableExtensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Data.Exceptions;
-using Gaver.Logic;
 using Gaver.Logic.Extensions;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
@@ -47,10 +46,14 @@ namespace Gaver.Web.Features.Wishes
 
         private MyListModel GetModel(GetMyListRequest message)
         {
-            return context.Set<WishList>()
+            var model = context.Set<WishList>()
                 .Where(wl => wl.UserId == message.UserId)
                 .ProjectTo<MyListModel>(mapper.MapperConfiguration)
                 .SingleOrDefault();
+            model.Invitations = context.Invitations.Where(i => i.UserId == message.UserId)
+                .ProjectTo<InvitationModel>(mapper.MapperConfiguration)
+                .ToList();
+            return model;
         }
 
         public SharedListModel Handle(GetSharedListRequest message)

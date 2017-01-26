@@ -49,7 +49,8 @@ class MyList extends React.Component {
       logOut: PropTypes.func,
       listId: PropTypes.number,
       editUrl: PropTypes.func,
-      editDescription: PropTypes.func
+      editDescription: PropTypes.func,
+      showSharedLists: PropTypes.func
     }
   }
 
@@ -80,6 +81,10 @@ class MyList extends React.Component {
             {this.props.userName && <div className="header_item">
               {this.props.userName}
             </div>}
+            <button className="btn btn-default header_item" onClick={() => this.props.showSharedLists()}>
+              <span className="icon-list icon-before" />
+              Andres lister
+            </button>
             <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>
               <span className="icon-share2 icon-before" />
               Del

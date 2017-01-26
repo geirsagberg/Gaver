@@ -24,6 +24,7 @@ using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 using Gaver.Web.Extensions;
+using Gaver.Web.Filters;
 
 namespace Gaver.Web
 {
@@ -77,7 +78,9 @@ namespace Gaver.Web
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options => {
+                options.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+            });
             services.AddSingleton(factory => new JsonSerializer
             {
                 ContractResolver = new SignalRContractResolver()

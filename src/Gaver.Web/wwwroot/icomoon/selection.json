@@ -296,7 +296,7 @@
       "attrs": [],
       "properties": {
         "id": 618,
-        "order": 17,
+        "order": 35,
         "prevSize": 32,
         "ligatures": "gift, present",
         "name": "gift",
@@ -305,6 +305,62 @@
       "setIdx": 0,
       "setId": 0,
       "iconIdx": 159
+    },
+    {
+      "icon": {
+        "paths": [
+          "M0 0h256v256h-256zM384 64h640v128h-640zM0 384h256v256h-256zM384 448h640v128h-640zM0 768h256v256h-256zM384 832h640v128h-640z"
+        ],
+        "attrs": [],
+        "tags": [
+          "list",
+          "todo",
+          "bullet",
+          "menu",
+          "options"
+        ],
+        "grid": 16
+      },
+      "attrs": [],
+      "properties": {
+        "id": 755,
+        "order": 36,
+        "prevSize": 32,
+        "ligatures": "list, todo",
+        "name": "list",
+        "code": 59650
+      },
+      "setIdx": 0,
+      "setId": 0,
+      "iconIdx": 186
+    },
+    {
+      "icon": {
+        "paths": [
+          "M384 64h640v128h-640v-128zM384 448h640v128h-640v-128zM384 832h640v128h-640v-128zM0 128c0-70.692 57.308-128 128-128s128 57.308 128 128c0 70.692-57.308 128-128 128s-128-57.308-128-128zM0 512c0-70.692 57.308-128 128-128s128 57.308 128 128c0 70.692-57.308 128-128 128s-128-57.308-128-128zM0 896c0-70.692 57.308-128 128-128s128 57.308 128 128c0 70.692-57.308 128-128 128s-128-57.308-128-128z"
+        ],
+        "attrs": [],
+        "tags": [
+          "list",
+          "todo",
+          "bullet",
+          "menu",
+          "options"
+        ],
+        "grid": 16
+      },
+      "attrs": [],
+      "properties": {
+        "id": 756,
+        "order": 37,
+        "prevSize": 32,
+        "ligatures": "list2, todo2",
+        "name": "list2",
+        "code": 59651
+      },
+      "setIdx": 0,
+      "setId": 0,
+      "iconIdx": 187
     },
     {
       "icon": {
