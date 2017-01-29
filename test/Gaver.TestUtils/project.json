@@ -4,7 +4,7 @@
     "debugType": "portable"
   },
   "dependencies": {
-    "LightInject": "4.1.5",
+    "LightInject": "5.0.0",
     "NSubstitute": "2.0.1-rc",
     "Microsoft.EntityFrameworkCore.InMemory": "1.1.0",
     "Gaver.Data": {

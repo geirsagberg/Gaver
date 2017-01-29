@@ -42,7 +42,7 @@ namespace Gaver.Web.Features.Wishes
             };
             context.Add(wish);
             context.SaveChanges();
-            clientNotifier.RefreshList(wishListId, null);
+            clientNotifier.RefreshList(wishListId);
             return mapper.Map<WishModel>(wish);
         }
 

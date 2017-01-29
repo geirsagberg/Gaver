@@ -12,8 +12,12 @@ namespace Gaver.TestUtils
 
         protected TestBase()
         {
-            Container = new ServiceContainer();
-            Container.RegisterFallback((type, name) => true, request => Substitute.For(new[] { request.ServiceType }, null), new PerContainerLifetime());
+            Container = new ServiceContainer(new ContainerOptions {
+                EnableVariance = false,
+                EnablePropertyInjection = false
+            });
+            Container.RegisterFallback((type, name) => true, request =>
+            Substitute.For(new[] { request.ServiceType }, null), new PerContainerLifetime());
         }
     }
 

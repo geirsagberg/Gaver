@@ -1,0 +1,42 @@
+﻿using System.Collections.Generic;
+using AutoMapper;
+using FluentAssertions;
+using Gaver.Data.Entities;
+using Gaver.Logic.Services;
+using Gaver.TestUtils;
+using Gaver.Web.Features.Wishes;
+using Gaver.Web.Features.Wishes.Models;
+using LightInject;
+using Microsoft.AspNetCore.Http;
+using NSubstitute;
+using Xunit;
+
+namespace Gaver.Web.Tests
+{
+    public class WishMappingProfileTests : TestBase
+    {
+        [Fact]
+        public void Invitation_gets_url()
+        {
+            var httpContextAccessor = Mocks.GetMockHttpContextAccessor();
+            Container.RegisterInstance(httpContextAccessor);
+            Container.Register<IEnumerable<Profile>>(factory => new Profile[] {
+                factory.Create<WishMappingProfile>()
+            });
+            var mapperService = Container.Create<MapperService>();
+            var invitation = new Invitation {
+                WishListId = 3,
+                User = new User {
+                    Name = "Geir"
+                }
+            };
+
+            var model = mapperService.Map<InvitationModel>(invitation);
+
+            model.ShouldBeEquivalentTo(new InvitationModel {
+                UserName = "Geir",
+                WishListUrl = "http://localhost/list/3"
+            });
+        }
+    }
+}

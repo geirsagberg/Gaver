@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Gaver.Web.Extensions
+namespace Gaver.Web.Exceptions
 {
     public static class AppBuilderExtensions
     {
@@ -28,6 +28,9 @@ namespace Gaver.Web.Extensions
 
         private static JwtBearerOptions CreateJwtBearerOptions(Auth0Settings auth0Settings)
         {
+            if (auth0Settings.ClientSecret.IsNullOrEmpty())
+                throw new ConfigurationException("auth0:ClientSecret");
+
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(auth0Settings.ClientSecret));
 
             return new JwtBearerOptions {

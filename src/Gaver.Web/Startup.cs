@@ -5,6 +5,8 @@ using Gaver.Data;
 using Gaver.Logic;
 using Gaver.Logic.Contracts;
 using Gaver.Logic.Services;
+using Gaver.Web.Exceptions;
+using Gaver.Web.Filters;
 using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
@@ -23,15 +25,11 @@ using Serilog.Events;
 using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
-using Gaver.Web.Extensions;
-using Gaver.Web.Filters;
 
 namespace Gaver.Web
 {
     public class Startup
     {
-        private IConfiguration Configuration { get; }
-
         public Startup(IHostingEnvironment hostingEnvironment)
         {
             var builder = new ConfigurationBuilder()
@@ -39,14 +37,15 @@ namespace Gaver.Web
                 .AddJsonFile("config.json", false, true);
 
             builder.AddEnvironmentVariables();
-            if (hostingEnvironment.IsDevelopment())
-            {
+            if (hostingEnvironment.IsDevelopment()) {
                 builder.AddUserSecrets();
                 UseRootNodeModules(hostingEnvironment);
             }
 
             Configuration = builder.Build();
         }
+
+        private IConfiguration Configuration { get; }
 
         private static void UseRootNodeModules(IHostingEnvironment hostingEnvironment)
         {
@@ -63,13 +62,14 @@ namespace Gaver.Web
             services.Configure<MailOptions>(Configuration.GetSection("mail"));
             services.Configure<Auth0Settings>(Configuration.GetSection("auth0"));
 
-            services.AddMvc(o =>
-            {
+            services.AddMvc(o => {
                 o.Filters.Add(new CustomExceptionFilterAttribute());
                 o.Filters.Add(new ValidationAttribute());
                 o.UseFromBodyBinding();
             });
             var connectionString = Configuration.GetConnectionString("GaverContext");
+            if (connectionString.IsNullOrEmpty())
+                throw new ConfigurationException("ConnectionStrings:GaverContext");
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GaverContext>(options => options
                     .UseNpgsql(connectionString, b => b
@@ -78,18 +78,17 @@ namespace Gaver.Web
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
-            services.AddSwaggerGen(options => {
-                options.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
-            });
-            services.AddSingleton(factory => new JsonSerializer
-            {
+            services.AddSwaggerGen(options => { options.OperationFilter<AuthorizationHeaderParameterOperationFilter>(); });
+            services.AddSingleton(factory => new JsonSerializer {
                 ContractResolver = new SignalRContractResolver()
             });
 
-            var container = new ServiceContainer
-            {
-                PropertyDependencySelector = new PropertyInjectionDisabler()
-            };
+            var container = new ServiceContainer(new ContainerOptions {
+                EnablePropertyInjection = false,
+                EnableVariance = false,
+                LogFactory = type => entry => Log.Logger.ForContext(type).Write(entry.Level.ToSerilogEventLevel(), entry.Message)
+            });
+            container.ScopeManagerProvider = new StandaloneScopeManagerProvider();
             container.RegisterAssembly<ILogicAssembly>();
             container.RegisterAssembly<Startup>();
             var provider = container.CreateServiceProvider(services);
@@ -106,8 +105,7 @@ namespace Gaver.Web
                 .WriteTo.ColoredConsole()
                 .CreateLogger();
 
-            var filterLoggerSettings = new FilterLoggerSettings
-            {
+            var filterLoggerSettings = new FilterLoggerSettings {
                 {"Microsoft.EntityFrameworkCore", LogLevel.Information},
                 {"Microsoft.AspNetCore.NodeServices", LogLevel.Information},
                 {"Microsoft.AspNetCore.SignalR", LogLevel.Information},
@@ -115,22 +113,18 @@ namespace Gaver.Web
                 {"Microsoft", LogLevel.Warning},
                 {"System", LogLevel.Warning}
             };
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 loggerFactory
                     .WithFilter(filterLoggerSettings)
                     .AddConsole(LogLevel.Debug);
 
                 app.UseDeveloperExceptionPage();
 
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });
-            }
-            else
-            {
+            } else {
                 loggerFactory
                     .WithFilter(filterLoggerSettings)
                     .AddConsole(LogLevel.Information);
@@ -146,15 +140,14 @@ namespace Gaver.Web
             app.UseSwaggerUi();
 
             app.UseHttpException();
-            app.UseMvc(routes =>
-            {
+            app.UseMvc(routes => {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new { controller = "Error", action = "NotFound" });
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute("API 404", "api/{*anything}", new {controller = "Error", action = "NotFound"});
                 routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
+                    "spa-fallback",
+                    new {controller = "Home", action = "Index"});
             });
         }
 
@@ -170,8 +163,7 @@ namespace Gaver.Web
 
             host.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
-            using (var context = host.Services.GetRequiredService<GaverContext>())
-            {
+            using (var context = host.Services.GetRequiredService<GaverContext>()) {
                 context.Database.Migrate();
             }
 

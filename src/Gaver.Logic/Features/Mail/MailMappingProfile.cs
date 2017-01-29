@@ -3,9 +3,9 @@ using AutoMapper;
 
 namespace Gaver.Logic.Features.Mail
 {
-    public class MappingProfile : Profile
+    public class MailMappingProfile : Profile
     {
-        public MappingProfile()
+        public MailMappingProfile()
         {
             CreateMap<MailModel, SendGridMail>()
                     .MapMember(m => m.From, m => new SendGridAddress
