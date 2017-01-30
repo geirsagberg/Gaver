@@ -30,11 +30,11 @@ namespace Gaver.Web.Features.Users
         private readonly Auth0Settings auth0Settings;
         private readonly IMapperService mapper;
 
-        public UserHandler(GaverContext context, IMapperService mapper, IOptions<Auth0Settings> options)
+        public UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings)
         {
             this.context = context;
             this.mapper = mapper;
-            auth0Settings = options.Value;
+            this.auth0Settings = auth0Settings;
         }
 
         public async Task<UserModel> HandleAsync(GetUserInfoRequest request)

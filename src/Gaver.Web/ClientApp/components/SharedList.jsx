@@ -7,6 +7,7 @@ import * as sharedListActions from 'store/sharedList'
 import { getIn, map, size } from 'utils/immutableExtensions'
 import { logOut } from 'store/user'
 import Chat from 'components/Chat'
+import { browserHistory } from 'react-router'
 
 class Wish extends React.Component {
   static get propTypes() {
@@ -82,6 +83,10 @@ class SharedList extends React.Component {
             <div className="header_item" data-tip={this.props.currentUsers.map(id => this.props.users[id].name).join(', ')}>
               {this.props.count} <span className="icon-users" />
             </div>
+            <button className="btn btn-default header_item" onClick={() => browserHistory.push('/')}>
+              <span className="icon-list icon-before" />
+              Min liste
+            </button>
             <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
               <span className="icon-exit icon-before" />
               Logg ut

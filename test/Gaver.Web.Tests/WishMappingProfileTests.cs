@@ -7,8 +7,6 @@ using Gaver.TestUtils;
 using Gaver.Web.Features.Wishes;
 using Gaver.Web.Features.Wishes.Models;
 using LightInject;
-using Microsoft.AspNetCore.Http;
-using NSubstitute;
 using Xunit;
 
 namespace Gaver.Web.Tests
@@ -16,16 +14,15 @@ namespace Gaver.Web.Tests
     public class WishMappingProfileTests : TestBase
     {
         [Fact]
-        public void Invitation_gets_url()
+        public void Invitation_is_mapped_correctly()
         {
-            var httpContextAccessor = Mocks.GetMockHttpContextAccessor();
-            Container.RegisterInstance(httpContextAccessor);
             Container.Register<IEnumerable<Profile>>(factory => new Profile[] {
                 factory.Create<WishMappingProfile>()
             });
             var mapperService = Container.Create<MapperService>();
             var invitation = new Invitation {
                 WishListId = 3,
+                UserId = 2,
                 User = new User {
                     Name = "Geir"
                 }
@@ -35,7 +32,7 @@ namespace Gaver.Web.Tests
 
             model.ShouldBeEquivalentTo(new InvitationModel {
                 UserName = "Geir",
-                WishListUrl = "http://localhost/list/3"
+                WishListId = 3
             });
         }
     }

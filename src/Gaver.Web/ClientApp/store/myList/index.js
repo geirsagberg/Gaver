@@ -18,8 +18,17 @@ function wishes (state = initialState, action) {
   return state
 }
 
+function invitations (state = initialState, action) {
+  switch (action.type) {
+    case actions.DATA_LOADED:
+      return action.data.entities.invitations || initialState
+  }
+  return state
+}
+
 const combinedReducer = combineReducers({
-  wishes
+  wishes,
+  invitations
 })
 
 function reducer (state = initialState, action) {

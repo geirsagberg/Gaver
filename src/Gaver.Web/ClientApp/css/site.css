@@ -26,3 +26,7 @@ input[type=checkbox] {
 .headline {
   margin-bottom: 2rem;
 }
+
+.tether-element {
+  z-index: 2;
+}

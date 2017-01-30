@@ -41,7 +41,7 @@ export default function createRoutes(store) {
       switch (accessStatus) {
         case AccessStatus.NotInvited:
           showError('Du er ikke invitert til denne listen')
-          // TODO: Egen liste for å be om tilgang
+          // TODO: Egen side for å be om tilgang
           replace('/')
           break
         case AccessStatus.Owner:

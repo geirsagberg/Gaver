@@ -18,6 +18,11 @@ $brand-danger:          #E74C3C;
   text-overflow: ellipsis;
 }
 
+.item-empty {
+  color: $gray-light;
+  font-style: italic;
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -34,7 +39,7 @@ $brand-danger:          #E74C3C;
     white-space: nowrap;
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     margin-left: auto;
   }
 
@@ -48,9 +53,15 @@ $brand-danger:          #E74C3C;
   }
 }
 
+.buttonMenu {
+  padding: 1rem;
+}
+
 .wish {
   display: flex;
   align-items: center;
+
+  flex-wrap: wrap;
 
   &-empty {
     color: $gray-light;

@@ -2,11 +2,14 @@ import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import * as myListActions from 'store/myList'
 import Immutable from 'seamless-immutable'
-import map from 'lodash/map'
+import { map, size } from 'utils/immutableExtensions'
 import { logOut } from 'store/user'
 import ReactTooltip from 'react-tooltip'
 import './MyList.css'
 import classNames from 'classnames'
+import Tether from 'react-tether'
+import { toggleSharedLists } from 'store/ui'
+import { Link } from 'react-router'
 
 class Wish extends React.Component {
   static get propTypes() {
@@ -40,6 +43,7 @@ class MyList extends React.Component {
   static get propTypes() {
     return {
       wishes: PropTypes.object,
+      invitations: PropTypes.object,
       count: PropTypes.number,
       addWish: PropTypes.func,
       loadMyList: PropTypes.func,
@@ -50,7 +54,8 @@ class MyList extends React.Component {
       listId: PropTypes.number,
       editUrl: PropTypes.func,
       editDescription: PropTypes.func,
-      showSharedLists: PropTypes.func
+      toggleSharedLists: PropTypes.func,
+      isShowingSharedLists: PropTypes.bool
     }
   }
 
@@ -72,7 +77,7 @@ class MyList extends React.Component {
   }
 
   render() {
-    const { listId, deleteWish, editUrl, editDescription, logOut } = this.props
+    const { listId, deleteWish, editUrl, editDescription, logOut, isShowingSharedLists, invitations } = this.props
     return (
       <div>
         <header className="header">
@@ -81,10 +86,27 @@ class MyList extends React.Component {
             {this.props.userName && <div className="header_item">
               {this.props.userName}
             </div>}
-            <button className="btn btn-default header_item" onClick={() => this.props.showSharedLists()}>
-              <span className="icon-list icon-before" />
-              Andres lister
-            </button>
+            <Tether
+              attachment="top center"
+              constraints={[{
+                to: 'scrollParent',
+                attachment: 'together'
+              }]}
+            >
+              <button className={classNames('btn btn-default header_item', {
+                active: isShowingSharedLists
+              })} onClick={() => this.props.toggleSharedLists()}>
+                <span className="icon-list icon-before" />
+                Andres lister
+              </button>
+              {isShowingSharedLists && <ul className="list-group">
+                {invitations::size() > 0
+                  ? invitations::map(invitation => <li className="list-group-item" key={invitation.wishListId}>
+                    <Link to={`/list/${invitation.wishListId}`}>{invitation.userName}</Link>
+                  </li>)
+                  : <li className="list-group-item item-empty">Ingen delte lister enda...</li>}
+              </ul>}
+            </Tether>
             <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>
               <span className="icon-share2 icon-before" />
               Del
@@ -103,7 +125,7 @@ class MyList extends React.Component {
             </span>
           </div>
           <ul className="list-group">
-            {map(this.props.wishes, wish => <Wish key={wish.id} {...{wish, listId, deleteWish, editUrl, editDescription}} />)}
+            {this.props.wishes::map(wish => <Wish key={wish.id} {...{wish, listId, deleteWish, editUrl, editDescription}} />)}
           </ul>
         </div>
         <ReactTooltip />
@@ -115,12 +137,15 @@ class MyList extends React.Component {
 const mapStateToProps = state => ({
   wishes: state.myList.wishes || Immutable({}),
   userName: state.user.name,
-  listId: state.myList.listId
+  listId: state.myList.listId,
+  isShowingSharedLists: state.ui.isShowingSharedLists,
+  invitations: state.myList.invitations || Immutable({})
 })
 
 const actions = {
   ...myListActions,
-  logOut
+  logOut,
+  toggleSharedLists
 }
 
 export default connect(mapStateToProps, actions)(MyList)

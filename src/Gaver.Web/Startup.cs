@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Gaver.Data;
 using Gaver.Logic;
 using Gaver.Logic.Contracts;
+using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Filters;
@@ -30,6 +33,8 @@ namespace Gaver.Web
 {
     public class Startup
     {
+        private readonly List<string> missingOptions = new List<string>();
+
         public Startup(IHostingEnvironment hostingEnvironment)
         {
             var builder = new ConfigurationBuilder()
@@ -59,8 +64,11 @@ namespace Gaver.Web
             services.AddOptions();
             services.AddAuthentication();
             services.AddAuthorization();
-            services.Configure<MailOptions>(Configuration.GetSection("mail"));
-            services.Configure<Auth0Settings>(Configuration.GetSection("auth0"));
+
+            ConfigureOptions<MailOptions>(services, "mail");
+            ConfigureOptions<Auth0Settings>(services, "auth0");
+            if (missingOptions.Any())
+                throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
 
             services.AddMvc(o => {
                 o.Filters.Add(new CustomExceptionFilterAttribute());
@@ -96,8 +104,24 @@ namespace Gaver.Web
             return provider;
         }
 
+        private void ConfigureOptions<T>(IServiceCollection services, string key) where T : class
+        {
+            var configurationSection = Configuration.GetSection(key);
+            var options = configurationSection.Get<T>();
+
+            var missing = typeof(T)
+                .GetProperties()
+                .Where(propertyInfo => propertyInfo.GetValue(options).IsNullOrDefault())
+                .Select(propertyInfo => $"{key}:{propertyInfo.Name}");
+
+            missingOptions.AddRange(missing);
+
+            services.Configure<T>(configurationSection);
+            services.AddScoped(provider => provider.GetService<IOptionsSnapshot<T>>().Value);
+        }
+
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env,
-            IOptions<Auth0Settings> auth0SettingsOptions)
+            Auth0Settings auth0Settings)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
@@ -129,7 +153,6 @@ namespace Gaver.Web
                     .WithFilter(filterLoggerSettings)
                     .AddConsole(LogLevel.Information);
             }
-            var auth0Settings = auth0SettingsOptions.Value;
             app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
