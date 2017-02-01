@@ -9,6 +9,7 @@ using Gaver.Logic.Contracts;
 using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
+using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -28,7 +29,7 @@ using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Gaver.Web.Utils
+namespace Gaver.Web
 {
     public class Startup
     {
@@ -84,7 +85,7 @@ namespace Gaver.Web.Utils
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSignalR();
+            services.AddSignalR(options => options.RegisterInvocationAdapter<CustomJsonNetInvocationAdapter>("json"));
             services.AddSingleton<IConfigureOptions<SignalROptions>, CustomSignalROptionsSetup>();
             services.AddSwaggerGen(options => { options.OperationFilter<AuthorizationHeaderParameterOperationFilter>(); });
             services.AddSingleton(factory => new JsonSerializer {

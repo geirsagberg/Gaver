@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using Microsoft.AspNetCore.SignalR;
-//using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Newtonsoft.Json.Serialization;
 
 namespace Gaver.Web.Utils

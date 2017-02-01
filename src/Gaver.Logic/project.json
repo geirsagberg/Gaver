@@ -5,11 +5,11 @@
     "Flurl.Http": "1.1.1",
     "Microsoft.Extensions.Logging": "1.1.0",
     "Microsoft.Extensions.Options": "1.1.0",
-    "NETStandard.Library": "1.6.1",
     "Gaver.Data": {
       "target": "project"
     },
-    "Microsoft.IdentityModel.Tokens": "5.1.0"
+    "Microsoft.IdentityModel.Tokens": "5.1.2",
+    "NETStandard.Library": "1.6.2-beta-24913-01"
   },
   "frameworks": {
     "netstandard1.3": {
