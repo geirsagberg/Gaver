@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Swashbuckle.Swagger.Model;
 using Swashbuckle.SwaggerGen.Generator;
 
-namespace Gaver.Web.Filters
+namespace Gaver.Web
 {
     public class AuthorizationHeaderParameterOperationFilter : IOperationFilter
     {

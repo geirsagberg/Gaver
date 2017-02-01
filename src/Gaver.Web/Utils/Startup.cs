@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,13 +9,12 @@ using Gaver.Logic.Contracts;
 using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
-using Gaver.Web.Filters;
-using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +28,7 @@ using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Gaver.Web
+namespace Gaver.Web.Utils
 {
     public class Startup
     {
@@ -85,7 +84,8 @@ namespace Gaver.Web
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
+            services.AddSignalR();
+            services.AddSingleton<IConfigureOptions<SignalROptions>, CustomSignalROptionsSetup>();
             services.AddSwaggerGen(options => { options.OperationFilter<AuthorizationHeaderParameterOperationFilter>(); });
             services.AddSingleton(factory => new JsonSerializer {
                 ContractResolver = new SignalRContractResolver()
@@ -156,8 +156,7 @@ namespace Gaver.Web
             app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
-            app.UseWebSockets();
-            app.UseSignalR();
+            app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
 
             app.UseSwagger();
             app.UseSwaggerUi();

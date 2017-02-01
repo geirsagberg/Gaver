@@ -7,6 +7,7 @@ import * as schemas from 'schemas'
 import { loadMessages } from 'store/chat'
 import { deepMerge } from 'utils/immutableExtensions'
 import { loadIdToken } from 'utils/auth'
+import { HubConnection } from '../../signalr/HubConnection'
 
 const initialState = Immutable({})
 
@@ -60,27 +61,27 @@ export const setBought = ({listId, wishId, isBought}) => async (dispatch, getSta
   dispatch(setBoughtSuccess({ wishId, isBought, userId: getState().user.id }))
 })
 
+let listHub
+
 export const subscribeList = listId => async dispatch => tryOrNotify(async () => {
   dispatch(loadSharedList(listId))
-  $.connection.hub.logging = isDevelopment
-  // Setting id_token in query string is currently only way to perform bearer authentication for SignalR
-  $.connection.hub.qs = { id_token: loadIdToken() }
-  const { server, client } = $.connection.listHub
-  client.updateUsers = data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
-  client.refresh = () => {
+  const idToken = loadIdToken()
+  listHub = new HubConnection(`http://${document.location.host}/listHub`, 'formatType=json&format=text&id_token=' + idToken)
+  
+  listHub.on('updateUsers', data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users)))))
+  listHub.on('refresh', () => {
     dispatch(loadSharedList(listId))
     dispatch(loadMessages(listId))
-  }
-  await $.connection.hub.start()
-  const users = await server.subscribe(listId)
-  client.updateUsers(users)
+  })
+  await listHub.start()
+  const users = await listHub.invoke('subscribe', listId)
+  listHub.methods['updateUsers'](users)
 })
 
-export const unsubscribeList = listId => async dispatch => {
-  const { server } = $.connection.listHub
-  await server.unsubscribeList(listId)
-  await $.connection.hub.stop()
-}
+export const unsubscribeList = listId => async dispatch => tryOrNotify(async () => {
+  await listHub.invoke('unsubscribe', listId)
+  await listHub.stop()
+})
 
 export function setUsers(data) {
   return {

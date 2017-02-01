@@ -44,7 +44,7 @@ namespace Gaver.Web.Features.Chat
             context.Add(chatMessage);
             context.SaveChanges();
             chatMessage.User = context.GetOrDie<User>(request.UserId);
-            _clientNotifier.RefreshList(request.WishListId, request.UserId);
+            _clientNotifier.RefreshListAsync(request.WishListId, request.UserId);
             return mapper.Map<ChatMessageModel>(chatMessage);
         }
     }

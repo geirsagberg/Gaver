@@ -1,6 +1,7 @@
 using System.Reflection;
 using Gaver.Logic.Features.Mail;
 using Gaver.Logic.Services;
+using Gaver.Web.Utils;
 using LightInject;
 using Xunit;
 

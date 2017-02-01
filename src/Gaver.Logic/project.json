@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0",
   "dependencies": {
     "AutoMapper": "5.2.0",
@@ -8,7 +8,8 @@
     "NETStandard.Library": "1.6.1",
     "Gaver.Data": {
       "target": "project"
-    }
+    },
+    "Microsoft.IdentityModel.Tokens": "5.1.0"
   },
   "frameworks": {
     "netstandard1.3": {

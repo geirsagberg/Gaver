@@ -1,9 +1,10 @@
 using System;
 using System.Reflection;
-using Microsoft.AspNetCore.SignalR.Infrastructure;
+using Microsoft.AspNetCore.SignalR;
+//using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Newtonsoft.Json.Serialization;
 
-namespace Gaver.Web
+namespace Gaver.Web.Utils
 {
     public class SignalRContractResolver : IContractResolver
     {
@@ -16,7 +17,7 @@ namespace Gaver.Web
         {
             defaultContractSerializer = new DefaultContractResolver();
             camelCaseContractResolver = new CamelCasePropertyNamesContractResolver();
-            assembly = typeof(Connection).GetTypeInfo().Assembly;
+            assembly = typeof(Hub).GetTypeInfo().Assembly;
         }
 
         public JsonContract ResolveContract(Type type)

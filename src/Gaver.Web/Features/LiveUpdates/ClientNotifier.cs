@@ -1,19 +1,20 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Infrastructure;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Gaver.Web.Features.LiveUpdates
 {
     public class ClientNotifier
     {
-        private readonly IHubContext<ListHub, IListHubClient> hub;
-        public ClientNotifier(IConnectionManager signalRManager)
+        private readonly IHubContext<ListHub> hub;
+
+        public ClientNotifier(IHubContext<ListHub> hub)
         {
-            hub = signalRManager.GetHubContext<ListHub, IListHubClient>();
+            this.hub = hub;
         }
 
-        public void RefreshList(int wishListId, int? excludeUserId = null)
+        public Task RefreshListAsync(int wishListId, int? excludeUserId = null)
         {
-            hub.RefreshData(wishListId, excludeUserId);
+            return hub.RefreshDataAsync(wishListId, excludeUserId);
         }
     }
 }

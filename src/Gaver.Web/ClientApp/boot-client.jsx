@@ -13,7 +13,7 @@ import './css/site.css'
 import createRoutes from './createRoutes'
 
 // Setup SignalR
-import 'ms-signalr-client'
+// import 'ms-signalr-client'
 
 setupProgress()
 
@@ -22,11 +22,13 @@ const initialState = window.initialReduxState
 const store = configureStore(initialState)
 const Router = createRoutes(store)
 
+ReactDOM.render(
+  <Provider store={store}>
+    {Router}
+  </Provider>, document.getElementById('react-app')
+)
+
 // Ensure the dynamic SignalR script is loaded before rendering
-$script('/signalr/hubs', () => {
-  ReactDOM.render(
-    <Provider store={store}>
-      {Router}
-    </Provider>, document.getElementById('react-app')
-  )
-})
+// $script('/signalr/hubs', () => {
+
+// })

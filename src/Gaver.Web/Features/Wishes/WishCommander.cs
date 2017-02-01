@@ -42,7 +42,7 @@ namespace Gaver.Web.Features.Wishes
             };
             context.Add(wish);
             context.SaveChanges();
-            clientNotifier.RefreshList(wishListId);
+            clientNotifier.RefreshListAsync(wishListId);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -66,7 +66,7 @@ namespace Gaver.Web.Features.Wishes
             }
 
             context.SaveChanges();
-            clientNotifier.RefreshList(message.WishListId, null);
+            clientNotifier.RefreshListAsync(message.WishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -76,7 +76,7 @@ namespace Gaver.Web.Features.Wishes
             wish.Description = message.Description;
             context.SaveChanges();
 
-            clientNotifier.RefreshList(message.WishListId, null);
+            clientNotifier.RefreshListAsync(message.WishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 
@@ -103,7 +103,7 @@ namespace Gaver.Web.Features.Wishes
             }
             context.SaveChanges();
 
-            clientNotifier.RefreshList(message.WishListId, message.UserId);
+            clientNotifier.RefreshListAsync(message.WishListId, message.UserId);
             return mapper.Map<SharedWishModel>(wish);
         }
 
@@ -111,7 +111,7 @@ namespace Gaver.Web.Features.Wishes
         {
             context.Delete<Wish>(message.WishId);
             context.SaveChanges();
-            clientNotifier.RefreshList(message.WishListId);
+            clientNotifier.RefreshListAsync(message.WishListId);
         }
 
         public void Handle(RegisterTokenRequest request)

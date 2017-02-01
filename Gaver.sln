@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A8C73828-F61B-41B9-9946-BB7E30D26991}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C5500253-6FAD-42EB-AFDF-BE1859C96417}"
@@ -25,6 +26,16 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Gaver.Logic.Tests", "test\Gaver.Logic.Tests\Gaver.Logic.Tests.xproj", "{69CD4FDF-197E-4ED4-8445-6FD20A30102E}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Gaver.Web.Tests", "test\Gaver.Web.Tests\Gaver.Web.Tests.xproj", "{FA923F66-653C-40AF-82ED-005B3DEB48E3}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.SignalR.Common", "..\SignalR\src\Microsoft.AspNetCore.SignalR.Common\Microsoft.AspNetCore.SignalR.Common.xproj", "{E37324FF-6BAF-4243-BA80-7C024CF5F29D}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Sockets", "..\SignalR\src\Microsoft.AspNetCore.Sockets\Microsoft.AspNetCore.Sockets.xproj", "{1715EA8D-8E13-4ACF-8BCA-57D048E55ED8}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.WebSockets.Internal", "..\SignalR\src\Microsoft.AspNetCore.WebSockets.Internal\Microsoft.AspNetCore.WebSockets.Internal.xproj", "{FFFE71F8-E476-4BCD-9689-F106EE1C1497}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.Extensions.WebSockets.Internal", "..\SignalR\src\Microsoft.Extensions.WebSockets.Internal\Microsoft.Extensions.WebSockets.Internal.xproj", "{5D9DA986-2EAB-4C6D-BF15-9A4BDD4DE775}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.SignalR", "..\SignalR\src\Microsoft.AspNetCore.SignalR\Microsoft.AspNetCore.SignalR.xproj", "{42E76F87-92B6-45AB-BF07-6B811C0F2CAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +71,26 @@ Global
 		{FA923F66-653C-40AF-82ED-005B3DEB48E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA923F66-653C-40AF-82ED-005B3DEB48E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA923F66-653C-40AF-82ED-005B3DEB48E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E37324FF-6BAF-4243-BA80-7C024CF5F29D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E37324FF-6BAF-4243-BA80-7C024CF5F29D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E37324FF-6BAF-4243-BA80-7C024CF5F29D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E37324FF-6BAF-4243-BA80-7C024CF5F29D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1715EA8D-8E13-4ACF-8BCA-57D048E55ED8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1715EA8D-8E13-4ACF-8BCA-57D048E55ED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1715EA8D-8E13-4ACF-8BCA-57D048E55ED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1715EA8D-8E13-4ACF-8BCA-57D048E55ED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFFE71F8-E476-4BCD-9689-F106EE1C1497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFE71F8-E476-4BCD-9689-F106EE1C1497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFE71F8-E476-4BCD-9689-F106EE1C1497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFE71F8-E476-4BCD-9689-F106EE1C1497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D9DA986-2EAB-4C6D-BF15-9A4BDD4DE775}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9DA986-2EAB-4C6D-BF15-9A4BDD4DE775}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D9DA986-2EAB-4C6D-BF15-9A4BDD4DE775}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9DA986-2EAB-4C6D-BF15-9A4BDD4DE775}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42E76F87-92B6-45AB-BF07-6B811C0F2CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42E76F87-92B6-45AB-BF07-6B811C0F2CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42E76F87-92B6-45AB-BF07-6B811C0F2CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42E76F87-92B6-45AB-BF07-6B811C0F2CAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

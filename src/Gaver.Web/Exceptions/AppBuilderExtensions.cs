@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Gaver.Logic;
 using Gaver.Logic.Extensions;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Gaver.Web.Exceptions
 {
@@ -26,25 +24,17 @@ namespace Gaver.Web.Exceptions
             }).UseJwtBearerAuthentication(options);
         }
 
-        private static JwtBearerOptions CreateJwtBearerOptions(Auth0Settings auth0Settings)
-        {
-            if (auth0Settings.ClientSecret.IsNullOrEmpty())
-                throw new ConfigurationException("auth0:ClientSecret");
-
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(auth0Settings.ClientSecret));
-
-            return new JwtBearerOptions {
-                Audience = auth0Settings.ClientId,
-                Authority = $"https://{auth0Settings.Domain}",
-                TokenValidationParameters = {
-                    IssuerSigningKey = key
-                },
-                // TODO Handle other events, e.g. OnAuthenticationFailed and OnChallenge
-                Events = new JwtBearerEvents {
-                    OnTokenValidated = OnTokenValidated
-                }
-            };
-        }
+        private static JwtBearerOptions CreateJwtBearerOptions(Auth0Settings auth0Settings) => new JwtBearerOptions {
+            Audience = auth0Settings.ClientId,
+            Authority = $"https://{auth0Settings.Domain}",
+            TokenValidationParameters = {
+                IssuerSigningKey = auth0Settings.SigningKey
+            },
+            // TODO Handle other events, e.g. OnAuthenticationFailed and OnChallenge
+            Events = new JwtBearerEvents {
+                OnTokenValidated = OnTokenValidated
+            }
+        };
 
         private static void AddAuthorizationHeaderFromQueryIfNecessary(HttpContext context)
         {
