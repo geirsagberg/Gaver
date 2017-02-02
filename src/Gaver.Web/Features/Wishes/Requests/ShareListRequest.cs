@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using MediatR;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes.Requests
 {
-    public class ShareListRequest
+    public class ShareListRequest : IRequest
     {
         [Required]
         [MinLength(1)]

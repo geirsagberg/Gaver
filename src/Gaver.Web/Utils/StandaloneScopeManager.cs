@@ -5,7 +5,7 @@ namespace Gaver.Web.Utils
 {
     internal class StandaloneScopeManager : IScopeManager
     {
-        private readonly ThreadLocal<Scope> currentScope = new ThreadLocal<Scope>();
+        private readonly LogicalThreadStorage<Scope> currentScope = new LogicalThreadStorage<Scope>();
 
         public StandaloneScopeManager(IServiceFactory serviceFactory)
         {

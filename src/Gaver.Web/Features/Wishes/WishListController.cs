@@ -75,11 +75,11 @@ namespace Gaver.Web.Features.Wishes
         }
 
         [HttpPost("{listId:int}/Share")]
-        public async Task ShareList(int listId, ShareListRequest request)
+        public Task ShareList(int listId, ShareListRequest request)
         {
             request.WishListId = listId;
             request.UserId = UserId;
-            await wishMailer.HandleAsync(request);
+            return wishMailer.Handle(request);
         }
 
         [HttpPost("{listId:int}/RegisterToken")]
@@ -93,7 +93,7 @@ namespace Gaver.Web.Features.Wishes
         [HttpGet("{listId:int}/Access")]
         public Task<ListAccessStatus> CheckSharedListAccess(int listId)
         {
-            return wishReader.HandleAsync(new CheckSharedListAccessRequest {
+            return wishReader.Handle(new CheckSharedListAccessRequest {
                 UserId = UserId,
                 WishListId = listId
             });

@@ -10,13 +10,12 @@ using Gaver.Logic.Exceptions;
 using Gaver.Logic.Extensions;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class WishReader :
-        IRequestHandler<GetMyListRequest, MyListModel>,
-        IRequestHandler<GetSharedListRequest, SharedListModel>,
+    public class WishReader : Logic.Contracts.IRequestHandler<GetMyListRequest, MyListModel>, Logic.Contracts.IRequestHandler<GetSharedListRequest, SharedListModel>,
         IAsyncRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
     {
         private readonly IAccessChecker accessChecker;
@@ -30,7 +29,7 @@ namespace Gaver.Web.Features.Wishes
             this.accessChecker = accessChecker;
         }
 
-        public async Task<ListAccessStatus> HandleAsync(CheckSharedListAccessRequest request)
+        public async Task<ListAccessStatus> Handle(CheckSharedListAccessRequest request)
         {
             var wishListOwnerId = await context.WishLists.Where(wl => wl.Id == request.WishListId)
                 .Select(wl => wl.UserId)

@@ -3,6 +3,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Gaver.Web.Exceptions;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,11 @@ namespace Gaver.Web.Features.Users
     [Authorize]
     public class UserController : GaverControllerBase
     {
-        private readonly UserHandler userHandler;
+        private readonly IMediator mediator;
 
-        public UserController(UserHandler userHandler)
+        public UserController(IMediator mediator)
         {
-            this.userHandler = userHandler;
+            this.mediator = mediator;
         }
 
         [HttpGet]
@@ -26,10 +27,12 @@ namespace Gaver.Web.Features.Users
             if (providerId == null) {
                 throw new HttpException(HttpStatusCode.Unauthorized);
             }
-            return userHandler.HandleAsync(new GetUserInfoRequest {
+            var request = new GetUserInfoRequest {
                 AccessToken = accessToken,
                 ProviderId = providerId
-            });
+            };
+
+            return mediator.Send(request);
         }
     }
 }

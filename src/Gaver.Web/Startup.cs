@@ -9,9 +9,11 @@ using Gaver.Logic.Contracts;
 using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
+using Gaver.Web.Extensions;
 using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -74,7 +76,7 @@ namespace Gaver.Web
                 o.Filters.Add(new CustomExceptionFilterAttribute());
                 o.Filters.Add(new ValidationAttribute());
                 o.UseFromBodyBinding();
-            });
+            }); //.AddControllersAsServices();
             var connectionString = Configuration.GetConnectionString("GaverContext");
             if (connectionString.IsNullOrEmpty())
                 throw new ConfigurationException("ConnectionStrings:GaverContext");
@@ -91,6 +93,7 @@ namespace Gaver.Web
             services.AddSingleton(factory => new JsonSerializer {
                 ContractResolver = new SignalRContractResolver()
             });
+            services.AddMediatR();
 
             var container = new ServiceContainer(new ContainerOptions {
                 EnablePropertyInjection = false,
@@ -100,9 +103,8 @@ namespace Gaver.Web
             container.ScopeManagerProvider = new StandaloneScopeManagerProvider();
             container.RegisterAssembly<ILogicAssembly>();
             container.RegisterAssembly<Startup>();
-            var provider = container.CreateServiceProvider(services);
 
-            return provider;
+            return container.CreateServiceProvider(services);
         }
 
         private void ConfigureOptions<T>(IServiceCollection services, string key) where T : class

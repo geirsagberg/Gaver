@@ -10,6 +10,7 @@ using Gaver.Logic.Contracts;
 using Gaver.Logic.Exceptions;
 using Gaver.Logic.Extensions;
 using Gaver.Web.Features.Wishes.Requests;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace Gaver.Web.Features.Wishes
@@ -27,7 +28,7 @@ namespace Gaver.Web.Features.Wishes
             this.gaverContext = gaverContext;
         }
 
-        public async Task HandleAsync(ShareListRequest message)
+        public async Task Handle(ShareListRequest message)
         {
             ValidateEmails(message.Emails);
             var userName = gaverContext.Users.Where(u => u.Id == message.UserId).Select(u => u.Name).Single();

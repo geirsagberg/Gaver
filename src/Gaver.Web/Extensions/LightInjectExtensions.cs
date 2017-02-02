@@ -3,7 +3,7 @@ using System.Reflection;
 using LightInject;
 using Serilog.Events;
 
-namespace Gaver.Web
+namespace Gaver.Web.Extensions
 {
     public static class LightInjectExtensions
     {

@@ -9,13 +9,13 @@ using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Logic.Exceptions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Users
 {
-    public class GetUserInfoRequest
+    public class GetUserInfoRequest : IRequest<UserModel>
     {
         [Required]
         public string AccessToken { get; set; }
@@ -26,8 +26,8 @@ namespace Gaver.Web.Features.Users
 
     public class UserHandler : IAsyncRequestHandler<GetUserInfoRequest, UserModel>
     {
-        private readonly GaverContext context;
         private readonly Auth0Settings auth0Settings;
+        private readonly GaverContext context;
         private readonly IMapperService mapper;
 
         public UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings)
@@ -37,7 +37,7 @@ namespace Gaver.Web.Features.Users
             this.auth0Settings = auth0Settings;
         }
 
-        public async Task<UserModel> HandleAsync(GetUserInfoRequest request)
+        public async Task<UserModel> Handle(GetUserInfoRequest request)
         {
             var user = await context.Users.Where(u => u.PrimaryIdentityId == request.ProviderId)
                 .Include(u => u.WishLists)
