@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <AssemblyName>Gaver.Logic</AssemblyName>
+    <PackageId>Gaver.Logic</PackageId>
+    <NetStandardImplicitPackageVersion>1.6.2-*</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="5.2.0" />
+    <PackageReference Include="Flurl.Http" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.1.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.1.2" />
+  </ItemGroup>
+
+</Project>
