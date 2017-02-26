@@ -5,7 +5,7 @@
     <DebugType>portable</DebugType>
     <AssemblyName>Gaver.TestUtils</AssemblyName>
     <PackageId>Gaver.TestUtils</PackageId>
-    <NetStandardImplicitPackageVersion>1.6.2-*</NetStandardImplicitPackageVersion>
+    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

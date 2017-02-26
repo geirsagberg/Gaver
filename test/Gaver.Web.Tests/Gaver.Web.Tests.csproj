@@ -6,7 +6,7 @@
     <AssemblyName>Gaver.Web.Tests</AssemblyName>
     <PackageId>Gaver.Web.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <RuntimeFrameworkVersion>1.2.0-beta-001304-00</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>1.1.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
