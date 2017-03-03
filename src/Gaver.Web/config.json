@@ -9,6 +9,6 @@
     "ClientSecret": ""
   },
   "ConnectionStrings": {
-    "GaverContext": ""
+    "GaverContext": "Server=localhost;Database=Gaver;"
   }
 }

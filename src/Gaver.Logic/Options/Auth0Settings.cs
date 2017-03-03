@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Gaver.Logic.Extensions;
 
 namespace Gaver.Logic
 {
@@ -9,6 +10,6 @@ namespace Gaver.Logic
         public string ClientSecret { get; set; }
         public string Domain { get; set; }
 
-        public SymmetricSecurityKey SigningKey => new SymmetricSecurityKey(Encoding.ASCII.GetBytes(ClientSecret));
+		public SymmetricSecurityKey SigningKey => ClientSecret.IsNullOrEmpty() ? null : new SymmetricSecurityKey(Encoding.ASCII.GetBytes(ClientSecret));
     }
 }

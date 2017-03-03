@@ -69,6 +69,7 @@ namespace Gaver.Web
 
             ConfigureOptions<MailOptions>(services, "mail");
             ConfigureOptions<Auth0Settings>(services, "auth0");
+
             if (missingOptions.Any())
                 throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
 
@@ -114,7 +115,7 @@ namespace Gaver.Web
 
             var missing = typeof(T)
                 .GetProperties()
-                .Where(propertyInfo => propertyInfo.GetValue(options).IsNullOrDefault())
+                .Where(propertyInfo => propertyInfo.GetValue(options).ToStringOrEmpty().IsNullOrEmpty())
                 .Select(propertyInfo => $"{key}:{propertyInfo.Name}");
 
             missingOptions.AddRange(missing);
@@ -169,10 +170,10 @@ namespace Gaver.Web
                 routes.MapRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new {controller = "Error", action = "NotFound"});
+                routes.MapRoute("API 404", "api/{*anything}", new { controller = "Error", action = "NotFound" });
                 routes.MapSpaFallbackRoute(
                     "spa-fallback",
-                    new {controller = "Home", action = "Index"});
+                    new { controller = "Home", action = "Index" });
             });
         }
 

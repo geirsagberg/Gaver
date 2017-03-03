@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "foreach -g 'test/**Tests/project.json' -x 'cd #{dir} && dotnet test' --no-C",
+    "test": "foreach -g 'test/**Tests/*.csproj' -x 'cd #{dir} && dotnet test' --no-C",
     "test:watch": "npm test && watch -p '**/*.cs' -c 'npm test'",
     "clean": "rimraf src/**/obj/ src/**/bin/ test/**/obj/ test/**/bin/",
     "start": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet run",
     "start:prod": "cd src/Gaver.Web && webpack && dotnet run",
     "watch": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
-    "build": "dotnet build **/project.json",
+    "build": "dotnet build",
     "webpack": "cd src/Gaver.Web && webpack",
     "webpack:dev": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development webpack",
     "cloc": "cloc --exclude-dir=node_modules,typings,wwwroot,bin,obj --exclude-lang=JSON ."
