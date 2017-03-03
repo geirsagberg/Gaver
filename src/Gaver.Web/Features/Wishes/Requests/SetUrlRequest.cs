@@ -1,8 +1,10 @@
+using Gaver.Web.Features.Wishes.Models;
+using MediatR;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes.Requests
 {
-    public class SetUrlRequest
+    public class SetUrlRequest : IRequest<WishModel>
     {
         public string Url { get; set; }
 

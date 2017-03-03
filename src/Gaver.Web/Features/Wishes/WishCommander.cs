@@ -2,7 +2,6 @@
 using System.Linq;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Logic;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Logic.Exceptions;
@@ -10,6 +9,7 @@ using Gaver.Web.Features.LiveUpdates;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
 using Microsoft.Extensions.Logging;
+using MediatR;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -18,7 +18,8 @@ namespace Gaver.Web.Features.Wishes
         IRequestHandler<SetUrlRequest, WishModel>,
         IRequestHandler<SetBoughtRequest, SharedWishModel>,
         IRequestHandler<SetDescriptionRequest, WishModel>,
-        IRequestHandler<DeleteWishRequest>
+        IRequestHandler<DeleteWishRequest>,
+        IRequestHandler<RegisterTokenRequest>
     {
         private readonly GaverContext context;
         private readonly IMapperService mapper;

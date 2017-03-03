@@ -3,10 +3,11 @@ using AutoMapper.QueryableExtensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic.Contracts;
+using MediatR;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class GetMessagesRequest
+    public class GetMessagesRequest : IRequest<ChatModel>
     {
         public int WishListId { get; set; }
     }

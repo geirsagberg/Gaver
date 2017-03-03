@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Wishes
@@ -9,69 +10,65 @@ namespace Gaver.Web.Features.Wishes
     [Microsoft.AspNetCore.Authorization.Authorize]
     public class WishListController : GaverControllerBase
     {
-        private readonly WishReader wishReader;
-        private readonly WishMailer wishMailer;
-        private readonly WishCommander wishCommander;
+        private readonly IMediator mediator;
 
-        public WishListController(WishReader wishReader, WishMailer wishMailer, WishCommander wishCommander)
+        public WishListController(IMediator mediator)
         {
-            this.wishReader = wishReader;
-            this.wishMailer = wishMailer;
-            this.wishCommander = wishCommander;
+            this.mediator = mediator;
         }
 
         [HttpGet]
-        public MyListModel Get()
+        public Task<MyListModel> Get()
         {
-            return wishReader.Handle(new GetMyListRequest {UserId = UserId});
+            return mediator.Send(new GetMyListRequest {UserId = UserId});
         }
 
         [HttpGet("{listId:int}")]
-        public SharedListModel Get(int listId)
+        public Task<SharedListModel> Get(int listId)
         {
-            return wishReader.Handle(new GetSharedListRequest {
+            return mediator.Send(new GetSharedListRequest {
                 ListId = listId,
                 UserId = UserId
             });
         }
 
         [HttpPost("{listId:int}")]
-        public WishModel Post(int listId, AddWishRequest request)
+        public Task<WishModel> Post(int listId, AddWishRequest request)
         {
             request.UserId = UserId;
             request.WishListId = listId;
-            return wishCommander.Handle(request);
+            return mediator.Send(request);
         }
 
         [HttpPut("{listId:int}/{wishId:int}/SetUrl")]
-        public WishModel SetUrl(int listId, int wishId, SetUrlRequest request)
+        public Task<WishModel> SetUrl(int listId, int wishId, SetUrlRequest request)
         {
             request.WishListId = listId;
             request.WishId = wishId;
-            return wishCommander.Handle(request);
+            return mediator.Send(request);
         }
 
         [HttpPut("{listId:int}/{wishId:int}/SetDescription")]
-        public WishModel SetDescription(int listId, int wishId, SetDescriptionRequest request)
+        public Task<WishModel> SetDescription(int listId, int wishId, SetDescriptionRequest request)
         {
             request.WishListId = listId;
             request.WishId = wishId;
-            return wishCommander.Handle(request);
+            return mediator.Send(request);
         }
 
         [HttpPut("{listId:int}/{wishId:int}/SetBought")]
-        public SharedWishModel SetBought(int listId, int wishId, SetBoughtRequest request)
+        public Task<SharedWishModel> SetBought(int listId, int wishId, SetBoughtRequest request)
         {
             request.WishListId = listId;
             request.WishId = wishId;
             request.UserId = UserId;
-            return wishCommander.Handle(request);
+            return mediator.Send(request);
         }
 
         [HttpDelete("{listId:int}/{wishId:int}")]
-        public void Delete(int listId, int wishId)
+        public Task Delete(int listId, int wishId)
         {
-            wishCommander.Handle(new DeleteWishRequest {WishId = wishId, WishListId = listId});
+            return mediator.Send(new DeleteWishRequest {WishId = wishId, WishListId = listId});
         }
 
         [HttpPost("{listId:int}/Share")]
@@ -79,21 +76,21 @@ namespace Gaver.Web.Features.Wishes
         {
             request.WishListId = listId;
             request.UserId = UserId;
-            return wishMailer.Handle(request);
+            return mediator.Send(request);
         }
 
         [HttpPost("{listId:int}/RegisterToken")]
-        public void RegisterToken(int listId, RegisterTokenRequest request)
+        public Task RegisterToken(int listId, RegisterTokenRequest request)
         {
             request.WishListId = listId;
             request.UserId = UserId;
-            wishCommander.Handle(request);
+            return mediator.Send(request);
         }
 
         [HttpGet("{listId:int}/Access")]
         public Task<ListAccessStatus> CheckSharedListAccess(int listId)
         {
-            return wishReader.Handle(new CheckSharedListAccessRequest {
+            return mediator.Send(new CheckSharedListAccessRequest {
                 UserId = UserId,
                 WishListId = listId
             });

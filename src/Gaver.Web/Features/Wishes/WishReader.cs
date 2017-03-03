@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class WishReader : Logic.Contracts.IRequestHandler<GetMyListRequest, MyListModel>, Logic.Contracts.IRequestHandler<GetSharedListRequest, SharedListModel>,
+    public class WishReader : MediatR.IRequestHandler<GetMyListRequest, MyListModel>, MediatR.IRequestHandler<GetSharedListRequest, SharedListModel>,
         IAsyncRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
     {
         private readonly IAccessChecker accessChecker;
