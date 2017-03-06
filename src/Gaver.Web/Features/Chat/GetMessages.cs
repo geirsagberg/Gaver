@@ -1,15 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic.Contracts;
+using Gaver.Web.CrossCutting;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class GetMessagesRequest : IRequest<ChatModel>
+    public class GetMessagesRequest : IRequest<ChatModel>, IWishListRequest
     {
+        [JsonIgnore]
         public int WishListId { get; set; }
+
+        [JsonIgnore]
+        public int UserId { get; set; }
     }
 
     public class GetMessagesHandler : IRequestHandler<GetMessagesRequest, ChatModel>
@@ -29,8 +36,7 @@ namespace Gaver.Web.Features.Chat
                 .Where(cm => cm.WishListId == message.WishListId)
                 .ProjectTo<ChatMessageModel>(mapper.MapperConfiguration).ToList();
 
-            return new ChatModel
-            {
+            return new ChatModel {
                 Messages = messages
             };
         }

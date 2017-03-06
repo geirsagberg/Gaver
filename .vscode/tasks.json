@@ -5,6 +5,7 @@
   "command": "dotnet",
   "isShellCommand": true,
   "args": [],
+  "_runner": "terminal",
   "tasks": [
     {
       "taskName": "build",
@@ -15,7 +16,7 @@
     {
       "taskName": "test",
       "args": [
-         "test/Gaver.Data.Tests"
+        "test/Gaver.Data.Tests"
       ],
       "isTestCommand": true
     }

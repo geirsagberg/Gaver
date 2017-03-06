@@ -10,6 +10,8 @@ using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Extensions;
+using Gaver.Web.Features.Wishes.Models;
+using Gaver.Web.Features.Wishes.Requests;
 using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
@@ -27,6 +29,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
+using Swashbuckle.AspNetCore.Swagger;
 using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
@@ -63,21 +66,21 @@ namespace Gaver.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions();
+            ConfigureOptions(services);
+
             services.AddAuthentication();
             services.AddAuthorization();
-
-            ConfigureOptions<MailOptions>(services, "mail");
-            ConfigureOptions<Auth0Settings>(services, "auth0");
-
-            if (missingOptions.Any())
-                throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
 
             services.AddMvc(o => {
                 o.Filters.Add(new CustomExceptionFilterAttribute());
                 o.Filters.Add(new ValidationAttribute());
                 o.UseFromBodyBinding();
             }); //.AddControllersAsServices();
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+            });
+            // services.AddSwaggerGen(options => { options.OperationFilter<AuthorizationHeaderParameterOperationFilter>(); });
             var connectionString = Configuration.GetConnectionString("GaverContext");
             if (connectionString.IsNullOrEmpty())
                 throw new ConfigurationException("ConnectionStrings:GaverContext");
@@ -90,7 +93,6 @@ namespace Gaver.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSignalR(options => options.RegisterInvocationAdapter<CustomJsonNetInvocationAdapter>("json"));
             services.AddSingleton<IConfigureOptions<SignalROptions>, CustomSignalROptionsSetup>();
-            services.AddSwaggerGen(options => { options.OperationFilter<AuthorizationHeaderParameterOperationFilter>(); });
             services.AddSingleton(factory => new JsonSerializer {
                 ContractResolver = new SignalRContractResolver()
             });
@@ -108,6 +110,17 @@ namespace Gaver.Web
             return container.CreateServiceProvider(services);
         }
 
+        private void ConfigureOptions(IServiceCollection services)
+        {
+            services.AddOptions();
+
+            ConfigureOptions<MailOptions>(services, "mail");
+            ConfigureOptions<Auth0Settings>(services, "auth0");
+
+            if (missingOptions.Any())
+                throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
+        }
+
         private void ConfigureOptions<T>(IServiceCollection services, string key) where T : class
         {
             var configurationSection = Configuration.GetSection(key);
@@ -121,6 +134,8 @@ namespace Gaver.Web
             missingOptions.AddRange(missing);
 
             services.Configure<T>(configurationSection);
+
+            // Enable injection of updated strongly typed options
             services.AddScoped(provider => provider.GetService<IOptionsSnapshot<T>>().Value);
         }
 
@@ -152,7 +167,8 @@ namespace Gaver.Web
                     HotModuleReplacement = true,
                     ReactHotModuleReplacement = true
                 });
-            } else {
+            }
+            else {
                 loggerFactory
                     .WithFilter(filterLoggerSettings)
                     .AddConsole(LogLevel.Information);
@@ -163,7 +179,9 @@ namespace Gaver.Web
             app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
 
             app.UseSwagger();
-            app.UseSwaggerUi();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseHttpException();
             app.UseMvc(routes => {
@@ -188,6 +206,8 @@ namespace Gaver.Web
                 .Build();
 
             host.Services.GetRequiredService<IMapperService>().ValidateMappings();
+
+            var x = host.Services.GetRequiredService<IAccessChecker>();
 
             using (var context = host.Services.GetRequiredService<GaverContext>()) {
                 context.Database.Migrate();

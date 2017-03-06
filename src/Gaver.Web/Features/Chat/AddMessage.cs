@@ -5,10 +5,11 @@ using Gaver.Logic.Contracts;
 using Gaver.Web.Features.LiveUpdates;
 using Newtonsoft.Json;
 using MediatR;
+using Gaver.Web.CrossCutting;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class AddMessageRequest : IRequest<ChatMessageModel>
+    public class AddMessageRequest : IRequest<ChatMessageModel>, IWishListRequest
     {
         [Required]
         [MinLength(1)]

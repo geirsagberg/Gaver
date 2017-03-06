@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Gaver.Logic.Contracts;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,30 +11,28 @@ namespace Gaver.Web.Features.Chat
     [Authorize]
     public class ChatController : GaverControllerBase
     {
-        private readonly AddMessageHandler addMessageHandler;
-        private readonly GetMessagesHandler getMessagesHandler;
-        private readonly IAccessChecker accessChecker;
+        private readonly IMediator mediator;
 
-        public ChatController(AddMessageHandler addMessageHandler, GetMessagesHandler getMessagesHandler, IAccessChecker accessChecker)
+        public ChatController(IMediator mediator)
         {
-            this.addMessageHandler = addMessageHandler;
-            this.getMessagesHandler = getMessagesHandler;
-            this.accessChecker = accessChecker;
+            this.mediator = mediator;
         }
 
         [HttpPost("{listId:int}")]
-        public ChatMessageModel AddMessage(int listId, AddMessageRequest request)
+        public Task<ChatMessageModel> AddMessage(int listId, AddMessageRequest request)
         {
-            accessChecker.CheckWishListInvitations(listId, UserId);
             request.WishListId = listId;
             request.UserId = UserId;
-            return addMessageHandler.Handle(request);
+            return mediator.Send(request);
         }
 
         [HttpGet("{listId:int}")]
-        public ChatModel GetMessages(int listId)
+        public Task<ChatModel> GetMessages(int listId)
         {
-            return getMessagesHandler.Handle(new GetMessagesRequest{WishListId = listId});
+            return mediator.Send(new GetMessagesRequest {
+                WishListId = listId,
+                UserId = UserId
+            });
         }
     }
 }
