@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>netstandard1.5</TargetFramework>
     <AssemblyName>Gaver.Data</AssemblyName>
     <PackageId>Gaver.Data</PackageId>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
-    <PackageReference Include="JetBrains.Annotations" Version="10.2.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="10.3.0" />
   </ItemGroup>
 
 </Project>
