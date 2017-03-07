@@ -75,7 +75,7 @@ module.exports = {
         sourceMap: true
       })
     ]),
-  devtool: isDevelopment ? 'cheap-module-eval-source-map' : 'cheap-module-source-map',
+  devtool: isDevelopment ? '#inline-source-map' : 'cheap-module-source-map',
   node: {
     console: true,
     fs: 'empty',

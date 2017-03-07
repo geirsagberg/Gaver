@@ -13,6 +13,7 @@ const namespace = 'gaver/user/'
 
 const LOGGED_OUT = namespace + 'LOGGED_OUT'
 const LOG_IN_SUCCESSFUL = namespace + 'LOG_IN_SUCCESSFUL'
+const AUTH_STARTED = namespace + 'AUTH_STARTED'
 
 const initialState = Immutable({})
 
@@ -29,9 +30,11 @@ const lock = new Auth0Lock(auth0ClientId, auth0Domain, {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
-      return state.merge(action.data).set('isLoggedIn', true)
+      return state.merge(action.data).set('isLoggedIn', true).set('isLoggingIn', false)
     case LOGGED_OUT:
       return initialState
+    case AUTH_STARTED:
+      return state.set('isLoggingIn', true)
   }
   return state
 }
@@ -49,11 +52,19 @@ function logInSuccessful(data) {
   }
 }
 
+function authStarted() {
+  return {
+    type: AUTH_STARTED
+  }
+}
+
 function redirectAfterLogin() {
   const urlAfterLogin = auth.loadUrlAfterLogin()
   if (urlAfterLogin) {
     auth.clearUrlAfterLogin()
     browserHistory.push(urlAfterLogin)
+  } else if (window.location.pathname.toLowerCase() === '/login') {
+    browserHistory.replace('/')
   }
 }
 
@@ -75,6 +86,7 @@ const completeLogin = async (dispatch, accessToken) => tryOrNotify(async () => {
 })
 
 export const initAuth = () => async dispatch => {
+  dispatch(authStarted())
   lock.on('authenticated', async authResult => {
     auth.saveIdToken(authResult.idToken)
     auth.saveAccessToken(authResult.accessToken)

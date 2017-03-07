@@ -12,6 +12,14 @@
     <RuntimeFrameworkVersion>1.1.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <EnvironmentVariables>
+      <Variable name="ASPNETCORE_ENVIRONMENT" value="Development" />
+    </EnvironmentVariables>
+    <ApplicationURL>http://localhost:5000</ApplicationURL>
+    <LaunchUrl></LaunchUrl>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="node_modules;obj\**\*" />
     <Content Update="wwwroot\**\*;Views\**\*;web.config;config.json">
