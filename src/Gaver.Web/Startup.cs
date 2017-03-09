@@ -48,7 +48,7 @@ namespace Gaver.Web
 
             builder.AddEnvironmentVariables();
             if (hostingEnvironment.IsDevelopment()) {
-                builder.AddUserSecrets();
+                builder.AddUserSecrets<Startup>();
                 UseRootNodeModules(hostingEnvironment);
             }
 
