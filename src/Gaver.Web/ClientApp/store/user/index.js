@@ -24,7 +24,15 @@ const lock = new Auth0Lock(auth0ClientId, auth0Domain, {
       scope: 'openid name email'
     },
     responseType: 'token'
-  }
+  },
+  theme: {
+    logo: '/images/gift.png',
+    primaryColor: '#375a7f'
+  },
+  languageDictionary: {
+    title: 'Gaver'
+  },
+  language: 'nb'
 })
 
 export default function reducer(state = initialState, action = {}) {

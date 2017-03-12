@@ -80,7 +80,6 @@ namespace Gaver.Web
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
                 c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
             });
-            // services.AddSwaggerGen(options => { options.OperationFilter<AuthorizationHeaderParameterOperationFilter>(); });
             var connectionString = Configuration.GetConnectionString("GaverContext");
             if (connectionString.IsNullOrEmpty())
                 throw new ConfigurationException("ConnectionStrings:GaverContext");

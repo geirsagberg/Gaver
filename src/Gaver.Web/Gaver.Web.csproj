@@ -37,7 +37,6 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-preview1-*" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0-rc3" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.ReactServices" Version="1.1.0-beta-000002" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.1" />
@@ -59,6 +58,7 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="1.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" />
     <PackageReference Include="MediatR" Version="3.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,4 +68,7 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
 </Project>
