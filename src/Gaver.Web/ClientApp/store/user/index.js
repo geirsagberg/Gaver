@@ -74,7 +74,6 @@ export const setUrlAfterLogin = url => () => {
 export const logOut = () => async dispatch => {
   auth.clearTokens()
   dispatch(loggedOut())
-  history.replace('/login')
 }
 
 const completeLogin = async (dispatch, accessToken) => tryOrNotify(async () => {
@@ -83,7 +82,6 @@ const completeLogin = async (dispatch, accessToken) => tryOrNotify(async () => {
 })
 
 export const initAuth = () => async dispatch => {
-  dispatch(authStarted())
   lock.on('authenticated', async authResult => {
     auth.saveIdToken(authResult.idToken)
     auth.saveAccessToken(authResult.accessToken)
@@ -92,7 +90,10 @@ export const initAuth = () => async dispatch => {
   const accessToken = auth.loadAccessToken()
   // Calling loadIdToken to check whether JWT is still valid
   if (accessToken && auth.loadIdToken()) {
+    dispatch(authStarted())
     await completeLogin(dispatch, accessToken)
+  } else if (location.hash.includes('access_token')) {
+    dispatch(authStarted())
   }
 }
 

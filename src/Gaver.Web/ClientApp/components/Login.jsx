@@ -3,15 +3,12 @@ import { connect } from 'react-redux'
 import * as actions from 'store/user'
 import './Login.css'
 import Loading from './Loading'
-import { Redirect } from 'react-router-dom'
-import { getIn } from 'utils/immutableExtensions'
 
 class Login extends React.Component {
   static get propTypes() {
     const result = {
       location: React.PropTypes.object,
       logIn: React.PropTypes.func.isRequired,
-      isLoggedIn: React.PropTypes.bool,
       isLoggingIn: React.PropTypes.bool
     }
     return result
@@ -22,9 +19,7 @@ class Login extends React.Component {
   }
 
   render() {
-    return this.props.isLoggedIn
-      ? <Redirect to={this.props::getIn('location.state.from', '/')} />
-      : (
+    return (
       <div className="container">
         {this.props.isLoggingIn
         ? <Loading />
@@ -40,7 +35,6 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.user.isLoggedIn,
   isLoggingIn: state.user.isLoggingIn
 })
 
