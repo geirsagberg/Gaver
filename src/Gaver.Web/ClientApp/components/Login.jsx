@@ -3,45 +3,18 @@ import { connect } from 'react-redux'
 import * as actions from 'store/user'
 import './Login.css'
 import Loading from './Loading'
+import { Redirect } from 'react-router-dom'
+import { getIn } from 'utils/immutableExtensions'
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isLoggingIn: this.props.isLoggedIn
-    }
-  }
-
-  componentDidMount() {
-    if (this.props.isLoggedIn) {
-      this.redirect()
-    }
-  }
-
   static get propTypes() {
     const result = {
       location: React.PropTypes.object,
       logIn: React.PropTypes.func.isRequired,
-      isLoggedIn: React.PropTypes.bool
+      isLoggedIn: React.PropTypes.bool,
+      isLoggingIn: React.PropTypes.bool
     }
     return result
-  }
-
-  static get contextTypes() {
-    return {
-      router: React.PropTypes.object.isRequired,
-      store: React.PropTypes.object
-    }
-  }
-
-  redirect() {
-    const { location } = this.props
-    const { router } = this.context
-    if (location.state && location.state.nextPathname) {
-      router.replace(location.state.nextPathname)
-    } else {
-      router.replace('/')
-    }
   }
 
   logIn() {
@@ -49,9 +22,11 @@ class Login extends React.Component {
   }
 
   render() {
-    return (
+    return this.props.isLoggedIn
+      ? <Redirect to={this.props::getIn('location.state.from', '/')} />
+      : (
       <div className="container">
-        {this.state.isLoggingIn
+        {this.props.isLoggingIn
         ? <Loading />
         : <div className="well col-sm-6 col-centered">
           <h1 className="headline">Gaver</h1>
@@ -65,7 +40,8 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.user.isLoggedIn
+  isLoggedIn: state.user.isLoggedIn,
+  isLoggingIn: state.user.isLoggingIn
 })
 
 export default connect(mapStateToProps, actions)(Login)

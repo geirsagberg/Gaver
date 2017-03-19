@@ -1,6 +1,5 @@
 import Immutable from 'seamless-immutable'
 import * as Api from './api'
-import { browserHistory } from 'react-router'
 import Auth0Lock from 'auth0-lock'
 import * as auth from 'utils/auth'
 import { tryOrNotify } from 'utils'
@@ -66,16 +65,6 @@ function authStarted() {
   }
 }
 
-function redirectAfterLogin() {
-  const urlAfterLogin = auth.loadUrlAfterLogin()
-  if (urlAfterLogin) {
-    auth.clearUrlAfterLogin()
-    browserHistory.push(urlAfterLogin)
-  } else if (window.location.pathname.toLowerCase() === '/login') {
-    browserHistory.replace('/')
-  }
-}
-
 export const setUrlAfterLogin = url => () => {
   const a = document.createElement('a')
   a.href = url
@@ -85,7 +74,7 @@ export const setUrlAfterLogin = url => () => {
 export const logOut = () => async dispatch => {
   auth.clearTokens()
   dispatch(loggedOut())
-  browserHistory.replace('/login')
+  history.replace('/login')
 }
 
 const completeLogin = async (dispatch, accessToken) => tryOrNotify(async () => {
@@ -99,13 +88,11 @@ export const initAuth = () => async dispatch => {
     auth.saveIdToken(authResult.idToken)
     auth.saveAccessToken(authResult.accessToken)
     await completeLogin(dispatch, authResult.accessToken)
-    redirectAfterLogin()
   })
   const accessToken = auth.loadAccessToken()
   // Calling loadIdToken to check whether JWT is still valid
   if (accessToken && auth.loadIdToken()) {
     await completeLogin(dispatch, accessToken)
-    redirectAfterLogin()
   }
 }
 

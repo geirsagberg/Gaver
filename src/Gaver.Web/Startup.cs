@@ -206,8 +206,6 @@ namespace Gaver.Web
 
             host.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
-            var x = host.Services.GetRequiredService<IAccessChecker>();
-
             using (var context = host.Services.GetRequiredService<GaverContext>()) {
                 context.Database.Migrate();
             }

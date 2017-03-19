@@ -18,7 +18,10 @@
     "no-trailing-spaces": [2, {
       "skipBlankLines": true
     }],
-    "prefer-const": 1
+    "prefer-const": 1,
+    "no-use-before-define": 1,
+    "no-unused-expressions": 1,
+    "react/prop-types": 1
   },
   "ignore": [
     "bundle.js",

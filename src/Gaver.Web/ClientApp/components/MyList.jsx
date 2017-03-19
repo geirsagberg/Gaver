@@ -28,12 +28,12 @@ class Wish extends React.Component {
       <li className="list-group-item wish">
         <span className="wish_title">{wish.title}</span>
         {wish.url
-          ? <span className="wish_url"><span className="icon-pencil clickable wish_edit" onClick={() => editUrl({listId, wishId: wish.id})} /><a href={wish.url} className="wish_urlLink">{wish.url}</a></span>
-          : <button className="btn btn-link wish_btn" onClick={() => editUrl({listId, wishId: wish.id})}>Legg til lenke</button>}
+          ? <span className="wish_url"><span className="icon-pencil clickable wish_edit" onClick={() => editUrl({ listId, wishId: wish.id })} /><a href={wish.url} className="wish_urlLink">{wish.url}</a></span>
+          : <button className="btn btn-link wish_btn" onClick={() => editUrl({ listId, wishId: wish.id })}>Legg til lenke</button>}
         {wish.description
-          ? <span className="wish_description"><span className="icon-pencil clickable wish_edit" onClick={() => editDescription({listId, wishId: wish.id})} /><span className="wish_descriptionText">{wish.description}</span></span>
-          : <button className="btn btn-link wish_btn" onClick={() => editDescription({listId, wishId: wish.id})}>Legg til beskrivelse</button>}
-        <button className="btn btn-link wish_btn wish_btn-right" onClick={() => deleteWish({listId, wishId: wish.id}) }>Fjern</button>
+          ? <span className="wish_description"><span className="icon-pencil clickable wish_edit" onClick={() => editDescription({ listId, wishId: wish.id })} /><span className="wish_descriptionText">{wish.description}</span></span>
+          : <button className="btn btn-link wish_btn" onClick={() => editDescription({ listId, wishId: wish.id })}>Legg til beskrivelse</button>}
+        <button className="btn btn-link wish_btn wish_btn-right" onClick={() => deleteWish({ listId, wishId: wish.id })}>Fjern</button>
       </li>
     )
   }
@@ -71,7 +71,7 @@ class MyList extends React.Component {
 
   addWish() {
     if (this.wishInput.value) {
-      this.props.addWish({listId: this.props.listId, title: this.wishInput.value})
+      this.props.addWish({ listId: this.props.listId, title: this.wishInput.value })
       this.wishInput.value = ''
     }
   }
@@ -86,50 +86,52 @@ class MyList extends React.Component {
             {this.props.userName && <div className="header_item">
               {this.props.userName}
             </div>}
-            <Tether
-              attachment="top center"
-              constraints={[{
-                to: 'scrollParent',
-                attachment: 'together'
-              }]}
-            >
-              <button className={classNames('btn btn-default header_item', {
-                active: isShowingSharedLists
-              })} onClick={() => this.props.toggleSharedLists()}>
-                <span className="icon-list icon-before" />
-                Andres lister
+            <div className="header_actions">
+              <Tether
+                attachment="top center"
+                constraints={[{
+                  to: 'scrollParent',
+                  attachment: 'together'
+                }]}
+              >
+                <button className={classNames('btn btn-default header_item', {
+                  active: isShowingSharedLists
+                })} onClick={() => this.props.toggleSharedLists()}>
+                  <span className="icon-list icon-before" />
+                  Andres lister
               </button>
-              {isShowingSharedLists && <ul className="list-group">
-                {invitations::size() > 0
+                {isShowingSharedLists && <ul className="list-group">
+                  {invitations::size() > 0
                   ? invitations::map(invitation => <li className="list-group-item" key={invitation.wishListId}>
                     <Link to={`/list/${invitation.wishListId}`}>{invitation.userName}</Link>
                   </li>)
                   : <li className="list-group-item item-empty">Ingen delte lister enda...</li>}
               </ul>}
-            </Tether>
-            <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>
-              <span className="icon-share2 icon-before" />
-              Del
+              </Tether>
+              <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>
+                <span className="icon-share2 icon-before" />
+                Del
             </button>
-            <button className={classNames('btn btn-default header_item')} onClick={logOut}>
-              <span className="icon-exit icon-before" />
-              Logg ut
+              <button className={classNames('btn btn-default header_item')} onClick={logOut}>
+                <span className="icon-exit icon-before" />
+                Logg ut
             </button>
+            </div>
           </div>
         </header>
         <div className="wishList">
           <div className="input-group">
-            <input autoFocus className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={:: this.onKeyUp} ref={el => (this.wishInput = el) } />
+            <input autoFocus className="form-control" placeholder="Jeg ønsker meg..." onKeyUp={:: this.onKeyUp} ref={el => (this.wishInput = el)} />
             <span className="input-group-btn">
               <button className="btn btn-default" type="button" onClick={:: this.addWish}>Legg til</button>
             </span>
-          </div>
-          <ul className="list-group">
-            {this.props.wishes::map(wish => <Wish key={wish.id} {...{wish, listId, deleteWish, editUrl, editDescription}} />)}
-          </ul>
         </div>
-        <ReactTooltip />
+        <ul className="list-group">
+          {this.props.wishes::map(wish => <Wish key={wish.id} {...{ wish, listId, deleteWish, editUrl, editDescription }} />)}
+          </ul>
       </div>
+      <ReactTooltip />
+      </div >
     )
   }
 }
@@ -149,4 +151,3 @@ const actions = {
 }
 
 export default connect(mapStateToProps, actions)(MyList)
-
