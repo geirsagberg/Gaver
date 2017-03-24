@@ -9,7 +9,7 @@ import './MyList.css'
 import classNames from 'classnames'
 import Tether from 'react-tether'
 import { toggleSharedLists } from 'store/ui'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 class Wish extends React.Component {
   static get propTypes() {
@@ -100,12 +100,13 @@ class MyList extends React.Component {
                   <span className="icon-list icon-before" />
                   Andres lister
               </button>
-                {isShowingSharedLists && <ul className="list-group">
-                  {invitations::size() > 0
-                  ? invitations::map(invitation => <li className="list-group-item" key={invitation.wishListId}>
-                    <Link to={`/list/${invitation.wishListId}`}>{invitation.userName}</Link>
-                  </li>)
-                  : <li className="list-group-item item-empty">Ingen delte lister enda...</li>}
+              {isShowingSharedLists &&
+              <ul className="list-group">
+                {invitations::size() > 0
+                ? invitations::map(invitation => <li className="list-group-item" key={invitation.wishListId}>
+                  <Link to={`/list/${invitation.wishListId}`}>{invitation.userName}</Link>
+                </li>)
+                : <li className="list-group-item item-empty">Ingen delte lister enda...</li>}
               </ul>}
               </Tether>
               <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>

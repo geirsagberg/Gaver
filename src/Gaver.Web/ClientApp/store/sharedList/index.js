@@ -1,13 +1,15 @@
 import Immutable from 'seamless-immutable'
-import * as api from './api'
-import { isDevelopment, tryOrNotify } from 'utils'
-import $ from 'jquery'
+import * as Api from './api'
+import { isDevelopment, tryOrNotify, getQueryVariable } from 'utils'
 import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
 import { loadMessages } from 'store/chat'
 import { deepMerge } from 'utils/immutableExtensions'
 import { loadIdToken } from 'utils/auth'
 import { HubConnection } from '../../signalr/HubConnection'
+import { showError } from 'utils/notifications'
+import { replace, push } from 'react-router-redux'
+import { AccessStatus } from 'enums'
 
 const initialState = Immutable({})
 
@@ -16,6 +18,8 @@ const namespace = 'gaver/sharedList/'
 const DATA_LOADED = namespace + 'DATA_LOADED'
 const SET_USERS = namespace + 'SET_USERS'
 const SET_BOUGHT_SUCCESS = namespace + 'SET_BOUGHT_SUCCESS'
+const CLEAR_STATE = namespace + 'CLEAR_STATE'
+const SET_AUTHORIZED = namespace + 'SET_AUTHORIZED'
 
 function dataLoaded(data) {
   return {
@@ -33,6 +37,12 @@ function setBoughtSuccess({wishId, isBought, userId}) {
   }
 }
 
+function setAuthorized() {
+  return {
+    type: SET_AUTHORIZED
+  }
+}
+
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case DATA_LOADED: {
@@ -47,27 +57,55 @@ export default function reducer(state = initialState, action) {
     case SET_USERS:
       return state::deepMerge(action.data.entities)
         .set('currentUsers', action.data.result)
+    case SET_AUTHORIZED:
+      return state.set('isAuthorized', true)
+    case CLEAR_STATE:
+      return initialState
   }
   return state
 }
 
 export const loadSharedList = listId => async dispatch => tryOrNotify(async () => {
-  const data = await api.loadSharedList(listId)
+  const data = await Api.loadSharedList(listId)
   dispatch(dataLoaded(data))
 })
 
 export const setBought = ({listId, wishId, isBought}) => async (dispatch, getState) => tryOrNotify(async () => {
-  await api.setBought({ listId, wishId, isBought })
+  await Api.setBought({ listId, wishId, isBought })
   dispatch(setBoughtSuccess({ wishId, isBought, userId: getState().user.id }))
 })
 
 let listHub
 
-export const subscribeList = listId => async dispatch => tryOrNotify(async () => {
+export const subscribeList = (listId, token) => async dispatch => tryOrNotify(async () => {
+  if (token) {
+    try {
+      await Api.registerToken(listId, token)
+    } catch (error) {
+      showError(error)
+      dispatch(replace('/'))
+      return
+    }
+  }
+  const accessStatus = await Api.checkSharedListAccess(listId)
+  switch (accessStatus) {
+    case AccessStatus.NotInvited:
+      showError('Du er ikke invitert til denne listen')
+      // TODO: Egen side for å be om tilgang
+      dispatch(replace('/'))
+      break
+    case AccessStatus.Owner:
+      dispatch(replace('/'))
+      break
+    case AccessStatus.Invited:
+      dispatch(setAuthorized())
+      break
+  }
+
   dispatch(loadSharedList(listId))
   const idToken = loadIdToken()
   listHub = new HubConnection(`http://${document.location.host}/listHub`, 'formatType=json&format=text&id_token=' + idToken)
-  
+
   listHub.on('updateUsers', data => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users)))))
   listHub.on('refresh', () => {
     dispatch(loadSharedList(listId))
@@ -78,9 +116,17 @@ export const subscribeList = listId => async dispatch => tryOrNotify(async () =>
   listHub.methods['updateUsers'](users)
 })
 
+function clearState() {
+  return {
+    type: CLEAR_STATE
+  }
+}
+
 export const unsubscribeList = listId => async dispatch => tryOrNotify(async () => {
+  dispatch(clearState())
   await listHub.invoke('unsubscribe', listId)
   await listHub.stop()
+  listHub = null
 })
 
 export function setUsers(data) {
@@ -88,4 +134,8 @@ export function setUsers(data) {
     type: SET_USERS,
     data
   }
+}
+
+export const showMyList = () => dispatch => {
+  dispatch(push('/'))
 }

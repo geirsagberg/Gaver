@@ -7,6 +7,8 @@ import * as sharedListActions from 'store/sharedList'
 import { getIn, map, size } from 'utils/immutableExtensions'
 import { logOut } from 'store/user'
 import Chat from 'components/Chat'
+import Loading from './Loading'
+import { getQueryVariable } from 'utils'
 
 class Wish extends React.Component {
   static get propTypes() {
@@ -31,7 +33,11 @@ class Wish extends React.Component {
         {!wish.boughtByUser || wish.boughtByUser === userId
           ? <span className="checkbox wish_detail wish_detail-right">
             <label>
-              <input type="checkbox" checked={wish.boughtByUser === userId} onChange={() => setBought({ listId: wish.wishListId, wishId: wish.id, isBought: wish.boughtByUser !== userId })} />
+              <input type="checkbox" checked={wish.boughtByUser === userId} onChange={() => setBought({
+                listId: wish.wishListId,
+                wishId: wish.id,
+                isBought: wish.boughtByUser !== userId
+              })} />
               <span>Jeg kjøper</span>
             </label>
           </span>
@@ -43,32 +49,19 @@ class Wish extends React.Component {
 }
 
 class SharedList extends React.Component {
-  static get propTypes() {
-    const result = {
-      logOut: PropTypes.func.isRequired,
-      setBought: PropTypes.func.isRequired,
-      userName: PropTypes.string.isRequired,
-      userId: PropTypes.number.isRequired,
-      params: PropTypes.object.isRequired,
-    }
-    return result
-  }
-
   componentDidMount() {
-    const listId = this.props.params.id
-    // this.props.loadSharedList(listId)
-    this.props.subscribeList(listId)
+    const listId = this.props.match.params.id
+    const inviteToken = getQueryVariable('token')
+    this.props.subscribeList(listId, inviteToken)
   }
 
   componentWillUnmount() {
-    this.props.unsubscribeList(this.props.params.id)
+    this.props.unsubscribeList(this.props.match.params.id)
   }
 
   render() {
-    if (!this.props.owner) {
-      return <div className="loading">
-        <div className="loading_icon" />
-      </div>
+    if (!this.props.owner || !this.props.isAuthorized) {
+      return <Loading />
     }
 
     return (
@@ -82,7 +75,7 @@ class SharedList extends React.Component {
             <div className="header_item" data-tip={this.props.currentUsers.map(id => this.props.users[id].name).join(', ')}>
               {this.props.count} <span className="icon-users" />
             </div>
-            <button className="btn btn-default header_item" onClick={() => this.context.router.push('/')}>
+            <button className="btn btn-default header_item" onClick={this.props.showMyList}>
               <span className="icon-list icon-before" />
               Min liste
             </button>
@@ -118,6 +111,7 @@ const mapStateToProps = state => ({
   owner: state.sharedList.owner || '',
   userName: state.user.name || '',
   userId: state.user.id || 0,
+  isAuthorized: state.sharedList.isAuthorized
 })
 
 const dispatchOptions = {

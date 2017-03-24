@@ -1229,6 +1229,10 @@ cliui@^3.0.3, cliui@^3.2.0:
     strip-ansi "^3.0.1"
     wrap-ansi "^2.0.0"
 
+cloc@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/cloc/-/cloc-2.2.0.tgz#ee38e476fd050edc1d2ef8357cbde274b7c7efb4"
+
 clone@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.2.tgz#260b7a99ebb1edfe247538175f783243cb19d149"
@@ -4026,6 +4030,13 @@ react-router-dom@^4.0.0:
 react-router-redux@^4.0.0:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/react-router-redux/-/react-router-redux-4.0.8.tgz#227403596b5151e182377dab835b5d45f0f8054e"
+
+react-router-redux@next:
+  version "5.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/react-router-redux/-/react-router-redux-5.0.0-alpha.4.tgz#0f64a8633ee78e14ee3eb96c6354ee134aa6ce4f"
+  dependencies:
+    history "^4.5.1"
+    react-router "^4.0.0"
 
 react-router@^4.0.0:
   version "4.0.0"

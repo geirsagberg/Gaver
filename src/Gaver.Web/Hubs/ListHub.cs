@@ -93,7 +93,6 @@ namespace Gaver.Web
             };
         }
 
-
         public override async Task OnDisconnectedAsync(Exception ex)
         {
             logger.LogDebug("Connection {ConnectionId} disconnected", Context.ConnectionId);

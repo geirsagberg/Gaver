@@ -6,10 +6,12 @@ import Login from './Login'
 import { getIn } from 'utils/immutableExtensions'
 import { connect } from 'react-redux'
 import {
-  BrowserRouter as Router,
   Route,
-  Redirect
+  Redirect,
+  Switch
 } from 'react-router-dom'
+import { ConnectedRouter } from 'react-router-redux'
+import history from 'utils/history'
 
 const PropTypes = React.PropTypes
 
@@ -44,20 +46,24 @@ LoginRoute.propTypes = {
 
 class Layout extends React.Component {
   render() {
+    const { isLoggedIn } = this.props
     return (
-      <Router>
-        {this.props.isLoading
+      <ConnectedRouter history={history}>
+        {this.props.isLoading || this.props.isLoggingIn
         ? <Loading />
         : <div className='container'>
             <div className='row'>
               <div className='col-sm-12'>
-                <PrivateRoute exact path='/' component={MyList} isLoggedIn={this.props.isLoggedIn} />
-                <Route path='/list/:id' component={SharedList} />
-                <LoginRoute isLoggedIn={this.props.isLoggedIn} />
+                <Switch>
+                  <PrivateRoute exact path='/' component={MyList} isLoggedIn={isLoggedIn} />
+                  <PrivateRoute path='/list/:id' component={SharedList} isLoggedIn={isLoggedIn} />
+                  <LoginRoute isLoggedIn={isLoggedIn} />
+                  <Route render={() => <div>lol</div>} />
+                </Switch>
               </div>
             </div>
           </div>}
-      </Router>
+      </ConnectedRouter>
     )
   }
 }
@@ -66,12 +72,14 @@ Layout.propTypes = {
   children: PropTypes.element,
   route: PropTypes.any,
   isLoading: PropTypes.bool,
-  isLoggedIn: PropTypes.bool
+  isLoggedIn: PropTypes.bool,
+  isLoggingIn: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
   isLoading: !!state.ui.isLoading,
-  isLoggedIn: !!state.user.isLoggedIn
+  isLoggedIn: !!state.user.isLoggedIn,
+  isLoggingIn: !!state.user.isLoggingIn
 })
 
 export default connect(mapStateToProps)(Layout)
