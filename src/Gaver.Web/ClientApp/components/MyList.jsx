@@ -8,7 +8,7 @@ import ReactTooltip from 'react-tooltip'
 import './MyList.css'
 import classNames from 'classnames'
 import Tether from 'react-tether'
-import { toggleSharedLists } from 'store/ui'
+import { toggleSharedLists, setSharedListsVisible } from 'store/ui'
 import { Link } from 'react-router-dom'
 
 class Wish extends React.Component {
@@ -61,6 +61,10 @@ class MyList extends React.Component {
 
   componentDidMount() {
     this.props.loadMyList()
+  }
+
+  componentWillUnmount() {
+    this.props.setSharedListsVisible(false)
   }
 
   onKeyUp(e) {
@@ -148,7 +152,8 @@ const mapStateToProps = state => ({
 const actions = {
   ...myListActions,
   logOut,
-  toggleSharedLists
+  toggleSharedLists,
+  setSharedListsVisible
 }
 
 export default connect(mapStateToProps, actions)(MyList)

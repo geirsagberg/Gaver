@@ -5,6 +5,7 @@ const namespace = 'gaver/ui/'
 const LOADING_STARTED = namespace + 'LOADING_STARTED'
 const LOADING_STOPPED = namespace + 'LOADING_STOPPED'
 const TOGGLE_SHARED_LISTS = namespace + 'TOGGLE_SHARED_LISTS'
+const SET_SHARED_LISTS_VISIBLE = namespace + 'SET_SHARED_LISTS_VISIBLE'
 
 const initialState = Immutable({})
 
@@ -16,6 +17,8 @@ export default function reducer (state = initialState, action = {}) {
       return state.update('isLoading', x => (x - 1) || 0)
     case TOGGLE_SHARED_LISTS:
       return state.update('isShowingSharedLists', x => !x)
+    case SET_SHARED_LISTS_VISIBLE:
+      return state.set('isShowingSharedLists', action.visible)
   }
   return state
 }
@@ -35,5 +38,12 @@ export function loadingStopped () {
 export function toggleSharedLists() {
   return {
     type: TOGGLE_SHARED_LISTS
+  }
+}
+
+export function setSharedListsVisible(visible) {
+  return {
+    type: SET_SHARED_LISTS_VISIBLE,
+    visible
   }
 }

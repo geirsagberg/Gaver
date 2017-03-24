@@ -93,10 +93,10 @@ export const subscribeList = (listId, token) => async dispatch => tryOrNotify(as
       showError('Du er ikke invitert til denne listen')
       // TODO: Egen side for å be om tilgang
       dispatch(replace('/'))
-      break
+      return
     case AccessStatus.Owner:
       dispatch(replace('/'))
-      break
+      return
     case AccessStatus.Invited:
       dispatch(setAuthorized())
       break
@@ -124,9 +124,11 @@ function clearState() {
 
 export const unsubscribeList = listId => async dispatch => tryOrNotify(async () => {
   dispatch(clearState())
-  await listHub.invoke('unsubscribe', listId)
-  await listHub.stop()
-  listHub = null
+  if (listHub) {
+    await listHub.invoke('unsubscribe', listId)
+    await listHub.stop()
+    listHub = null
+  }
 })
 
 export function setUsers(data) {
