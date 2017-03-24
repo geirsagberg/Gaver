@@ -69,19 +69,19 @@ class SharedList extends React.Component {
         <header className="header">
           <h1 className="header_title">{this.props.owner}&nbsp;sine ønsker</h1>
           <div className="header_items">
-            {this.props.userName && <div className="header_item">
+            {this.props.userName && <div className="header_item header_username">
               {this.props.userName}
             </div>}
             <div className="header_item" data-tip={this.props.currentUsers.map(id => this.props.users[id].name).join(', ')}>
               {this.props.count} <span className="icon-users" />
             </div>
             <button className="btn btn-default header_item" onClick={this.props.showMyList}>
-              <span className="icon-list icon-before" />
-              Min liste
+              <span className="icon-home3 icon-before" />
+              <span className="btn_text">Min liste</span>
             </button>
             <button className={classNames('btn btn-default header_item')} onClick={this.props.logOut}>
               <span className="icon-exit icon-before" />
-              Logg ut
+              <span className="btn_text">Logg ut</span>
             </button>
           </div>
         </header>

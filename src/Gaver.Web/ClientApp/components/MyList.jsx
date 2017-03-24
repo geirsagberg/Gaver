@@ -28,7 +28,10 @@ class Wish extends React.Component {
       <li className="list-group-item wish">
         <span className="wish_title">{wish.title}</span>
         {wish.url
-          ? <span className="wish_url"><span className="icon-pencil clickable wish_edit" onClick={() => editUrl({ listId, wishId: wish.id })} /><a href={wish.url} className="wish_urlLink">{wish.url}</a></span>
+          ? <span className="wish_url">
+              <span className="icon-pencil clickable wish_edit" onClick={() => editUrl({ listId, wishId: wish.id })} />
+              <a href={wish.url} className="wish_urlLink">{wish.url}</a>
+            </span>
           : <button className="btn btn-link wish_btn" onClick={() => editUrl({ listId, wishId: wish.id })}>Legg til lenke</button>}
         {wish.description
           ? <span className="wish_description"><span className="icon-pencil clickable wish_edit" onClick={() => editDescription({ listId, wishId: wish.id })} /><span className="wish_descriptionText">{wish.description}</span></span>
@@ -87,7 +90,7 @@ class MyList extends React.Component {
         <header className="header">
           <h1 className="header_title">Mine ønsker</h1>
           <div className="header_items">
-            {this.props.userName && <div className="header_item">
+            {this.props.userName && <div className="header_item header_username">
               {this.props.userName}
             </div>}
             <div className="header_actions">
@@ -102,7 +105,7 @@ class MyList extends React.Component {
                   active: isShowingSharedLists
                 })} onClick={() => this.props.toggleSharedLists()}>
                   <span className="icon-list icon-before" />
-                  Andres lister
+                  <span className="btn_text">Andres lister</span>
               </button>
               {isShowingSharedLists &&
               <ul className="list-group">
@@ -115,11 +118,11 @@ class MyList extends React.Component {
               </Tether>
               <button className={classNames('btn btn-default header_item')} onClick={() => this.props.shareList(this.props.listId)}>
                 <span className="icon-share2 icon-before" />
-                Del
+                <span className="btn_text">Del</span>
             </button>
               <button className={classNames('btn btn-default header_item')} onClick={logOut}>
                 <span className="icon-exit icon-before" />
-                Logg ut
+                <span className="btn_text">Logg ut</span>
             </button>
             </div>
           </div>

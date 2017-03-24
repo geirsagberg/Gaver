@@ -41,11 +41,22 @@ $brand-danger:          #E74C3C;
     align-items: center;
     flex-wrap: wrap;
     margin-left: auto;
+
+  }
+
+  &_username {
+    @media screen and (max-width: 767px) {
+      display: none;
+    }
   }
 
   &_item {
     margin: 0 1rem;
     white-space: nowrap;
+
+    @media screen and (max-width: 767px) {
+      margin: 0 0.5rem;
+    }
 
     &:last-child {
       margin-right: 0;
@@ -53,9 +64,19 @@ $brand-danger:          #E74C3C;
   }
 
   &_actions {
-    @media screen and (max-width: 767px) {
-      display: none;
-    }
+
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .icon-before:before {
+    margin: 0;
+  }
+}
+
+.btn_text {
+  @media screen and (max-width: 767px) {
+    display: none;
   }
 }
 
