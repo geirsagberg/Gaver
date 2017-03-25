@@ -90,6 +90,13 @@ $brand-danger:          #E74C3C;
 
   flex-wrap: wrap;
 
+  $wishChildMargin: 0.4rem;
+
+  > * {
+    margin-top: $wishChildMargin;
+    margin-bottom: $wishChildMargin;
+  }
+
   &-empty {
     color: $gray-light;
     font-style: italic;
@@ -117,7 +124,7 @@ $brand-danger:          #E74C3C;
 
   &_url {
     @extend overflowEllipsis;
-    margin-left: 2rem;
+    margin-left: 1rem;
     margin-right: 1rem;
   }
 
@@ -127,7 +134,8 @@ $brand-danger:          #E74C3C;
 
   &_description {
     @extend overflowEllipsis;
-    margin: 0 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 
   &_descriptionText {
