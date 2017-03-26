@@ -105,7 +105,7 @@ class MyList extends React.Component {
                   active: isShowingSharedLists
                 })} onClick={() => this.props.toggleSharedLists()}>
                   <span className="icon-list icon-before" />
-                  <span className="btn_text">Andres lister</span>
+                  <span className="btn_text">Venner</span>
               </button>
               {isShowingSharedLists &&
               <ul className="list-group">

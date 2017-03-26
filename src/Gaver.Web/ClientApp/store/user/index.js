@@ -3,6 +3,7 @@ import * as Api from './api'
 import Auth0Lock from 'auth0-lock'
 import * as auth from 'utils/auth'
 import { tryOrNotify } from 'utils'
+import { showConfirm } from 'utils/dialogs'
 
 const auth0ClientId = 'q57tZFsUo6359RyFzmzB0VYrmCeLVrBi'
 const auth0Domain = 'sagberg.eu.auth0.com'
@@ -72,8 +73,10 @@ export const setUrlAfterLogin = url => () => {
 }
 
 export const logOut = () => async dispatch => {
-  auth.clearTokens()
-  dispatch(loggedOut())
+  if (await showConfirm('Vil du logge ut?')) {
+    auth.clearTokens()
+    dispatch(loggedOut())
+  }
 }
 
 const completeLogin = async (dispatch, accessToken) => tryOrNotify(async () => {

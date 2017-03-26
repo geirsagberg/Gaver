@@ -13,3 +13,13 @@ export function showPrompt (options) {
     })
   })
 }
+
+export function showConfirm (message) {
+  return new Promise((resolve, reject) => {
+    bootbox.confirm({
+      message,
+      callback: resolve,
+      backdrop: true
+    })
+  })
+}
