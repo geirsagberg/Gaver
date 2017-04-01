@@ -10,8 +10,6 @@ using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Extensions;
-using Gaver.Web.Features.Wishes.Models;
-using Gaver.Web.Features.Wishes.Requests;
 using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
@@ -120,7 +118,7 @@ namespace Gaver.Web
                 throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
         }
 
-        private void ConfigureOptions<T>(IServiceCollection services, string key) where T : class
+        private void ConfigureOptions<T>(IServiceCollection services, string key) where T : class, new()
         {
             var configurationSection = Configuration.GetSection(key);
             var options = configurationSection.Get<T>();
