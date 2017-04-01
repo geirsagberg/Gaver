@@ -4,6 +4,7 @@
     <AssemblyName>Gaver.Logic</AssemblyName>
     <PackageId>Gaver.Logic</PackageId>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <RuntimeIdentifiers>win10-x64;osx.10.11-x64</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />

@@ -9,6 +9,7 @@
     "NewLinesForBracesInMethods": true,
     "NewLinesForBracesInProperties": false,
     "NewLinesForBracesInTypes": true,
+    "NewLineForElse": false,
     "TabSize": 4,
     "UseTabs": false
   }

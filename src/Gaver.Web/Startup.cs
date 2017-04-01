@@ -136,16 +136,7 @@ namespace Gaver.Web
             services.AddScoped(provider => provider.GetService<IOptionsSnapshot<T>>().Value);
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env,
-            Auth0Settings auth0Settings)
-        {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.ColoredConsole()
-                .CreateLogger();
-
-            var filterLoggerSettings = new FilterLoggerSettings {
+        private static readonly FilterLoggerSettings FilterLoggerSettings = new FilterLoggerSettings {
                 {"Microsoft.EntityFrameworkCore", LogLevel.Information},
                 {"Microsoft.AspNetCore.NodeServices", LogLevel.Information},
                 {"Microsoft.AspNetCore.SignalR", LogLevel.Information},
@@ -153,22 +144,16 @@ namespace Gaver.Web
                 {"Microsoft", LogLevel.Warning},
                 {"System", LogLevel.Warning}
             };
+
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env,
+            Auth0Settings auth0Settings)
+        {
+            SetupLogger(env);
+
             if (env.IsDevelopment()) {
-                loggerFactory
-                    .WithFilter(filterLoggerSettings)
-                    .AddConsole(LogLevel.Debug);
-
-                app.UseDeveloperExceptionPage();
-
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
-                    HotModuleReplacement = true,
-                    ReactHotModuleReplacement = true
-                });
-            }
-            else {
-                loggerFactory
-                    .WithFilter(filterLoggerSettings)
-                    .AddConsole(LogLevel.Information);
+                SetupForDevelopment(app, loggerFactory);
+            } else {
+                SetupForProduction(loggerFactory);
             }
             app.UseJwtAuthentication(auth0Settings);
 
@@ -181,6 +166,11 @@ namespace Gaver.Web
             });
 
             app.UseHttpException();
+            SetupRoutes(app);
+        }
+
+        private static void SetupRoutes(IApplicationBuilder app)
+        {
             app.UseMvc(routes => {
                 routes.MapRoute(
                     "default",
@@ -192,6 +182,35 @@ namespace Gaver.Web
             });
         }
 
+        private static void SetupLogger(IHostingEnvironment env)
+        {
+            Log.Logger = new LoggerConfiguration()
+                            .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
+                            .Enrich.FromLogContext()
+                            .WriteTo.ColoredConsole()
+                            .CreateLogger();
+        }
+
+        private static void SetupForProduction(ILoggerFactory loggerFactory)
+        {
+            loggerFactory
+                                .WithFilter(FilterLoggerSettings)
+                                .AddConsole(LogLevel.Information);
+        }
+
+        private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        {
+            loggerFactory
+                .WithFilter(FilterLoggerSettings)
+                .AddConsole(LogLevel.Debug);
+
+            app.UseDeveloperExceptionPage();
+
+            app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+                HotModuleReplacement = true,
+                ReactHotModuleReplacement = true
+            });
+        }
 
         public static void Main(string[] args)
         {
