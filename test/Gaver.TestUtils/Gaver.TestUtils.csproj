@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LightInject" Version="5.0.0" />
-    <PackageReference Include="NSubstitute" Version="2.0.1-rc" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="1.1.0" />
+    <PackageReference Include="LightInject" Version="5.0.2" />
+    <PackageReference Include="NSubstitute" Version="2.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="1.1.1" />
   </ItemGroup>
 
 </Project>
