@@ -1,7 +1,5 @@
-using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using FluentAssertions;
 
 namespace Gaver.Data.Tests
 {

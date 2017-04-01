@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using LightInject;
+﻿using LightInject;
 
 namespace Gaver.Web.Utils
 {

@@ -17,14 +17,14 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
+// using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+// using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
 using Swashbuckle.AspNetCore.Swagger;
@@ -88,11 +88,11 @@ namespace Gaver.Web
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSignalR(options => options.RegisterInvocationAdapter<CustomJsonNetInvocationAdapter>("json"));
-            services.AddSingleton<IConfigureOptions<SignalROptions>, CustomSignalROptionsSetup>();
-            services.AddSingleton(factory => new JsonSerializer {
-                ContractResolver = new SignalRContractResolver()
-            });
+            // services.AddSignalR(options => options.RegisterInvocationAdapter<CustomJsonNetInvocationAdapter>("json"));
+            // services.AddSingleton<IConfigureOptions<SignalROptions>, CustomSignalROptionsSetup>();
+            // services.AddSingleton(factory => new JsonSerializer {
+            //     ContractResolver = new SignalRContractResolver()
+            // });
             services.AddMediatR();
 
             var container = new ServiceContainer(new ContainerOptions {
@@ -158,7 +158,7 @@ namespace Gaver.Web
             app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
-            app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
+            // app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
 
             app.UseSwagger();
             app.UseSwaggerUI(c => {
