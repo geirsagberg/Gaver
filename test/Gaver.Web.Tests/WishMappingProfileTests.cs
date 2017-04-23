@@ -25,13 +25,18 @@ namespace Gaver.Web.Tests
                 UserId = 2,
                 User = new User {
                     Name = "Geir"
+                },
+                WishList = new WishList {
+                    User = new User {
+                        Name = "OwnerMan"
+                    }
                 }
             };
 
             var model = mapperService.Map<InvitationModel>(invitation);
 
             model.ShouldBeEquivalentTo(new InvitationModel {
-                UserName = "Geir",
+                WishListUserName = "OwnerMan",
                 WishListId = 3
             });
         }

@@ -111,7 +111,7 @@ class MyList extends React.Component {
               <ul className="list-group">
                 {invitations::size() > 0
                 ? invitations::map(invitation => <li className="list-group-item" key={invitation.wishListId}>
-                  <Link to={`/list/${invitation.wishListId}`}>{invitation.userName}</Link>
+                  <Link to={`/list/${invitation.wishListId}`}>{invitation.wishListUserName}</Link>
                 </li>)
                 : <li className="list-group-item item-empty">Ingen delte lister enda...</li>}
               </ul>}
