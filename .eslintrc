@@ -14,7 +14,7 @@
     "eol-last": 0,
     "no-unused-vars": 1,
     "comma-dangle": 0,
-    "space-before-function-paren": 0,
+    "space-before-function-paren": 1,
     "no-trailing-spaces": [2, {
       "skipBlankLines": true
     }],

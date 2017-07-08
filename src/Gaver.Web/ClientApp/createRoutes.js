@@ -54,10 +54,10 @@ export default function createRoutes(store) {
 
   return (
     <Router history={browserHistory}>
-      <Route path='/' component={Layout}>
+      <Route path="/" component={Layout}>
         <IndexRoute component={MyList} onEnter={checkAccess} />
-        <Route path='list/:id' component={SharedList} onEnter={checkSharedListAccess} />
-        <Route path='login' component={Login} />
+        <Route path="list/:id" component={SharedList} onEnter={checkSharedListAccess} />
+        <Route path="login" component={Login} />
       </Route>
     </Router>
   )
