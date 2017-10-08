@@ -22,7 +22,7 @@ namespace Gaver.Data
             {
                 entity.Property(e => e.Created)
                     .ValueGeneratedOnAdd()
-                    .ForNpgsqlHasDefaultValueSql("NOW()")
+                    .HasDefaultValueSql("NOW()")
                     ;
             });
             modelBuilder.Entity<Invitation>(entity =>
@@ -32,7 +32,7 @@ namespace Gaver.Data
             modelBuilder.Entity<InvitationToken>(entity => {
                 entity.Property(e => e.Created)
                     .ValueGeneratedOnAdd()
-                    .ForNpgsqlHasDefaultValueSql("NOW()");
+                    .HasDefaultValueSql("NOW()");
             });
         }
 

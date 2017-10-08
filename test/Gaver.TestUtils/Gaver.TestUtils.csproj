@@ -1,21 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <DebugType>portable</DebugType>
     <AssemblyName>Gaver.TestUtils</AssemblyName>
     <PackageId>Gaver.TestUtils</PackageId>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\Gaver.Data\Gaver.Data.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="LightInject" Version="5.0.2" />
-    <PackageReference Include="NSubstitute" Version="2.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.0" />
+    <PackageReference Include="NETStandard.Library" Version="2.0.0" />
+    <PackageReference Include="LightInject" Version="5.1.0" />
+    <PackageReference Include="NSubstitute" Version="3.0.0" />
   </ItemGroup>
-
 </Project>

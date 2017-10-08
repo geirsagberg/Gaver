@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Logic;
 using Gaver.Logic.Contracts;
@@ -10,21 +12,22 @@ using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Extensions;
+using Gaver.Web.Features.Users;
 using Gaver.Web.Utils;
 using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-// using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-// using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
 using Swashbuckle.AspNetCore.Swagger;
@@ -38,19 +41,9 @@ namespace Gaver.Web
     {
         private readonly List<string> missingOptions = new List<string>();
 
-        public Startup(IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(hostingEnvironment.ContentRootPath)
-                .AddJsonFile("config.json", false, true);
-
-            builder.AddEnvironmentVariables();
-            if (hostingEnvironment.IsDevelopment()) {
-                builder.AddUserSecrets<Startup>();
-                UseRootNodeModules(hostingEnvironment);
-            }
-
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
         private IConfiguration Configuration { get; }
@@ -61,19 +54,47 @@ namespace Gaver.Web
             Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        private static async Task OnTokenValidated(TokenValidatedContext tokenContext)
+        {
+            var identity = tokenContext.Principal.Identity as ClaimsIdentity;
+            var providerId = identity?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (providerId == null) return;
+
+            var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
+
+            var userId = await userHandler.GetUserIdOrNullAsync(providerId);
+            if (userId != null) {
+                identity.AddClaim(new Claim("GaverUserId", userId.Value.ToString(), ClaimValueTypes.Integer32));
+            }
+        }
+
+        public void ConfigureServices(IServiceCollection services)
         {
             ConfigureOptions(services);
 
-            services.AddAuthentication();
+            var authSettings = Configuration.GetSection("auth0").Get<Auth0Settings>();
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options => {
+                options.Audience = authSettings.ClientId;
+                options.Authority = $"https://{authSettings.Domain}";
+                options.TokenValidationParameters = new TokenValidationParameters {
+                    IssuerSigningKey = authSettings.SigningKey
+                };
+                // TODO Handle other events, e.g. OnAuthenticationFailed and OnChallenge
+                options.Events = new JwtBearerEvents {
+                    OnTokenValidated = OnTokenValidated,
+                    OnAuthenticationFailed = OnAuthenticationFailed
+                };
+            });
             services.AddAuthorization();
 
             services.AddMvc(o => {
                 o.Filters.Add(new CustomExceptionFilterAttribute());
                 o.Filters.Add(new ValidationAttribute());
                 o.UseFromBodyBinding();
-            }); //.AddControllersAsServices();
+            });
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
                 c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
@@ -88,23 +109,19 @@ namespace Gaver.Web
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            // services.AddSignalR(options => options.RegisterInvocationAdapter<CustomJsonNetInvocationAdapter>("json"));
-            // services.AddSingleton<IConfigureOptions<SignalROptions>, CustomSignalROptionsSetup>();
-            // services.AddSingleton(factory => new JsonSerializer {
-            //     ContractResolver = new SignalRContractResolver()
-            // });
+            // services.AddSignalR();
             services.AddMediatR();
 
-            var container = new ServiceContainer(new ContainerOptions {
-                EnablePropertyInjection = false,
-                EnableVariance = false,
-                LogFactory = type => entry => Log.Logger.ForContext(type).Write(entry.Level.ToSerilogEventLevel(), entry.Message)
+            services.Scan(scan => {
+                scan.FromAssemblyOf<ILogicAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
+                scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
+                scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
             });
-            container.ScopeManagerProvider = new StandaloneScopeManagerProvider();
-            container.RegisterAssembly<ILogicAssembly>();
-            container.RegisterAssembly<Startup>();
+        }
 
-            return container.CreateServiceProvider(services);
+        private Task OnAuthenticationFailed(AuthenticationFailedContext arg)
+        {
+            throw new NotImplementedException();
         }
 
         private void ConfigureOptions(IServiceCollection services)
@@ -136,29 +153,18 @@ namespace Gaver.Web
             services.AddScoped(provider => provider.GetService<IOptionsSnapshot<T>>().Value);
         }
 
-        private static readonly FilterLoggerSettings FilterLoggerSettings = new FilterLoggerSettings {
-                {"Microsoft.EntityFrameworkCore", LogLevel.Information},
-                {"Microsoft.AspNetCore.NodeServices", LogLevel.Information},
-                {"Microsoft.AspNetCore.SignalR", LogLevel.Information},
-                {"Microsoft.AspNetCore.Authentication", LogLevel.Information},
-                {"Microsoft", LogLevel.Warning},
-                {"System", LogLevel.Warning}
-            };
-
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env,
             Auth0Settings auth0Settings)
         {
-            SetupLogger(env);
-
             if (env.IsDevelopment()) {
-                SetupForDevelopment(app, loggerFactory);
+                SetupForDevelopment(app, loggerFactory, env);
             } else {
                 SetupForProduction(loggerFactory);
             }
-            app.UseJwtAuthentication(auth0Settings);
+            // app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
-            // app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
+            // app.UseSignalR(routes => routes.MapHub<ListHub>("listHub"));
 
             app.UseSwagger();
             app.UseSwaggerUI(c => {
@@ -182,52 +188,19 @@ namespace Gaver.Web
             });
         }
 
-        private static void SetupLogger(IHostingEnvironment env)
-        {
-            Log.Logger = new LoggerConfiguration()
-                            .MinimumLevel.Is(env.IsDevelopment() ? LogEventLevel.Debug : LogEventLevel.Information)
-                            .Enrich.FromLogContext()
-                            .WriteTo.ColoredConsole()
-                            .CreateLogger();
-        }
-
         private static void SetupForProduction(ILoggerFactory loggerFactory)
         {
-            loggerFactory
-                                .WithFilter(FilterLoggerSettings)
-                                .AddConsole(LogLevel.Information);
         }
 
-        private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
-            loggerFactory
-                .WithFilter(FilterLoggerSettings)
-                .AddConsole(LogLevel.Debug);
-
             app.UseDeveloperExceptionPage();
+            UseRootNodeModules(env);
 
             app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                 HotModuleReplacement = true,
                 ReactHotModuleReplacement = true
             });
-        }
-
-        public static void Main(string[] args)
-        {
-            var host = new WebHostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseKestrel()
-                .UseStartup<Startup>()
-                .Build();
-
-            host.Services.GetRequiredService<IMapperService>().ValidateMappings();
-
-            using (var context = host.Services.GetRequiredService<GaverContext>()) {
-                context.Database.Migrate();
-            }
-
-            host.Run();
         }
     }
 }

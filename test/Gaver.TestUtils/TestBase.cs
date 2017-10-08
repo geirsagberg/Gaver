@@ -37,7 +37,7 @@ namespace Gaver.TestUtils
         protected DbTestBase()
         {
             var options = new DbContextOptionsBuilder<GaverContext>()
-                .UseInMemoryDatabase().Options;
+                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
             Container.RegisterInstance<DbContextOptions<GaverContext>>(options);
         }
     }

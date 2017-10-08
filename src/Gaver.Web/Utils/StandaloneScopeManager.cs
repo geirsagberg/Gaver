@@ -11,10 +11,9 @@ namespace Gaver.Web.Utils
             ServiceFactory = serviceFactory;
         }
 
-        public Scope CurrentScope
-        {
-            get { return currentScope.Value; }
-            set { currentScope.Value = value; }
+        public Scope CurrentScope {
+            get => currentScope.Value;
+            set => currentScope.Value = value;
         }
 
         public IServiceFactory ServiceFactory { get; }
