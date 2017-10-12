@@ -1,6 +1,6 @@
 {
   "parser": "babel-eslint",
-  "extends": ["standard", "plugin:react/recommended"],
+  "extends": [ "standard", "plugin:react/recommended" ],
   "parserOptions": {
     "ecmaFeatures": {
       "modules": true
@@ -15,21 +15,18 @@
     "no-unused-vars": 1,
     "comma-dangle": 0,
     "space-before-function-paren": 1,
-    "no-trailing-spaces": [2, {
-      "skipBlankLines": true
-    }],
+    "no-trailing-spaces": [
+      2,
+      {
+        "skipBlankLines": true
+      }
+    ],
     "prefer-const": 1,
     "no-use-before-define": 1,
     "no-unused-expressions": 1,
     "react/prop-types": 0
   },
-  "ignore": [
-    "bundle.js",
-    "**/node_modules/*"
-  ],
-  "plugins": [
-    "react"
-  ],
+  "plugins": [ "react" ],
   "globals": {
     "fetch": false
   }

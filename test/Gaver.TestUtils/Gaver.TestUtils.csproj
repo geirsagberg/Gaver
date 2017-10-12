@@ -10,7 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.0" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.0" />
     <PackageReference Include="LightInject" Version="5.1.0" />
     <PackageReference Include="NSubstitute" Version="3.0.0" />
   </ItemGroup>

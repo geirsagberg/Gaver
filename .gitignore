@@ -238,3 +238,5 @@ dist/
 .idea*/
 
 !lib/*.nupkg
+
+.esm-cache

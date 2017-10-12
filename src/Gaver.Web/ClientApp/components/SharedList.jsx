@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import ReactTooltip from 'react-tooltip'
 import { connect } from 'react-redux'
@@ -11,7 +12,7 @@ import Loading from './Loading'
 import { getQueryVariable } from 'utils'
 
 class Wish extends React.Component {
-  static get propTypes() {
+  static get propTypes () {
     return {
       wish: PropTypes.object.isRequired,
       setBought: PropTypes.func.isRequired,
@@ -21,45 +22,58 @@ class Wish extends React.Component {
     }
   }
 
-  render() {
+  render () {
     const { wish, setBought, userId, users } = this.props
     return (
       <li className="list-group-item wish">
-        <span className={classNames('wish_title', {
-          'wish_title-bought': !!wish.boughtByUser
-        })}>{wish.title}</span>
-        {wish.url && <a href={wish.url} className="wish_url">{wish.url}</a>}
+        <span
+          className={classNames('wish_title', {
+            'wish_title-bought': !!wish.boughtByUser
+          })}>
+          {wish.title}
+        </span>
+        {wish.url && (
+          <a href={wish.url} className="wish_url">
+            {wish.url}
+          </a>
+        )}
         {wish.description && <span className="wish_description">{wish.description}</span>}
-        {!wish.boughtByUser || wish.boughtByUser === userId
-          ? <span className="checkbox wish_detail wish_detail-right">
+        {!wish.boughtByUser || wish.boughtByUser === userId ? (
+          <span className="checkbox wish_detail wish_detail-right">
             <label>
-              <input type="checkbox" checked={wish.boughtByUser === userId} onChange={() => setBought({
-                listId: wish.wishListId,
-                wishId: wish.id,
-                isBought: wish.boughtByUser !== userId
-              })} />
+              <input
+                type="checkbox"
+                checked={wish.boughtByUser === userId}
+                onChange={() =>
+                  setBought({
+                    listId: wish.wishListId,
+                    wishId: wish.id,
+                    isBought: wish.boughtByUser !== userId
+                  })}
+              />
               <span>Jeg kjøper</span>
             </label>
           </span>
-          : <span className="wish_detail wish_detail-right">Kjøpt av {users[wish.boughtByUser].name}</span>
-        }
+        ) : (
+          <span className="wish_detail wish_detail-right">Kjøpt av {users[wish.boughtByUser].name}</span>
+        )}
       </li>
     )
   }
 }
 
 class SharedList extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     const listId = this.props.match.params.id
     const inviteToken = getQueryVariable('token')
     this.props.subscribeList(listId, inviteToken)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.props.unsubscribeList(this.props.match.params.id)
   }
 
-  render() {
+  render () {
     if (!this.props.owner || !this.props.isAuthorized) {
       return <Loading />
     }
@@ -69,10 +83,10 @@ class SharedList extends React.Component {
         <header className="header">
           <h1 className="header_title">{this.props.owner}&nbsp;sine ønsker</h1>
           <div className="header_items">
-            {this.props.userName && <div className="header_item header_username">
-              {this.props.userName}
-            </div>}
-            <div className="header_item" data-tip={this.props.currentUsers.map(id => this.props.users[id].name).join(', ')}>
+            {this.props.userName && <div className="header_item header_username">{this.props.userName}</div>}
+            <div
+              className="header_item"
+              data-tip={this.props.currentUsers.map((id) => this.props.users[id].name).join(', ')}>
               {this.props.count} <span className="icon-users" />
             </div>
             <button className="btn btn-default header_item" onClick={this.props.showMyList}>
@@ -88,9 +102,11 @@ class SharedList extends React.Component {
         <div className="row">
           <div className="wishList col-md-8">
             <ul className="list-group">
-              {this.props.wishes::size() > 0
-                ? this.props.wishes::map(wish => <Wish {...{...this.props, wish}} key={wish.id}/>)
-                : <li className="list-group-item wish wish-empty">Ingen ønsker enda...</li>}
+              {this.props.wishes::size() > 0 ? (
+                this.props.wishes::map((wish) => <Wish {...{ ...this.props, wish }} key={wish.id} />)
+              ) : (
+                <li className="list-group-item wish wish-empty">Ingen ønsker enda...</li>
+              )}
             </ul>
           </div>
           <div className="col-md-4">
@@ -103,7 +119,7 @@ class SharedList extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   wishes: state.sharedList.wishes || Immutable({}),
   users: state::getIn('sharedList.users', Immutable({})),
   currentUsers: state::getIn('sharedList.currentUsers', Immutable([])),

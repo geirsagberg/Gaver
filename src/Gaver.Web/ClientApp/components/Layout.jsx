@@ -12,8 +12,7 @@ import {
 } from 'react-router-dom'
 import { ConnectedRouter } from 'react-router-redux'
 import history from 'utils/history'
-
-const PropTypes = React.PropTypes
+import PropTypes from 'prop-types'
 
 const PrivateRoute = ({ component, isLoggedIn, ...rest }) => (
   <Route {...rest} render={props => (

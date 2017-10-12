@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "es5",
+    "module": "es2015",
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "*": [ "ClientApp/*" ]
+    },
+    "lib": [ "dom", "es2015" ]
+  },
+  "exclude": [ "node_modules", "wwwroot" ]
+}
