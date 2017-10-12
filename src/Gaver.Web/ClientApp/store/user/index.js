@@ -35,7 +35,7 @@ const lock = new Auth0Lock(auth0ClientId, auth0Domain, {
   language: 'nb'
 })
 
-export default function reducer(state = initialState, action = {}) {
+export default function reducer (state = initialState, action = {}) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
       return state.merge(action.data).set('isLoggedIn', true).set('isLoggingIn', false)
@@ -47,45 +47,46 @@ export default function reducer(state = initialState, action = {}) {
   return state
 }
 
-function loggedOut() {
+function loggedOut () {
   return {
     type: LOGGED_OUT
   }
 }
 
-function logInSuccessful(data) {
+function logInSuccessful (data) {
   return {
     type: LOG_IN_SUCCESSFUL,
     data
   }
 }
 
-function authStarted() {
+function authStarted () {
   return {
     type: AUTH_STARTED
   }
 }
 
-export const setUrlAfterLogin = url => () => {
+export const setUrlAfterLogin = (url) => () => {
   const a = document.createElement('a')
   a.href = url
   auth.saveUrlAfterLogin(`${a.pathname}${a.hash}${a.search}`)
 }
 
-export const logOut = () => async dispatch => {
+export const logOut = () => async (dispatch) => {
   if (await showConfirm('Vil du logge ut?')) {
     auth.clearTokens()
     dispatch(loggedOut())
   }
 }
 
-const completeLogin = async (dispatch, accessToken) => tryOrNotify(async () => {
-  const userInfo = await Api.loadUserInfo(accessToken)
-  dispatch(logInSuccessful(userInfo))
-})
+const completeLogin = async (dispatch, accessToken) =>
+  tryOrNotify(async () => {
+    const userInfo = await Api.loadUserInfo(accessToken)
+    dispatch(logInSuccessful(userInfo))
+  })
 
-export const initAuth = () => async dispatch => {
-  lock.on('authenticated', async authResult => {
+export const initAuth = () => async (dispatch) => {
+  lock.on('authenticated', async (authResult) => {
     auth.saveIdToken(authResult.idToken)
     auth.saveAccessToken(authResult.accessToken)
     await completeLogin(dispatch, authResult.accessToken)
@@ -100,6 +101,6 @@ export const initAuth = () => async dispatch => {
   }
 }
 
-export const logIn = () => async dispatch => {
+export const logIn = () => async (dispatch) => {
   lock.show()
 }

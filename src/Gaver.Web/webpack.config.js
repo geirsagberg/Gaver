@@ -1,7 +1,7 @@
-var path = require('path')
-var webpack = require('webpack')
-var isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   resolve: {

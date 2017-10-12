@@ -6,14 +6,14 @@ import { initAuth } from './store/user'
 import history from 'utils/history'
 import { routerMiddleware as createRouterMiddleware, routerReducer } from 'react-router-redux'
 
-function buildRootReducer(allReducers) {
+function buildRootReducer (allReducers) {
   return combineReducers({
     ...allReducers,
     router: routerReducer
   })
 }
 
-export default function configureStore(initialState) {
+export default function configureStore (initialState) {
   // Build middleware. These are functions that can process the actions before they reach the store.
   const windowIfDefined = typeof window === 'undefined' ? null : window
   const devToolsExtension = windowIfDefined && windowIfDefined.devToolsExtension // If devTools is installed, connect to it
@@ -21,7 +21,7 @@ export default function configureStore(initialState) {
   const routerMiddleware = createRouterMiddleware(history)
   const createStoreWithMiddleware = compose(
     applyMiddleware(thunk, routerMiddleware),
-    devToolsExtension ? devToolsExtension() : f => f
+    devToolsExtension ? devToolsExtension() : (f) => f
   )(createStore)
   // Combine all reducers and instantiate the app-wide store instance
   const allReducers = buildRootReducer(Store.reducers)

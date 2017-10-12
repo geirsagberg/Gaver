@@ -3,8 +3,12 @@
 	// for the documentation about the jsconfig.json format
 	"compilerOptions": {
 		"target": "es6",
-		"module": "commonjs",
+    "module": "es2015",
 		"allowSyntheticDefaultImports": true
+    // "baseUrl": ".",
+    // "paths": {
+    //   "*": "ClientApp/*"
+    // }
 	},
 	"exclude": [
 		"node_modules",
@@ -12,6 +16,6 @@
 		"jspm_packages",
 		"tmp",
 		"temp",
-    "src/Gaver.Web/wwwroot"
+    "wwwroot"
 	]
 }
