@@ -85,7 +85,8 @@ namespace Gaver.Web
                 // TODO Handle other events, e.g. OnAuthenticationFailed and OnChallenge
                 options.Events = new JwtBearerEvents {
                     OnTokenValidated = OnTokenValidated,
-                    OnAuthenticationFailed = OnAuthenticationFailed
+                    OnAuthenticationFailed = OnAuthenticationFailed,
+                    OnChallenge = OnChallenge
                 };
             });
             services.AddAuthorization();
@@ -119,8 +120,15 @@ namespace Gaver.Web
             });
         }
 
+        private Task OnChallenge(JwtBearerChallengeContext arg)
+        {
+            return Task.CompletedTask;
+            // throw new NotImplementedException();
+        }
+
         private Task OnAuthenticationFailed(AuthenticationFailedContext arg)
         {
+            return Task.CompletedTask;
             throw new NotImplementedException();
         }
 
@@ -170,6 +178,8 @@ namespace Gaver.Web
             app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
+
+            app.UseAuthentication();
 
             app.UseHttpException();
             SetupRoutes(app);
