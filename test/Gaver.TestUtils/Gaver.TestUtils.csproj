@@ -7,10 +7,19 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Gaver.Data\Gaver.Data.csproj" />
+    <ProjectReference Include="..\..\src\Gaver.Logic\Gaver.Logic.csproj">
+      <Project>{B9840932-3F2A-4636-8564-367D455ED61E}</Project>
+      <Name>Gaver.Logic</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.0" />
     <PackageReference Include="LightInject" Version="5.1.0" />
     <PackageReference Include="NSubstitute" Version="3.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005">
+      <HintPath>..\..\..\..\.nuget\packages\automapper\6.1.1\lib\netstandard1.3\AutoMapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

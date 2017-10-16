@@ -1,8 +1,9 @@
 ﻿using System;
+using AutoMapper;
+using Gaver.Logic.Contracts;
+using Gaver.Logic.Services;
 using LightInject;
-using Microsoft.EntityFrameworkCore;
 using NSubstitute;
-using Gaver.Data;
 
 namespace Gaver.TestUtils
 {
@@ -16,29 +17,27 @@ namespace Gaver.TestUtils
                 EnableVariance = false,
                 EnablePropertyInjection = false
             });
+            Container.Register<IMapperService, MapperService>(new PerContainerLifetime());
             Container.RegisterFallback((type, name) => true, request =>
-            Substitute.For(new[] { request.ServiceType }, null), new PerContainerLifetime());
+                Substitute.For(new[] {request.ServiceType}, null), new PerContainerLifetime());
+        }
+
+        protected T Get<T>()
+        {
+            return Container.GetInstance<T>();
         }
     }
 
     public abstract class TestBase<TSut> : TestBase where TSut : class
     {
         private readonly Lazy<TSut> _testSubject;
-        protected TSut TestSubject => _testSubject.Value;
 
         protected TestBase()
         {
             _testSubject = new Lazy<TSut>(() => Container.Create<TSut>());
+            Container.RegisterAssembly(typeof(TSut).Assembly, (service, implementation) => service == typeof(Profile));
         }
-    }
 
-    public abstract class DbTestBase<TSut> : TestBase<TSut> where TSut : class
-    {
-        protected DbTestBase()
-        {
-            var options = new DbContextOptionsBuilder<GaverContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
-            Container.RegisterInstance<DbContextOptions<GaverContext>>(options);
-        }
+        protected TSut TestSubject => _testSubject.Value;
     }
 }

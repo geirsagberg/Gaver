@@ -5,17 +5,14 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Gaver.Data;
 using Gaver.Logic;
 using Gaver.Logic.Contracts;
 using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
-using Gaver.Web.Extensions;
 using Gaver.Web.Features.Users;
-using Gaver.Web.Utils;
-using LightInject;
-using LightInject.Microsoft.DependencyInjection;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -23,17 +20,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
-using Serilog.Events;
 using Swashbuckle.AspNetCore.Swagger;
 using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Gaver.Web
 {
@@ -63,9 +58,8 @@ namespace Gaver.Web
             var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
 
             var userId = await userHandler.GetUserIdOrNullAsync(providerId);
-            if (userId != null) {
+            if (userId != null)
                 identity.AddClaim(new Claim("GaverUserId", userId.Value.ToString(), ClaimValueTypes.Integer32));
-            }
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -84,9 +78,7 @@ namespace Gaver.Web
                 };
                 // TODO Handle other events, e.g. OnAuthenticationFailed and OnChallenge
                 options.Events = new JwtBearerEvents {
-                    OnTokenValidated = OnTokenValidated,
-                    OnAuthenticationFailed = OnAuthenticationFailed,
-                    OnChallenge = OnChallenge
+                    OnTokenValidated = OnTokenValidated
                 };
             });
             services.AddAuthorization();
@@ -97,39 +89,32 @@ namespace Gaver.Web
                 o.UseFromBodyBinding();
             });
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info {Title = "My API", Version = "v1"});
                 c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
             });
             var connectionString = Configuration.GetConnectionString("GaverContext");
             if (connectionString.IsNullOrEmpty())
                 throw new ConfigurationException("ConnectionStrings:GaverContext");
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<GaverContext>(options => options
-                    .UseNpgsql(connectionString, b => b
-                        .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName)), ServiceLifetime.Transient);
+                .AddDbContext<GaverContext>(options => {
+                    options.ConfigureWarnings(b => b.Throw(RelationalEventId.QueryClientEvaluationWarning));
+                    options
+                        .UseNpgsql(connectionString, b => b
+                            .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName));
+                });
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            // services.AddSignalR();
+            services.AddSignalR();
             services.AddMediatR();
 
             services.Scan(scan => {
                 scan.FromAssemblyOf<ILogicAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
                 scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
                 scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
+                scan.FromEntryAssembly().AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>()
+                    .WithSingletonLifetime();
             });
-        }
-
-        private Task OnChallenge(JwtBearerChallengeContext arg)
-        {
-            return Task.CompletedTask;
-            // throw new NotImplementedException();
-        }
-
-        private Task OnAuthenticationFailed(AuthenticationFailedContext arg)
-        {
-            return Task.CompletedTask;
-            throw new NotImplementedException();
         }
 
         private void ConfigureOptions(IServiceCollection services)
@@ -164,24 +149,20 @@ namespace Gaver.Web
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env,
             Auth0Settings auth0Settings)
         {
-            if (env.IsDevelopment()) {
-                SetupForDevelopment(app, loggerFactory, env);
-            } else {
-                SetupForProduction(loggerFactory);
-            }
-            // app.UseJwtAuthentication(auth0Settings);
+            if (env.IsDevelopment()) SetupForDevelopment(app, loggerFactory, env);
+            else SetupForProduction(loggerFactory);
+            app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
-            // app.UseSignalR(routes => routes.MapHub<ListHub>("listHub"));
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c => {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
-
-            app.UseAuthentication();
 
             app.UseHttpException();
+            app.UseAuthentication();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
+
+            app.UseSignalR(routes => routes.MapHub<ListHub>("listHub"));
+
             SetupRoutes(app);
         }
 
@@ -191,25 +172,27 @@ namespace Gaver.Web
                 routes.MapRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new { controller = "Error", action = "NotFound" });
+                routes.MapRoute("API 404", "api/{*anything}", new {controller = "Error", action = "NotFound"});
                 routes.MapSpaFallbackRoute(
                     "spa-fallback",
-                    new { controller = "Home", action = "Index" });
+                    new {controller = "Home", action = "Index"});
             });
         }
 
-        private static void SetupForProduction(ILoggerFactory loggerFactory)
-        {
-        }
+        private static void SetupForProduction(ILoggerFactory loggerFactory) { }
 
-        private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
+        private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory,
+            IHostingEnvironment env)
         {
             app.UseDeveloperExceptionPage();
             UseRootNodeModules(env);
 
             app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                 HotModuleReplacement = true,
-                ReactHotModuleReplacement = true
+                ReactHotModuleReplacement = true,
+                HotModuleReplacementClientOptions = new Dictionary<string, string> {
+                    {"reload", "true"}
+                }
             });
         }
     }

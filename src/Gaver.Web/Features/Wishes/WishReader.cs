@@ -78,7 +78,7 @@ namespace Gaver.Web.Features.Wishes
             var model = context.Set<WishList>()
                 .Where(wl => wl.UserId == message.UserId)
                 .ProjectTo<MyListModel>(mapper.MapperConfiguration)
-                .SingleOrDefault();
+                .Single();
             model.Invitations = context.Invitations.Where(i => i.UserId == message.UserId)
                 .ProjectTo<InvitationModel>(mapper.MapperConfiguration)
                 .ToList();

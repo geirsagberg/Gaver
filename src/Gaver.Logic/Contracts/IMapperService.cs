@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AutoMapper;
 
 namespace Gaver.Logic.Contracts
@@ -6,6 +7,7 @@ namespace Gaver.Logic.Contracts
     {
         TTo Map<TTo>(object source);
         IConfigurationProvider MapperConfiguration { get; }
+        IEnumerable<Profile> Profiles { get; }
         void ValidateMappings();
     }
 }

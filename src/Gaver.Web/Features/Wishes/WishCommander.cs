@@ -8,8 +8,8 @@ using Gaver.Logic.Exceptions;
 using Gaver.Web.Features.LiveUpdates;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
-using Microsoft.Extensions.Logging;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -21,12 +21,13 @@ namespace Gaver.Web.Features.Wishes
         IRequestHandler<DeleteWishRequest>,
         IRequestHandler<RegisterTokenRequest>
     {
-        private readonly GaverContext context;
-        private readonly IMapperService mapper;
         private readonly ClientNotifier clientNotifier;
+        private readonly GaverContext context;
         private readonly ILogger<WishCommander> logger;
+        private readonly IMapperService mapper;
 
-        public WishCommander(GaverContext context, IMapperService mapper, ClientNotifier clientNotifier, ILogger<WishCommander> logger)
+        public WishCommander(GaverContext context, IMapperService mapper, ClientNotifier clientNotifier,
+            ILogger<WishCommander> logger)
         {
             this.context = context;
             this.mapper = mapper;
@@ -47,67 +48,6 @@ namespace Gaver.Web.Features.Wishes
             return mapper.Map<WishModel>(wish);
         }
 
-        public WishModel Handle(SetUrlRequest message)
-        {
-            var wish = GetWish(message.WishId, message.WishListId);
-
-            var urlString = message.Url;
-
-            if (urlString.IsNullOrEmpty()) {
-                wish.Url = null;
-            } else {
-                if (!urlString.StartsWith("http"))
-                    urlString = $"http://{urlString}";
-
-                Uri uri;
-                if (!Uri.TryCreate(urlString, UriKind.Absolute, out uri))
-                    throw new FriendlyException(EventIds.InvalidUrl, "Ugyldig lenke");
-
-                wish.Url = uri.ToString();
-            }
-
-            context.SaveChanges();
-            clientNotifier.RefreshListAsync(message.WishListId, null);
-            return mapper.Map<WishModel>(wish);
-        }
-
-        public WishModel Handle(SetDescriptionRequest message)
-        {
-            var wish = GetWish(message.WishId, message.WishListId);
-            wish.Description = message.Description;
-            context.SaveChanges();
-
-            clientNotifier.RefreshListAsync(message.WishListId, null);
-            return mapper.Map<WishModel>(wish);
-        }
-
-        private Wish GetWish(int wishId, int wishListId)
-        {
-            var wish = context.GetOrDie<Wish>(wishId);
-            if (wish.WishListId != wishListId)
-                throw new FriendlyException(EventIds.WrongList,
-                    $"Wish {wishId} does not belong to list {wishListId}");
-            return wish;
-        }
-
-        public SharedWishModel Handle(SetBoughtRequest message)
-        {
-            var wish = GetWish(message.WishId, message.WishListId);
-            var userId = message.UserId;
-            if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId)
-                throw new FriendlyException(EventIds.AlreadyBought, "Wish has already been bought by someone else");
-
-            if (message.IsBought) {
-                wish.BoughtByUserId = userId;
-            } else {
-                wish.BoughtByUserId = null;
-            }
-            context.SaveChanges();
-
-            clientNotifier.RefreshListAsync(message.WishListId, message.UserId);
-            return mapper.Map<SharedWishModel>(wish);
-        }
-
         public void Handle(DeleteWishRequest message)
         {
             context.Delete<Wish>(message.WishId);
@@ -118,7 +58,8 @@ namespace Gaver.Web.Features.Wishes
         public void Handle(RegisterTokenRequest request)
         {
             if (context.Invitations.Any(i => i.WishListId == request.WishListId && i.UserId == request.UserId)) {
-                logger.LogInformation("User {UserId} already has access to {WishListId}", request.UserId, request.WishListId);
+                logger.LogInformation("User {UserId} already has access to {WishListId}", request.UserId,
+                    request.WishListId);
                 return;
             }
             var token = context.Find<InvitationToken>(request.Token);
@@ -134,6 +75,64 @@ namespace Gaver.Web.Features.Wishes
             context.Add(invitation);
             token.Accepted = DateTimeOffset.Now;
             context.SaveChanges();
+        }
+
+        public SharedWishModel Handle(SetBoughtRequest message)
+        {
+            var wish = GetWish(message.WishId, message.WishListId);
+            var userId = message.UserId;
+            if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId)
+                throw new FriendlyException(EventIds.AlreadyBought, "Wish has already been bought by someone else");
+
+            if (message.IsBought) wish.BoughtByUserId = userId;
+            else wish.BoughtByUserId = null;
+            context.SaveChanges();
+
+            clientNotifier.RefreshListAsync(message.WishListId, message.UserId);
+            return mapper.Map<SharedWishModel>(wish);
+        }
+
+        public WishModel Handle(SetDescriptionRequest message)
+        {
+            var wish = GetWish(message.WishId, message.WishListId);
+            wish.Description = message.Description;
+            context.SaveChanges();
+
+            clientNotifier.RefreshListAsync(message.WishListId, null);
+            return mapper.Map<WishModel>(wish);
+        }
+
+        public WishModel Handle(SetUrlRequest message)
+        {
+            var wish = GetWish(message.WishId, message.WishListId);
+
+            var urlString = message.Url;
+
+            if (urlString.IsNullOrEmpty()) {
+                wish.Url = null;
+            }
+            else {
+                if (!urlString.StartsWith("http"))
+                    urlString = $"http://{urlString}";
+
+                if (!Uri.TryCreate(urlString, UriKind.Absolute, out var uri))
+                    throw new FriendlyException(EventIds.InvalidUrl, "Ugyldig lenke");
+
+                wish.Url = uri.ToString();
+            }
+
+            context.SaveChanges();
+            clientNotifier.RefreshListAsync(message.WishListId, null);
+            return mapper.Map<WishModel>(wish);
+        }
+
+        private Wish GetWish(int wishId, int wishListId)
+        {
+            var wish = context.GetOrDie<Wish>(wishId);
+            if (wish.WishListId != wishListId)
+                throw new FriendlyException(EventIds.WrongList,
+                    $"Wish {wishId} does not belong to list {wishListId}");
+            return wish;
         }
     }
 }

@@ -71,5 +71,5 @@ module.exports = {
           })
         ]
   ),
-  devtool: isDevelopment ? '#inline-source-map' : 'cheap-module-source-map'
+  devtool: 'source-map' //isDevelopment ? 'cheap-module-eval-source-map' : 'source-map'
 } as Configuration

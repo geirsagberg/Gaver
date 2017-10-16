@@ -11,7 +11,10 @@ namespace Gaver.Web.Features.Wishes
         {
             CreateMap<WishList, SharedListModel>().MapMember(m => m.Owner, wl => wl.User.Name);
             CreateMap<WishList, MyListModel>().IgnoreMember(m => m.Invitations);
-            CreateMap<Invitation, InvitationModel>();
+//            CreateMap<Invitation, InvitationModel>();
+//            CreateMap<Wish, WishModel>();
+//            CreateMap<Wish, SharedWishModel>();
+//            CreateMap<User, UserModel>();
         }
     }
 }
