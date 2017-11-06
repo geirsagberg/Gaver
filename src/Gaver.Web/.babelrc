@@ -11,7 +11,8 @@
   ],
   "plugins": [
     "transform-function-bind",
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    "transform-class-properties"
   ],
   "sourceMaps": true
 }
