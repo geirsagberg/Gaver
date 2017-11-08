@@ -6,6 +6,7 @@ using Gaver.Data;
 using Gaver.Logic.Contracts;
 using Gaver.Web.Extensions;
 using Gaver.Web.Features;
+using Gaver.Web.Features.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;

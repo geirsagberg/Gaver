@@ -1,4 +1,4 @@
-﻿namespace Gaver.Web.Features
+﻿namespace Gaver.Web.Features.Users
 {
     public class UserModel
     {

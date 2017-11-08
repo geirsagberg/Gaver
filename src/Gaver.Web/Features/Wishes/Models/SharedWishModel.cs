@@ -1,3 +1,5 @@
+using Gaver.Web.Features.Users;
+
 namespace Gaver.Web.Features.Wishes.Models
 {
     public class SharedWishModel : WishModel

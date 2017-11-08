@@ -15,7 +15,6 @@ namespace Gaver.Web.Features.LiveUpdates
         public Task RefreshListAsync(int wishListId, int? excludeUserId = null)
         {
             return hub.RefreshDataAsync(wishListId, excludeUserId);
-//            return Task.CompletedTask;
         }
     }
 }

@@ -42,31 +42,29 @@ namespace Gaver.Web.Features.Users
             var user = await context.Users.Where(u => u.PrimaryIdentityId == request.ProviderId)
                 .Include(u => u.WishLists)
                 .SingleOrDefaultAsync();
-            if (user == null) {
-                var result = await $"https://{auth0Settings.Domain}/userinfo"
-                    .WithOAuthBearerToken(request.AccessToken)
-                    .GetJsonAsync();
-                var userInfo = result as IDictionary<string, object>;
-                if (userInfo == null)
-                    throw new FriendlyException(EventIds.AuthenticationError, "Noe gikk galt ved innloggingen");
+            if (user != null) return mapper.Map<UserModel>(user);
 
-                object name, email;
-                if (!userInfo.TryGetValue("name", out name))
-                    throw new FriendlyException(EventIds.MissingName, "Navn mangler");
-                if (!userInfo.TryGetValue("email", out email))
-                    throw new FriendlyException(EventIds.MissingEmail, "E-post mangler");
+            var result = await $"https://{auth0Settings.Domain}/userinfo"
+                .WithOAuthBearerToken(request.AccessToken)
+                .GetJsonAsync();
+            if (!(result is IDictionary<string, object> userInfo))
+                throw new FriendlyException(EventIds.AuthenticationError, "Noe gikk galt ved innloggingen");
 
-                user = new User {
-                    PrimaryIdentityId = request.ProviderId,
-                    Name = name.ToString(),
-                    Email = email.ToString(),
-                    WishLists = {
-                        new WishList()
-                    }
-                };
-                context.Users.Add(user);
-                await context.SaveChangesAsync();
-            }
+            if (!userInfo.TryGetValue("name", out var name))
+                throw new FriendlyException(EventIds.MissingName, "Navn mangler");
+            if (!userInfo.TryGetValue("email", out var email))
+                throw new FriendlyException(EventIds.MissingEmail, "E-post mangler");
+
+            user = new User {
+                PrimaryIdentityId = request.ProviderId,
+                Name = name.ToString(),
+                Email = email.ToString(),
+                WishLists = {
+                    new WishList()
+                }
+            };
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
             return mapper.Map<UserModel>(user);
         }
 

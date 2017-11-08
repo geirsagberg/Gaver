@@ -2,10 +2,10 @@
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Logic.Contracts;
-using Gaver.Web.Features.LiveUpdates;
-using Newtonsoft.Json;
-using MediatR;
 using Gaver.Web.CrossCutting;
+using Gaver.Web.Features.LiveUpdates;
+using MediatR;
+using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Chat
 {
@@ -24,9 +24,9 @@ namespace Gaver.Web.Features.Chat
 
     public class AddMessageHandler : IRequestHandler<AddMessageRequest, ChatMessageModel>
     {
-        private readonly IMapperService mapper;
-        private readonly GaverContext context;
         private readonly ClientNotifier _clientNotifier;
+        private readonly GaverContext context;
+        private readonly IMapperService mapper;
 
         public AddMessageHandler(IMapperService mapper, GaverContext context, ClientNotifier clientNotifier)
         {
@@ -37,8 +37,7 @@ namespace Gaver.Web.Features.Chat
 
         public ChatMessageModel Handle(AddMessageRequest request)
         {
-            var chatMessage = new ChatMessage
-            {
+            var chatMessage = new ChatMessage {
                 Text = request.Text,
                 UserId = request.UserId,
                 WishListId = request.WishListId
