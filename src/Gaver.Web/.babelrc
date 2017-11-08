@@ -9,10 +9,6 @@
     "stage-3",
     "react"
   ],
-  "plugins": [
-    "transform-function-bind",
-    "transform-object-rest-spread",
-    "transform-class-properties"
-  ],
+  "plugins": [ "transform-function-bind", "transform-object-rest-spread", "transform-class-properties" ],
   "sourceMaps": true
 }

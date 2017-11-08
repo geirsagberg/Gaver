@@ -4,6 +4,7 @@ const path = require('path')
 const webpack = require('webpack')
 const isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   resolve: {
@@ -66,8 +67,9 @@ module.exports = {
       ? []
       : [
           new ExtractTextPlugin('styles.css'),
-          new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true
+          new UglifyJsPlugin({
+            sourceMap: true,
+            uglifyOptions: { ecma: 8 }
           })
         ]
   ),
