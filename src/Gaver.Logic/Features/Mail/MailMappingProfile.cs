@@ -8,24 +8,23 @@ namespace Gaver.Logic.Features.Mail
         public MailMappingProfile()
         {
             CreateMap<MailModel, SendGridMail>()
-                    .MapMember(m => m.From, m => new SendGridAddress
-                    {
-                        Email = m.From,
-                        Name = "Gaver"
-                    })
-                    .MapMember(m => m.Content, m => new[] {
-                        new SendGridContent {
-                            Value = m.Content,
-                            Type = "text/html"
-                        }
-                    })
-                    .MapMember(m => m.Personalizations, m => new[] {
-                        new SendGridPersonalization {
-                            To = m.To.Select(to => new SendGridAddress {
-                                Email = to
-                            }).ToList()
-                        }
-                    });
+                .MapMember(m => m.From, m => new SendGridAddress {
+                    Email = m.From,
+                    Name = "Gaver"
+                })
+                .MapMember(m => m.Content, m => new[] {
+                    new SendGridContent {
+                        Value = m.Content,
+                        Type = "text/html"
+                    }
+                })
+                .MapMember(m => m.Personalizations, m => new[] {
+                    new SendGridPersonalization {
+                        To = m.To.Select(to => new SendGridAddress {
+                            Email = to
+                        }).ToList()
+                    }
+                });
         }
     }
 }

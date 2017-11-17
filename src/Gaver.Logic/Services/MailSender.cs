@@ -5,6 +5,7 @@ using Gaver.Data;
 using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Logic.Exceptions;
+using Gaver.Logic.Features.Mail;
 using Microsoft.Extensions.Logging;
 
 namespace Gaver.Logic.Services

@@ -13,6 +13,7 @@ using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Features.Users;
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -30,10 +31,11 @@ using Swashbuckle.AspNetCore.Swagger;
 using WebApiContrib.Core;
 using WebApiContrib.Core.Filters;
 
-namespace Gaver.Web
-{
-    public class Startup
-    {
+[assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
+[assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
+
+namespace Gaver.Web {
+    public class Startup {
         private readonly List<string> missingOptions = new List<string>();
 
         public Startup(IConfiguration configuration)
@@ -53,13 +55,16 @@ namespace Gaver.Web
         {
             var identity = tokenContext.Principal.Identity as ClaimsIdentity;
             var providerId = identity?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (providerId == null) return;
+            if (providerId == null) {
+                return;
+            }
 
             var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
 
             var userId = await userHandler.GetUserIdOrNullAsync(providerId);
-            if (userId != null)
+            if (userId != null) {
                 identity.AddClaim(new Claim("GaverUserId", userId.Value.ToString(), ClaimValueTypes.Integer32));
+            }
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -87,14 +92,23 @@ namespace Gaver.Web
                 o.Filters.Add(new CustomExceptionFilterAttribute());
                 o.Filters.Add(new ValidationAttribute());
                 o.UseFromBodyBinding();
+            }).AddRazorOptions(o => {
+                o.ViewLocationFormats.Clear();
+                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
+                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
+                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
             });
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Info {Title = "My API", Version = "v1"});
+                c.SwaggerDoc("v1", new Info {
+                    Title = "My API",
+                    Version = "v1"
+                });
                 c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
             });
             var connectionString = Configuration.GetConnectionString("GaverContext");
-            if (connectionString.IsNullOrEmpty())
+            if (connectionString.IsNullOrEmpty()) {
                 throw new ConfigurationException("ConnectionStrings:GaverContext");
+            }
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GaverContext>(options => {
                     options.ConfigureWarnings(b => b.Throw(RelationalEventId.QueryClientEvaluationWarning));
@@ -124,8 +138,9 @@ namespace Gaver.Web
             ConfigureOptions<MailOptions>(services, "mail");
             ConfigureOptions<Auth0Settings>(services, "auth0");
 
-            if (missingOptions.Any())
+            if (missingOptions.Any()) {
                 throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
+            }
         }
 
         private void ConfigureOptions<T>(IServiceCollection services, string key) where T : class, new()
@@ -149,8 +164,11 @@ namespace Gaver.Web
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env,
             Auth0Settings auth0Settings)
         {
-            if (env.IsDevelopment()) SetupForDevelopment(app, loggerFactory, env);
-            else SetupForProduction(loggerFactory);
+            if (env.IsDevelopment()) {
+                SetupForDevelopment(app, loggerFactory, env);
+            } else {
+                SetupForProduction(loggerFactory);
+            }
             app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
@@ -172,10 +190,16 @@ namespace Gaver.Web
                 routes.MapRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new {controller = "Error", action = "NotFound"});
+                routes.MapRoute("API 404", "api/{*anything}", new {
+                    controller = "Error",
+                    action = "NotFound"
+                });
                 routes.MapSpaFallbackRoute(
                     "spa-fallback",
-                    new {controller = "Home", action = "Index"});
+                    new {
+                        controller = "Home",
+                        action = "Index"
+                    });
             });
         }
 

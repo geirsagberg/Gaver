@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Gaver.Logic.Features.Mail;
 
 namespace Gaver.Logic.Contracts
 {

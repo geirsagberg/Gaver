@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Gaver.Logic
+namespace Gaver.Logic.Features.Mail
 {
     public class MailModel
     {

@@ -9,6 +9,7 @@ using Gaver.Logic.Constants;
 using Gaver.Logic.Contracts;
 using Gaver.Logic.Exceptions;
 using Gaver.Logic.Extensions;
+using Gaver.Logic.Features.Mail;
 using Gaver.Web.Features.Wishes.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Http;
