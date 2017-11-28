@@ -15,8 +15,6 @@ const LOGGED_OUT = namespace + 'LOGGED_OUT'
 const LOG_IN_SUCCESSFUL = namespace + 'LOG_IN_SUCCESSFUL'
 const AUTH_STARTED = namespace + 'AUTH_STARTED'
 
-const initialState = Immutable({})
-
 const lock = new Auth0Lock(auth0ClientId, auth0Domain, {
   auth: {
     redirectUrl,
@@ -35,7 +33,19 @@ const lock = new Auth0Lock(auth0ClientId, auth0Domain, {
   language: 'nb'
 })
 
-export default function reducer (state = initialState, action = {}) {
+interface User {
+  id: number
+  name: string
+}
+
+export type UserState = Partial<User> & {
+  isLoggedIn: boolean
+  isLoggingIn: boolean
+}
+
+const initialState = Immutable({})
+
+export default function reducer (state = initialState, action) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
       return state.merge(action.data).set('isLoggedIn', true).set('isLoggingIn', false)
@@ -79,7 +89,7 @@ export const logOut = () => async (dispatch) => {
   }
 }
 
-const completeLogin = async (dispatch, accessToken) =>
+const completeLogin = (dispatch, accessToken) =>
   tryOrNotify(async () => {
     const userInfo = await Api.loadUserInfo(accessToken)
     dispatch(logInSuccessful(userInfo))
@@ -101,6 +111,13 @@ export const initAuth = () => async (dispatch) => {
   }
 }
 
-export const logIn = () => async (dispatch) => {
+export const logIn = () => (dispatch) => {
   lock.show()
+}
+
+export const actionCreators = {
+  logIn,
+  initAuth,
+  logOut,
+  setUrlAfterLogin
 }

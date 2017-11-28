@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import * as myListActions from 'store/myList'
 import Immutable from 'seamless-immutable'
-import { map, size } from 'utils/immutableExtensions'
+import { map, size } from 'lodash-es'
 import { logOut } from 'store/user'
 import ReactTooltip from 'react-tooltip'
 import './MyList.css'
@@ -91,13 +91,13 @@ class MyList extends React.Component {
     this.props.setSharedListsVisible(false)
   }
 
-  onKeyUp (e) {
+  onKeyUp = (e) => {
     if (e.which === 13) {
       this.addWish()
     }
   }
 
-  addWish () {
+  addWish = () => {
     if (this.wishInput.value) {
       this.props.addWish({ listId: this.props.listId, title: this.wishInput.value })
       this.wishInput.value = ''
@@ -131,8 +131,8 @@ class MyList extends React.Component {
                 </button>
                 {isShowingSharedLists && (
                   <ul className="list-group">
-                    {invitations::size() > 0 ? (
-                      invitations::map((invitation) => (
+                    {size(invitations) > 0 ? (
+                      map(invitations, (invitation) => (
                         <li className="list-group-item" key={invitation.wishListId}>
                           <Link to={`/list/${invitation.wishListId}`}>{invitation.wishListUserName}</Link>
                         </li>
@@ -162,17 +162,17 @@ class MyList extends React.Component {
               autoFocus
               className="form-control"
               placeholder="Jeg ønsker meg..."
-              onKeyUp={::this.onKeyUp}
+              onKeyUp={this.onKeyUp}
               ref={(el) => (this.wishInput = el)}
             />
             <span className="input-group-btn">
-              <button className="btn btn-default" type="button" onClick={::this.addWish}>
+              <button className="btn btn-default" type="button" onClick={this.addWish}>
                 Legg til
               </button>
             </span>
           </div>
           <ul className="list-group">
-            {this.props.wishes::map((wish) => (
+            {map(this.props.wishes, (wish) => (
               <Wish key={wish.id} {...{ wish, listId, deleteWish, editUrl, editDescription }} />
             ))}
           </ul>

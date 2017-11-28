@@ -4,14 +4,11 @@ import { tryOrNotify } from 'utils'
 import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
 import { loadMessages } from 'store/chat'
-import { deepMerge } from 'utils/immutableExtensions'
 import { loadIdToken } from 'utils/auth'
 import { HubConnection } from '@aspnet/signalr-client'
 import { showError } from 'utils/notifications'
 import { replace, push } from 'react-router-redux'
 import { AccessStatus } from 'enums'
-
-const initialState = Immutable({})
 
 const namespace = 'gaver/sharedList/'
 
@@ -20,6 +17,29 @@ const SET_USERS = namespace + 'SET_USERS'
 const SET_BOUGHT_SUCCESS = namespace + 'SET_BOUGHT_SUCCESS'
 const CLEAR_STATE = namespace + 'CLEAR_STATE'
 const SET_AUTHORIZED = namespace + 'SET_AUTHORIZED'
+
+export interface UserModel {
+  id?: number
+  name?: string
+}
+
+export interface WishModel {
+  id?: number
+  wishListId?: number
+  title?: string
+  url?: string
+  description?: string
+}
+
+export interface SharedWishModel extends WishModel {
+  boughtByUser?: UserModel
+}
+
+export interface SharedListModel {
+  id?: number
+  wishes?: SharedWishModel[]
+  owner?: string
+}
 
 function dataLoaded (data) {
   return {
@@ -43,6 +63,12 @@ function setAuthorized () {
   }
 }
 
+const initialState = Immutable({})
+
+type SharedListState = {
+  currentUsers: number[]
+}
+
 export default function reducer (state = initialState, action) {
   switch (action.type) {
     case DATA_LOADED: {
@@ -59,7 +85,7 @@ export default function reducer (state = initialState, action) {
     case SET_BOUGHT_SUCCESS:
       return state.setIn([ 'wishes', action.wishId, 'boughtByUser' ], action.isBought ? action.userId : null)
     case SET_USERS:
-      return state::deepMerge(action.data.entities).set('currentUsers', action.data.result)
+      return state.merge(action.data.entities).set('currentUsers', action.data.result)
     case SET_AUTHORIZED:
       return state.set('isAuthorized', true)
     case CLEAR_STATE:
@@ -110,8 +136,7 @@ export const subscribeList = (listId, token) => async (dispatch) =>
 
     dispatch(loadSharedList(listId))
     const idToken = loadIdToken()
-    listHub = new HubConnection(`http://${document.location.host}/listHub?id_token=${idToken}`)
-    // , 'formatType=json&format=text&id_token=' + idToken)
+    listHub = new HubConnection(`${document.location.origin}/listHub?id_token=${idToken}`)
 
     const updateUsers = (data) => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
 
@@ -150,4 +175,13 @@ export function setUsers (data) {
 
 export const showMyList = () => (dispatch) => {
   dispatch(push('/'))
+}
+
+export const actionCreators = {
+  showMyList,
+  setUsers,
+  unsubscribeList,
+  subscribeList,
+  setBought,
+  loadSharedList
 }

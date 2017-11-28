@@ -1,6 +1,6 @@
 import toastr from 'toastr'
 import { isDevelopment } from 'utils'
-import escape from 'lodash/escape'
+import {escape} from 'lodash-es'
 
 toastr.options.positionClass = 'toast-bottom-full-width'
 

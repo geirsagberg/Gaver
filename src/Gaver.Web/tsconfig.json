@@ -12,5 +12,6 @@
     },
     "lib": [ "dom", "es2015" ]
   },
+  "compileOnSave": false,
   "exclude": [ "node_modules", "wwwroot" ]
 }

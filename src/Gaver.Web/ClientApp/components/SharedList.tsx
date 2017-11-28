@@ -4,24 +4,14 @@ import classNames from 'classnames'
 import ReactTooltip from 'react-tooltip'
 import { connect } from 'react-redux'
 import Immutable from 'seamless-immutable'
-import * as sharedListActions from 'store/sharedList'
-import { getIn, map, size } from 'utils/immutableExtensions'
+import { actionCreators } from 'store/sharedList'
+import { map, size } from 'lodash-es'
 import { logOut } from 'store/user'
 import Chat from 'components/Chat'
 import Loading from './Loading'
 import { getQueryVariable } from 'utils'
 
-class Wish extends React.Component {
-  static get propTypes () {
-    return {
-      wish: PropTypes.object.isRequired,
-      setBought: PropTypes.func.isRequired,
-      userName: PropTypes.string.isRequired,
-      userId: PropTypes.number.isRequired,
-      users: PropTypes.object.isRequired
-    }
-  }
-
+class Wish extends React.Component<any> {
   render () {
     const { wish, setBought, userId, users } = this.props
     return (
@@ -62,7 +52,7 @@ class Wish extends React.Component {
   }
 }
 
-class SharedList extends React.Component {
+class SharedList extends React.Component<any> {
   componentDidMount () {
     const listId = this.props.match.params.id
     const inviteToken = getQueryVariable('token')
@@ -102,8 +92,8 @@ class SharedList extends React.Component {
         <div className="row">
           <div className="wishList col-md-8">
             <ul className="list-group">
-              {this.props.wishes::size() > 0 ? (
-                this.props.wishes::map((wish) => <Wish {...{ ...this.props, wish }} key={wish.id} />)
+              {size(this.props.wishes) > 0 ? (
+                map(this.props.wishes, (wish: any) => <Wish {...{ ...this.props, wish }} key={wish.id} />)
               ) : (
                 <li className="list-group-item wish wish-empty">Ingen ønsker enda...</li>
               )}
@@ -121,9 +111,9 @@ class SharedList extends React.Component {
 
 const mapStateToProps = (state) => ({
   wishes: state.sharedList.wishes || Immutable({}),
-  users: state::getIn('sharedList.users', Immutable({})),
-  currentUsers: state::getIn('sharedList.currentUsers', Immutable([])),
-  count: state::getIn('sharedList.currentUsers.length', 0),
+  users: Immutable.getIn(state, [ 'sharedList', 'users' ], Immutable({})),
+  currentUsers: Immutable.getIn(state, [ 'sharedList', 'currentUsers' ], Immutable([])),
+  count: Immutable.getIn(state, [ 'sharedList', 'currentUsers', 'length' ], 0),
   owner: state.sharedList.owner || '',
   userName: state.user.name || '',
   userId: state.user.id || 0,
@@ -131,7 +121,7 @@ const mapStateToProps = (state) => ({
 })
 
 const dispatchOptions = {
-  ...sharedListActions,
+  ...actionCreators,
   logOut
 }
 

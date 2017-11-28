@@ -9,7 +9,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   resolve: {
     modules: [ 'ClientApp', 'node_modules' ],
-    extensions: [ '.js', '.jsx' ]
+    extensions: [ '.js', '.jsx', '.ts', '.tsx' ]
   },
   module: {
     rules: [
@@ -27,9 +27,12 @@ module.exports = {
         ]
       },
       {
-        test: /\.js(x?)$/,
+        test: /\.(j|t)s(x?)$/,
         include: /ClientApp/,
-        loader: 'babel-loader'
+        loader: 'awesome-typescript-loader',
+        options: {
+          silent: true
+        }
       },
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
@@ -43,14 +46,14 @@ module.exports = {
         use: isDevelopment
           ? [ 'style-loader', 'css-loader?importLoaders=1', 'postcss-loader' ]
           : ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: [ 'css-loader?importLoaders=1', 'postcss-loader' ]
-            })
+            fallback: 'style-loader',
+            use: [ 'css-loader?importLoaders=1', 'postcss-loader' ]
+          })
       }
     ]
   },
   entry: {
-    main: './ClientApp/boot-client.jsx'
+    main: './ClientApp/boot-client'
   },
   output: {
     path: path.resolve(__dirname, 'wwwroot', 'dist'),
@@ -66,12 +69,12 @@ module.exports = {
     isDevelopment
       ? []
       : [
-          new ExtractTextPlugin('styles.css'),
-          new UglifyJsPlugin({
-            sourceMap: true,
-            uglifyOptions: { ecma: 8 }
-          })
-        ]
+        new ExtractTextPlugin('styles.css'),
+        new UglifyJsPlugin({
+          sourceMap: true,
+          uglifyOptions: { ecma: 8 }
+        })
+      ]
   ),
-  devtool: 'source-map' //isDevelopment ? 'cheap-module-eval-source-map' : 'source-map'
+  devtool: 'source-map' // isDevelopment ? 'cheap-module-eval-source-map' : 'source-map'
 } as Configuration
