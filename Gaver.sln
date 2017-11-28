@@ -1,31 +1,32 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{001F6C8D-7AFE-4668-80BD-48DD18D95220}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A8C73828-F61B-41B9-9946-BB7E30D26991}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet.config = NuGet.config
 		.editorconfig = .editorconfig
+		global.json = global.json
+		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C5500253-6FAD-42EB-AFDF-BE1859C96417}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaver.Web", "src\Gaver.Web\Gaver.Web.csproj", "{462820C1-211D-4DD9-B14F-5C2961C192B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.Web", "src\Gaver.Web\Gaver.Web.csproj", "{462820C1-211D-4DD9-B14F-5C2961C192B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaver.Data", "src\Gaver.Data\Gaver.Data.csproj", "{5D2E813E-C80F-4B84-B869-32D5D0F7F272}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.Data", "src\Gaver.Data\Gaver.Data.csproj", "{5D2E813E-C80F-4B84-B869-32D5D0F7F272}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaver.Logic", "src\Gaver.Logic\Gaver.Logic.csproj", "{B9840932-3F2A-4636-8564-367D455ED61E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.Logic", "src\Gaver.Logic\Gaver.Logic.csproj", "{B9840932-3F2A-4636-8564-367D455ED61E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaver.TestUtils", "test\Gaver.TestUtils\Gaver.TestUtils.csproj", "{A18A41AC-8DAD-4DA4-B586-58B1F91B0DDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.TestUtils", "test\Gaver.TestUtils\Gaver.TestUtils.csproj", "{A18A41AC-8DAD-4DA4-B586-58B1F91B0DDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaver.Data.Tests", "test\Gaver.Data.Tests\Gaver.Data.Tests.csproj", "{C007180D-8E6F-425D-8591-9EC2081ED4F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.Data.Tests", "test\Gaver.Data.Tests\Gaver.Data.Tests.csproj", "{C007180D-8E6F-425D-8591-9EC2081ED4F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaver.Logic.Tests", "test\Gaver.Logic.Tests\Gaver.Logic.Tests.csproj", "{69CD4FDF-197E-4ED4-8445-6FD20A30102E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.Logic.Tests", "test\Gaver.Logic.Tests\Gaver.Logic.Tests.csproj", "{69CD4FDF-197E-4ED4-8445-6FD20A30102E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gaver.Web.Tests", "test\Gaver.Web.Tests\Gaver.Web.Tests.csproj", "{FA923F66-653C-40AF-82ED-005B3DEB48E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.Web.Tests", "test\Gaver.Web.Tests\Gaver.Web.Tests.csproj", "{FA923F66-653C-40AF-82ED-005B3DEB48E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,5 +74,8 @@ Global
 		{C007180D-8E6F-425D-8591-9EC2081ED4F6} = {C5500253-6FAD-42EB-AFDF-BE1859C96417}
 		{69CD4FDF-197E-4ED4-8445-6FD20A30102E} = {C5500253-6FAD-42EB-AFDF-BE1859C96417}
 		{FA923F66-653C-40AF-82ED-005B3DEB48E3} = {C5500253-6FAD-42EB-AFDF-BE1859C96417}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2171A279-10A6-46F0-A3C9-497E809C2368}
 	EndGlobalSection
 EndGlobal

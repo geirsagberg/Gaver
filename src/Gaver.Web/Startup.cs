@@ -34,8 +34,10 @@ using WebApiContrib.Core.Filters;
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
 [assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
 
-namespace Gaver.Web {
-    public class Startup {
+namespace Gaver.Web
+{
+    public class Startup
+    {
         private readonly List<string> missingOptions = new List<string>();
 
         public Startup(IConfiguration configuration)
@@ -124,8 +126,11 @@ namespace Gaver.Web {
 
             services.Scan(scan => {
                 scan.FromAssemblyOf<ILogicAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
+                scan.FromAssemblyOf<ILogicAssembly>().AddClasses(classes => classes.AssignableTo<Profile>())
+                    .As<Profile>().WithSingletonLifetime();
                 scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
                 scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
+
                 scan.FromEntryAssembly().AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>()
                     .WithSingletonLifetime();
             });
@@ -154,6 +159,7 @@ namespace Gaver.Web {
                 .Select(propertyInfo => $"{key}:{propertyInfo.Name}");
 
             missingOptions.AddRange(missing);
+
 
             services.Configure<T>(configurationSection);
 
@@ -203,7 +209,9 @@ namespace Gaver.Web {
             });
         }
 
-        private static void SetupForProduction(ILoggerFactory loggerFactory) { }
+        private static void SetupForProduction(ILoggerFactory loggerFactory)
+        {
+        }
 
         private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory,
             IHostingEnvironment env)

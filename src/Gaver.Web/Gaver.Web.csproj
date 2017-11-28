@@ -2,7 +2,6 @@
   <PropertyGroup>
     <VersionPrefix>1.1.0</VersionPrefix>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);NETSTANDARD13</DefineConstants>
     <AssemblyName>Gaver.Web</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>Gaver.Web</PackageId>
@@ -29,8 +28,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Scrutor" Version="2.1.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="WebApiContrib.Core" Version="1.2.0" />
     <PackageReference Include="MediatR" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
@@ -39,7 +38,7 @@
     <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha2-final" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
-    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="2.0.4" />
+    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="2.0.5" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
