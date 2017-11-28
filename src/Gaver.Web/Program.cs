@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
 using Gaver.Data;
 using Gaver.Logic.Contracts;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +25,7 @@ namespace Gaver.Web
         }
 
         public static IWebHost BuildWebHost(string[] args) => WebHost.CreateDefaultBuilder(args)
+            .UseApplicationInsights()
             .UseStartup<Startup>()
             .ConfigureLogging(ConfigureLogging)
             .Build();

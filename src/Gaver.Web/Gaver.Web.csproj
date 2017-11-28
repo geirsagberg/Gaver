@@ -7,6 +7,9 @@
     <PackageId>Gaver.Web</PackageId>
     <UserSecretsId>Gaver-d5fca685-5997-4e8a-9069-0750a83f161e</UserSecretsId>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <ApplicationInsightsResourceId>/subscriptions/0d60de30-59ab-484b-b845-244c39b366ce/resourcegroups/Gaver/providers/microsoft.insights/components/Gaver</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/0d60de30-59ab-484b-b845-244c39b366ce/resourcegroups/Gaver/providers/microsoft.insights/components/Gaver</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
@@ -27,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Joonasw.AspNetCore.SecurityHeaders" Version="2.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
     <PackageReference Include="Scrutor" Version="2.1.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
@@ -53,5 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 </Project>
