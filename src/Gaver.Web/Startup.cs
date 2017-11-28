@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,11 +15,13 @@ using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Features.Users;
 using JetBrains.Annotations;
+using Joonasw.AspNetCore.SecurityHeaders;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -173,7 +176,7 @@ namespace Gaver.Web
             if (env.IsDevelopment()) {
                 SetupForDevelopment(app, loggerFactory, env);
             } else {
-                SetupForProduction(loggerFactory);
+                SetupForProduction(app, loggerFactory);
             }
             app.UseJwtAuthentication(auth0Settings);
 
@@ -209,8 +212,11 @@ namespace Gaver.Web
             });
         }
 
-        private static void SetupForProduction(ILoggerFactory loggerFactory)
+        [Conditional("RELEASE")]
+        private static void SetupForProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            app.UseRewriter(new RewriteOptions().AddRedirectToHttpsPermanent());
+            app.UseHsts();
         }
 
         private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory,
