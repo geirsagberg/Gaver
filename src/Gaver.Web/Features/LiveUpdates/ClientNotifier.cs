@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
+using Gaver.Web.Contracts;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Gaver.Web.Features.LiveUpdates
 {
-    public class ClientNotifier
+    public class ClientNotifier : IClientNotifier
     {
         private readonly IHubContext<ListHub> hub;
 
