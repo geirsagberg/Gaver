@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Gaver.Web.Contracts;
+using Gaver.Web.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Gaver.Web.Features.LiveUpdates

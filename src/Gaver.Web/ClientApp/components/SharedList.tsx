@@ -5,7 +5,7 @@ import ReactTooltip from 'react-tooltip'
 import { connect } from 'react-redux'
 import Immutable from 'seamless-immutable'
 import { actionCreators } from 'store/sharedList'
-import { map, size } from 'lodash-es'
+import { map, size, get } from 'lodash-es'
 import { logOut } from 'store/user'
 import Chat from 'components/Chat'
 import Loading from './Loading'
@@ -45,7 +45,7 @@ class Wish extends React.Component<any> {
             </label>
           </span>
         ) : (
-          <span className="wish_detail wish_detail-right">Kjøpt av {users[wish.boughtByUser].name}</span>
+          <span className="wish_detail wish_detail-right">Kjøpt av {get(users, [ wish.boughtByUser, 'name' ])}</span>
         )}
       </li>
     )

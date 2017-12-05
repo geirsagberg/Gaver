@@ -57,7 +57,7 @@ class Chat extends React.Component {
   componentWillReceiveProps (nextProps) {
     if (size(this.props.messages) !== size(nextProps.messages)) {
       setTimeout(() => {
-        this.chatMessages.scrollTop = this.chatMessages.scrollHeight
+        this.chatMessages.scrollTop = this.chatMessages && this.chatMessages.scrollHeight
       }, 0)
     }
   }

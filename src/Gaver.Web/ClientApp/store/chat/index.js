@@ -10,22 +10,22 @@ const namespace = 'gaver/chat/'
 const MESSAGES_LOADED = namespace + 'MESSAGES_LOADED'
 const MESSAGE_ADDED = namespace + 'MESSAGE_ADDED'
 
-function users(state = initialState, action) {
+function users (state = initialState, action) {
   switch (action.type) {
     case MESSAGES_LOADED:
       return action.data.entities.users || initialState
     case MESSAGE_ADDED:
-      return state.merge(action.data.entities.users)
+      return state.merge(action.data.entities.users, { deep: true })
   }
   return state
 }
 
-function messages(state = initialState, action) {
+function messages (state = initialState, action) {
   switch (action.type) {
     case MESSAGES_LOADED:
       return action.data.entities.messages || initialState
     case MESSAGE_ADDED:
-      return state.merge(action.data.entities.messages)
+      return state.merge(action.data.entities.messages, { deep: true })
   }
   return state
 }
@@ -35,26 +35,28 @@ export default combineReducers({
   users
 })
 
-function messagesLoaded(data) {
+function messagesLoaded (data) {
   return {
     type: MESSAGES_LOADED,
     data
   }
 }
 
-function messageAdded(data) {
+function messageAdded (data) {
   return {
     type: MESSAGE_ADDED,
     data
   }
 }
 
-export const addMessage = ({listId, text}) => async dispatch => tryOrNotify(async () => {
-  const data = await api.addMessage({ listId, text })
-  dispatch(messageAdded(data))
-})
+export const addMessage = ({ listId, text }) => async (dispatch) =>
+  tryOrNotify(async () => {
+    const data = await api.addMessage({ listId, text })
+    dispatch(messageAdded(data))
+  })
 
-export const loadMessages = listId => async dispatch => tryOrNotify(async () => {
-  const data = await api.loadMessages(listId)
-  dispatch(messagesLoaded(data))
-})
+export const loadMessages = (listId) => async (dispatch) =>
+  tryOrNotify(async () => {
+    const data = await api.loadMessages(listId)
+    dispatch(messagesLoaded(data))
+  })

@@ -14,6 +14,7 @@ using Gaver.Logic.Extensions;
 using Gaver.Logic.Services;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Features.Users;
+using Gaver.Web.Hubs;
 using JetBrains.Annotations;
 using Joonasw.AspNetCore.SecurityHeaders;
 using MediatR;

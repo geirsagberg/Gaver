@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Logic.Contracts;
 using Gaver.Web.Extensions;
-using Gaver.Web.Features;
 using Gaver.Web.Features.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
-namespace Gaver.Web
+namespace Gaver.Web.Hubs
 {
     [Authorize]
-    public class ListHub : Hub
+    public class ListHub : Hub<IListHubClient>
     {
         private static readonly HashSet<UserListConnection> userListConnections
             = new HashSet<UserListConnection>();
@@ -25,7 +24,8 @@ namespace Gaver.Web
         private readonly ILogger<ListHub> logger;
         private readonly IMapperService mapper;
 
-        public ListHub(ILogger<ListHub> logger, GaverContext gaverContext, IMapperService mapper, IAccessChecker accessChecker)
+        public ListHub(ILogger<ListHub> logger, GaverContext gaverContext, IMapperService mapper,
+            IAccessChecker accessChecker)
         {
             this.logger = logger;
             this.gaverContext = gaverContext;
@@ -52,25 +52,18 @@ namespace Gaver.Web
             var group = GetGroup(listId);
             await Groups.AddAsync(connectionId, group);
             var status = GetStatus(listId);
-            await Clients.Group(group).InvokeAsync("updateUsers", status);
+            await Clients.Group(group).UpdateUsers(status);
             return status;
         }
 
-        public override Task OnConnectedAsync()
-        {
-            // if (!Context.User.Identity.IsAuthenticated)
-            // {
-            //     Context.Connection.Dispose();
-            // }
-
-            return Task.CompletedTask;
-        }
+        public override Task OnConnectedAsync() => Task.CompletedTask;
 
         public Task Unsubscribe(int listId)
         {
             userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
             var status = GetStatus(listId);
-            return Clients.Group(GetGroup(listId)).InvokeAsync("updateUsers", status);
+            var groupName = GetGroup(listId);
+            return Clients.Group(groupName).UpdateUsers(status);
         }
 
         public Task UnsubscribeAll()
@@ -79,7 +72,11 @@ namespace Gaver.Web
                 .Where(c => c.ConnectionId == Context.ConnectionId)
                 .Select(c => c.ListId).ToList();
             userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
-            var tasks = listIds.Select(listId => Clients.Group(GetGroup(listId)).InvokeAsync("updateUsers", GetStatus(listId)));
+            var tasks = listIds.Select(listId => {
+                var status = GetStatus(listId);
+                var groupName = GetGroup(listId);
+                return Clients.Group(groupName).UpdateUsers(status);
+            });
             return Task.WhenAll(tasks);
         }
 
@@ -104,13 +101,8 @@ namespace Gaver.Web
 
     public static class ListHubExtensions
     {
-        public static Task RefreshDataAsync(this IHubContext<ListHub> hub, int listId, int? excludeUserId = null)
-        {
-            //var excludeConnectionIds = excludeUserId.HasValue
-            //    ? ListHub.GetConnectionIdsForUser(excludeUserId.Value)
-            //    : new string[0];
-            return hub.Clients.Group(ListHub.GetGroup(listId)).InvokeAsync("refresh");
-        }
+        public static Task RefreshDataAsync(this IHubContext<ListHub> hub, int listId, int? excludeUserId = null) =>
+            hub.Clients.Group(ListHub.GetGroup(listId)).InvokeAsync("refresh");
     }
 
     public class UserListConnection

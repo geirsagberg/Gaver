@@ -58,7 +58,7 @@ class Layout extends React.Component<LayoutProps> {
               <div className="col-sm-12">
                 <Switch>
                   <PrivateRoute exact path="/" component={MyList} isLoggedIn={isLoggedIn} />
-                  <PrivateRoute exact path="/list/:id" component={SharedList} isLoggedIn={isLoggedIn} />
+                  <PrivateRoute path="/list/:id" component={SharedList} isLoggedIn={isLoggedIn} />
                   <LoginRoute isLoggedIn={isLoggedIn} />
                 </Switch>
               </div>

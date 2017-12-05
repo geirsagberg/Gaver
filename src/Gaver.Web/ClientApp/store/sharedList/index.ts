@@ -77,7 +77,8 @@ export default function reducer (state = initialState, action) {
         .set('wishes', action.data.entities.wishes)
         .update(
           'users',
-          (users) => (users ? users.merge(action.data.entities.users || initialState) : action.data.entities.users)
+          (users) =>
+            users ? users.merge(action.data.entities.users || initialState, { deep: true }) : action.data.entities.users
         )
         .set('owner', action.data.entities.wishLists[wishListId].owner)
         .set('listId', wishListId)
@@ -85,7 +86,7 @@ export default function reducer (state = initialState, action) {
     case SET_BOUGHT_SUCCESS:
       return state.setIn([ 'wishes', action.wishId, 'boughtByUser' ], action.isBought ? action.userId : null)
     case SET_USERS:
-      return state.merge(action.data.entities).set('currentUsers', action.data.result)
+      return state.merge(action.data.entities, { deep: true }).set('currentUsers', action.data.result)
     case SET_AUTHORIZED:
       return state.set('isAuthorized', true)
     case CLEAR_STATE:
@@ -138,7 +139,9 @@ export const subscribeList = (listId, token) => async (dispatch) =>
     const idToken = loadIdToken()
     listHub = new HubConnection(`${document.location.origin}/listHub?id_token=${idToken}`)
 
-    const updateUsers = (data) => dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
+    const updateUsers = (data) => {
+      dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
+    }
 
     listHub.on('updateUsers', updateUsers)
     listHub.on('refresh', () => {

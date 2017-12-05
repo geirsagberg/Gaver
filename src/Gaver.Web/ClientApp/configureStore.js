@@ -5,6 +5,7 @@ import Immutable from 'seamless-immutable'
 import { initAuth } from './store/user'
 import history from 'utils/history'
 import { routerMiddleware as createRouterMiddleware, routerReducer } from 'react-router-redux'
+import { isDevelopment } from 'utils'
 
 function buildRootReducer (allReducers) {
   return combineReducers({
@@ -19,14 +20,20 @@ export default function configureStore (initialState) {
   const devToolsExtension = windowIfDefined && windowIfDefined.devToolsExtension // If devTools is installed, connect to it
 
   const routerMiddleware = createRouterMiddleware(history)
+
+  const middleware = [ thunk, routerMiddleware ]
+
+  if (isDevelopment) middleware.unshift(require('redux-immutable-state-invariant').default)
+
   const createStoreWithMiddleware = compose(
     applyMiddleware(thunk, routerMiddleware),
     devToolsExtension ? devToolsExtension() : (f) => f
   )(createStore)
   // Combine all reducers and instantiate the app-wide store instance
-  const allReducers = buildRootReducer(Store.reducers)
+  const rootReducer = buildRootReducer(Store.reducers)
   const immutableInitialState = Immutable(initialState)
-  const store = createStoreWithMiddleware(allReducers, immutableInitialState)
+  const store = createStoreWithMiddleware(rootReducer, immutableInitialState)
+  // const store = createStore(rootReducer, immutableInitialState,)
 
   // Enable Webpack hot module replacement for reducers
   if (module.hot) {

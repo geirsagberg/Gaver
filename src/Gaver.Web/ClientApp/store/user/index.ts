@@ -48,7 +48,7 @@ const initialState = Immutable({})
 export default function reducer (state = initialState, action) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
-      return state.merge(action.data).set('isLoggedIn', true).set('isLoggingIn', false)
+      return state.merge(action.data, { deep: true }).set('isLoggedIn', true).set('isLoggingIn', false)
     case LOGGED_OUT:
       return initialState
     case AUTH_STARTED:
