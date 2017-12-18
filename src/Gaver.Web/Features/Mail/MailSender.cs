@@ -1,14 +1,16 @@
 using System;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Gaver.Common.Contracts;
+using Gaver.Common.Exceptions;
 using Gaver.Data;
-using Gaver.Logic.Constants;
-using Gaver.Logic.Contracts;
-using Gaver.Logic.Exceptions;
-using Gaver.Logic.Features.Mail;
+using Gaver.Web.Constants;
+using Gaver.Web.Contracts;
+using Gaver.Web.Extensions;
+using Gaver.Web.Options;
 using Microsoft.Extensions.Logging;
 
-namespace Gaver.Logic.Services
+namespace Gaver.Web.Features.Mail
 {
     public class MailSender : IMailSender
     {
@@ -25,8 +27,9 @@ namespace Gaver.Logic.Services
 
         public async Task SendAsync(MailModel mail)
         {
-            if (options.SendGridApiKey.IsNullOrEmpty())
+            if (options.SendGridApiKey.IsNullOrEmpty()) {
                 throw new FriendlyException(EventIds.SendGridApiKeyMissing, "Mangler API-nøkkel for SendGrid");
+            }
             var sendGridMail = mapper.Map<SendGridMail>(mail);
             try {
                 await options.SendGridUrl

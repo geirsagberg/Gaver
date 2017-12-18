@@ -1,7 +1,6 @@
 using AutoMapper.QueryableExtensions;
 using FluentAssertions;
 using Gaver.Data.Entities;
-using Gaver.Logic.Contracts;
 using Gaver.TestUtils;
 using Gaver.Web.Features.Chat;
 using Gaver.Web.Features.Users;

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Gaver.Logic.Features.Mail;
+using Gaver.Web.Features.Mail;
 
-namespace Gaver.Logic.Contracts
+namespace Gaver.Web.Contracts
 {
     public interface IMailSender
     {

@@ -1,12 +1,12 @@
 ﻿using System.Linq;
+using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Logic.Constants;
-using Gaver.Logic.Contracts;
-using Gaver.Logic.Exceptions;
+using Gaver.Web.Constants;
+using Gaver.Web.Contracts;
 using JetBrains.Annotations;
 
-namespace Gaver.Logic.Services
+namespace Gaver.Web.Features.Auth
 {
     public class AccessChecker : IAccessChecker
     {

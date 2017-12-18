@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gaver.Logic.Extensions
+namespace Gaver.Common.Extensions
 {
     public static class EnumerableExtensions
     {

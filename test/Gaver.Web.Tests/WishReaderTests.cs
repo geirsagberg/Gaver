@@ -2,9 +2,9 @@
 using System.Linq;
 using AutoMapper;
 using FluentAssertions;
+using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Logic.Contracts;
 using Gaver.TestUtils;
 using Gaver.Web.Features.Wishes;
 using Gaver.Web.Features.Wishes.Models;

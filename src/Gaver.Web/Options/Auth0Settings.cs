@@ -1,8 +1,8 @@
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Gaver.Logic.Extensions;
+using Gaver.Common.Extensions;
+using System.Text;
 
-namespace Gaver.Logic
+namespace Gaver.Web.Options
 {
     public class Auth0Settings
     {

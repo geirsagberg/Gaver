@@ -1,5 +1,5 @@
+using Gaver.Common.Contracts;
 using Gaver.Data;
-using Gaver.Logic.Contracts;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

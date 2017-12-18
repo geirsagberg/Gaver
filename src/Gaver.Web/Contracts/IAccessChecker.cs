@@ -1,4 +1,4 @@
-﻿namespace Gaver.Logic.Contracts
+﻿namespace Gaver.Web.Contracts
 {
     public interface IAccessChecker
     {

@@ -1,5 +1,5 @@
-using Gaver.Logic.Constants;
-using Gaver.Logic.Exceptions;
+using Gaver.Common.Exceptions;
+using Gaver.Web.Constants;
 using Gaver.Web.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

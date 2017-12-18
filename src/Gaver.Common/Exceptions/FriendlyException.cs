@@ -1,6 +1,6 @@
 using System;
 
-namespace Gaver.Logic.Exceptions
+namespace Gaver.Common.Exceptions
 {
     public class FriendlyException : Exception
     {

@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using AutoMapper;
 
-namespace Gaver.Logic
+namespace Gaver.Common.Extensions
 {
     public static class MapperExtensions
     {

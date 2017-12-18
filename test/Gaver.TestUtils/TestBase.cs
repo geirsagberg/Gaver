@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper;
-using Gaver.Logic.Contracts;
-using Gaver.Logic.Services;
+using Gaver.Common.Contracts;
+using Gaver.Common.Utils;
 using LightInject;
 using NSubstitute;
 

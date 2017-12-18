@@ -7,14 +7,16 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Gaver.Common;
+using Gaver.Common.Contracts;
+using Gaver.Common.Extensions;
+using Gaver.Common.Utils;
 using Gaver.Data;
-using Gaver.Logic;
-using Gaver.Logic.Contracts;
-using Gaver.Logic.Extensions;
-using Gaver.Logic.Services;
+
 using Gaver.Web.Exceptions;
 using Gaver.Web.Features.Users;
 using Gaver.Web.Hubs;
+using Gaver.Web.Options;
 using JetBrains.Annotations;
 using Joonasw.AspNetCore.SecurityHeaders;
 using MediatR;
@@ -129,9 +131,7 @@ namespace Gaver.Web
             services.AddMediatR();
 
             services.Scan(scan => {
-                scan.FromAssemblyOf<ILogicAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
-                scan.FromAssemblyOf<ILogicAssembly>().AddClasses(classes => classes.AssignableTo<Profile>())
-                    .As<Profile>().WithSingletonLifetime();
+                scan.FromAssemblyOf<ICommonAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
                 scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
                 scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
 

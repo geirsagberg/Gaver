@@ -3,12 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Gaver.Common.Contracts;
+using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Logic;
-using Gaver.Logic.Constants;
-using Gaver.Logic.Contracts;
-using Gaver.Logic.Exceptions;
+
+using Gaver.Web.Constants;
+using Gaver.Web.Options;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;

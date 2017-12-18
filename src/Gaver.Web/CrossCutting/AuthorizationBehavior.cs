@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Gaver.Logic.Contracts;
+using Gaver.Web.Contracts;
 using MediatR;
 
 namespace Gaver.Web.CrossCutting

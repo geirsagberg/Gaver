@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using AutoMapper.QueryableExtensions;
+using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Logic.Contracts;
 using Gaver.Web.CrossCutting;
 using MediatR;
 using Newtonsoft.Json;

@@ -1,4 +1,4 @@
-﻿namespace Gaver.Logic
+﻿namespace Gaver.Web.Options
 {
     public class MailOptions
     {

@@ -1,4 +1,4 @@
-namespace Gaver.Logic.Constants
+namespace Gaver.Web.Constants
 {
     public static class EventIds
     {

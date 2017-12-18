@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
-using Gaver.Logic.Constants;
-using Gaver.Logic.Exceptions;
+using Gaver.Common.Exceptions;
+using Gaver.Web.Constants;
 
 namespace Gaver.Web.Extensions
 {

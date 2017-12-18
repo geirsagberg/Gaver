@@ -1,7 +1,8 @@
 using System.Linq;
 using AutoMapper;
+using Gaver.Common.Extensions;
 
-namespace Gaver.Logic.Features.Mail
+namespace Gaver.Web.Features.Mail
 {
     public class MailMappingProfile : Profile
     {

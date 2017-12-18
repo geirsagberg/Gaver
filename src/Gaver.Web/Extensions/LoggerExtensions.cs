@@ -1,8 +1,8 @@
 using System;
-using Gaver.Logic.Exceptions;
+using Gaver.Common.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace Gaver.Logic
+namespace Gaver.Web.Extensions
 {
     public static class LoggerExtensions
     {

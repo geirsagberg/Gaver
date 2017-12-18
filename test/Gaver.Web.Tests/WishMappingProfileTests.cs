@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using FluentAssertions;
+using Gaver.Common.Utils;
 using Gaver.Data.Entities;
-using Gaver.Logic.Services;
 using Gaver.TestUtils;
 using Gaver.Web.Features.Wishes;
 using Gaver.Web.Features.Wishes.Models;

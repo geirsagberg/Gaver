@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Gaver.Logic
+namespace Gaver.Common.Extensions
 {
     public static class TypeExtensions
     {

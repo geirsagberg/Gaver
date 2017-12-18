@@ -10,6 +10,7 @@
     <PackageReference Include="NSubstitute" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Gaver.Logic\Gaver.Logic.csproj" />
+    <ProjectReference Include="..\..\src\Gaver.Common\Gaver.Common.csproj" />
+    <ProjectReference Include="..\..\src\Gaver.Data\Gaver.Data.csproj" />
   </ItemGroup>
 </Project>

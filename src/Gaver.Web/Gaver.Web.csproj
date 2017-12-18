@@ -25,10 +25,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gaver.Common\Gaver.Common.csproj" />
     <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />
-    <ProjectReference Include="..\Gaver.Logic\Gaver.Logic.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Flurl.Http" Version="2.1.0" />
     <PackageReference Include="Joonasw.AspNetCore.SecurityHeaders" Version="2.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
