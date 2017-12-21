@@ -83,16 +83,19 @@ class MyList extends React.Component {
   }
 
   componentDidMount () {
-    document.addEventListener('click', e => {
-      if (this.props.isShowingSharedLists && !document.getElementById('sharedListsWrapper').contains(e.target)) {
-        this.props.setSharedListsVisible(false)
-      }
-    })
+    document.addEventListener('click', this.handleClick)
     this.props.loadMyList()
   }
 
   componentWillUnmount () {
+    document.removeEventListener('click', this.handleClick)
     this.props.setSharedListsVisible(false)
+  }
+
+  handleClick = (e) => {
+    if (this.props.isShowingSharedLists && !document.getElementById('sharedListsWrapper').contains(e.target)) {
+      this.props.setSharedListsVisible(false)
+    }
   }
 
   onKeyUp = (e) => {
