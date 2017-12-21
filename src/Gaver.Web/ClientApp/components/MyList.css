@@ -147,3 +147,15 @@ $brand-danger:          #E74C3C;
     margin-right: 1rem;
   }
 }
+
+.sharedListsWrapper {
+  display: inline-block;
+  position: relative;
+  z-index: 3;
+}
+
+.sharedLists {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}

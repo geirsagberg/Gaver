@@ -8,7 +8,6 @@ import { logOut } from 'store/user'
 import ReactTooltip from 'react-tooltip'
 import './MyList.css'
 import classNames from 'classnames'
-import Tether from 'react-tether'
 import { toggleSharedLists, setSharedListsVisible } from 'store/ui'
 import { Link } from 'react-router-dom'
 
@@ -84,6 +83,11 @@ class MyList extends React.Component {
   }
 
   componentDidMount () {
+    document.addEventListener('click', e => {
+      if (this.props.isShowingSharedLists && !document.getElementById('sharedListsWrapper').contains(e.target)) {
+        this.props.setSharedListsVisible(false)
+      }
+    })
     this.props.loadMyList()
   }
 
@@ -113,16 +117,9 @@ class MyList extends React.Component {
           <div className="header_items">
             {this.props.userName && <div className="header_item header_username">{this.props.userName}</div>}
             <div className="header_actions">
-              <Tether
-                attachment="top center"
-                constraints={[
-                  {
-                    to: 'scrollParent',
-                    attachment: 'together'
-                  }
-                ]}>
+              <div id="sharedListsWrapper" className="sharedListsWrapper header_item">
                 <button
-                  className={classNames('btn btn-default header_item', {
+                  className={classNames('btn btn-default', {
                     active: isShowingSharedLists
                   })}
                   onClick={() => this.props.toggleSharedLists()}>
@@ -130,7 +127,7 @@ class MyList extends React.Component {
                   <span className="btn_text">Venner</span>
                 </button>
                 {isShowingSharedLists && (
-                  <ul className="list-group">
+                  <ul className="list-group sharedLists">
                     {size(invitations) > 0 ? (
                       map(invitations, (invitation) => (
                         <li className="list-group-item" key={invitation.wishListId}>
@@ -142,7 +139,7 @@ class MyList extends React.Component {
                     )}
                   </ul>
                 )}
-              </Tether>
+              </div>
               <button
                 className={classNames('btn btn-default header_item')}
                 onClick={() => this.props.shareList(this.props.listId)}>
