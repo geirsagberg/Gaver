@@ -5,6 +5,7 @@ const webpack = require('webpack')
 const isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
 module.exports = {
   resolve: {
@@ -29,9 +30,9 @@ module.exports = {
       {
         test: /\.(j|t)s(x?)$/,
         include: /ClientApp/,
-        loader: 'awesome-typescript-loader',
+	loader: 'ts-loader',
         options: {
-          silent: true
+	  transpileOnly: true
         }
       },
       {
@@ -40,6 +41,10 @@ module.exports = {
         options: {
           limit: 100000
         }
+      },
+      {
+	test: /\.vue$/,
+	loader: 'vue-loader'
       },
       {
         test: /\.css$/,
@@ -53,7 +58,7 @@ module.exports = {
     ]
   },
   entry: {
-    main: './ClientApp/boot-client'
+    main: './ClientApp/app'
   },
   output: {
     path: path.resolve(__dirname, 'wwwroot', 'dist'),
@@ -61,6 +66,7 @@ module.exports = {
     publicPath: '/dist/'
   },
   plugins: [
+    new ForkTsCheckerWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production')
     }),

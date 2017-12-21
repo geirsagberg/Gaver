@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { SFC, ComponentClass } from 'react'
 import Loading from './Loading'
 import MyList from './MyList'
 import SharedList from './SharedList'
@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import { Route, Redirect, Switch } from 'react-router-dom'
 import { ConnectedRouter } from 'react-router-redux'
 import history from 'utils/history'
-import { SFC, ComponentClass } from 'react'
 import { RouteComponentProps, RouteProps } from 'react-router'
 
 type PrivateRouteProps = {
@@ -20,7 +19,7 @@ const PrivateRoute: SFC<PrivateRouteProps> = ({ component, isLoggedIn, ...rest }
     {...rest}
     render={(props) =>
       isLoggedIn ? (
-        React.createElement(component, props)
+	React.createElement(component as any, props)
       ) : (
         <Redirect
           to={{
@@ -34,7 +33,7 @@ const PrivateRoute: SFC<PrivateRouteProps> = ({ component, isLoggedIn, ...rest }
 
 const LoginRoute: SFC<{ isLoggedIn: boolean }> = ({ isLoggedIn }) => (
   <Route
-    path="/login"
+    path='/login'
     render={(props) => (isLoggedIn ? <Redirect to={get(props, 'location.state.props', '/')} /> : <Login />)}
   />
 )
@@ -53,12 +52,12 @@ class Layout extends React.Component<LayoutProps> {
         {isLoading || isLoggingIn ? (
           <Loading />
         ) : (
-          <div className="container">
-            <div className="row">
-              <div className="col-sm-12">
+	  <div className='container'>
+	    <div className='row'>
+	      <div className='col-sm-12'>
                 <Switch>
-                  <PrivateRoute exact path="/" component={MyList} isLoggedIn={isLoggedIn} />
-                  <PrivateRoute path="/list/:id" component={SharedList} isLoggedIn={isLoggedIn} />
+		  <PrivateRoute exact path='/' component={MyList} isLoggedIn={isLoggedIn} />
+		  <PrivateRoute path='/list/:id' component={SharedList} isLoggedIn={isLoggedIn} />
                   <LoginRoute isLoggedIn={isLoggedIn} />
                 </Switch>
               </div>
@@ -76,4 +75,4 @@ const mapStateToProps = (state) => ({
   isLoggingIn: !!state.user.isLoggingIn
 })
 
-export default connect(mapStateToProps)(Layout)
+export default connect(mapStateToProps)(Layout) as any

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { actionCreators, UserState } from 'store/user'
 import './Login.css'
@@ -10,13 +9,13 @@ type Props = UserState & typeof actionCreators
 class Login extends React.Component<Props> {
   render () {
     return (
-      <div className="container">
+      <div className='container'>
         {this.props.isLoggingIn ? (
           <Loading />
         ) : (
-          <div className="well col-sm-6 col-centered">
-            <h1 className="headline">Gaver</h1>
-            <button className="btn btn-primary" onClick={this.props.logIn}>
+	  <div className='well col-sm-6 col-centered'>
+	    <h1 className='headline'>Gaver</h1>
+	    <button className='btn btn-primary' onClick={this.props.logIn}>
               Logg inn
             </button>
           </div>
@@ -28,4 +27,4 @@ class Login extends React.Component<Props> {
 
 const mapStateToProps = (state) => state.user
 
-export default connect(mapStateToProps, actionCreators)(Login)
+export default connect(mapStateToProps, actionCreators)(Login) as any

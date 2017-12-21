@@ -13,5 +13,12 @@
     "**/.DS_Store": true,
     ".idea*": true
   },
-  "eslint.enable": true
+  "prettier.tabWidth": 2,
+	"prettier.useTabs": false,
+	"prettier.jsxBracketSameLine": true,
+	"prettier.semi": false,
+	"prettier.spaceBeforeFunctionParen": true,
+  "eslint.enable": true,
+  "tslint.autoFixOnSave": true,
+  "vetur.format.defaultFormatter.html": "js-beautify-html"
 }

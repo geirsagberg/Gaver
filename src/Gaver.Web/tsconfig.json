@@ -10,8 +10,12 @@
     "paths": {
       "*": [ "ClientApp/*" ]
     },
-    "lib": [ "dom", "es2015" ]
+    "lib": [ "dom", "es2015" ],
+    "sourceMap": true
   },
   "compileOnSave": false,
-  "exclude": [ "node_modules", "wwwroot" ]
+  "exclude": [ "node_modules", "wwwroot" ],
+  "include": [
+    "ClientApp/**/*"
+  ]
 }

@@ -14,12 +14,11 @@ import Layout from './components/Layout'
 setupProgress()
 
 // Get the application-wide store instance, prepopulating with state from the server where available.
-const initialState = window['initialReduxState']
-const store = configureStore(initialState)
+const store = configureStore()
 
 render(
   <Provider store={store}>
     <Layout />
   </Provider>,
-  document.getElementById('react-app')
+  document.getElementById('app')
 )
