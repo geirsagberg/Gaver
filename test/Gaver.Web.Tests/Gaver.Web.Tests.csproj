@@ -12,7 +12,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Gaver.Logic\Gaver.Logic.csproj" />
     <ProjectReference Include="..\..\src\Gaver.Web\Gaver.Web.csproj" />
     <ProjectReference Include="..\Gaver.TestUtils\Gaver.TestUtils.csproj" />
   </ItemGroup>
