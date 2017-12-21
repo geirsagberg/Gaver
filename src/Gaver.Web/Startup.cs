@@ -77,8 +77,6 @@ namespace Gaver.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureOptions(services);
-
             var authSettings = Configuration.GetSection("auth0").Get<Auth0Settings>();
             services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -138,6 +136,8 @@ namespace Gaver.Web
                 scan.FromEntryAssembly().AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>()
                     .WithSingletonLifetime();
             });
+
+            ConfigureOptions(services);
         }
 
         private void ConfigureOptions(IServiceCollection services)
@@ -163,7 +163,6 @@ namespace Gaver.Web
                 .Select(propertyInfo => $"{key}:{propertyInfo.Name}");
 
             missingOptions.AddRange(missing);
-
 
             services.Configure<T>(configurationSection);
 
