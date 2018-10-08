@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using AutoMapper;
 using FluentAssertions;
 using Gaver.Common.Utils;
@@ -35,7 +35,7 @@ namespace Gaver.Web.Tests
 
             var model = mapperService.Map<InvitationModel>(invitation);
 
-            model.ShouldBeEquivalentTo(new InvitationModel {
+            model.Should().BeEquivalentTo(new InvitationModel {
                 WishListUserName = "OwnerMan",
                 WishListId = 3
             });

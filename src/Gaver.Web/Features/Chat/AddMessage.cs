@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Threading;
+using System.Threading.Tasks;
 using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
@@ -35,7 +37,7 @@ namespace Gaver.Web.Features.Chat
             _clientNotifier = clientNotifier;
         }
 
-        public ChatMessageModel Handle(AddMessageRequest request)
+        public async Task<ChatMessageModel> Handle(AddMessageRequest request, CancellationToken token = default)
         {
             var user = context.GetOrDie<User>(request.UserId);
             var chatMessage = new ChatMessage {
@@ -44,10 +46,10 @@ namespace Gaver.Web.Features.Chat
                 WishListId = request.WishListId
             };
             context.Add(chatMessage);
-            context.SaveChanges();
+            await context.SaveChangesAsync(token);
 
             chatMessage.User = user;
-            _clientNotifier.RefreshListAsync(request.WishListId, request.UserId);
+            await _clientNotifier.RefreshListAsync(request.WishListId, request.UserId);
             return mapper.Map<ChatMessageModel>(chatMessage);
         }
     }

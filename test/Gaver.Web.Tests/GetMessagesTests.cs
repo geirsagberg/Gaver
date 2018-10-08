@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
@@ -10,7 +11,7 @@ namespace Gaver.Web.Tests
     public class GetMessagesTests : DbTestBase<GetMessagesHandler>
     {
         [Fact]
-        public void Can_get_chatMessages()
+        public async Task Can_get_chatMessages()
         {
             var firstWishList = new WishList {
                 User = new User(),
@@ -33,14 +34,12 @@ namespace Gaver.Web.Tests
             Context.AddRange(firstWishList, secondWishList);
             Context.SaveChanges();
 
-            var result = TestSubject.Handle(new GetMessagesRequest {
+            var result = await TestSubject.Handle(new GetMessagesRequest {
                 UserId = 1,
                 WishListId = firstWishList.Id
             });
 
-            result.Messages.Select(m => m.Text).ShouldAllBeEquivalentTo(new[] {
-                "Hello"
-            });
+            result.Messages.Select(m => m.Text).Should().BeEquivalentTo("Hello");
         }
     }
 }

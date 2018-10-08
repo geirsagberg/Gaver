@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Gaver.Data;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Gaver.Web.Migrations
 {

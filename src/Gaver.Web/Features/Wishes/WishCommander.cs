@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
@@ -35,7 +37,7 @@ namespace Gaver.Web.Features.Wishes
             this.logger = logger;
         }
 
-        public WishModel Handle(AddWishRequest message)
+        public async Task<WishModel> Handle(AddWishRequest message, CancellationToken token)
         {
             var wishListId = context.WishLists.Single(wl => wl.UserId == message.UserId).Id;
             var wish = new Wish {
@@ -43,24 +45,25 @@ namespace Gaver.Web.Features.Wishes
                 WishListId = wishListId
             };
             context.Add(wish);
-            context.SaveChanges();
-            clientNotifier.RefreshListAsync(wishListId);
+            await context.SaveChangesAsync(token);
+            await clientNotifier.RefreshListAsync(wishListId);
             return mapper.Map<WishModel>(wish);
         }
 
-        public void Handle(DeleteWishRequest message)
+        public async Task<Unit> Handle(DeleteWishRequest message, CancellationToken token)
         {
             context.Delete<Wish>(message.WishId);
-            context.SaveChanges();
-            clientNotifier.RefreshListAsync(message.WishListId);
+            await context.SaveChangesAsync(token);
+            await clientNotifier.RefreshListAsync(message.WishListId);
+            return Unit.Value;
         }
 
-        public void Handle(RegisterTokenRequest request)
+        public async Task<Unit> Handle(RegisterTokenRequest request, CancellationToken canellationToken)
         {
             if (context.Invitations.Any(i => i.WishListId == request.WishListId && i.UserId == request.UserId)) {
                 logger.LogInformation("User {UserId} already has access to {WishListId}", request.UserId,
                     request.WishListId);
-                return;
+                return Unit.Value;
             }
             var token = context.Find<InvitationToken>(request.Token);
             if (token == null)
@@ -74,10 +77,11 @@ namespace Gaver.Web.Features.Wishes
             };
             context.Add(invitation);
             token.Accepted = DateTimeOffset.Now;
-            context.SaveChanges();
+            await context.SaveChangesAsync(canellationToken);
+            return Unit.Value;
         }
 
-        public SharedWishModel Handle(SetBoughtRequest message)
+        public async Task<SharedWishModel> Handle(SetBoughtRequest message, CancellationToken cancellationToken)
         {
             var wish = GetWish(message.WishId, message.WishListId);
             var userId = message.UserId;
@@ -86,23 +90,23 @@ namespace Gaver.Web.Features.Wishes
 
             if (message.IsBought) wish.BoughtByUserId = userId;
             else wish.BoughtByUserId = null;
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
 
-            clientNotifier.RefreshListAsync(message.WishListId, message.UserId);
+            await clientNotifier.RefreshListAsync(message.WishListId, message.UserId);
             return mapper.Map<SharedWishModel>(wish);
         }
 
-        public WishModel Handle(SetDescriptionRequest message)
+        public async Task<WishModel> Handle(SetDescriptionRequest message, CancellationToken cancellationToken)
         {
             var wish = GetWish(message.WishId, message.WishListId);
             wish.Description = message.Description;
-            context.SaveChanges();
+            await context.SaveChangesAsync(cancellationToken);
 
-            clientNotifier.RefreshListAsync(message.WishListId, null);
+            await clientNotifier.RefreshListAsync(message.WishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 
-        public WishModel Handle(SetUrlRequest message)
+        public async Task<WishModel> Handle(SetUrlRequest message, CancellationToken token)
         {
             var wish = GetWish(message.WishId, message.WishListId);
 
@@ -121,8 +125,8 @@ namespace Gaver.Web.Features.Wishes
                 wish.Url = uri.ToString();
             }
 
-            context.SaveChanges();
-            clientNotifier.RefreshListAsync(message.WishListId, null);
+            await context.SaveChangesAsync(token);
+            await clientNotifier.RefreshListAsync(message.WishListId, null);
             return mapper.Map<WishModel>(wish);
         }
 

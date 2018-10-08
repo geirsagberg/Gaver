@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Gaver.Web.Migrations
 {

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Gaver.Web.Contracts;
 using MediatR;
@@ -14,7 +15,7 @@ namespace Gaver.Web.CrossCutting
             this.accessChecker = accessChecker;
         }
 
-        public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next)
+        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             accessChecker.CheckWishListInvitations(request.WishListId, request.UserId);
             accessChecker.CheckNotOwner(request.WishListId, request.UserId);

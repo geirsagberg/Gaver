@@ -18,7 +18,6 @@ using Gaver.Web.Features.Users;
 using Gaver.Web.Hubs;
 using Gaver.Web.Options;
 using JetBrains.Annotations;
-using Joonasw.AspNetCore.SecurityHeaders;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -34,8 +33,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
-using WebApiContrib.Core;
-using WebApiContrib.Core.Filters;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
 [assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
@@ -96,8 +93,6 @@ namespace Gaver.Web
 
             services.AddMvc(o => {
                 o.Filters.Add(new CustomExceptionFilterAttribute());
-                o.Filters.Add(new ValidationAttribute());
-                o.UseFromBodyBinding();
             }).AddRazorOptions(o => {
                 o.ViewLocationFormats.Clear();
                 o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
@@ -188,7 +183,7 @@ namespace Gaver.Web
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
-            app.UseSignalR(routes => routes.MapHub<ListHub>("listHub"));
+            app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
 
             SetupRoutes(app);
         }
@@ -215,7 +210,7 @@ namespace Gaver.Web
         [Conditional("RELEASE")]
         private static void SetupForProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            app.UseRewriter(new RewriteOptions().AddRedirectToHttpsPermanent());
+            app.UseHttpsRedirection();
             app.UseHsts();
         }
 

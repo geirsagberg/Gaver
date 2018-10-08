@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Gaver.Common.Contracts;
@@ -18,7 +19,7 @@ namespace Gaver.Web.Features.Wishes
 {
     public class WishReader : IRequestHandler<GetMyListRequest, MyListModel>,
         IRequestHandler<GetSharedListRequest, SharedListModel>,
-        IAsyncRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
+        IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
     {
         private readonly IAccessChecker accessChecker;
         private readonly GaverContext context;
@@ -31,47 +32,51 @@ namespace Gaver.Web.Features.Wishes
             this.accessChecker = accessChecker;
         }
 
-        public async Task<ListAccessStatus> Handle(CheckSharedListAccessRequest request)
+        public async Task<ListAccessStatus> Handle(CheckSharedListAccessRequest request,
+            CancellationToken token = default)
         {
             var wishListOwnerId = await context.WishLists.Where(wl => wl.Id == request.WishListId)
                 .Select(wl => wl.UserId)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(token);
             if (wishListOwnerId == 0)
                 throw new EntityNotFoundException<WishList>(request.WishListId);
 
             if (wishListOwnerId == request.UserId)
                 return ListAccessStatus.Owner;
 
-            if (await context.Invitations.AnyAsync(wl => wl.WishListId == request.WishListId && wl.UserId == request.UserId))
+            if (await context.Invitations.AnyAsync(
+                wl => wl.WishListId == request.WishListId && wl.UserId == request.UserId, token))
                 return ListAccessStatus.Invited;
 
             return ListAccessStatus.NotInvited;
         }
 
-        public MyListModel Handle(GetMyListRequest message)
+        public async Task<MyListModel> Handle(GetMyListRequest message, CancellationToken token = default)
         {
             var model = GetModel(message);
             if (model == null) {
                 context.Add(new WishList {
                     UserId = message.UserId
                 });
-                context.SaveChanges();
+                await context.SaveChangesAsync(token);
             }
+
             return GetModel(message);
         }
 
-        public SharedListModel Handle(GetSharedListRequest message)
+        public Task<SharedListModel> Handle(GetSharedListRequest message, CancellationToken cancellationToken = default)
         {
             if (context.Set<WishList>().Any(wl => wl.Id == message.ListId && wl.UserId == message.UserId)) {
                 throw new FriendlyException(EventIds.OwnerAccessingSharedList, "Du kan ikke se din egen liste");
             }
+
             accessChecker.CheckWishListInvitations(message.ListId, message.UserId);
 
             var sharedListModel = context.Set<WishList>()
                 .Where(wl => wl.Id == message.ListId)
                 .ProjectTo<SharedListModel>(mapper.MapperConfiguration)
                 .SingleOrThrow(new FriendlyException(EventIds.SharedListMissing, "Listen finnes ikke"));
-            return sharedListModel;
+            return Task.FromResult(sharedListModel);
         }
 
         private MyListModel GetModel(GetMyListRequest message)

@@ -51,7 +51,7 @@ namespace Gaver.Web.Hubs
                 ConnectionId = connectionId
             });
             var group = GetGroup(listId);
-            await Groups.AddAsync(connectionId, group);
+            await Groups.AddToGroupAsync(connectionId, group);
             var status = GetStatus(listId);
             await Clients.Group(group).UpdateUsers(status);
             return status;
@@ -98,30 +98,5 @@ namespace Gaver.Web.Hubs
             await UnsubscribeAll();
             await base.OnDisconnectedAsync(ex);
         }
-    }
-
-    public static class ListHubExtensions
-    {
-        public static Task RefreshDataAsync(this IHubContext<ListHub> hub, int listId, int? excludeUserId = null) =>
-            hub.Clients.Group(ListHub.GetGroup(listId)).InvokeAsync("refresh");
-    }
-
-    public class UserListConnection
-    {
-        public int UserId { get; set; }
-        public int ListId { get; set; }
-        public string ConnectionId { get; set; }
-    }
-
-    public interface IListHubClient
-    {
-        Task UpdateUsers(SubscriptionStatus status);
-        Task HeartBeat();
-        Task Refresh();
-    }
-
-    public class SubscriptionStatus
-    {
-        public IEnumerable<UserModel> CurrentUsers { get; set; }
     }
 }

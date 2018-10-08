@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <VersionPrefix>1.1.0</VersionPrefix>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>Gaver.Web</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>Gaver.Web</PackageId>
@@ -10,6 +10,7 @@
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <ApplicationInsightsResourceId>/subscriptions/0d60de30-59ab-484b-b845-244c39b366ce/resourcegroups/Gaver/providers/microsoft.insights/components/Gaver</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/0d60de30-59ab-484b-b845-244c39b366ce/resourcegroups/Gaver/providers/microsoft.insights/components/Gaver</ApplicationInsightsAnnotationResourceId>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
@@ -29,35 +30,26 @@
     <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Flurl.Http" Version="2.1.0" />
-    <PackageReference Include="Joonasw.AspNetCore.SecurityHeaders" Version="2.2.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
-    <PackageReference Include="Scrutor" Version="2.1.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
-    <PackageReference Include="WebApiContrib.Core" Version="1.2.0" />
-    <PackageReference Include="MediatR" Version="3.0.1" />
+    <PackageReference Include="Flurl.Http" Version="2.4.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.4" />
+    <PackageReference Include="Scrutor" Version="3.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.5" />
+    <PackageReference Include="MediatR" Version="5.1.0" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="3.0.0" />
-    <PackageReference Include="Serilog" Version="2.5.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="5.1.0" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha2-final" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.4" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
-    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="2.0.5" />
-  </ItemGroup>
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
-    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
+    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="2.0.8" />
   </ItemGroup>
   <ItemGroup>
     <Watch Include="webpack.config.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />

@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-
 using Gaver.Web.Constants;
 using Gaver.Web.Options;
 using MediatR;
@@ -25,7 +25,7 @@ namespace Gaver.Web.Features.Users
         public string ProviderId { get; set; }
     }
 
-    public class UserHandler : IAsyncRequestHandler<GetUserInfoRequest, UserModel>
+    public class UserHandler : IRequestHandler<GetUserInfoRequest, UserModel>
     {
         private readonly Auth0Settings auth0Settings;
         private readonly GaverContext context;
@@ -38,16 +38,16 @@ namespace Gaver.Web.Features.Users
             this.auth0Settings = auth0Settings;
         }
 
-        public async Task<UserModel> Handle(GetUserInfoRequest request)
+        public async Task<UserModel> Handle(GetUserInfoRequest request, CancellationToken token)
         {
             var user = await context.Users.Where(u => u.PrimaryIdentityId == request.ProviderId)
                 .Include(u => u.WishLists)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync(token);
             if (user != null) return mapper.Map<UserModel>(user);
 
             var result = await $"https://{auth0Settings.Domain}/userinfo"
                 .WithOAuthBearerToken(request.AccessToken)
-                .GetJsonAsync();
+                .GetJsonAsync(token);
             if (!(result is IDictionary<string, object> userInfo))
                 throw new FriendlyException(EventIds.AuthenticationError, "Noe gikk galt ved innloggingen");
 
@@ -65,7 +65,7 @@ namespace Gaver.Web.Features.Users
                 }
             };
             context.Users.Add(user);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(token);
             return mapper.Map<UserModel>(user);
         }
 

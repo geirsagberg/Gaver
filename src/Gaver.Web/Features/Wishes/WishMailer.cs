@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Flurl;
 using Gaver.Common.Exceptions;
@@ -16,7 +17,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class WishMailer : IAsyncRequestHandler<ShareListRequest>
+    public class WishMailer : IRequestHandler<ShareListRequest>
     {
         private readonly IMailSender mailSender;
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -29,7 +30,7 @@ namespace Gaver.Web.Features.Wishes
             this.gaverContext = gaverContext;
         }
 
-        public async Task Handle(ShareListRequest message)
+        public async Task<Unit> Handle(ShareListRequest message, CancellationToken cancellationToken)
         {
             ValidateEmails(message.Emails);
             var userName = gaverContext.Users.Where(u => u.Id == message.UserId).Select(u => u.Name).Single();
@@ -53,9 +54,10 @@ namespace Gaver.Web.Features.Wishes
                 mailTasks.Add(mailSender.SendAsync(mail));
             }
 
-            await gaverContext.SaveChangesAsync();
+            await gaverContext.SaveChangesAsync(cancellationToken);
 
             await Task.WhenAll(mailTasks);
+            return Unit.Value;
         }
 
         private static void ValidateEmails(IEnumerable<string> emails)

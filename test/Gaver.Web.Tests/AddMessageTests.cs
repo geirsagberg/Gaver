@@ -1,4 +1,4 @@
-using AutoMapper.QueryableExtensions;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
@@ -11,7 +11,7 @@ namespace Gaver.Web.Tests
     public class AddMessageTests : DbTestBase<AddMessageHandler>
     {
         [Fact]
-        public void Can_add_chatMessage()
+        public async Task Can_add_chatMessage()
         {
             var user = new User {
                 Name = "Userman"
@@ -19,12 +19,12 @@ namespace Gaver.Web.Tests
             Context.Add(user);
             Context.SaveChanges();
 
-            var result = TestSubject.Handle(new AddMessageRequest {
+            var result = await TestSubject.Handle(new AddMessageRequest {
                 Text = "Hello",
                 UserId = user.Id
             });
 
-            result.ShouldBeEquivalentTo(new ChatMessageModel {
+            result.Should().BeEquivalentTo(new ChatMessageModel {
                 Text = "Hello",
                 User = new UserModel {
                     Id = user.Id,

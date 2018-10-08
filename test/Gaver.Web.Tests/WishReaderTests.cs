@@ -1,30 +1,28 @@
-﻿using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
 using Gaver.Web.Features.Wishes;
-using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
 using LightInject;
 using Xunit;
 
-namespace Tests
+namespace Gaver.Web.Tests
 {
     public class WishReaderTests : DbTestBase<WishReader>
     {
-        private readonly GaverContext context;
-
         public WishReaderTests()
         {
             context = Container.Create<GaverContext>();
         }
 
+        private readonly GaverContext context;
+
         [Fact]
-        public void Can_read_my_list()
+        public async Task Can_read_my_list()
         {
             var mapper = Get<IMapperService>();
             mapper.Profiles.Should().NotBeEmpty();
@@ -39,7 +37,7 @@ namespace Tests
             context.Add(user);
             context.SaveChanges();
 
-            var result = TestSubject.Handle(new GetMyListRequest {
+            var result = await TestSubject.Handle(new GetMyListRequest {
                 UserId = user.Id
             });
 
@@ -47,7 +45,7 @@ namespace Tests
         }
 
         [Fact]
-        public void Can_read_shared_list()
+        public async Task Can_read_shared_list()
         {
             var bob = new User {
                 Name = "Bob",
@@ -61,7 +59,7 @@ namespace Tests
             context.AddRange(bob, james);
             context.SaveChanges();
 
-            var result = TestSubject.Handle(new GetSharedListRequest {
+            var result = await TestSubject.Handle(new GetSharedListRequest {
                 ListId = bob.WishLists.First().Id,
                 UserId = james.Id
             });

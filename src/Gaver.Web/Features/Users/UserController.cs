@@ -11,6 +11,7 @@ namespace Gaver.Web.Features.Users
 {
     [Route("api/[controller]")]
     [Authorize]
+    [ApiController]
     public class UserController : GaverControllerBase
     {
         private readonly IMediator mediator;
@@ -21,7 +22,7 @@ namespace Gaver.Web.Features.Users
         }
 
         [HttpGet]
-        public Task<UserModel> GetUserInfo([FromQuery] string accessToken)
+        public Task<UserModel> GetUserInfo(string accessToken)
         {
             var providerId = User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (providerId == null) {

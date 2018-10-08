@@ -1,13 +1,15 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Wishes
 {
     [Route("api/[controller]")]
-    [Microsoft.AspNetCore.Authorization.Authorize]
+    [Authorize]
+    [ApiController]
     public class WishListController : GaverControllerBase
     {
         private readonly IMediator mediator;
