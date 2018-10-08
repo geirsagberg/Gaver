@@ -12,7 +12,7 @@ import Loading from './Loading'
 import { getQueryVariable } from 'utils'
 
 class Wish extends React.Component<any> {
-  render () {
+  render() {
     const { wish, setBought, userId, users } = this.props
     return (
       <li className="list-group-item wish">
@@ -39,13 +39,14 @@ class Wish extends React.Component<any> {
                     listId: wish.wishListId,
                     wishId: wish.id,
                     isBought: wish.boughtByUser !== userId
-                  })}
+                  })
+                }
               />
               <span>Jeg kjøper</span>
             </label>
           </span>
         ) : (
-          <span className="wish_detail wish_detail-right">Kjøpt av {get(users, [ wish.boughtByUser, 'name' ])}</span>
+          <span className="wish_detail wish_detail-right">Kjøpt av {get(users, [wish.boughtByUser, 'name'])}</span>
         )}
       </li>
     )
@@ -53,17 +54,17 @@ class Wish extends React.Component<any> {
 }
 
 class SharedList extends React.Component<any> {
-  componentDidMount () {
+  componentDidMount() {
     const listId = this.props.match.params.id
     const inviteToken = getQueryVariable('token')
     this.props.subscribeList(listId, inviteToken)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.props.unsubscribeList(this.props.match.params.id)
   }
 
-  render () {
+  render() {
     if (!this.props.owner || !this.props.isAuthorized) {
       return <Loading />
     }
@@ -71,12 +72,15 @@ class SharedList extends React.Component<any> {
     return (
       <div>
         <header className="header">
-          <h1 className="header_title">{this.props.owner}&nbsp;sine ønsker</h1>
+          <h1 className="header_title">
+            {this.props.owner}
+            &nbsp;sine ønsker
+          </h1>
           <div className="header_items">
             {this.props.userName && <div className="header_item header_username">{this.props.userName}</div>}
             <div
               className="header_item"
-              data-tip={this.props.currentUsers.map((id) => this.props.users[id].name).join(', ')}>
+              data-tip={this.props.currentUsers.map(id => this.props.users[id].name).join(', ')}>
               {this.props.count} <span className="icon-users" />
             </div>
             <button className="btn btn-default header_item" onClick={this.props.showMyList}>
@@ -109,11 +113,11 @@ class SharedList extends React.Component<any> {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   wishes: state.sharedList.wishes || Immutable({}),
-  users: Immutable.getIn(state, [ 'sharedList', 'users' ], Immutable({})),
-  currentUsers: Immutable.getIn(state, [ 'sharedList', 'currentUsers' ], Immutable([])),
-  count: Immutable.getIn(state, [ 'sharedList', 'currentUsers', 'length' ], 0),
+  users: state.getIn(['sharedList', 'users'], Immutable({})),
+  currentUsers: state.getIn(['sharedList', 'currentUsers'], Immutable([])),
+  count: state.getIn(['sharedList', 'currentUsers', 'length'], 0),
   owner: state.sharedList.owner || '',
   userName: state.user.name || '',
   userId: state.user.id || 0,
@@ -125,4 +129,7 @@ const dispatchOptions = {
   logOut
 }
 
-export default connect(mapStateToProps, dispatchOptions)(SharedList)
+export default connect(
+  mapStateToProps,
+  dispatchOptions
+)(SharedList)

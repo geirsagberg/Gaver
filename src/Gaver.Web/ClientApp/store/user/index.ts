@@ -1,4 +1,4 @@
-import Immutable from 'seamless-immutable'
+import Immutable, { ImmutableObjectMixin } from 'seamless-immutable'
 import * as Api from './api'
 import Auth0Lock from 'auth0-lock'
 import * as auth from 'utils/auth'
@@ -39,16 +39,19 @@ interface User {
 }
 
 export type UserState = Partial<User> & {
-  isLoggedIn: boolean
-  isLoggingIn: boolean
+  isLoggedIn?: boolean
+  isLoggingIn?: boolean
 }
 
-const initialState = Immutable({})
+const initialState: ImmutableObjectMixin<UserState> = Immutable({})
 
-export default function reducer (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
-      return state.merge(action.data, { deep: true }).set('isLoggedIn', true).set('isLoggingIn', false)
+      return state
+        .merge(action.data, { deep: true })
+        .set('isLoggedIn', true)
+        .set('isLoggingIn', false)
     case LOGGED_OUT:
       return initialState
     case AUTH_STARTED:
@@ -57,32 +60,32 @@ export default function reducer (state = initialState, action) {
   return state
 }
 
-function loggedOut () {
+function loggedOut() {
   return {
     type: LOGGED_OUT
   }
 }
 
-function logInSuccessful (data) {
+function logInSuccessful(data) {
   return {
     type: LOG_IN_SUCCESSFUL,
     data
   }
 }
 
-function authStarted () {
+function authStarted() {
   return {
     type: AUTH_STARTED
   }
 }
 
-export const setUrlAfterLogin = (url) => () => {
+export const setUrlAfterLogin = url => () => {
   const a = document.createElement('a')
   a.href = url
   auth.saveUrlAfterLogin(`${a.pathname}${a.hash}${a.search}`)
 }
 
-export const logOut = () => async (dispatch) => {
+export const logOut = () => async dispatch => {
   if (await showConfirm('Vil du logge ut?')) {
     auth.clearTokens()
     dispatch(loggedOut())
@@ -95,8 +98,8 @@ const completeLogin = (dispatch, accessToken) =>
     dispatch(logInSuccessful(userInfo))
   })
 
-export const initAuth = () => async (dispatch) => {
-  lock.on('authenticated', async (authResult) => {
+export const initAuth = () => async dispatch => {
+  lock.on('authenticated', async authResult => {
     auth.saveIdToken(authResult.idToken)
     auth.saveAccessToken(authResult.accessToken)
     await completeLogin(dispatch, authResult.accessToken)
@@ -111,7 +114,7 @@ export const initAuth = () => async (dispatch) => {
   }
 }
 
-export const logIn = () => (dispatch) => {
+export const logIn = () => dispatch => {
   lock.show()
 }
 

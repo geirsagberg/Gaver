@@ -8,7 +8,7 @@ import Loading from './Loading'
 type Props = UserState & typeof actionCreators
 
 class Login extends React.Component<Props> {
-  render () {
+  render() {
     return (
       <div className="container">
         {this.props.isLoggingIn ? (
@@ -26,6 +26,9 @@ class Login extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state) => state.user
+const mapStateToProps = (state): UserState => state.user
 
-export default connect(mapStateToProps, actionCreators)(Login)
+export default connect(
+  mapStateToProps,
+  actionCreators
+)(Login)

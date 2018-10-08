@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
+    "noEmit": true,
     "jsx": "react",
     "target": "es5",
     "module": "es2015",
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
+    "pretty": true,
+    "sourceMap": true,
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "*": [ "ClientApp/*" ]
+      "*": ["src/Gaver.Web/ClientApp/*"]
     },
-    "lib": [ "dom", "es2015" ]
+    "lib": ["dom", "es2015"]
   },
   "compileOnSave": false,
-  "exclude": [ "node_modules", "wwwroot" ]
+  "exclude": ["node_modules", "*/wwwroot"],
+  "include": ["src/Gaver.Web/ClientApp"]
 }

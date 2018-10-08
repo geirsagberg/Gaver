@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
+import { createStore, applyMiddleware, compose, combineReducers, StoreCreator } from 'redux'
 import thunk from 'redux-thunk'
 import * as Store from './store'
 import Immutable from 'seamless-immutable'
@@ -7,27 +7,27 @@ import history from 'utils/history'
 import { routerMiddleware as createRouterMiddleware, routerReducer } from 'react-router-redux'
 import { isDevelopment } from 'utils'
 
-function buildRootReducer (allReducers) {
+function buildRootReducer(allReducers) {
   return combineReducers({
     ...allReducers,
     router: routerReducer
   })
 }
 
-export default function configureStore (initialState) {
+export default function configureStore(initialState) {
   // Build middleware. These are functions that can process the actions before they reach the store.
   const windowIfDefined = typeof window === 'undefined' ? null : window
-  const devToolsExtension = windowIfDefined && windowIfDefined.devToolsExtension // If devTools is installed, connect to it
+  const devToolsExtension = windowIfDefined && windowIfDefined['devToolsExtension'] // If devTools is installed, connect to it
 
   const routerMiddleware = createRouterMiddleware(history)
 
-  const middleware = [ thunk, routerMiddleware ]
+  const middleware = [thunk, routerMiddleware]
 
   if (isDevelopment) middleware.unshift(require('redux-immutable-state-invariant').default)
 
-  const createStoreWithMiddleware = compose(
+  const createStoreWithMiddleware: StoreCreator = compose<StoreCreator>(
     applyMiddleware(thunk, routerMiddleware),
-    devToolsExtension ? devToolsExtension() : (f) => f
+    devToolsExtension ? devToolsExtension() : f => f
   )(createStore)
   // Combine all reducers and instantiate the app-wide store instance
   const rootReducer = buildRootReducer(Store.reducers)
@@ -42,6 +42,6 @@ export default function configureStore (initialState) {
       store.replaceReducer(buildRootReducer(nextRootReducer.reducers))
     })
   }
-  store.dispatch(initAuth())
+  store.dispatch(initAuth() as any)
   return store
 }

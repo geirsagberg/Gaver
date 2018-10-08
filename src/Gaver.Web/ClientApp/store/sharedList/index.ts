@@ -5,7 +5,7 @@ import { normalize } from 'normalizr'
 import * as schemas from 'schemas'
 import { loadMessages } from 'store/chat'
 import { loadIdToken } from 'utils/auth'
-import { HubConnection } from '@aspnet/signalr-client'
+import { HubConnectionBuilder } from '@aspnet/signalr'
 import { showError } from 'utils/notifications'
 import { replace, push } from 'react-router-redux'
 import { AccessStatus } from 'enums'
@@ -41,14 +41,14 @@ export interface SharedListModel {
   owner?: string
 }
 
-function dataLoaded (data) {
+function dataLoaded(data) {
   return {
     type: DATA_LOADED,
     data
   }
 }
 
-function setBoughtSuccess ({ wishId, isBought, userId }) {
+function setBoughtSuccess({ wishId, isBought, userId }) {
   return {
     type: SET_BOUGHT_SUCCESS,
     wishId,
@@ -57,19 +57,19 @@ function setBoughtSuccess ({ wishId, isBought, userId }) {
   }
 }
 
-function setAuthorized () {
+function setAuthorized() {
   return {
     type: SET_AUTHORIZED
   }
 }
 
-const initialState = Immutable({})
+const initialState = Immutable<SharedListModel>({})
 
 type SharedListState = {
   currentUsers: number[]
 }
 
-export default function reducer (state = initialState, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case DATA_LOADED: {
       const wishListId = action.data.result
@@ -77,14 +77,14 @@ export default function reducer (state = initialState, action) {
         .set('wishes', action.data.entities.wishes)
         .update(
           'users',
-          (users) =>
+          (users: any) =>
             users ? users.merge(action.data.entities.users || initialState, { deep: true }) : action.data.entities.users
         )
         .set('owner', action.data.entities.wishLists[wishListId].owner)
         .set('listId', wishListId)
     }
     case SET_BOUGHT_SUCCESS:
-      return state.setIn([ 'wishes', action.wishId, 'boughtByUser' ], action.isBought ? action.userId : null)
+      return state.setIn(['wishes', action.wishId, 'boughtByUser'], action.isBought ? action.userId : null)
     case SET_USERS:
       return state.merge(action.data.entities, { deep: true }).set('currentUsers', action.data.result)
     case SET_AUTHORIZED:
@@ -95,7 +95,7 @@ export default function reducer (state = initialState, action) {
   return state
 }
 
-export const loadSharedList = (listId) => async (dispatch) =>
+export const loadSharedList = listId => async dispatch =>
   tryOrNotify(async () => {
     const data = await Api.loadSharedList(listId)
     dispatch(dataLoaded(data))
@@ -109,7 +109,7 @@ export const setBought = ({ listId, wishId, isBought }) => async (dispatch, getS
 
 let listHub
 
-export const subscribeList = (listId, token) => async (dispatch) =>
+export const subscribeList = (listId, token) => async dispatch =>
   tryOrNotify(async () => {
     if (token) {
       try {
@@ -137,9 +137,9 @@ export const subscribeList = (listId, token) => async (dispatch) =>
 
     dispatch(loadSharedList(listId))
     const idToken = loadIdToken()
-    listHub = new HubConnection(`${document.location.origin}/listHub?id_token=${idToken}`)
+    listHub = new HubConnectionBuilder().withUrl(`${document.location.origin}/listHub?id_token=${idToken}`)
 
-    const updateUsers = (data) => {
+    const updateUsers = data => {
       dispatch(setUsers(Immutable(normalize(data.currentUsers, schemas.users))))
     }
 
@@ -153,13 +153,13 @@ export const subscribeList = (listId, token) => async (dispatch) =>
     updateUsers(users)
   })
 
-function clearState () {
+function clearState() {
   return {
     type: CLEAR_STATE
   }
 }
 
-export const unsubscribeList = (listId) => async (dispatch) =>
+export const unsubscribeList = listId => async dispatch =>
   tryOrNotify(async () => {
     dispatch(clearState())
     if (listHub) {
@@ -169,14 +169,14 @@ export const unsubscribeList = (listId) => async (dispatch) =>
     }
   })
 
-export function setUsers (data) {
+export function setUsers(data) {
   return {
     type: SET_USERS,
     data
   }
 }
 
-export const showMyList = () => (dispatch) => {
+export const showMyList = () => dispatch => {
   dispatch(push('/'))
 }
 

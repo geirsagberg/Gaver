@@ -222,7 +222,6 @@ namespace Gaver.Web
 
             app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
                 HotModuleReplacement = true,
-                ReactHotModuleReplacement = true,
                 HotModuleReplacementClientOptions = new Dictionary<string, string> {
                     {"reload", "true"}
                 }

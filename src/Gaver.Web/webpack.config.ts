@@ -3,13 +3,13 @@ import { Configuration } from 'webpack'
 const path = require('path')
 const webpack = require('webpack')
 const isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const ExtractTextPlugin = require('mini-css-extract-plugin')
 
-module.exports = {
+const configuration: Configuration = {
+  mode: isDevelopment ? 'development' : 'production',
   resolve: {
-    modules: [ 'ClientApp', 'node_modules' ],
-    extensions: [ '.js', '.jsx', '.ts', '.tsx' ]
+    modules: ['ClientApp', 'node_modules'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   module: {
     rules: [
@@ -43,12 +43,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: isDevelopment
-          ? [ 'style-loader', 'css-loader?importLoaders=1', 'postcss-loader' ]
-          : ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: [ 'css-loader?importLoaders=1', 'postcss-loader' ]
-          })
+        use: [isDevelopment ? 'style-loader' : ExtractTextPlugin.loader, 'css-loader', 'postcss-loader']
       }
     ]
   },
@@ -65,16 +60,8 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production')
     }),
     new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }) // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
-  ].concat(
-    isDevelopment
-      ? []
-      : [
-        new ExtractTextPlugin('styles.css'),
-        new UglifyJsPlugin({
-          sourceMap: true,
-          uglifyOptions: { ecma: 8 }
-        })
-      ]
-  ),
-  devtool: 'source-map' // isDevelopment ? 'cheap-module-eval-source-map' : 'source-map'
-} as Configuration
+  ].concat(isDevelopment ? [] : [new ExtractTextPlugin({ filename: 'styles.css' })]),
+  devtool: isDevelopment ? 'source-map' : 'nosources-source-map'
+}
+
+module.exports = configuration
