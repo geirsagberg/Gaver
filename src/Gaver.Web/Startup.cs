@@ -4,26 +4,20 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using AutoMapper;
 using Gaver.Common;
 using Gaver.Common.Contracts;
 using Gaver.Common.Extensions;
 using Gaver.Common.Utils;
 using Gaver.Data;
-
 using Gaver.Web.Exceptions;
-using Gaver.Web.Features.Users;
 using Gaver.Web.Hubs;
 using Gaver.Web.Options;
 using JetBrains.Annotations;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -31,7 +25,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
@@ -56,67 +49,13 @@ namespace Gaver.Web
             Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
         }
 
-        private static async Task OnTokenValidated(TokenValidatedContext tokenContext)
-        {
-            var identity = tokenContext.Principal.Identity as ClaimsIdentity;
-            var providerId = identity?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (providerId == null) {
-                return;
-            }
-
-            var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
-
-            var userId = await userHandler.GetUserIdOrNullAsync(providerId);
-            if (userId != null) {
-                identity.AddClaim(new Claim("GaverUserId", userId.Value.ToString(), ClaimValueTypes.Integer32));
-            }
-        }
-
         public void ConfigureServices(IServiceCollection services)
         {
-            var authSettings = Configuration.GetSection("auth0").Get<Auth0Settings>();
-            services.AddAuthentication(options => {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options => {
-                options.Audience = authSettings.ClientId;
-                options.Authority = $"https://{authSettings.Domain}";
-                options.TokenValidationParameters = new TokenValidationParameters {
-                    IssuerSigningKey = authSettings.SigningKey
-                };
-                // TODO Handle other events, e.g. OnAuthenticationFailed and OnChallenge
-                options.Events = new JwtBearerEvents {
-                    OnTokenValidated = OnTokenValidated
-                };
-            });
-            services.AddAuthorization();
+            services.AddCustomAuth(Configuration);
 
-            services.AddMvc(o => {
-                o.Filters.Add(new CustomExceptionFilterAttribute());
-            }).AddRazorOptions(o => {
-                o.ViewLocationFormats.Clear();
-                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
-            });
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Info {
-                    Title = "My API",
-                    Version = "v1"
-                });
-                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
-            });
-            var connectionString = Configuration.GetConnectionString("GaverContext");
-            if (connectionString.IsNullOrEmpty()) {
-                throw new ConfigurationException("ConnectionStrings:GaverContext");
-            }
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<GaverContext>(options => {
-                    options.ConfigureWarnings(b => b.Throw(RelationalEventId.QueryClientEvaluationWarning));
-                    options
-                        .UseNpgsql(connectionString, b => b
-                            .MigrationsAssembly(GetType().GetTypeInfo().Assembly.FullName));
-                });
+            services.AddCustomMvc();
+            services.AddCustomSwagger();
+            services.AddCustomDbContext(Configuration);
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -173,6 +112,7 @@ namespace Gaver.Web
             } else {
                 SetupForProduction(app, loggerFactory);
             }
+
             app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
