@@ -4,11 +4,15 @@ const path = require('path')
 const webpack = require('webpack')
 const isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
 const ExtractTextPlugin = require('mini-css-extract-plugin')
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 
 const configuration: Configuration = {
   mode: isDevelopment ? 'development' : 'production',
   resolve: {
-    modules: ['ClientApp', 'node_modules'],
+    alias: {
+      '~': path.join(__dirname, 'src', 'Gaver.Web', 'ClientApp'),
+      lodash: 'lodash-es'
+    },
     extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   module: {
@@ -31,7 +35,8 @@ const configuration: Configuration = {
         include: /ClientApp/,
         loader: 'awesome-typescript-loader',
         options: {
-          silent: true
+          silent: true,
+          useCache: true
         }
       },
       {
@@ -60,8 +65,8 @@ const configuration: Configuration = {
       'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production')
     }),
     new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }) // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
-  ].concat(isDevelopment ? [] : [new ExtractTextPlugin({ filename: 'styles.css' })]),
-  devtool: isDevelopment ? 'source-map' : 'nosources-source-map'
+  ].concat(isDevelopment ? [new HardSourceWebpackPlugin()] : [new ExtractTextPlugin({ filename: 'styles.css' })]),
+  devtool: isDevelopment ? 'cheap-module-eval-source-map' : 'nosources-source-map'
 }
 
 module.exports = configuration

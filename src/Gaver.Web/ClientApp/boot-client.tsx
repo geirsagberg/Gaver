@@ -4,12 +4,12 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import configureStore from './configureStore'
-import setupProgress from 'utils/progress'
 import 'bootswatch/dist/darkly/bootstrap.css'
 import 'toastr/build/toastr.css'
 import 'nprogress/nprogress.css'
 import './css/site.css'
 import Layout from './components/Layout'
+import { setupProgress } from './utils/progress'
 
 setupProgress()
 

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Gaver.Common.Extensions;
 using Gaver.Data.Entities;
 
@@ -10,7 +10,7 @@ namespace Gaver.Web.Features.Users
         public UserMappingProfile()
         {
             CreateMap<User, LoginUserModel>()
-                .IgnoreMember<User, LoginUserModel>(u => u.WishListId);
+                .IgnoreMember(u => u.WishListId);
         }
     }
 }

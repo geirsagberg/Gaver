@@ -11,9 +11,13 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "*": ["src/Gaver.Web/ClientApp/*"]
+      "~/*": ["src/Gaver.Web/ClientApp/*"]
     },
-    "lib": ["dom", "es2015"]
+    "lib": ["dom", "es2015"],
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "forceConsistentCasingInFileNames": true
   },
   "compileOnSave": false,
   "exclude": ["node_modules", "*/wwwroot"],

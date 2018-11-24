@@ -1,7 +1,7 @@
 import * as React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { actionCreators, UserState } from 'store/user'
+import { actionCreators, UserState } from '~/store/user'
 import './Login.css'
 import Loading from './Loading'
 

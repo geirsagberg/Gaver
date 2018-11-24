@@ -1,23 +1,19 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { map, size, values } from 'lodash-es'
-import * as chatActions from 'store/chat'
-import Immutable from 'seamless-immutable'
+import * as chatActions from '~/store/chat'
 import classNames from 'classnames'
 import './Chat.css'
 
-class ChatMessage extends React.Component {
-  static get propTypes () {
-    return {
-      message: PropTypes.object.isRequired,
-      users: PropTypes.object.isRequired,
-      userId: PropTypes.number.isRequired,
-      firstOfUser: PropTypes.bool.isRequired
-    }
-  }
+type ChatMessageProps = {
+  message
+  users
+  userId
+  firstOfUser
+}
 
-  render () {
+class ChatMessage extends React.Component<ChatMessageProps> {
+  render() {
     const isSelf = this.props.message.user === this.props.userId
     const { firstOfUser } = this.props
     return (
@@ -26,10 +22,15 @@ class ChatMessage extends React.Component {
           'chat_message-first': firstOfUser,
           'chat_message-self': isSelf
         })}>
-        {firstOfUser && <span className="chat_user">{this.props.users[this.props.message.user].name}:&nbsp;</span>}
+        {firstOfUser && (
+          <span className="chat_user">
+            {this.props.users[this.props.message.user].name}
+            :&nbsp;
+          </span>
+        )}
         <div
           className={classNames('chat_innerMessage', {
-            [`chat-user-${this.props.message.user % 5 + 1}`]: !isSelf
+            [`chat-user-${(this.props.message.user % 5) + 1}`]: !isSelf
           })}>
           {this.props.message.text}
         </div>
@@ -38,23 +39,23 @@ class ChatMessage extends React.Component {
   }
 }
 
-class Chat extends React.Component {
-  static get propTypes () {
-    return {
-      addMessage: PropTypes.func.isRequired,
-      messages: PropTypes.object.isRequired,
-      loadMessages: PropTypes.func.isRequired,
-      listId: PropTypes.number.isRequired,
-      users: PropTypes.object.isRequired,
-      userId: PropTypes.number.isRequired
-    }
-  }
+type ChatProps = {
+  addMessage
+  messages
+  loadMessages
+  listId
+  users
+  userId
+}
 
-  componentDidMount () {
+class Chat extends React.Component<ChatProps> {
+  chatMessages
+  chatInput
+  componentDidMount() {
     this.props.loadMessages(this.props.listId)
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (size(this.props.messages) !== size(nextProps.messages)) {
       setTimeout(() => {
         this.chatMessages.scrollTop = this.chatMessages && this.chatMessages.scrollHeight
@@ -62,7 +63,7 @@ class Chat extends React.Component {
     }
   }
 
-  onKeyUp = (e) => {
+  onKeyUp = e => {
     if (e.which === 13) {
       this.addMessage()
     }
@@ -75,14 +76,14 @@ class Chat extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const { users, userId } = this.props
     const messages = values(this.props.messages)
     return (
       <div className="chat">
         <div
           className="chat_messages"
-          ref={(el) => {
+          ref={el => {
             this.chatMessages = el
           }}>
           {map(messages, (message, i) => (
@@ -101,7 +102,7 @@ class Chat extends React.Component {
           <input
             className="form-control"
             placeholder="Skriv en melding..."
-            ref={(el) => {
+            ref={el => {
               this.chatInput = el
             }}
             onKeyUp={this.onKeyUp}
@@ -117,10 +118,10 @@ class Chat extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  messages: state.chat.messages || Immutable({}),
+const mapStateToProps = state => ({
+  messages: state.chat.messages || {},
   listId: +window.location.pathname.match(/list\/([0-9]+)/i)[1],
-  users: state.chat.users || Immutable({}),
+  users: state.chat.users || {},
   userId: state.user.id || 0
 })
 
@@ -128,4 +129,7 @@ const dispatchActions = {
   ...chatActions
 }
 
-export default connect(mapStateToProps, dispatchActions)(Chat)
+export default connect(
+  mapStateToProps,
+  dispatchActions
+)(Chat)

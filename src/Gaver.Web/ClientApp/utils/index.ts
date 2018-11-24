@@ -3,13 +3,13 @@ import { showError } from './notifications'
 export const isDevelopment = process.env.NODE_ENV === 'development'
 
 // Bind arguments starting with argument number "n".
-export function bindArgsFromN (fn, n, ...boundArgs) {
-  return function (...args) {
+export function bindArgsFromN(fn, n, ...boundArgs) {
+  return function(...args) {
     return fn(...args.slice(0, n - 1), ...boundArgs)
   }
 }
 
-export async function tryOrNotify (func, finallyCallback) {
+export async function tryOrNotify(func: Function, finallyCallback?: Function) {
   try {
     await func()
     return true
@@ -23,7 +23,7 @@ export async function tryOrNotify (func, finallyCallback) {
   }
 }
 
-export function getQueryVariable (variable) {
+export function getQueryVariable(variable) {
   const query = window.location.search.substring(1)
   const vars = query.split('&')
   for (let i = 0; i < vars.length; i++) {

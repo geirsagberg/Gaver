@@ -1,28 +1,39 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import * as myListActions from 'store/myList'
-import Immutable from 'seamless-immutable'
 import { map, size } from 'lodash-es'
-import { logOut } from 'store/user'
+import { logOut } from '~/store/user'
 import ReactTooltip from 'react-tooltip'
 import './MyList.css'
 import classNames from 'classnames'
-import { toggleSharedLists, setSharedListsVisible } from 'store/ui'
+import { toggleSharedLists, setSharedListsVisible } from '~/store/ui'
 import { Link } from 'react-router-dom'
+import { Wish } from '~/types/data'
+import { shareList, deleteWish } from '~/store/myList/actions'
 
-class Wish extends React.Component {
-  static get propTypes () {
-    return {
-      wish: PropTypes.object,
-      deleteWish: PropTypes.func.isRequired,
-      listId: PropTypes.number,
-      editUrl: PropTypes.func.isRequired,
-      editDescription: PropTypes.func.isRequired
-    }
-  }
+type Props = {
+  wish: Wish
+  listId: number
+} & typeof actions
 
-  render () {
+const mapStateToProps = state => ({
+  wishes: state.myList.wishes || {},
+  userName: state.user.name,
+  listId: state.myList.listId,
+  isShowingSharedLists: state.ui.isShowingSharedLists,
+  invitations: state.myList.invitations || {}
+})
+
+const actions = {
+  shareList,
+  logOut,
+  toggleSharedLists,
+  setSharedListsVisible,
+  deleteWish
+}
+
+class Wish extends React.Component<Props> {
+  render() {
     const { wish, listId, deleteWish, editUrl, editDescription } = this.props
     return (
       <li className="list-group-item wish">
@@ -63,7 +74,7 @@ class Wish extends React.Component {
 }
 
 class MyList extends React.Component {
-  static get propTypes () {
+  static get propTypes() {
     return {
       wishes: PropTypes.object,
       invitations: PropTypes.object,
@@ -82,23 +93,23 @@ class MyList extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     document.addEventListener('click', this.handleClick)
     this.props.loadMyList()
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     document.removeEventListener('click', this.handleClick)
     this.props.setSharedListsVisible(false)
   }
 
-  handleClick = (e) => {
+  handleClick = e => {
     if (this.props.isShowingSharedLists && !document.getElementById('sharedListsWrapper').contains(e.target)) {
       this.props.setSharedListsVisible(false)
     }
   }
 
-  onKeyUp = (e) => {
+  onKeyUp = e => {
     if (e.which === 13) {
       this.addWish()
     }
@@ -111,7 +122,7 @@ class MyList extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const { listId, deleteWish, editUrl, editDescription, logOut, isShowingSharedLists, invitations } = this.props
     return (
       <div>
@@ -132,7 +143,7 @@ class MyList extends React.Component {
                 {isShowingSharedLists && (
                   <ul className="list-group sharedLists">
                     {size(invitations) > 0 ? (
-                      map(invitations, (invitation) => (
+                      map(invitations, invitation => (
                         <li className="list-group-item" key={invitation.wishListId}>
                           <Link to={`/list/${invitation.wishListId}`}>{invitation.wishListUserName}</Link>
                         </li>
@@ -163,7 +174,7 @@ class MyList extends React.Component {
               className="form-control"
               placeholder="Jeg ønsker meg..."
               onKeyUp={this.onKeyUp}
-              ref={(el) => (this.wishInput = el)}
+              ref={el => (this.wishInput = el)}
             />
             <span className="input-group-btn">
               <button className="btn btn-default" type="button" onClick={this.addWish}>
@@ -172,7 +183,7 @@ class MyList extends React.Component {
             </span>
           </div>
           <ul className="list-group">
-            {map(this.props.wishes, (wish) => (
+            {map(this.props.wishes, wish => (
               <Wish key={wish.id} {...{ wish, listId, deleteWish, editUrl, editDescription }} />
             ))}
           </ul>
@@ -183,19 +194,7 @@ class MyList extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  wishes: state.myList.wishes || Immutable({}),
-  userName: state.user.name,
-  listId: state.myList.listId,
-  isShowingSharedLists: state.ui.isShowingSharedLists,
-  invitations: state.myList.invitations || Immutable({})
-})
-
-const actions = {
-  ...myListActions,
-  logOut,
-  toggleSharedLists,
-  setSharedListsVisible
-}
-
-export default connect(mapStateToProps, actions)(MyList)
+export default connect(
+  mapStateToProps,
+  actions
+)(MyList)

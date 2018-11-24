@@ -7,7 +7,7 @@ import { get } from 'lodash-es'
 import { connect } from 'react-redux'
 import { Route, Redirect, Switch } from 'react-router-dom'
 import { ConnectedRouter } from 'react-router-redux'
-import history from 'utils/history'
+import history from '~/utils/history'
 import { SFC, ComponentClass } from 'react'
 import { RouteComponentProps, RouteProps } from 'react-router'
 

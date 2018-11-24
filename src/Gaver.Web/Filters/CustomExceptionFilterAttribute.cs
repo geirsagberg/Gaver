@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
-namespace Gaver.Web
+namespace Gaver.Web.Filters
 {
     public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
     {
@@ -18,8 +18,7 @@ namespace Gaver.Web
             logger.LogError(EventIds.ApiError, context.Exception, "Error in " + context.HttpContext.Request.Path);
 
             if (context.HttpContext.Request.Path.ToUriComponent().ToLowerInvariant().Contains("/api/")) {
-                var friendlyException = context.Exception as FriendlyException;
-                var result = friendlyException != null
+                var result = context.Exception is FriendlyException friendlyException
                     ? (object) new {
                         friendlyException.Message,
                         friendlyException.EventId

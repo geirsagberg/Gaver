@@ -240,3 +240,5 @@ dist/
 !lib/*.nupkg
 
 .esm-cache
+
+.awcache/

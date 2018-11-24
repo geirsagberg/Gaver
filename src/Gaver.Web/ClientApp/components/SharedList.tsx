@@ -1,15 +1,13 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import ReactTooltip from 'react-tooltip'
 import { connect } from 'react-redux'
-import Immutable from 'seamless-immutable'
-import { actionCreators } from 'store/sharedList'
+import { actionCreators } from '~/store/sharedList'
 import { map, size, get } from 'lodash-es'
-import { logOut } from 'store/user'
-import Chat from 'components/Chat'
+import { logOut } from '~/store/user'
+import Chat from '~/components/Chat'
 import Loading from './Loading'
-import { getQueryVariable } from 'utils'
+import { getQueryVariable } from '~/utils'
 
 class Wish extends React.Component<any> {
   render() {
@@ -114,10 +112,10 @@ class SharedList extends React.Component<any> {
 }
 
 const mapStateToProps = state => ({
-  wishes: state.sharedList.wishes || Immutable({}),
-  users: state.getIn(['sharedList', 'users'], Immutable({})),
-  currentUsers: state.getIn(['sharedList', 'currentUsers'], Immutable([])),
-  count: state.getIn(['sharedList', 'currentUsers', 'length'], 0),
+  wishes: state.sharedList.wishes,
+  users: state.sharedList.users,
+  currentUsers: state.sharedList.currentUsers,
+  count: state.sharedList.currentUsers.length,
   owner: state.sharedList.owner || '',
   userName: state.user.name || '',
   userId: state.user.id || 0,

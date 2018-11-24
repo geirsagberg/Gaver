@@ -3,8 +3,10 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Gaver.Data;
+using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Features.Users;
+using Gaver.Web.Filters;
 using Gaver.Web.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +58,10 @@ namespace Gaver.Web
 
         public static void AddCustomMvc(this IServiceCollection services)
         {
-            services.AddMvc(o => { o.Filters.Add(new CustomExceptionFilterAttribute()); }).AddRazorOptions(o => {
+            services.AddMvc(o => {
+                o.Filters.Add(new CustomExceptionFilterAttribute());
+                o.Filters.Add<PipelineActionFilter>();
+            }).AddRazorOptions(o => {
                 o.ViewLocationFormats.Clear();
                 o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
                 o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");

@@ -4,11 +4,12 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:5000/",
-      "sslPort": 0
+      "sslPort": 5001
     }
   },
   "profiles": {
     "dotnet watch": {
+      "commandName": "dotnet watch",
       "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
       "commandLineArgs": "watch run",
       "environmentVariables": {

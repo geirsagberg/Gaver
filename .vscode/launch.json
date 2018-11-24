@@ -21,13 +21,18 @@
       "processId": "${command:pickProcess}"
     },
     {
-      "name": "Chrome (Attach)",
       "type": "chrome",
       "request": "attach",
-      "url": "http://localhost:5000/login",
-      "webRoot": "${workspaceRoot}/src/Gaver.Web/wwwroot",
+      "name": "Attach to Chrome",
+      "port": 9222,
+      "webRoot": "${workspaceRoot}/src/Gaver.Web",
+      "urlFilter": "http://localhost:5000/*",
       "sourceMaps": true,
-      "port": 9222
+      "smartStep": true,
+      "skipFiles": ["node_modules/**"],
+      "sourceMapPathOverrides": {
+        "webpack:///*": "${webRoot}/*"
+      }
     },
     {
       "name": "Chrome (Launch)",

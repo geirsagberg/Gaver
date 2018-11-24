@@ -3,9 +3,13 @@ import { schema } from 'normalizr'
 export const wish = new schema.Entity('wishes')
 export const wishes = [wish]
 
-export const invitation = new schema.Entity('invitations', {}, {
-  idAttribute: 'wishListId'
-})
+export const invitation = new schema.Entity(
+  'invitations',
+  {},
+  {
+    idAttribute: 'wishListId'
+  }
+)
 export const invitations = [invitation]
 
 export const wishList = new schema.Entity('wishLists')
