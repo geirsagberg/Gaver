@@ -13,7 +13,7 @@
     "paths": {
       "~/*": ["src/Gaver.Web/ClientApp/*"]
     },
-    "lib": ["dom", "es2015"],
+    "lib": ["dom", "es2015", "es2016"],
     "strict": true,
     "noImplicitAny": false,
     "strictNullChecks": false,

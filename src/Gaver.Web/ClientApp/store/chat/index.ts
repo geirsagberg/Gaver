@@ -3,6 +3,7 @@ import * as api from './api'
 import { ChatMessage } from '~/types/data'
 import { createAction, ActionsUnion } from '~/utils/reduxUtils'
 import { combineReducers } from 'redux'
+import produce from 'immer';
 
 type ChatState = Dictionary<ChatMessage>
 
@@ -23,15 +24,17 @@ const actionCreators = {
 
 type Action = ActionsUnion<typeof actionCreators>
 
-function users(state: ChatState = initialState, action: Action): ChatState {
+const users = produce(((draft: , action) => {
   switch (action.type) {
     case ActionType.MessagesLoaded:
+
       return action.entities.users || initialState
     case ActionType.MessageAdded:
+
       return state.merge(action.data.entities.users, { deep: true })
   }
   return state
-}
+}))
 
 function messages(state = initialState, action) {
   switch (action.type) {

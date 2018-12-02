@@ -53,7 +53,7 @@ const combinedReducer = combineReducers({
   invitations
 })
 
-const reducer = produce((state = initialState, action) => {
+const reducer = produce((state: MyListState = initialState, action) => {
   state = { ...state, ...combinedReducer(state, action) }
   switch (action.type) {
     case ActionType.MyListLoaded:

@@ -4,6 +4,7 @@ import { map, size, values } from 'lodash-es'
 import * as chatActions from '~/store/chat'
 import classNames from 'classnames'
 import './Chat.css'
+import { createMapDispatchToProps } from '~/utils/reduxUtils'
 
 type ChatMessageProps = {
   message
@@ -13,7 +14,7 @@ type ChatMessageProps = {
 }
 
 class ChatMessage extends React.Component<ChatMessageProps> {
-  render() {
+  render () {
     const isSelf = this.props.message.user === this.props.userId
     const { firstOfUser } = this.props
     return (
@@ -51,11 +52,11 @@ type ChatProps = {
 class Chat extends React.Component<ChatProps> {
   chatMessages
   chatInput
-  componentDidMount() {
+  componentDidMount () {
     this.props.loadMessages(this.props.listId)
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     if (size(this.props.messages) !== size(nextProps.messages)) {
       setTimeout(() => {
         this.chatMessages.scrollTop = this.chatMessages && this.chatMessages.scrollHeight
@@ -76,7 +77,7 @@ class Chat extends React.Component<ChatProps> {
     }
   }
 
-  render() {
+  render () {
     const { users, userId } = this.props
     const messages = values(this.props.messages)
     return (
@@ -125,11 +126,9 @@ const mapStateToProps = state => ({
   userId: state.user.id || 0
 })
 
-const dispatchActions = {
-  ...chatActions
-}
+const mapDispatchToProps = createMapDispatchToProps(chatActions)
 
 export default connect(
   mapStateToProps,
-  dispatchActions
+  mapDispatchToProps
 )(Chat)

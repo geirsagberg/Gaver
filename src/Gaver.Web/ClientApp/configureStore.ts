@@ -1,44 +1,31 @@
-import { createStore, applyMiddleware, compose, combineReducers, StoreCreator } from 'redux'
+import { applyMiddleware, combineReducers, compose, createStore, ReducersMapObject, Reducer } from 'redux'
+import { connectRoutes, LocationState } from 'redux-first-router'
 import thunk from 'redux-thunk'
-import * as Store from './store'
-import history from '~/utils/history'
-import { routerMiddleware as createRouterMiddleware, routerReducer } from 'react-router-redux'
 import { isDevelopment } from '~/utils'
-import { initAuth } from './store/user/thunks'
+import { routesMap } from './routing'
 
-function buildRootReducer(allReducers) {
-  return combineReducers({
-    ...allReducers,
-    router: routerReducer
-  })
-}
-
-export default function configureStore(initialState = {}) {
-  // Build middleware. These are functions that can process the actions before they reach the store.
+export default function configureStore(reducers: ReducersMapObject) {
   const windowIfDefined = typeof window === 'undefined' ? null : window
-  const devToolsExtension = windowIfDefined && windowIfDefined['devToolsExtension'] // If devTools is installed, connect to it
+  const devToolsExtension = isDevelopment && windowIfDefined && windowIfDefined['__REDUX_DEVTOOLS_EXTENSION__']
 
-  const routerMiddleware = createRouterMiddleware(history)
+  const router = connectRoutes(routesMap, {
+    location: 'routing'
+  })
 
-  const middleware = [thunk, routerMiddleware]
-
-  if (isDevelopment) middleware.unshift(require('redux-immutable-state-invariant').default)
-
-  const createStoreWithMiddleware: StoreCreator = compose<StoreCreator>(
-    applyMiddleware(thunk, routerMiddleware),
+  const rootReducer = buildRootReducer(reducers, router.reducer)
+  const middlewares = applyMiddleware(router.middleware, thunk)
+  const enhancers = compose(
+    router.enhancer,
+    middlewares,
     devToolsExtension ? devToolsExtension() : f => f
-  )(createStore)
-  // Combine all reducers and instantiate the app-wide store instance
-  const rootReducer = buildRootReducer(Store.reducers)
-  const store = createStoreWithMiddleware(rootReducer, initialState)
-
-  // Enable Webpack hot module replacement for reducers
-  if (module.hot) {
-    module.hot.accept('./store', () => {
-      const nextRootReducer = require('./store')
-      store.replaceReducer(buildRootReducer(nextRootReducer.reducers))
-    })
-  }
-  store.dispatch(initAuth() as any)
-  return store
+  )
+  const store = createStore(rootReducer, enhancers)
+  const updateStore = (reducers: ReducersMapObject) => store.replaceReducer(buildRootReducer(reducers, router.reducer))
+  return { store, updateStore }
 }
+
+const buildRootReducer = (reducers: ReducersMapObject, routing: Reducer<LocationState>) =>
+  combineReducers({
+    ...reducers,
+    routing
+  })
