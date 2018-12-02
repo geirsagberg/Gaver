@@ -1,8 +1,8 @@
 import { RoutesMap } from 'redux-first-router'
 
 export enum RouteType {
-  FrontPage,
-  WishList
+  FrontPage = 'ROUTE:FRONT_PAGE',
+  WishList = 'ROUTE:WISH_LIST'
 }
 
 export const routesMap: RoutesMap = {

@@ -1,10 +1,21 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+#react-app {
+  height: 100%;
+  width: 100%;
+}
+
 .no-padding {
-    padding: 0;
+  padding: 0;
 }
 
 .col-centered {
-    float: none;
-    margin: 0 auto;
+  float: none;
+  margin: 0 auto;
 }
 
 .icon-before:before {
@@ -19,7 +30,7 @@
   cursor: pointer;
 }
 
-input[type=checkbox] {
+input[type='checkbox'] {
   cursor: pointer;
 }
 

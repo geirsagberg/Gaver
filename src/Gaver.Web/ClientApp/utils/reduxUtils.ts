@@ -1,5 +1,6 @@
 import { ActionCreatorsMapObject, Dispatch, bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
+import { LocationState } from 'redux-first-router'
 
 export type ActionsUnion<A extends ActionCreatorsMapObject> =
   | ReturnType<A[keyof A]>
@@ -16,18 +17,22 @@ export interface ActionWithPayload<T extends string, P> extends Action<T> {
   payload: P
 }
 
+export type WithRouting<T = {}> = {
+  routing: LocationState<T>
+}
+
 export function createAction<T extends string>(type: T): Action<T>
 export function createAction<T extends string, P>(type: T, payload: P): ActionWithPayload<T, P>
-export function createAction<T extends string, P> (type: T, payload?: P) {
+export function createAction<T extends string, P>(type: T, payload?: P) {
   return payload === undefined ? { type } : { type, payload }
 }
 
-export function bindThunkActionCreators<M extends ActionCreatorsMapObject> (map: M, dispatch: Dispatch) {
+export function bindThunkActionCreators<M extends ActionCreatorsMapObject>(map: M, dispatch: Dispatch) {
   return bindActionCreators<M, { [P in keyof M]: UnwrapThunk<M[P]> }>(map, dispatch)
 }
 
-export function createMapDispatchToProps<M extends ActionCreatorsMapObject> (actionCreators: M) {
-  return function (dispatch: Dispatch) {
+export function createMapDispatchToProps<M extends ActionCreatorsMapObject>(actionCreators: M) {
+  return function(dispatch: Dispatch) {
     return bindThunkActionCreators(actionCreators, dispatch)
   }
 }
