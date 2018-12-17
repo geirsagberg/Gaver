@@ -113,11 +113,11 @@ namespace Gaver.Web
             app.UseAuthentication();
 
             app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
-
-            UseCustomMvc(app);
-
+            
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
+
+            UseCustomMvc(app);
         }
 
         private static void UseCustomMvc(IApplicationBuilder app)

@@ -4,14 +4,15 @@ using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Flurl.Http;
 using Gaver.Common.Contracts;
+using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
+using Gaver.Web.Constants;
 using Gaver.Web.Options;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using EntityFrameworkQueryableExtensions = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions;
 
 namespace Gaver.Web.Features.Users
 {
@@ -35,8 +36,7 @@ namespace Gaver.Web.Features.Users
 
         public async Task<User> Handle(GetOrCreateUserRequest request, CancellationToken cancellationToken)
         {
-            var user = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(context.Set<User>(),
-                u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);
+            var user = await context.Set<User>().SingleOrDefaultAsync(u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);
 
             if (user == null) {
                 var userInfo = await GetUserInfo(cancellationToken);
@@ -59,7 +59,11 @@ namespace Gaver.Web.Features.Users
         public async Task<CurrentUserModel> Handle(GetUserInfoRequest request, CancellationToken token)
         {
             var userModel = await context.Users.Where(u => u.Id == request.UserId)
-                .ProjectTo<CurrentUserModel>(mapper.MapperConfiguration).SingleAsync(token);
+                .ProjectTo<CurrentUserModel>(mapper.MapperConfiguration).SingleOrDefaultAsync(token);
+
+            if (userModel == null) {
+                throw new FriendlyException(EventIds.UnknownUserId, "Bruker finnes ikke");
+            }
 
             return userModel;
         }

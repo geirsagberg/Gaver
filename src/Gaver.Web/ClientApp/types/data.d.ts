@@ -2,6 +2,7 @@ export interface UserModel {
   id?: number
   name?: string
   wishListId?: number
+  pictureUrl?: string
 }
 
 export interface SharedWishModel extends Wish {

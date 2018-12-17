@@ -6,7 +6,10 @@ import {
   withStyles,
   WithStyles,
   Button,
-  ButtonBase
+  ButtonBase,
+  Avatar,
+  Menu,
+  MenuItem
 } from '@material-ui/core'
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
@@ -30,6 +33,14 @@ const styles = createStyles({
     justifyContent: 'center',
     height: '100%',
     paddingTop: '4rem'
+  },
+  profileImage: {
+    width: '2rem',
+    height: '2rem',
+    borderRadius: '50%',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center'
   }
 })
 
@@ -45,7 +56,12 @@ const mapDispatchToProps = createMapDispatchToProps({
 
 type Props = WithStyles<typeof styles> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
-class Layout extends Component<Props> {
+type State = {
+  menuAnchorEl?: HTMLElement
+}
+
+class Layout extends Component<Props, State> {
+  state: State = {}
   componentDidMount() {
     console.log('componentDidMount')
     this.props.checkSession()
@@ -59,6 +75,17 @@ class Layout extends Component<Props> {
         return this.props.auth.isLoggedIn ? <MyList /> : <StartPage />
     }
   }
+
+  showProfileMenu = event =>
+    this.setState({
+      menuAnchorEl: event.currentTarget
+    })
+
+  hideProfileMenu = () =>
+    this.setState({
+      menuAnchorEl: null
+    })
+
   render() {
     const { classes, auth } = this.props
 
@@ -71,7 +98,28 @@ class Layout extends Component<Props> {
               Gaver
             </Typography>
             <Expander />
-            {auth.isLoggedIn && <ButtonBase onClick={this.props.logout}>{auth.user.name}</ButtonBase>}
+            {auth.isLoggedIn && (
+              <>
+                <ButtonBase onClick={this.showProfileMenu}>
+                  {auth.user.pictureUrl ? (
+                    <Avatar src={auth.user.pictureUrl} />
+                  ) : (
+                    <Avatar>
+                      {auth.user.name
+                        .split(' ')
+                        .map(s => (s.length > 0 ? s[0] : ''))
+                        .join('')}
+                    </Avatar>
+                  )}
+                </ButtonBase>
+                <Menu
+                  anchorEl={this.state.menuAnchorEl}
+                  open={!!this.state.menuAnchorEl}
+                  onClose={this.hideProfileMenu}>
+                  <MenuItem onClick={this.hideProfileMenu}>Logg ut</MenuItem>
+                </Menu>
+              </>
+            )}
           </Toolbar>
         </AppBar>
         <div className={classes.content}>{Content}</div>
