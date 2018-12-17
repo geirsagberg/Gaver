@@ -1,6 +1,6 @@
 import Auth0Lock from 'auth0-lock'
 import { tryOrNotify } from '~/utils'
-import * as auth from '~/utils/auth'
+import * as auth from '~/utils/auth_old'
 import { showConfirm } from '~/utils/dialogs'
 import { authStarted, loggedOut, logInSuccessful } from '.'
 import * as Api from './api'

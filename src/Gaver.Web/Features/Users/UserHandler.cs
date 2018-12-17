@@ -1,72 +1,78 @@
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 using Flurl.Http;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Constants;
+using Gaver.Web.Extensions;
 using Gaver.Web.Options;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Users
 {
-    public class GetUserInfoRequest : IRequest<UserModel>
-    {
-        [Required]
-        public string AccessToken { get; set; }
-
-        [JsonIgnore]
-        public string ProviderId { get; set; }
-    }
-
-    public class UserHandler : IRequestHandler<GetUserInfoRequest, UserModel>
+    public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserModel>,
+        IRequestHandler<UpdateUserInfoRequest>
     {
         private readonly Auth0Settings auth0Settings;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly GaverContext context;
         private readonly IMapperService mapper;
 
-        public UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings)
+        public UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings, IHttpContextAccessor httpContextAccessor)
         {
             this.context = context;
             this.mapper = mapper;
             this.auth0Settings = auth0Settings;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<UserModel> Handle(GetUserInfoRequest request, CancellationToken token)
+        public async Task<CurrentUserModel> Handle(GetUserInfoRequest request, CancellationToken token)
         {
-            var user = await context.Users.Where(u => u.PrimaryIdentityId == request.ProviderId)
-                .Include(u => u.WishLists)
-                .SingleOrDefaultAsync(token);
-            if (user != null) return mapper.Map<UserModel>(user);
+            throw new NotImplementedException();
+            //var primaryIdentityId = request.User.GetPrimaryIdentityId();
+            //var userModel = context.Users.Where(u => u.PrimaryIdentityId == primaryIdentityId)
+            //    .ProjectTo<CurrentUserModel>(mapper.MapperConfiguration).SingleOrDefault();
+            //if (userModel != null) return userModel;
 
-            var result = await $"https://{auth0Settings.Domain}/userinfo"
-                .WithOAuthBearerToken(request.AccessToken)
-                .GetJsonAsync(token);
-            if (!(result is IDictionary<string, object> userInfo))
-                throw new FriendlyException(EventIds.AuthenticationError, "Noe gikk galt ved innloggingen");
+            
+            //var userInfo = await GetUserInfo(token);
 
-            if (!userInfo.TryGetValue("name", out var name))
-                throw new FriendlyException(EventIds.MissingName, "Navn mangler");
-            if (!userInfo.TryGetValue("email", out var email))
-                throw new FriendlyException(EventIds.MissingEmail, "E-post mangler");
+            //if (!userInfo.TryGetValue("name", out var name))
+            //    throw new FriendlyException(EventIds.MissingName, "Navn mangler");
+            //if (!userInfo.TryGetValue("email", out var email))
+            //    throw new FriendlyException(EventIds.MissingEmail, "E-post mangler");
+            //userInfo.TryGetValue("picture", out var pictureUrl);
 
-            user = new User {
-                PrimaryIdentityId = request.ProviderId,
-                Name = name.ToString(),
-                Email = email.ToString(),
-                WishLists = {
-                    new WishList()
-                }
-            };
-            context.Users.Add(user);
-            await context.SaveChangesAsync(token);
-            return mapper.Map<UserModel>(user);
+            //var user = new User {
+            //    PrimaryIdentityId = primaryIdentityId,
+            //    Name = name.ToString(),
+            //    Email = email.ToString(),
+            //    PictureUrl = pictureUrl?.ToString(),
+            //    WishLists = {
+            //        new WishList()
+            //    }
+            //};
+            //context.Users.Add(user);
+            //await context.SaveChangesAsync(token);
+            //return mapper.Map<CurrentUserModel>(user);
+        }
+
+        private async Task<IDictionary<string, object>> GetUserInfo(CancellationToken token)
+        {
+            var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            var userInfo = await $"https://{auth0Settings.Domain}/userinfo"
+                .WithOAuthBearerToken(accessToken)
+                .GetJsonAsync<IDictionary<string, object>>(token);
+            return userInfo;
         }
 
         public async Task<int?> GetUserIdOrNullAsync(string providerId)
@@ -74,6 +80,15 @@ namespace Gaver.Web.Features.Users
             var userId = await context.Users.Where(u => u.PrimaryIdentityId == providerId).Select(u => u.Id)
                 .SingleOrDefaultAsync();
             return userId == 0 ? (int?) null : userId;
+        }
+
+        public async Task<Unit> Handle(UpdateUserInfoRequest request, CancellationToken cancellationToken)
+        {
+            var userInfo = await GetUserInfo(cancellationToken);
+
+
+
+            return Unit.Value;
         }
     }
 }

@@ -2,7 +2,7 @@ import { applyMiddleware, combineReducers, compose, createStore, ReducersMapObje
 import { connectRoutes, LocationState } from 'redux-first-router'
 import thunk from 'redux-thunk'
 import { isDevelopment } from '~/utils'
-import { routesMap } from './routing'
+import { routesMap, RouteKeys } from './routing'
 
 export default function configureStore(reducers: ReducersMapObject) {
   const windowIfDefined = typeof window === 'undefined' ? null : window
@@ -24,7 +24,7 @@ export default function configureStore(reducers: ReducersMapObject) {
   return { store, updateStore }
 }
 
-const buildRootReducer = (reducers: ReducersMapObject, routing: Reducer<LocationState>) =>
+const buildRootReducer = (reducers: ReducersMapObject, routing: Reducer<LocationState<RouteKeys>>) =>
   combineReducers({
     ...reducers,
     routing

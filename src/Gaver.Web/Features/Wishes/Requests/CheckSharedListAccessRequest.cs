@@ -1,9 +1,10 @@
-﻿using MediatR;
+using Gaver.Web.Contracts;
+using MediatR;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes.Requests
 {
-    public class CheckSharedListAccessRequest : IRequest<ListAccessStatus>
+    public class CheckSharedListAccessRequest : IRequest<ListAccessStatus>, IAuthenticatedRequest
     {
         [JsonIgnore]
         public int UserId { get; set; }

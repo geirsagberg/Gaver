@@ -3,29 +3,27 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using AutoMapper;
 using Gaver.Common;
 using Gaver.Common.Contracts;
 using Gaver.Common.Extensions;
 using Gaver.Common.Utils;
 using Gaver.Data;
+using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Hubs;
 using Gaver.Web.Options;
 using JetBrains.Annotations;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Swagger;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
 [assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
@@ -51,6 +49,15 @@ namespace Gaver.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Scan(scan => {
+                scan.FromAssemblyOf<ICommonAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
+                scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
+                scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
+
+                scan.FromEntryAssembly().AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>()
+                    .WithSingletonLifetime();
+            });
+
             services.AddCustomAuth(Configuration);
 
             services.AddCustomMvc();
@@ -62,14 +69,8 @@ namespace Gaver.Web
             services.AddSignalR();
             services.AddMediatR();
 
-            services.Scan(scan => {
-                scan.FromAssemblyOf<ICommonAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
-                scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
-                scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
-
-                scan.FromEntryAssembly().AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>()
-                    .WithSingletonLifetime();
-            });
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
 
             ConfigureOptions(services);
         }
@@ -104,16 +105,13 @@ namespace Gaver.Web
             services.AddScoped(provider => provider.GetService<IOptionsSnapshot<T>>().Value);
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env,
-            Auth0Settings auth0Settings)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
             if (env.IsDevelopment()) {
                 SetupForDevelopment(app, loggerFactory, env);
             } else {
                 SetupForProduction(app, loggerFactory);
             }
-
-            app.UseJwtAuthentication(auth0Settings);
 
             app.UseFileServer();
 

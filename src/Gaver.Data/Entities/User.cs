@@ -20,6 +20,9 @@ namespace Gaver.Data.Entities
         [Required]
         public string Email { get; set; }
 
+        [MaxLength(255)]
+        public string PictureUrl { get; set; }
+
         public virtual ISet<WishList> WishLists { get; set; } = new HashSet<WishList>();
         public virtual ISet<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
         public virtual ISet<Invitation> Invitations { get; set; } = new HashSet<Invitation>();

@@ -51,35 +51,22 @@ namespace Gaver.Web.Features.Wishes
             return ListAccessStatus.NotInvited;
         }
 
-        public async Task<MyListModel> Handle(GetMyListRequest message, CancellationToken token = default)
+        public  Task<MyListModel> Handle(GetMyListRequest message, CancellationToken token = default)
         {
-            var model = GetModel(message);
-            if (model == null) {
-                context.Add(new WishList {
-                    UserId = message.UserId
-                });
-                await context.SaveChangesAsync(token);
-            }
-
-            return GetModel(message);
+            var myList = GetMyList(message);
+            return Task.FromResult(myList);
         }
 
         public Task<SharedListModel> Handle(GetSharedListRequest message, CancellationToken cancellationToken = default)
         {
-            if (context.Set<WishList>().Any(wl => wl.Id == message.ListId && wl.UserId == message.UserId)) {
-                throw new FriendlyException(EventIds.OwnerAccessingSharedList, "Du kan ikke se din egen liste");
-            }
-
-            accessChecker.CheckWishListInvitations(message.ListId, message.UserId);
-
             var sharedListModel = context.Set<WishList>()
-                .Where(wl => wl.Id == message.ListId)
+                .Where(wl => wl.Id == message.WishListId)
                 .ProjectTo<SharedListModel>(mapper.MapperConfiguration)
                 .SingleOrThrow(new FriendlyException(EventIds.SharedListMissing, "Listen finnes ikke"));
             return Task.FromResult(sharedListModel);
         }
 
-        private MyListModel GetModel(GetMyListRequest message)
+        private MyListModel GetMyList(GetMyListRequest message)
         {
             var model = context.Set<WishList>()
                 .Where(wl => wl.UserId == message.UserId)

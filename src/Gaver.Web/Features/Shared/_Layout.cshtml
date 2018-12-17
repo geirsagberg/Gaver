@@ -1,3 +1,5 @@
+@using Gaver.Web.Options
+@inject Auth0Settings Auth0Settings
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,6 +29,13 @@
   <environment names="Production">
     <link rel="stylesheet" href="~/dist/styles.css" asp-append-version="true"/>
   </environment>
+  <script>
+    window.AppSettings = {
+      domain: '@Auth0Settings.Domain',
+      clientId: '@Auth0Settings.ClientId',
+      audience: '@Auth0Settings.Audience'
+    }
+  </script>
 </head>
 <body style="background: #222">
   @RenderBody()

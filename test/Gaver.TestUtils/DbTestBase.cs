@@ -1,11 +1,25 @@
 using System;
+using AutoMapper;
 using Gaver.Data;
 using LightInject;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.TestUtils
 {
-    public abstract class DbTestBase<TSut> : TestBase<TSut> where TSut : class
+    public abstract class DbTestBase<TSut> : DbTestBase where TSut : class
+    {
+        private readonly Lazy<TSut> _testSubject;
+
+        protected DbTestBase()
+        {
+            _testSubject = new Lazy<TSut>(() => Container.Create<TSut>());
+            Container.RegisterAssembly(typeof(TSut).Assembly, (service, implementation) => service == typeof(Profile));
+        }
+
+        protected TSut TestSubject => _testSubject.Value;
+    }
+
+    public abstract class DbTestBase : TestBase
     {
         protected DbTestBase()
         {

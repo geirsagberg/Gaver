@@ -21,7 +21,6 @@ namespace Gaver.Web.Features.Chat
         public Task<ChatMessageModel> AddMessage(int listId, AddMessageRequest request)
         {
             request.WishListId = listId;
-            request.UserId = UserId;
             return mediator.Send(request);
         }
 
@@ -29,8 +28,7 @@ namespace Gaver.Web.Features.Chat
         public Task<ChatModel> GetMessages(int listId)
         {
             return mediator.Send(new GetMessagesRequest {
-                WishListId = listId,
-                UserId = UserId
+                WishListId = listId
             });
         }
     }

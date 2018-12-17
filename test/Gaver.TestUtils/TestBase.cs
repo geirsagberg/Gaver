@@ -1,7 +1,9 @@
-﻿using System;
+using System;
+using System.Security.Claims;
 using AutoMapper;
 using Gaver.Common.Contracts;
 using Gaver.Common.Utils;
+using Gaver.Data.Entities;
 using LightInject;
 using NSubstitute;
 

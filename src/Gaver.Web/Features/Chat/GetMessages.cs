@@ -5,21 +5,10 @@ using AutoMapper.QueryableExtensions;
 using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.CrossCutting;
 using MediatR;
-using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class GetMessagesRequest : IRequest<ChatModel>, IWishListRequest
-    {
-        [JsonIgnore]
-        public int WishListId { get; set; }
-
-        [JsonIgnore]
-        public int UserId { get; set; }
-    }
-
     public class GetMessagesHandler : IRequestHandler<GetMessagesRequest, ChatModel>
     {
         private readonly GaverContext context;

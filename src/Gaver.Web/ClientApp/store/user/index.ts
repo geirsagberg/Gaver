@@ -1,10 +1,6 @@
 import produce from 'immer'
 
-const namespace = 'gaver/user/'
-
-const LOGGED_OUT = namespace + 'LOGGED_OUT'
-const LOG_IN_SUCCESSFUL = namespace + 'LOG_IN_SUCCESSFUL'
-const AUTH_STARTED = namespace + 'AUTH_STARTED'
+enum ActionType {}
 
 export interface User {
   id: number
@@ -19,7 +15,7 @@ export type UserState = {
 
 const initialState: UserState = {}
 
-const reducer = produce((draft: UserState = initialState, action) => {
+export const reducer = produce((draft: UserState = initialState, action) => {
   switch (action.type) {
     case LOG_IN_SUCCESSFUL:
       draft.user = action.data
@@ -34,8 +30,6 @@ const reducer = produce((draft: UserState = initialState, action) => {
   }
   return
 })
-
-export default reducer
 
 export function loggedOut() {
   return {

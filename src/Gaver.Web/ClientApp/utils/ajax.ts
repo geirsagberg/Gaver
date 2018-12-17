@@ -1,8 +1,7 @@
 import 'isomorphic-fetch'
 import { normalize } from 'normalizr'
-import Promise from 'bluebird'
-import { loadIdToken } from '~/utils/auth'
 import { publish, Topic } from './pubSub'
+import AuthService from './AuthService'
 
 const acceptJsonHeader = {
   Accept: 'application/json',
@@ -34,7 +33,7 @@ const handleResponse = schema => async response => {
   }
 }
 
-async function tryAjax<T>(func: () => Promise<Response>, schema) {
+async function tryAjax<T>(func: () => Promise<Response>, schema): Promise<T> {
   publish(Topic.AjaxStart)
   try {
     const response = await func()
@@ -45,7 +44,7 @@ async function tryAjax<T>(func: () => Promise<Response>, schema) {
 }
 
 const getAuthHeader = () => ({
-  Authorization: 'Bearer ' + loadIdToken()
+  Authorization: 'Bearer ' + AuthService.loadAccessToken()
 })
 
 const getCredentials = (includeCredentials: boolean) => (includeCredentials ? 'include' : 'omit')

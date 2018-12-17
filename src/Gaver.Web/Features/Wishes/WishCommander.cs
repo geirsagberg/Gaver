@@ -7,6 +7,7 @@ using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Constants;
+using Gaver.Web.Extensions;
 using Gaver.Web.Features.LiveUpdates;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
@@ -92,7 +93,7 @@ namespace Gaver.Web.Features.Wishes
             else wish.BoughtByUserId = null;
             await context.SaveChangesAsync(cancellationToken);
 
-            await clientNotifier.RefreshListAsync(message.WishListId, message.UserId);
+            await clientNotifier.RefreshListAsync(message.WishListId, userId);
             return mapper.Map<SharedWishModel>(wish);
         }
 

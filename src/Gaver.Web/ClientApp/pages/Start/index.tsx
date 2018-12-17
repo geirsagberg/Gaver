@@ -1,6 +1,9 @@
-import React, { Component } from 'react'
-import { WithStyles, createStyles, colors, Typography, Button, withStyles } from '@material-ui/core'
+import { Button, colors, createStyles, Typography, WithStyles, withStyles } from '@material-ui/core'
 import classNames from 'classnames'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { login } from '~/store/auth/thunks'
+import { createMapDispatchToProps } from '~/utils/reduxUtils'
 
 const styles = createStyles({
   root: {
@@ -17,15 +20,21 @@ const styles = createStyles({
   }
 })
 
-type Props = WithStyles<typeof styles>
+const mapDispatchToProps = createMapDispatchToProps({
+  login
+})
+
+type Props = WithStyles<typeof styles> & ReturnType<typeof mapDispatchToProps>
 
 class StartPage extends Component<Props> {
+  logIn = () => this.props.login()
+
   render() {
     const { classes } = this.props
     return (
       <div className={classes.root}>
         <Typography variant="h1">Gaver</Typography>
-        <Button color="primary" variant="contained" className={classes.loginButton}>
+        <Button color="primary" variant="contained" className={classes.loginButton} onClick={this.logIn}>
           Logg inn
         </Button>
         <span className={classNames('icon-gift', classes.icon)} />
@@ -34,4 +43,7 @@ class StartPage extends Component<Props> {
   }
 }
 
-export default withStyles(styles)(StartPage)
+export default connect(
+  null,
+  mapDispatchToProps
+)(withStyles(styles)(StartPage))

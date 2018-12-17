@@ -35,7 +35,6 @@ namespace Gaver.Web.Tests
             Context.SaveChanges();
 
             var result = await TestSubject.Handle(new GetMessagesRequest {
-                UserId = 1,
                 WishListId = firstWishList.Id
             });
 

@@ -22,23 +22,20 @@ namespace Gaver.Web.Features.Wishes
         [HttpGet]
         public Task<MyListModel> Get()
         {
-            return mediator.Send(new GetMyListRequest {UserId = UserId});
+            return mediator.Send(new GetMyListRequest ());
         }
 
         [HttpGet("{listId:int}")]
         public Task<SharedListModel> Get(int listId)
         {
             return mediator.Send(new GetSharedListRequest {
-                ListId = listId,
-                UserId = UserId
+                WishListId = listId,
             });
         }
 
-        [HttpPost("{listId:int}")]
-        public Task<WishModel> Post(int listId, AddWishRequest request)
+        [HttpPost]
+        public Task<WishModel> Post(AddWishRequest request)
         {
-            request.UserId = UserId;
-            request.WishListId = listId;
             return mediator.Send(request);
         }
 
@@ -63,7 +60,6 @@ namespace Gaver.Web.Features.Wishes
         {
             request.WishListId = listId;
             request.WishId = wishId;
-            request.UserId = UserId;
             return mediator.Send(request);
         }
 
@@ -77,7 +73,6 @@ namespace Gaver.Web.Features.Wishes
         public Task ShareList(int listId, ShareListRequest request)
         {
             request.WishListId = listId;
-            request.UserId = UserId;
             return mediator.Send(request);
         }
 
@@ -85,7 +80,6 @@ namespace Gaver.Web.Features.Wishes
         public Task RegisterToken(int listId, RegisterTokenRequest request)
         {
             request.WishListId = listId;
-            request.UserId = UserId;
             return mediator.Send(request);
         }
 
@@ -93,7 +87,6 @@ namespace Gaver.Web.Features.Wishes
         public Task<ListAccessStatus> CheckSharedListAccess(int listId)
         {
             return mediator.Send(new CheckSharedListAccessRequest {
-                UserId = UserId,
                 WishListId = listId
             });
         }

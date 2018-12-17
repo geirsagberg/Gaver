@@ -1,14 +1,20 @@
 <style>
   .sk-cube-grid {
     height: 40px;
-    margin: 40px auto;
+    margin: 0 auto;
     width: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: url(/images/gift.png);
+    background-size: cover;
   }
 
     .sk-cube-grid .sk-cube {
       -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
       animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
-      background-color: #333;
+      background-color: rgba(34,34,34,0.4);
       float: left;
       height: 33.33%;
       width: 33.33%;

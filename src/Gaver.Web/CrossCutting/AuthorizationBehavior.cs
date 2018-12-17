@@ -5,21 +5,21 @@ using MediatR;
 
 namespace Gaver.Web.CrossCutting
 {
-    public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IWishListRequest
-    {
-        private readonly IAccessChecker accessChecker;
+    //public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    //    where TRequest : IWishListRequest
+    //{
+    //    private readonly IAccessChecker accessChecker;
 
-        public AuthorizationBehavior(IAccessChecker accessChecker)
-        {
-            this.accessChecker = accessChecker;
-        }
+    //    public AuthorizationBehavior(IAccessChecker accessChecker)
+    //    {
+    //        this.accessChecker = accessChecker;
+    //    }
 
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            accessChecker.CheckWishListInvitations(request.WishListId, request.UserId);
-            accessChecker.CheckNotOwner(request.WishListId, request.UserId);
-            return next();
-        }
-    }
+    //    public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    //    {
+    //        accessChecker.CheckWishListInvitations(request.WishListId, request.User);
+    //        accessChecker.CheckNotOwner(request.WishListId, request.User);
+    //        return next();
+    //    }
+    //}
 } 

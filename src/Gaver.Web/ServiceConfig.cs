@@ -20,21 +20,21 @@ namespace Gaver.Web
 {
     public static class ServiceConfig
     {
-        private static async Task OnTokenValidated(TokenValidatedContext tokenContext)
-        {
-            var identity = tokenContext.Principal.Identity as ClaimsIdentity;
-            var providerId = identity?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (providerId == null) {
-                return;
-            }
+        //private static async Task OnTokenValidated(TokenValidatedContext tokenContext)
+        //{
+        //    var identity = tokenContext.Principal.Identity as ClaimsIdentity;
+        //    var providerId = identity?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        //    if (providerId == null) {
+        //        return;
+        //    }
 
-            var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
+        //    var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
 
-            var userId = await userHandler.GetUserIdOrNullAsync(providerId);
-            if (userId != null) {
-                identity.AddClaim(new Claim("GaverUserId", userId.Value.ToString(), ClaimValueTypes.Integer32));
-            }
-        }
+        //    var userId = await userHandler.GetUserIdOrNullAsync(providerId);
+        //    if (userId != null) {
+        //        identity.AddClaim(new Claim("GaverUserId", userId.Value.ToString(), ClaimValueTypes.Integer32));
+        //    }
+        //}
 
         public static void AddCustomAuth(this IServiceCollection services, IConfiguration configuration)
         {
@@ -43,14 +43,14 @@ namespace Gaver.Web
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options => {
-                options.Audience = authSettings.ClientId;
+                options.Audience = authSettings.Audience;
                 options.Authority = $"https://{authSettings.Domain}";
                 options.TokenValidationParameters = new TokenValidationParameters {
                     IssuerSigningKey = authSettings.SigningKey
                 };
                 // TODO Handle other events, e.g. OnAuthenticationFailed and OnChallenge
                 options.Events = new JwtBearerEvents {
-                    OnTokenValidated = OnTokenValidated
+                    //OnTokenValidated = OnTokenValidated
                 };
             });
             services.AddAuthorization();
@@ -60,7 +60,7 @@ namespace Gaver.Web
         {
             services.AddMvc(o => {
                 o.Filters.Add(new CustomExceptionFilterAttribute());
-                o.Filters.Add<PipelineActionFilter>();
+                //o.Filters.Add<PipelineActionFilter>();
             }).AddRazorOptions(o => {
                 o.ViewLocationFormats.Clear();
                 o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
@@ -92,7 +92,7 @@ namespace Gaver.Web
                     options.ConfigureWarnings(b => b.Throw(RelationalEventId.QueryClientEvaluationWarning));
                     options
                         .UseNpgsql(connectionString, b => b
-                            .MigrationsAssembly(Assembly.GetCallingAssembly().FullName));
+                            .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));
                 });
         }
     }

@@ -1,29 +1,14 @@
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
-using Gaver.Web.CrossCutting;
+using Gaver.Web.Extensions;
 using MediatR;
-using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class AddMessageRequest : IRequest<ChatMessageModel>, IWishListRequest
-    {
-        [Required]
-        [MinLength(1)]
-        public string Text { get; set; }
-
-        [JsonIgnore]
-        public int WishListId { get; set; }
-
-        [JsonIgnore]
-        public int UserId { get; set; }
-    }
-
     public class AddMessageHandler : IRequestHandler<AddMessageRequest, ChatMessageModel>
     {
         private readonly IClientNotifier _clientNotifier;
@@ -39,17 +24,16 @@ namespace Gaver.Web.Features.Chat
 
         public async Task<ChatMessageModel> Handle(AddMessageRequest request, CancellationToken token = default)
         {
-            var user = context.GetOrDie<User>(request.UserId);
+            var userId = request.UserId;
             var chatMessage = new ChatMessage {
                 Text = request.Text,
-                UserId = request.UserId,
+                UserId = userId,
                 WishListId = request.WishListId
             };
             context.Add(chatMessage);
             await context.SaveChangesAsync(token);
 
-            chatMessage.User = user;
-            await _clientNotifier.RefreshListAsync(request.WishListId, request.UserId);
+            await _clientNotifier.RefreshListAsync(request.WishListId, userId);
             return mapper.Map<ChatMessageModel>(chatMessage);
         }
     }

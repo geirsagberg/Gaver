@@ -60,7 +60,7 @@ namespace Gaver.Web.Tests
             context.SaveChanges();
 
             var result = await TestSubject.Handle(new GetSharedListRequest {
-                ListId = bob.WishLists.First().Id,
+                WishListId = bob.WishLists.First().Id,
                 UserId = james.Id
             });
 

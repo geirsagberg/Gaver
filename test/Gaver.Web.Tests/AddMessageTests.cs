@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Data.Entities;
@@ -14,7 +15,8 @@ namespace Gaver.Web.Tests
         public async Task Can_add_chatMessage()
         {
             var user = new User {
-                Name = "Userman"
+                Name = "Userman",
+                PrimaryIdentityId = "1"
             };
             Context.Add(user);
             Context.SaveChanges();

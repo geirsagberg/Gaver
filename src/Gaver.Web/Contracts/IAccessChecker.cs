@@ -1,8 +1,15 @@
-﻿namespace Gaver.Web.Contracts
+using System.Security.Claims;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
+namespace Gaver.Web.Contracts
 {
     public interface IAccessChecker
     {
-        void CheckWishListInvitations(int wishListId, int userId);
-        void CheckNotOwner(int wishListId, int userId);
+        [AssertionMethod]
+        Task CheckWishListInvitations(int wishListId, int UserId);
+
+        [AssertionMethod]
+        Task CheckNotOwner(int wishListId, int UserId);
     }
 }
