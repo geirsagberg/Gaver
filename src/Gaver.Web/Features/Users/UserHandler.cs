@@ -1,33 +1,31 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Flurl.Http;
 using Gaver.Common.Contracts;
-using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.Constants;
-using Gaver.Web.Extensions;
 using Gaver.Web.Options;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using EntityFrameworkQueryableExtensions = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions;
 
 namespace Gaver.Web.Features.Users
 {
     public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserModel>,
-        IRequestHandler<UpdateUserInfoRequest>
+        IRequestHandler<UpdateUserInfoRequest>,
+        IRequestHandler<GetOrCreateUserRequest, User>
     {
         private readonly Auth0Settings auth0Settings;
-        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly GaverContext context;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapperService mapper;
 
-        public UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings, IHttpContextAccessor httpContextAccessor)
+        public UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings,
+            IHttpContextAccessor httpContextAccessor)
         {
             this.context = context;
             this.mapper = mapper;
@@ -35,43 +33,58 @@ namespace Gaver.Web.Features.Users
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<CurrentUserModel> Handle(GetUserInfoRequest request, CancellationToken token)
+        public async Task<User> Handle(GetOrCreateUserRequest request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-            //var primaryIdentityId = request.User.GetPrimaryIdentityId();
-            //var userModel = context.Users.Where(u => u.PrimaryIdentityId == primaryIdentityId)
-            //    .ProjectTo<CurrentUserModel>(mapper.MapperConfiguration).SingleOrDefault();
-            //if (userModel != null) return userModel;
+            var user = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(context.Set<User>(),
+                u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);
 
-            
-            //var userInfo = await GetUserInfo(token);
+            if (user == null) {
+                var userInfo = await GetUserInfo(cancellationToken);
+                user = new User {
+                    Email = userInfo.Email,
+                    Name = userInfo.Name,
+                    PictureUrl = userInfo.Picture,
+                    PrimaryIdentityId = request.PrimaryIdentityId,
+                    WishLists = {
+                        new WishList()
+                    }
+                };
+                context.Add(user);
+                await context.SaveChangesAsync(cancellationToken);
+            }
 
-            //if (!userInfo.TryGetValue("name", out var name))
-            //    throw new FriendlyException(EventIds.MissingName, "Navn mangler");
-            //if (!userInfo.TryGetValue("email", out var email))
-            //    throw new FriendlyException(EventIds.MissingEmail, "E-post mangler");
-            //userInfo.TryGetValue("picture", out var pictureUrl);
-
-            //var user = new User {
-            //    PrimaryIdentityId = primaryIdentityId,
-            //    Name = name.ToString(),
-            //    Email = email.ToString(),
-            //    PictureUrl = pictureUrl?.ToString(),
-            //    WishLists = {
-            //        new WishList()
-            //    }
-            //};
-            //context.Users.Add(user);
-            //await context.SaveChangesAsync(token);
-            //return mapper.Map<CurrentUserModel>(user);
+            return user;
         }
 
-        private async Task<IDictionary<string, object>> GetUserInfo(CancellationToken token)
+        public async Task<CurrentUserModel> Handle(GetUserInfoRequest request, CancellationToken token)
+        {
+            var userModel = await context.Users.Where(u => u.Id == request.UserId)
+                .ProjectTo<CurrentUserModel>(mapper.MapperConfiguration).SingleAsync(token);
+
+            return userModel;
+        }
+
+        public async Task<Unit> Handle(UpdateUserInfoRequest request, CancellationToken cancellationToken)
+        {
+            var userInfo = await GetUserInfo(cancellationToken);
+
+            var user = await context.GetOrDieAsync<User>(request.UserId);
+
+            user.Email = userInfo.Email;
+            user.Name = userInfo.Name;
+            user.PictureUrl = userInfo.Picture;
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
+        }
+
+        private async Task<UserInfo> GetUserInfo(CancellationToken token)
         {
             var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
             var userInfo = await $"https://{auth0Settings.Domain}/userinfo"
                 .WithOAuthBearerToken(accessToken)
-                .GetJsonAsync<IDictionary<string, object>>(token);
+                .GetJsonAsync<UserInfo>(token);
             return userInfo;
         }
 
@@ -82,13 +95,12 @@ namespace Gaver.Web.Features.Users
             return userId == 0 ? (int?) null : userId;
         }
 
-        public async Task<Unit> Handle(UpdateUserInfoRequest request, CancellationToken cancellationToken)
+        public class UserInfo
         {
-            var userInfo = await GetUserInfo(cancellationToken);
-
-
-
-            return Unit.Value;
+            public string Email { get; set; }
+            public string Picture { get; set; }
+            public string Nickname { get; set; }
+            public string Name { get; set; }
         }
     }
 }

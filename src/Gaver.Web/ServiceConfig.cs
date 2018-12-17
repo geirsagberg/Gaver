@@ -1,11 +1,9 @@
-using System.Linq;
 using System.Reflection;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using AutoMapper;
+using Gaver.Common;
 using Gaver.Data;
 using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
-using Gaver.Web.Features.Users;
 using Gaver.Web.Filters;
 using Gaver.Web.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -47,10 +45,6 @@ namespace Gaver.Web
                 options.Authority = $"https://{authSettings.Domain}";
                 options.TokenValidationParameters = new TokenValidationParameters {
                     IssuerSigningKey = authSettings.SigningKey
-                };
-                // TODO Handle other events, e.g. OnAuthenticationFailed and OnChallenge
-                options.Events = new JwtBearerEvents {
-                    //OnTokenValidated = OnTokenValidated
                 };
             });
             services.AddAuthorization();
@@ -94,6 +88,18 @@ namespace Gaver.Web
                         .UseNpgsql(connectionString, b => b
                             .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));
                 });
+        }
+
+        public static void ScanAssemblies(this IServiceCollection services)
+        {
+            services.Scan(scan => {
+                scan.FromAssemblyOf<ICommonAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
+                scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
+                scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
+
+                scan.FromEntryAssembly().AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>()
+                    .WithSingletonLifetime();
+            });
         }
     }
 }

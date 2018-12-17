@@ -12,6 +12,7 @@ using Gaver.Data;
 using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Hubs;
+using Gaver.Web.Middleware;
 using Gaver.Web.Options;
 using JetBrains.Annotations;
 using MediatR;
@@ -49,14 +50,7 @@ namespace Gaver.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Scan(scan => {
-                scan.FromAssemblyOf<ICommonAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
-                scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
-                scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
-
-                scan.FromEntryAssembly().AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>()
-                    .WithSingletonLifetime();
-            });
+            services.ScanAssemblies();
 
             services.AddCustomAuth(Configuration);
 
@@ -118,15 +112,15 @@ namespace Gaver.Web
             app.UseHttpException();
             app.UseAuthentication();
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
-
             app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
 
-            SetupRoutes(app);
+            UseCustomMvc(app);
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
         }
 
-        private static void SetupRoutes(IApplicationBuilder app)
+        private static void UseCustomMvc(IApplicationBuilder app)
         {
             app.UseMvc(routes => {
                 routes.MapRoute(
