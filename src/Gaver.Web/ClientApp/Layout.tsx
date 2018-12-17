@@ -116,7 +116,7 @@ class Layout extends Component<Props, State> {
                   anchorEl={this.state.menuAnchorEl}
                   open={!!this.state.menuAnchorEl}
                   onClose={this.hideProfileMenu}>
-                  <MenuItem onClick={this.hideProfileMenu}>Logg ut</MenuItem>
+                  <MenuItem onClick={this.props.logout}>Logg ut</MenuItem>
                 </Menu>
               </>
             )}

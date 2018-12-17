@@ -5,13 +5,14 @@ import { tryOrNotify } from '~/utils'
 import { getJson } from '~/utils/ajax'
 import AuthService from '~/utils/AuthService'
 import { showError } from '~/utils/notifications'
-import { logInCompleted, logInStarted, logInSuccessful } from '.'
+import { logInCompleted, logInStarted, logInSuccessful, logOut } from '.'
 import { GaverThunk } from '..'
 
 export const login = (): GaverThunk => () => AuthService.login()
 
 export const logout = (): GaverThunk => dispatch => {
   AuthService.logout()
+  dispatch(logOut())
   dispatch(routeActions.showFrontPage())
 }
 export const handleAuthentication = (): GaverThunk => () => {

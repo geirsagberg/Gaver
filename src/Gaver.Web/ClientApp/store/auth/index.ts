@@ -12,17 +12,20 @@ export interface AuthState {
 enum ActionType {
   LogInSuccessful = 'AUTH:LOG_IN_SUCCESSFUL',
   LogInStarted = 'AUTH:LOG_IN_STARTED',
-  LogInCompleted = 'AUTH:LOG_IN_COMPLETED'
+  LogInCompleted = 'AUTH:LOG_IN_COMPLETED',
+  LogOut = 'AUTH:LOG_OUT'
 }
 
 export const logInSuccessful = (user: UserModel) => createAction(ActionType.LogInSuccessful, user)
 export const logInStarted = () => createAction(ActionType.LogInStarted)
 export const logInCompleted = () => createAction(ActionType.LogInCompleted)
+export const logOut = () => createAction(ActionType.LogOut)
 
 export const authActionCreators = {
   logInSuccessful,
   logInStarted,
-  logInCompleted
+  logInCompleted,
+  logOut
 }
 
 type Action = ActionsUnion<typeof authActionCreators>
@@ -44,6 +47,9 @@ export const reducer = produce((draft: AuthState, action: Action) => {
     case ActionType.LogInCompleted: {
       draft.isLoggingIn = false
       return
+    }
+    case ActionType.LogOut: {
+      return initialState
     }
   }
 }, initialState)
