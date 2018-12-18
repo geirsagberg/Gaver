@@ -22,8 +22,9 @@ import { checkSession, logout } from './store/auth/thunks'
 import { createMapDispatchToProps } from './utils/reduxUtils'
 import Loading from './components/Loading'
 import Expander from './components/Expander'
+import { makeStyles } from '@material-ui/styles'
 
-const styles = createStyles({
+const useStyles = makeStyles({
   root: {
     height: '100%'
   },
@@ -54,7 +55,7 @@ const mapDispatchToProps = createMapDispatchToProps({
   logout
 })
 
-type Props = WithStyles<typeof styles> & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 type State = {
   menuAnchorEl?: HTMLElement
@@ -87,7 +88,9 @@ class Layout extends Component<Props, State> {
     })
 
   render() {
-    const { classes, auth } = this.props
+    const { auth } = this.props
+
+    const classes = useStyles()
 
     const Content = this.getContent()
     return (
@@ -132,5 +135,5 @@ export default hot(module)(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(withStyles(styles)(Layout))
+  )(Layout)
 )

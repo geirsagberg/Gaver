@@ -1,12 +1,14 @@
 import { Wish } from '~/types/data'
 import produce from 'immer'
 
-export type WishListData = Dictionary<WishListState>
+export type WishListData = Dictionary<WishList>
 
-export interface WishListState {
+export interface WishList {
   wishes: Dictionary<Wish>
 }
 
 const initialState: WishListData = {}
 
-export const reducer = produce((draft, action) => {}, initialState)
+export const reducer = produce((draft: WishListData, action: any) => {
+  return draft
+}, initialState)
