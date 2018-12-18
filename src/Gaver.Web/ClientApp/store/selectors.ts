@@ -1,4 +1,9 @@
-import { AppStateWithRouting } from '..'
+import { AppStateWithRouting } from '.'
+
+export const selectMyList = (state: AppStateWithRouting) => {
+  const user = selectCurrentUser(state)
+  return user ? state.data.wishLists[user.id] : null
+}
 
 export const selectAuth = (state: AppStateWithRouting) => state.auth
 

@@ -1,9 +1,9 @@
 import { RoutesMap, Options, redirect, RouteObject } from 'redux-first-router'
 import { AppStateWithRouting } from '~/store'
 import { handleAuthentication, login } from '~/store/auth/thunks'
-import { selectIsLoggedIn } from '~/store/auth/selectors'
 import { getJson } from '~/utils/ajax'
 import AuthService from '~/utils/AuthService'
+import { selectIsLoggedIn } from '~/store/selectors'
 
 export enum RouteType {
   FrontPage = 'ROUTE:FRONT_PAGE',

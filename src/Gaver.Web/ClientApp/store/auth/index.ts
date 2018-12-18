@@ -1,4 +1,3 @@
-import { AppStateWithRouting } from '..'
 import produce from 'immer'
 import { createAction, ActionsUnion } from '~/utils/reduxUtils'
 import { UserModel } from '~/types/data'

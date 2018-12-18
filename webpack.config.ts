@@ -8,8 +8,15 @@ const isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
 const mode = isDevelopment ? 'development' : 'production'
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 
 const baseDir = process.cwd()
+
+const commonPlugins = [
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': `'${mode}'`
+  })
+]
 
 const productionPlugins = [
   new ForkTsCheckerWebpackPlugin({
@@ -22,7 +29,7 @@ const productionPlugins = [
   })
 ]
 
-const developmentPlugins = []
+const developmentPlugins = [new HardSourceWebpackPlugin()]
 
 const configuration: Configuration = {
   mode,
@@ -85,11 +92,7 @@ const configuration: Configuration = {
       chunks: 'all'
     }
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': `'${mode}'`
-    })
-  ].concat(isDevelopment ? developmentPlugins : productionPlugins)
+  plugins: commonPlugins.concat(isDevelopment ? developmentPlugins : productionPlugins)
 }
 
 module.exports = configuration
