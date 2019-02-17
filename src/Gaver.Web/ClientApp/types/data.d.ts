@@ -10,8 +10,8 @@ export interface SharedWishModel extends Wish {
 }
 
 export interface Wish {
-  id: number
-  wishListId: number
+  id?: number
+  wishListId?: number
   title: string
   url?: string
   description?: string

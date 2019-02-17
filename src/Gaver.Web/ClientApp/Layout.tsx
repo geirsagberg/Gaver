@@ -14,7 +14,7 @@ import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import { connect } from 'react-redux'
 import MyList from '~/pages/MyList'
-import StartPage from '~/pages/Start'
+import LoginPage from '~/pages/Login'
 import { RouteType } from '~/routing'
 import { AppStateWithRouting } from '~/store'
 import Expander from './components/Expander'
@@ -70,7 +70,7 @@ class Layout extends Component<Props, State> {
     }
     switch (this.props.routing.type) {
       case RouteType.FrontPage:
-        return this.props.auth.isLoggedIn ? <MyList /> : <StartPage />
+        return this.props.auth.isLoggedIn ? <MyList /> : <LoginPage />
     }
   }
 

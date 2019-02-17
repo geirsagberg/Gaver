@@ -1,4 +1,5 @@
-import { createMuiTheme, colors } from '@material-ui/core'
+import { createMuiTheme } from '@material-ui/core'
+import { PaletteOptions } from '@material-ui/core/styles/createPalette'
 
 export const gaverColors = {
   first: '#0D3746',
@@ -7,11 +8,14 @@ export const gaverColors = {
   fourth: '#EC7D2B',
   fifth: '#DD395A'
 }
+const palette: PaletteOptions = {
+  primary: { main: '#3F51B5' },
+  secondary: { main: '#AB47BC' },
+  type: 'dark'
+}
 
 const theme = createMuiTheme({
-  palette: {
-    type: 'dark'
-  },
+  palette,
   typography: {
     useNextVariants: true
   }

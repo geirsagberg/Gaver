@@ -1,6 +1,5 @@
 import auth0 from 'auth0-js'
 import AppSettings from '~/utils/appSettings'
-import { replace } from 'redux-first-router'
 
 const AccessTokenKey = 'access_token'
 const ExpiresAtKey = 'expires_at'
