@@ -7,6 +7,7 @@ import AuthService from '~/utils/AuthService'
 import { showError } from '~/utils/notifications'
 import { logInCompleted, logInStarted, logInSuccessful, logOut } from '.'
 import { GaverThunk } from '..'
+import { selectIsLoggedIn } from '../selectors'
 
 export const login = (): GaverThunk => () => AuthService.login()
 
@@ -25,16 +26,17 @@ export const handleAuthentication = (): GaverThunk => () => {
     }
   })
 }
-export const checkSession = () => (dispatch, getState) =>
-  tryOrNotify(
-    async () => {
-      dispatch(logInStarted())
-      if (AuthService.isAuthenticated()) {
-        const userInfo = await getJson<UserModel>('/api/user')
-        dispatch(logInSuccessful(userInfo))
+export const checkSession = (): GaverThunk => (dispatch, getState) =>
+  tryOrNotify(async () => {
+    if (!selectIsLoggedIn(getState())) {
+      try {
+        dispatch(logInStarted())
+        if (AuthService.isAuthenticated()) {
+          const userInfo = await getJson<UserModel>('/api/user')
+          dispatch(logInSuccessful(userInfo))
+        }
+      } finally {
+        dispatch(logInCompleted())
       }
-    },
-    () => {
-      dispatch(logInCompleted())
     }
-  )
+  })

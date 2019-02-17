@@ -21,7 +21,8 @@ export const routesMap: RoutesMap<RouteKeys, AppStateWithRouting> = {
     requireLogin: false,
     thunk: async (dispatch, getState) => {
       if (selectIsLoggedIn(getState())) {
-        // const myListId = await getJson('/api/')
+        const myList = await getJson('/api/WishList')
+        console.log(myList)
       }
     }
   },
@@ -35,7 +36,8 @@ export const routesMap: RoutesMap<RouteKeys, AppStateWithRouting> = {
   [RouteType.WishList]: {
     path: '/list/:listId',
     thunk: async (dispatch, getState) => {
-      // await getJson('/api/WishList/')
+      // const list = await getJson('/api/WishList/')
+      // dispatch()
     },
     requireLogin: true
   }

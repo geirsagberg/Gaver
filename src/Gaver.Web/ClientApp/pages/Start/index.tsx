@@ -34,6 +34,7 @@ class StartPage extends Component<Props> {
     return (
       <div className={classes.root}>
         <Typography variant="h1">Gaver</Typography>
+        <Typography variant="subtitle1">Lag og del din ønskeliste</Typography>
         <Button color="primary" variant="contained" className={classes.loginButton} onClick={this.logIn}>
           Logg inn
         </Button>

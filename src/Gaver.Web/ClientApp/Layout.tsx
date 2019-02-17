@@ -1,15 +1,14 @@
 import {
   AppBar,
-  createStyles,
+  Avatar,
+  ButtonBase,
+  Menu,
+  MenuItem,
   Toolbar,
   Typography,
-  withStyles,
+  createStyles,
   WithStyles,
-  Button,
-  ButtonBase,
-  Avatar,
-  Menu,
-  MenuItem
+  withStyles
 } from '@material-ui/core'
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
@@ -18,13 +17,12 @@ import MyList from '~/pages/MyList'
 import StartPage from '~/pages/Start'
 import { RouteType } from '~/routing'
 import { AppStateWithRouting } from '~/store'
+import Expander from './components/Expander'
+import Loading from './components/Loading'
 import { checkSession, logout } from './store/auth/thunks'
 import { createMapDispatchToProps } from './utils/reduxUtils'
-import Loading from './components/Loading'
-import Expander from './components/Expander'
-import { makeStyles } from '@material-ui/styles'
 
-const useStyles = makeStyles({
+const styles = createStyles({
   root: {
     height: '100%'
   },
@@ -55,7 +53,7 @@ const mapDispatchToProps = createMapDispatchToProps({
   logout
 })
 
-type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & WithStyles<typeof styles>
 
 type State = {
   menuAnchorEl?: HTMLElement
@@ -64,7 +62,6 @@ type State = {
 class Layout extends Component<Props, State> {
   state: State = {}
   componentDidMount() {
-    console.log('componentDidMount')
     this.props.checkSession()
   }
   getContent() {
@@ -77,7 +74,7 @@ class Layout extends Component<Props, State> {
     }
   }
 
-  showProfileMenu = event =>
+  showProfileMenu = (event: React.MouseEvent<HTMLElement>) =>
     this.setState({
       menuAnchorEl: event.currentTarget
     })
@@ -88,9 +85,7 @@ class Layout extends Component<Props, State> {
     })
 
   render() {
-    const { auth } = this.props
-
-    const classes = useStyles()
+    const { auth, classes } = this.props
 
     const Content = this.getContent()
     return (
@@ -111,7 +106,8 @@ class Layout extends Component<Props, State> {
                       {auth.user.name
                         .split(' ')
                         .map(s => (s.length > 0 ? s[0] : ''))
-                        .join('')}
+                        .join('')
+                        .substr(0, 2)}
                     </Avatar>
                   )}
                 </ButtonBase>
@@ -135,5 +131,5 @@ export default hot(module)(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(Layout)
+  )(withStyles(styles)(Layout))
 )

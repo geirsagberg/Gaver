@@ -40,9 +40,6 @@
     <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <Watch Include="webpack.config.ts" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

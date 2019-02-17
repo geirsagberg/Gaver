@@ -22,7 +22,7 @@ namespace Gaver.Web.Features.Wishes
         [HttpGet]
         public Task<MyListModel> Get()
         {
-            return mediator.Send(new GetMyListRequest ());
+            return mediator.Send(new GetMyListRequest());
         }
 
         [HttpGet("{listId:int}")]
@@ -66,7 +66,7 @@ namespace Gaver.Web.Features.Wishes
         [HttpDelete("{listId:int}/{wishId:int}")]
         public Task Delete(int listId, int wishId)
         {
-            return mediator.Send(new DeleteWishRequest {WishId = wishId, WishListId = listId});
+            return mediator.Send(new DeleteWishRequest { WishId = wishId, WishListId = listId });
         }
 
         [HttpPost("{listId:int}/Share")]
