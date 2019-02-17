@@ -26,10 +26,15 @@ const useStyles = makeStyles({
     maxWidth: 600,
     position: 'relative'
   },
-  addWishButton: {
-    position: 'fixed',
+  fabWrapper: {
+    position: 'absolute',
     bottom: '1rem',
-    right: '1rem'
+    right: '1rem',
+    width: 56,
+    height: 56
+  },
+  addWishButton: {
+    position: 'fixed'
   }
 })
 
@@ -64,11 +69,11 @@ const MyListPage: FC = () => {
           </ListItem> */}
       </List>
 
-      <Portal container={document.getElementById('portal-overlay')}>
+      <div className={classes.fabWrapper}>
         <Fab color="secondary" onClick={startAddingWish} className={classes.addWishButton}>
           <Icon>add_icon</Icon>
         </Fab>
-      </Portal>
+      </div>
 
       <Dialog fullWidth open={isAddingWish} onClose={cancelAddingWish}>
         <DialogTitle>Nytt ønske</DialogTitle>
