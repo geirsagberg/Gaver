@@ -1,7 +1,23 @@
-import { AppBar, Avatar, ButtonBase, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
+import {
+  AppBar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Icon,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
+import ChipInput from 'material-ui-chip-input'
 import React, { FC, useState } from 'react'
 import { hot } from 'react-hot-loader'
+import { KeyCodes } from '~/types'
 import Expander from './components/Expander'
 import { useOvermind } from './overmind'
 import LoginPage from './pages/Login'
@@ -25,10 +41,11 @@ const useStyles = makeStyles({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center'
+  },
+  overflowDialog: {
+    overflow: 'visible'
   }
 })
-
-type Props = {}
 
 const Content: FC = () => {
   const {
@@ -45,8 +62,7 @@ const Content: FC = () => {
   return null
 }
 
-const Layout: FC<Props> = () => {
-  const classes = useStyles()
+const LoggedInAvatar: FC = () => {
   const {
     state: { auth },
     actions: {
@@ -59,39 +75,74 @@ const Layout: FC<Props> = () => {
 
   const hideProfileMenu = () => setMenuAnchorEl(null)
 
+  return auth.isLoggedIn ? (
+    <>
+      <IconButton color="inherit" onClick={showProfileMenu}>
+        <Icon>account_circle</Icon>
+      </IconButton>
+      <Menu anchorEl={menuAnchorEl} open={!!menuAnchorEl} onClose={hideProfileMenu}>
+        <MenuItem onClick={logOut}>Logg ut</MenuItem>
+      </Menu>
+    </>
+  ) : null
+}
+
+const Layout: FC = () => {
+  const classes = useStyles()
+  const {
+    actions: {
+      myList: { startSharingList, cancelSharingList, emailAdded, emailDeleted, shareList }
+    },
+    state: {
+      myList: { isSharingList, shareEmails },
+      app: { isSavingOrLoading }
+    }
+  } = useOvermind()
+
   return (
     <div className={classes.root}>
       <AppBar>
         <Toolbar>
-          <Typography variant="h6" color="inherit">
+          <Typography variant="h6" color="inherit" style={{ marginRight: '1rem' }}>
             Gaver
           </Typography>
           <Expander />
-          {auth.isLoggedIn && (
-            <>
-              <ButtonBase onClick={showProfileMenu}>
-                {auth.user.pictureUrl ? (
-                  <Avatar src={auth.user.pictureUrl} />
-                ) : (
-                  <Avatar>
-                    {auth.user.name
-                      .split(' ')
-                      .map(s => (s.length > 0 ? s[0] : ''))
-                      .join('')
-                      .substr(0, 2)}
-                  </Avatar>
-                )}
-              </ButtonBase>
-              <Menu anchorEl={menuAnchorEl} open={!!menuAnchorEl} onClose={hideProfileMenu}>
-                <MenuItem onClick={logOut}>Logg ut</MenuItem>
-              </Menu>
-            </>
-          )}
+          <IconButton color="inherit" onClick={startSharingList}>
+            <Icon>share</Icon>
+          </IconButton>
+          <LoggedInAvatar />
         </Toolbar>
       </AppBar>
       <div className={classes.content}>
         <Content />
       </div>
+      <Dialog fullWidth classes={{ paper: classes.overflowDialog }} open={isSharingList} onClose={cancelSharingList}>
+        <DialogTitle>Del din ønskeliste</DialogTitle>
+        <DialogContent className={classes.overflowDialog}>
+          <DialogContentText>Legg inn e-postadressene til de du vil dele listen med</DialogContentText>
+          <ChipInput
+            fullWidth
+            classes={{}}
+            value={shareEmails}
+            onAdd={emailAdded}
+            InputProps={{ type: 'email' }}
+            onDelete={emailDeleted}
+            blurBehavior="add"
+            required
+            newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.SemiColon, KeyCodes.Comma]}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={isSavingOrLoading || !shareEmails.length}
+            variant="contained"
+            color="primary"
+            onClick={shareList}>
+            Del liste
+          </Button>
+          <Button onClick={cancelSharingList}>Avbryt</Button>
+        </DialogActions>
+      </Dialog>
       <div id="portal-overlay" style={{ position: 'relative', zIndex: 1100 }} />
     </div>
   )

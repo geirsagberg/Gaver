@@ -34,18 +34,19 @@ namespace Gaver.Web.Features.Wishes
         {
             ValidateEmails(message.Emails);
             var userName = gaverContext.Users.Where(u => u.Id == message.UserId).Select(u => u.Name).Single();
+            var wishListId = gaverContext.WishLists.Where(wl => wl.UserId == message.UserId).Select(wl => wl.Id).Single();
             var request = httpContextAccessor.HttpContext.Request;
 
             var mailTasks = new List<Task>();
             foreach (var email in message.Emails) {
                 var token = new InvitationToken {
-                    WishListId = message.WishListId
+                    WishListId = wishListId
                 };
                 gaverContext.InvitationTokens.Add(token);
 
-                var url = Url.Combine(request.Scheme + "://" + request.Host, "list", message.WishListId.ToString(), "?token=" + token.Id.ToString());
+                var url = Url.Combine(request.Scheme + "://" + request.Host, "list", wishListId.ToString(), "?token=" + token.Id.ToString());
                 var mail = new MailModel {
-                    To = new[] {email},
+                    To = new[] { email },
                     From = "noreply@sagberg.net",
                     Subject = $"{userName} har delt en ønskeliste med deg",
                     Content = $@"<h1>{userName} har delt en ønskeliste med deg!</h1>

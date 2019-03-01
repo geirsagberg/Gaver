@@ -4,6 +4,7 @@ import { namespaced } from 'overmind/config'
 import * as auth from './auth'
 import * as routing from './routing'
 import * as myList from './myList'
+import * as app from './app'
 
 export interface Config extends IConfig<typeof config> {}
 
@@ -18,7 +19,8 @@ export interface Derive<Parent extends IState, Output> extends IDerive<Config, P
 const config = namespaced({
   auth,
   routing,
-  myList
+  myList,
+  app
 })
 
 const overmind = new Overmind(config)

@@ -14,17 +14,10 @@ namespace Gaver.Web.CrossCutting
             this.accessChecker = accessChecker;
         }
 
-        //public Task ProcessRequestAsync(IWishListRequest request)
-        //{
-        //    accessChecker.CheckWishListInvitations(request.WishListId, request.User);
-        //    accessChecker.CheckNotOwner(request.WishListId, request.User);
-        //    return Task.CompletedTask;
-        //}
-
         public Task Process(IWishListRequest request, CancellationToken cancellationToken)
         {
-            accessChecker.CheckWishListInvitations(request.WishListId, request.UserId);
-            accessChecker.CheckNotOwner(request.WishListId, request.UserId);
+            accessChecker.CheckWishListInvitations(request.WishListId, request.UserId, cancellationToken);
+            accessChecker.CheckNotOwner(request.WishListId, request.UserId, cancellationToken);
             return Task.CompletedTask;
         }
     }

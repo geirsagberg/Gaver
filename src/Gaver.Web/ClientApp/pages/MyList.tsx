@@ -64,9 +64,6 @@ const MyListPage: FC = () => {
         {map(wishes, wish => (
           <WishListItem key={wish.id} {...wish} />
         ))}
-        {/* <ListItem button>
-            <ListItemText primary="Legg til ønske" />
-          </ListItem> */}
       </List>
 
       <div className={classes.fabWrapper}>

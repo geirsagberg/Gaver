@@ -14,9 +14,6 @@ namespace Gaver.Web.Features.Wishes.Requests
         public string[] Emails { get; set; }
 
         [JsonIgnore]
-        public int WishListId { get; set; }
-        
-        [JsonIgnore]
         public int UserId { get; set; }
     }
 }

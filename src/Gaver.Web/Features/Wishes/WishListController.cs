@@ -39,6 +39,12 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(request);
         }
 
+        [HttpPost("Share")]
+        public Task ShareList(ShareListRequest request)
+        {
+            return mediator.Send(request);
+        }
+
         [HttpPut("{listId:int}/{wishId:int}/SetUrl")]
         public Task<WishModel> SetUrl(int listId, int wishId, SetUrlRequest request)
         {
@@ -67,13 +73,6 @@ namespace Gaver.Web.Features.Wishes
         public Task Delete(int listId, int wishId)
         {
             return mediator.Send(new DeleteWishRequest { WishId = wishId, WishListId = listId });
-        }
-
-        [HttpPost("{listId:int}/Share")]
-        public Task ShareList(int listId, ShareListRequest request)
-        {
-            request.WishListId = listId;
-            return mediator.Send(request);
         }
 
         [HttpPost("{listId:int}/RegisterToken")]
