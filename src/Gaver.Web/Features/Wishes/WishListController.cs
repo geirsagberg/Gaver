@@ -7,9 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Wishes
 {
-    [Route("api/[controller]")]
-    [Authorize]
-    [ApiController]
     public class WishListController : GaverControllerBase
     {
         private readonly IMediator mediator;
@@ -45,7 +42,15 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(request);
         }
 
-        [HttpPut("{listId:int}/{wishId:int}/SetUrl")]
+        [HttpPut("{listId:int}/{wishId:int}/Title")]
+        public Task<WishModel> SetTitle(int listId, int wishId, SetTitleRequest request)
+        {
+            request.WishListId = listId;
+            request.WishId = wishId;
+            return mediator.Send(request);
+        }
+
+        [HttpPut("{listId:int}/{wishId:int}/Url")]
         public Task<WishModel> SetUrl(int listId, int wishId, SetUrlRequest request)
         {
             request.WishListId = listId;
@@ -53,7 +58,7 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(request);
         }
 
-        [HttpPut("{listId:int}/{wishId:int}/SetDescription")]
+        [HttpPut("{listId:int}/{wishId:int}/Description")]
         public Task<WishModel> SetDescription(int listId, int wishId, SetDescriptionRequest request)
         {
             request.WishListId = listId;
@@ -61,7 +66,7 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(request);
         }
 
-        [HttpPut("{listId:int}/{wishId:int}/SetBought")]
+        [HttpPut("{listId:int}/{wishId:int}/Bought")]
         public Task<SharedWishModel> SetBought(int listId, int wishId, SetBoughtRequest request)
         {
             request.WishListId = listId;

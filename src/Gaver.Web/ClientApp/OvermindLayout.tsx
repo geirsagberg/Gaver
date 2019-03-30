@@ -16,12 +16,13 @@ import {
 import { makeStyles } from '@material-ui/styles'
 import ChipInput from 'material-ui-chip-input'
 import React, { FC, useState } from 'react'
-import { hot } from 'react-hot-loader'
+import { hot } from 'react-hot-loader/root'
 import { KeyCodes } from '~/types'
 import Expander from './components/Expander'
 import { useOvermind } from './overmind'
 import LoginPage from './pages/Login'
 import MyListPage from './pages/MyList'
+import NotFoundPage from './pages/NotFound'
 
 const useStyles = makeStyles({
   root: {
@@ -58,6 +59,8 @@ const Content: FC = () => {
   switch (currentPage) {
     case 'start':
       return isLoggedIn ? <MyListPage /> : <LoginPage />
+    case 'notFound':
+      return <NotFoundPage />
   }
   return null
 }
@@ -87,15 +90,54 @@ const LoggedInAvatar: FC = () => {
   ) : null
 }
 
-const Layout: FC = () => {
+const ShareListDialog: FC = () => {
   const classes = useStyles()
   const {
     actions: {
-      myList: { startSharingList, cancelSharingList, emailAdded, emailDeleted, shareList }
+      myList: { cancelSharingList, emailAdded, emailDeleted, shareList }
     },
     state: {
       myList: { isSharingList, shareEmails },
       app: { isSavingOrLoading }
+    }
+  } = useOvermind()
+
+  return (
+    <Dialog fullWidth classes={{ paper: classes.overflowDialog }} open={isSharingList} onClose={cancelSharingList}>
+      <DialogTitle>Del din ønskeliste</DialogTitle>
+      <DialogContent className={classes.overflowDialog}>
+        <DialogContentText>Legg inn e-postadressene til de du vil dele listen med</DialogContentText>
+        <ChipInput
+          fullWidth
+          classes={{}}
+          value={shareEmails}
+          onAdd={emailAdded}
+          InputProps={{ type: 'email' }}
+          onDelete={emailDeleted}
+          blurBehavior="add"
+          required
+          newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.SemiColon, KeyCodes.Comma]}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button
+          disabled={isSavingOrLoading || !shareEmails.length}
+          variant="contained"
+          color="primary"
+          onClick={shareList}>
+          Del liste
+        </Button>
+        <Button onClick={cancelSharingList}>Avbryt</Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+const Layout: FC = () => {
+  const classes = useStyles()
+  const {
+    actions: {
+      myList: { startSharingList }
     }
   } = useOvermind()
 
@@ -116,36 +158,10 @@ const Layout: FC = () => {
       <div className={classes.content}>
         <Content />
       </div>
-      <Dialog fullWidth classes={{ paper: classes.overflowDialog }} open={isSharingList} onClose={cancelSharingList}>
-        <DialogTitle>Del din ønskeliste</DialogTitle>
-        <DialogContent className={classes.overflowDialog}>
-          <DialogContentText>Legg inn e-postadressene til de du vil dele listen med</DialogContentText>
-          <ChipInput
-            fullWidth
-            classes={{}}
-            value={shareEmails}
-            onAdd={emailAdded}
-            InputProps={{ type: 'email' }}
-            onDelete={emailDeleted}
-            blurBehavior="add"
-            required
-            newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.SemiColon, KeyCodes.Comma]}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            disabled={isSavingOrLoading || !shareEmails.length}
-            variant="contained"
-            color="primary"
-            onClick={shareList}>
-            Del liste
-          </Button>
-          <Button onClick={cancelSharingList}>Avbryt</Button>
-        </DialogActions>
-      </Dialog>
+      <ShareListDialog />
       <div id="portal-overlay" style={{ position: 'relative', zIndex: 1100 }} />
     </div>
   )
 }
 
-export default hot(module)(Layout)
+export default hot(Layout)

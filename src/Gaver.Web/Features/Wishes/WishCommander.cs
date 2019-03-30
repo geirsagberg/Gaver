@@ -21,6 +21,7 @@ namespace Gaver.Web.Features.Wishes
         IRequestHandler<SetUrlRequest, WishModel>,
         IRequestHandler<SetBoughtRequest, SharedWishModel>,
         IRequestHandler<SetDescriptionRequest, WishModel>,
+        IRequestHandler<SetTitleRequest, WishModel>,
         IRequestHandler<DeleteWishRequest>,
         IRequestHandler<RegisterTokenRequest>
     {
@@ -115,8 +116,7 @@ namespace Gaver.Web.Features.Wishes
 
             if (urlString.IsNullOrEmpty()) {
                 wish.Url = null;
-            }
-            else {
+            } else {
                 if (!urlString.StartsWith("http"))
                     urlString = $"http://{urlString}";
 
@@ -128,6 +128,15 @@ namespace Gaver.Web.Features.Wishes
 
             await context.SaveChangesAsync(token);
             await clientNotifier.RefreshListAsync(message.WishListId, null);
+            return mapper.Map<WishModel>(wish);
+        }
+
+        public async Task<WishModel> Handle(SetTitleRequest request, CancellationToken cancellationToken)
+        {
+            var wish = GetWish(request.WishId, request.WishListId);
+            wish.Title = request.Title;
+            await context.SaveChangesAsync(cancellationToken);
+            await clientNotifier.RefreshListAsync(request.WishListId);
             return mapper.Map<WishModel>(wish);
         }
 

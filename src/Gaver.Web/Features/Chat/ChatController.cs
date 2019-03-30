@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Chat
 {
-    [Route("api/[controller]")]
-    [Authorize]
-    [ApiController]
     public class ChatController : GaverControllerBase
     {
         private readonly IMediator mediator;

@@ -37,7 +37,7 @@ const configuration: Configuration = {
   resolve: {
     alias: {
       '~': path.join(baseDir, 'ClientApp'),
-      lodash: 'lodash-es'
+      'react-dom': '@hot-loader/react-dom'
     },
     extensions: ['.js', '.jsx', '.ts', '.tsx']
   },

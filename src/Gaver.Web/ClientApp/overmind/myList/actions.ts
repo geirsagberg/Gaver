@@ -2,7 +2,7 @@ import { without } from 'lodash-es'
 import * as schemas from '~/schemas'
 import { MyListModel, Wish } from '~/types/data'
 import { tryOrNotify } from '~/utils'
-import { getJson, postJson } from '~/utils/ajax'
+import { getJson, postJson, putJson, deleteJson } from '~/utils/ajax'
 import { showError, showSuccess } from '~/utils/notifications'
 import { Action } from '..'
 import { getEmptyWish } from './state'
@@ -24,15 +24,53 @@ export const cancelAddingWish: Action = ({ state: { myList } }) => {
   myList.isAddingWish = false
 }
 
-export const setTitle: Action<string> = ({ state }, title) => {
+export const startEditingWish: Action<number> = ({ state: { myList } }, wishId) => {
+  const wish = myList.wishes[wishId]
+  myList.editingWish = { ...wish }
+}
+
+export const confirmDeleteWish: Action<number> = ({ state: { myList } }, wishId) =>
+  tryOrNotify(async () => {
+    if (confirm('Er du sikker på at du vil slette dette ønsket?')) {
+      await deleteJson(`/api/WishList/${myList.id}/${wishId}`)
+      delete myList.wishes[wishId]
+    }
+  })
+
+export const cancelEditingWish: Action = ({ state: { myList } }) => {
+  myList.editingWish = null
+}
+
+export const updateEditingWish: Action<{ field: keyof Wish; value }> = (
+  {
+    state: {
+      myList: { editingWish }
+    }
+  },
+  { field, value }
+) => {
+  editingWish[field] = value
+}
+
+export const saveEditingWish: Action = ({ state: { myList } }) =>
+  tryOrNotify(async () => {
+    const wish = myList.editingWish
+    const result = await putJson<Wish>(`/api/WishList/${myList.id}/${wish.id}/title`, { title: wish.title })
+    myList.wishes[wish.id] = result
+    myList.editingWish = null
+  })
+
+export const setNewWishTitle: Action<string> = ({ state }, title) => {
   state.myList.newWish.title = title
 }
 
 export const loadWishes: Action = async ({ state: { myList } }) => {
   const {
+    result,
     entities: { wishes }
   } = await getJson<MyListModel>('/api/WishList', schemas.wishList)
   myList.wishes = wishes
+  myList.id = result
 }
 
 export const startSharingList: Action = ({ state: { myList } }) => {

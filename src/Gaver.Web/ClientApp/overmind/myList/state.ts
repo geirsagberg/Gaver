@@ -1,11 +1,13 @@
 import { Wish } from '~/types/data'
 
 export interface MyListState {
+  id?: number
+  editingWish?: Wish
   shareEmails: string[]
   isSharingList: boolean
   wishes: Dictionary<Wish>
   isAddingWish: boolean
-  newWish: Wish
+  newWish?: Wish
 }
 
 export const getEmptyWish = () => ({
@@ -16,6 +18,5 @@ export const state: MyListState = {
   shareEmails: [],
   wishes: {},
   isAddingWish: false,
-  isSharingList: false,
-  newWish: getEmptyWish()
+  isSharingList: false
 }

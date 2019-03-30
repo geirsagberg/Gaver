@@ -5,9 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Users
 {
-    [Route("api/[controller]")]
-    [Authorize]
-    [ApiController]
     public class UserController : GaverControllerBase
     {
         private readonly IMediator mediator;

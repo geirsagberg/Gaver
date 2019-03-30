@@ -15,11 +15,13 @@
     },
     "lib": ["dom", "es2015", "es2016"],
     "strict": true,
+    "noUnusedLocals": true,
     "noImplicitAny": false,
     "strictNullChecks": false,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true
   },
   "compileOnSave": false,
-  "exclude": ["node_modules", "*/wwwroot"],
-  "include": ["src/Gaver.Web/ClientApp"]
+  "exclude": ["node_modules", "**/wwwroot"],
+  "include": ["**/ClientApp"]
 }

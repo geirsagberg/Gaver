@@ -1,5 +1,6 @@
 import { Action } from '..'
+import { Page } from './state'
 
-export const showStartPage: Action = ({ state }) => {
-  state.routing.currentPage = 'start'
+export const setCurrentPage: Action<Page> = ({ state }, page) => {
+  state.routing.currentPage = page
 }

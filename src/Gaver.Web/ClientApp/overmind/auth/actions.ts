@@ -39,3 +39,7 @@ export const handleAuthentication: Action = ({ effects, actions }) => {
     }
   })
 }
+
+export const handleInvitation: Action = ({effects, actions }) => {
+
+}

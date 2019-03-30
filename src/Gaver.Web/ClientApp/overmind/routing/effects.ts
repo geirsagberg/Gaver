@@ -5,7 +5,8 @@ import { Page, PageMap } from './state'
 const pageMap: PageMap = {
   start: '/',
   myList: '/myList',
-  authCallback: '/callback'
+  authCallback: '/callback',
+  notFound: '/notFound'
 }
 
 export function route(route: string, action: Action) {

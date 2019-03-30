@@ -1,19 +1,21 @@
+import { OnInitialize } from '..'
 import * as actions from './actions'
 import * as effects from './effects'
 import { state } from './state'
-import { OnInitialize } from '..'
 
 const onInitialize: OnInitialize = ({
   actions: {
-    routing: { showStartPage },
-    auth: { handleAuthentication }
+    routing: { setCurrentPage },
+    auth: { handleAuthentication, handleInvitation }
   },
   effects: {
     routing: { route, start }
   }
 }) => {
-  route('/', showStartPage)
+  route('/', () => setCurrentPage('start'))
   route('/callback', handleAuthentication)
+  route('/invitation/:token', handleInvitation)
+  route('*', () => setCurrentPage('notFound'))
   start()
 }
 
