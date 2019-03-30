@@ -1,30 +1,15 @@
-import {
-  AppBar,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Icon,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography
-} from '@material-ui/core'
+import { AppBar, Icon, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import ChipInput from 'material-ui-chip-input'
 import React, { FC, useState } from 'react'
 import { hot } from 'react-hot-loader/root'
-import { KeyCodes } from '~/types'
 import Expander from './components/Expander'
 import { useOvermind } from './overmind'
 import LoginPage from './pages/Login'
 import MyListPage from './pages/MyList'
 import NotFoundPage from './pages/NotFound'
+import { ShareListDialog } from './ShareListDialog'
 
-const useStyles = makeStyles({
+export const useStyles = makeStyles({
   root: {
     height: '100%'
   },
@@ -42,9 +27,6 @@ const useStyles = makeStyles({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center'
-  },
-  overflowDialog: {
-    overflow: 'visible'
   }
 })
 
@@ -88,49 +70,6 @@ const LoggedInAvatar: FC = () => {
       </Menu>
     </>
   ) : null
-}
-
-const ShareListDialog: FC = () => {
-  const classes = useStyles()
-  const {
-    actions: {
-      myList: { cancelSharingList, emailAdded, emailDeleted, shareList }
-    },
-    state: {
-      myList: { isSharingList, shareEmails },
-      app: { isSavingOrLoading }
-    }
-  } = useOvermind()
-
-  return (
-    <Dialog fullWidth classes={{ paper: classes.overflowDialog }} open={isSharingList} onClose={cancelSharingList}>
-      <DialogTitle>Del din ønskeliste</DialogTitle>
-      <DialogContent className={classes.overflowDialog}>
-        <DialogContentText>Legg inn e-postadressene til de du vil dele listen med</DialogContentText>
-        <ChipInput
-          fullWidth
-          classes={{}}
-          value={shareEmails}
-          onAdd={emailAdded}
-          InputProps={{ type: 'email' }}
-          onDelete={emailDeleted}
-          blurBehavior="add"
-          required
-          newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.SemiColon, KeyCodes.Comma]}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button
-          disabled={isSavingOrLoading || !shareEmails.length}
-          variant="contained"
-          color="primary"
-          onClick={shareList}>
-          Del liste
-        </Button>
-        <Button onClick={cancelSharingList}>Avbryt</Button>
-      </DialogActions>
-    </Dialog>
-  )
 }
 
 const Layout: FC = () => {

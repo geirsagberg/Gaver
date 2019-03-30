@@ -1,16 +1,17 @@
 import '@babel/polyfill'
-import { CssBaseline, MuiThemeProvider } from '@material-ui/core'
+import './bootstrap'
 import React from 'react'
 import { render } from 'react-dom'
-import './bootstrap'
 import Layout from './OvermindLayout'
 import theme from './theme'
+import { ThemeProvider } from '@material-ui/styles'
+import { CssBaseline } from '@material-ui/core'
 
 render(
-  <MuiThemeProvider theme={theme}>
+  <ThemeProvider theme={theme}>
     <CssBaseline>
       <Layout />
     </CssBaseline>
-  </MuiThemeProvider>,
+  </ThemeProvider>,
   document.getElementById('react-app')
 )
