@@ -1,5 +1,6 @@
 import { createMuiTheme } from '@material-ui/core'
 import { PaletteOptions } from '@material-ui/core/styles/createPalette'
+import { CSSProperties } from '@material-ui/styles/withStyles'
 
 export const gaverColors = {
   first: '#0D3746',
@@ -25,3 +26,13 @@ const theme = createMuiTheme({
 })
 
 export default theme
+
+export const pageWidth = 600
+
+export const centerContent: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  alignSelf: 'center',
+  textAlign: 'center'
+}

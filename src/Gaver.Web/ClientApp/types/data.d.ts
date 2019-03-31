@@ -37,3 +37,14 @@ export interface MyListModel {
     users: Dictionary<UserModel>
   }
 }
+
+export interface InvitationTokenStatus {
+  ok: boolean
+  error: string
+  owner: string
+  pictureUrl: string
+}
+
+export interface AcceptInvitationResponse {
+  wishListId: number
+}

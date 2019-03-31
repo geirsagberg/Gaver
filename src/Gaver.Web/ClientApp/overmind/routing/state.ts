@@ -1,6 +1,4 @@
-export type Page = 'start' | 'myList' | 'authCallback' | 'notFound'
-
-export type PageMap = { [page in Page]: string }
+export type Page = 'start' | 'authCallback' | 'notFound' | 'acceptInvitation' | 'sharedList'
 
 export interface RoutingState {
   currentPage: Page

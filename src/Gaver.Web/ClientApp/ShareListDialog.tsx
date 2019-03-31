@@ -32,8 +32,9 @@ export const ShareListDialog: FC = () => {
           classes={{}}
           value={shareEmails}
           onAdd={emailAdded}
-          InputProps={{ type: 'email' }}
+          InputProps={{ type: 'email', autoFocus: true }}
           onDelete={emailDeleted}
+          onKeyPress={e => e.key === 'Enter' && shareList()}
           blurBehavior="add"
           required
           newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.SemiColon, KeyCodes.Comma]}

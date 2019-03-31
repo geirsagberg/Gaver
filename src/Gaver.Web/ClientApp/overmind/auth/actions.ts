@@ -2,11 +2,12 @@ import { tryOrNotify } from '~/utils'
 import AuthService from '~/utils/AuthService'
 import { showError } from '~/utils/notifications'
 import { Action } from '..'
+import { RouteCallbackArgs } from '../routing/effects'
 
 export const logOut: Action = ({ state, effects }) => {
   AuthService.logout()
   state.auth = {}
-  effects.routing.show('start')
+  effects.routing.showStartPage()
 }
 
 export const logIn: Action = () => {
@@ -40,6 +41,23 @@ export const handleAuthentication: Action = ({ effects, actions }) => {
   })
 }
 
-export const handleInvitation: Action = ({effects, actions }) => {
+export const requireLogin: Action<RouteCallbackArgs> = (_, { next }) => {
+  if (AuthService.isAuthenticated()) {
+    next()
+  }
+}
 
+export const redirectIfNotLoggedIn: Action<RouteCallbackArgs> = (
+  {
+    actions: {
+      auth: { logIn }
+    }
+  },
+  { next }
+) => {
+  if (AuthService.isAuthenticated()) {
+    next()
+  } else {
+    logIn()
+  }
 }

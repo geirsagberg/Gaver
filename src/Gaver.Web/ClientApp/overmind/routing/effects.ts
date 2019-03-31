@@ -1,17 +1,18 @@
 import pageJs from 'page'
-import { Action } from '..'
-import { Page, PageMap } from './state'
 
-const pageMap: PageMap = {
-  start: '/',
-  myList: '/myList',
-  authCallback: '/callback',
-  notFound: '/notFound'
+export type RouteCallbackArgs = {
+  params: any
+  next: () => any
 }
 
-export function route(route: string, action: Action) {
-  pageJs(route, ({ params }) => action(params))
+export type RouteCallback = (args: RouteCallbackArgs) => any
+
+export function route(route: string, ...actions: RouteCallback[]) {
+  const callbacks = actions.map(action => ({ params }, next) => action({ params, next }))
+  pageJs(route, ...callbacks)
 }
 export const start = pageJs.start
-export const show = (page: Page) => pageJs.show(pageMap[page])
 export const redirect = pageJs.redirect
+
+export const showStartPage = () => pageJs.show('/')
+export const showSharedList = (wishListId: number) => pageJs.show(`/list/${wishListId}`)

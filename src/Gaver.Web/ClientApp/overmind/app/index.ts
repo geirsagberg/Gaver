@@ -21,4 +21,4 @@ const onInitialize: OnInitialize = ({
   subscribe(Topic.AjaxStop, decrementAjaxCounter)
 }
 
-export { actions, state, onInitialize }
+export default { actions, state, onInitialize }

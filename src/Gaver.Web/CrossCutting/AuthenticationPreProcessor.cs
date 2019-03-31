@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Gaver.Common.Exceptions;
-using Gaver.Web.Constants;
 using Gaver.Web.Contracts;
 using Gaver.Web.Exceptions;
 using MediatR.Pipeline;
@@ -28,7 +27,7 @@ namespace Gaver.Web.CrossCutting
                     throw new HttpException(HttpStatusCode.Unauthorized);
                 var userId = user.Claims.SingleOrDefault(c => c.Type == GaverClaimTypes.GaverUserId)?.Value;
                 if (userId == null)
-                    throw new FriendlyException(EventIds.UnknownUserId, "Ugyldig bruker");
+                    throw new FriendlyException("Ugyldig bruker");
 
                 authenticatedRequest.UserId = int.Parse(userId);
             }

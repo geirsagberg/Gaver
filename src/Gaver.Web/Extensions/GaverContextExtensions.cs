@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.Constants;
 using Gaver.Web.Exceptions;
 using Microsoft.EntityFrameworkCore;
 

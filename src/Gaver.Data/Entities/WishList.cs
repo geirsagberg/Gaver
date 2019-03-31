@@ -10,9 +10,9 @@ namespace Gaver.Data.Entities
         public int UserId { get; set; }
 
         public virtual User User { get; set; }
-        public virtual ISet<Wish> Wishes { get; set; } = new HashSet<Wish>();
-        public virtual ISet<ChatMessage> ChatMessages { get; set; } = new HashSet<ChatMessage>();
-        public virtual ISet<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
-        public virtual ISet<InvitationToken> InvitationTokens { get; set; } = new HashSet<InvitationToken>();
+        public virtual ICollection<Wish> Wishes { get; set; } = new HashSet<Wish>();
+        public virtual ICollection<ChatMessage> ChatMessages { get; set; } = new HashSet<ChatMessage>();
+        public virtual ICollection<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
+        public virtual ICollection<InvitationToken> InvitationTokens { get; set; } = new HashSet<InvitationToken>();
     }
 }

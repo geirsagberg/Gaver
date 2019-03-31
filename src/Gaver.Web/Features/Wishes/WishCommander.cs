@@ -6,7 +6,6 @@ using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.Constants;
 using Gaver.Web.Extensions;
 using Gaver.Web.Features.LiveUpdates;
 using Gaver.Web.Features.Wishes.Models;
@@ -22,8 +21,7 @@ namespace Gaver.Web.Features.Wishes
         IRequestHandler<SetBoughtRequest, SharedWishModel>,
         IRequestHandler<SetDescriptionRequest, WishModel>,
         IRequestHandler<SetTitleRequest, WishModel>,
-        IRequestHandler<DeleteWishRequest>,
-        IRequestHandler<RegisterTokenRequest>
+        IRequestHandler<DeleteWishRequest>
     {
         private readonly ClientNotifier clientNotifier;
         private readonly GaverContext context;
@@ -60,35 +58,12 @@ namespace Gaver.Web.Features.Wishes
             return Unit.Value;
         }
 
-        public async Task<Unit> Handle(RegisterTokenRequest request, CancellationToken canellationToken)
-        {
-            if (context.Invitations.Any(i => i.WishListId == request.WishListId && i.UserId == request.UserId)) {
-                logger.LogInformation("User {UserId} already has access to {WishListId}", request.UserId,
-                    request.WishListId);
-                return Unit.Value;
-            }
-            var token = context.Find<InvitationToken>(request.Token);
-            if (token == null)
-                throw new FriendlyException(EventIds.UnknownToken, "Unknown token");
-            if (token.Accepted != null)
-                throw new FriendlyException(EventIds.TokenAlreadyAccepted, "Token already accepted");
-
-            var invitation = new Invitation {
-                UserId = request.UserId,
-                WishListId = request.WishListId
-            };
-            context.Add(invitation);
-            token.Accepted = DateTimeOffset.Now;
-            await context.SaveChangesAsync(canellationToken);
-            return Unit.Value;
-        }
-
         public async Task<SharedWishModel> Handle(SetBoughtRequest message, CancellationToken cancellationToken)
         {
             var wish = GetWish(message.WishId, message.WishListId);
             var userId = message.UserId;
             if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId)
-                throw new FriendlyException(EventIds.AlreadyBought, "Wish has already been bought by someone else");
+                throw new FriendlyException("Wish has already been bought by someone else");
 
             if (message.IsBought) wish.BoughtByUserId = userId;
             else wish.BoughtByUserId = null;
@@ -121,7 +96,7 @@ namespace Gaver.Web.Features.Wishes
                     urlString = $"http://{urlString}";
 
                 if (!Uri.TryCreate(urlString, UriKind.Absolute, out var uri))
-                    throw new FriendlyException(EventIds.InvalidUrl, "Ugyldig lenke");
+                    throw new FriendlyException("Ugyldig lenke");
 
                 wish.Url = uri.ToString();
             }
@@ -144,8 +119,7 @@ namespace Gaver.Web.Features.Wishes
         {
             var wish = context.GetOrDie<Wish>(wishId);
             if (wish.WishListId != wishListId)
-                throw new FriendlyException(EventIds.WrongList,
-                    $"Wish {wishId} does not belong to list {wishListId}");
+                throw new FriendlyException($"Wish {wishId} does not belong to list {wishListId}");
             return wish;
         }
     }

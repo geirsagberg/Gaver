@@ -80,13 +80,6 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(new DeleteWishRequest { WishId = wishId, WishListId = listId });
         }
 
-        [HttpPost("{listId:int}/RegisterToken")]
-        public Task RegisterToken(int listId, RegisterTokenRequest request)
-        {
-            request.WishListId = listId;
-            return mediator.Send(request);
-        }
-
         [HttpGet("{listId:int}/Access")]
         public Task<ListAccessStatus> CheckSharedListAccess(int listId)
         {

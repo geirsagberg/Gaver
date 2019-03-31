@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Common.Contracts;
@@ -28,11 +27,10 @@ namespace Gaver.Web.Tests
             mapper.Profiles.Should().NotBeEmpty();
             var user = new User {
                 Name = "Bob",
-                WishLists = {
+                WishList =
                     new WishList {
                         Title = "My list"
                     }
-                }
             };
             context.Add(user);
             context.SaveChanges();
@@ -49,9 +47,8 @@ namespace Gaver.Web.Tests
         {
             var bob = new User {
                 Name = "Bob",
-                WishLists = {
+                WishList =
                     new WishList()
-                }
             };
             var james = new User {
                 Name = "James"
@@ -60,7 +57,7 @@ namespace Gaver.Web.Tests
             context.SaveChanges();
 
             var result = await TestSubject.Handle(new GetSharedListRequest {
-                WishListId = bob.WishLists.First().Id,
+                WishListId = bob.WishList.Id,
                 UserId = james.Id
             });
 

@@ -1,10 +1,12 @@
 import { IAction, IConfig, IDerive, IOnInitialize, IOperator, IState, Overmind } from 'overmind'
 import { createHook } from 'overmind-react'
 import { namespaced } from 'overmind/config'
-import * as auth from './auth'
-import * as routing from './routing'
-import * as myList from './myList'
-import * as app from './app'
+import auth from './auth'
+import routing from './routing'
+import myList from './myList'
+import app from './app'
+import invitations from './invitations'
+import sharedList from './sharedList'
 
 export interface Config extends IConfig<typeof config> {}
 
@@ -20,7 +22,9 @@ const config = namespaced({
   auth,
   routing,
   myList,
-  app
+  app,
+  invitations,
+  sharedList
 })
 
 const overmind = new Overmind(config)

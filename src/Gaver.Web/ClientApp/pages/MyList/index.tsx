@@ -6,12 +6,13 @@ import { useOvermind } from '~/overmind'
 import WishListItem from './WishListItem'
 import AddWishDialog from './AddWishDialog'
 import EditWishDialog from './EditWishDialog'
+import { pageWidth } from '~/theme'
 
 const useStyles = makeStyles({
   root: {
     height: '100%',
     width: '100%',
-    maxWidth: 600,
+    maxWidth: pageWidth,
     position: 'relative'
   },
   fabWrapper: {

@@ -16,7 +16,7 @@ const auth = new auth0.WebAuth({
 export default class AuthService {
   static login() {
     const returnUrl = location.pathname + location.search + location.hash
-    auth.authorize({ state: returnUrl })
+    auth.authorize({ state: returnUrl, prompt: 'none' })
   }
 
   static logout() {
@@ -35,7 +35,11 @@ export default class AuthService {
         const returnUrl = state || '/'
         callback({ returnUrl })
       } else if (error) {
-        callback({ error })
+        if (error.error === 'login_required') {
+          auth.authorize({ state: error.state })
+        } else {
+          callback({ error })
+        }
       }
     })
   }

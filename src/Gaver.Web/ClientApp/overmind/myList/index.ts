@@ -1,15 +1,13 @@
-import { state } from './state'
-import * as actions from './actions'
-import * as effects from './effects'
 import { useOvermind } from '..'
-
-export { state, actions, effects }
+import * as actions from './actions'
+import { state } from './state'
 
 export const useMyList = () => {
-  const { state, actions, effects } = useOvermind()
+  const { state, actions } = useOvermind()
   return {
     state: state.myList,
-    actions: actions.myList,
-    effects: effects.myList
+    actions: actions.myList
   }
 }
+
+export default { state, actions }

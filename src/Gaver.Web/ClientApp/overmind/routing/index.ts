@@ -6,7 +6,9 @@ import { state } from './state'
 const onInitialize: OnInitialize = ({
   actions: {
     routing: { setCurrentPage },
-    auth: { handleAuthentication, handleInvitation }
+    auth: { handleAuthentication, requireLogin },
+    invitations: { handleInvitation },
+    sharedList: { handleSharedList }
   },
   effects: {
     routing: { route, start }
@@ -14,9 +16,10 @@ const onInitialize: OnInitialize = ({
 }) => {
   route('/', () => setCurrentPage('start'))
   route('/callback', handleAuthentication)
-  route('/invitation/:token', handleInvitation)
+  route('/invitations/:token', requireLogin, handleInvitation)
+  route('/list/:listId', requireLogin, handleSharedList)
   route('*', () => setCurrentPage('notFound'))
   start()
 }
 
-export { actions, state, effects, onInitialize }
+export default { actions, state, effects, onInitialize }

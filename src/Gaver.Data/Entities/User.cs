@@ -23,8 +23,8 @@ namespace Gaver.Data.Entities
         [MaxLength(255)]
         public string PictureUrl { get; set; }
 
-        public virtual ISet<WishList> WishLists { get; set; } = new HashSet<WishList>();
-        public virtual ISet<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
-        public virtual ISet<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
+        public WishList WishList { get; set; }
+        public virtual ICollection<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
+        public virtual ICollection<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
     }
 }

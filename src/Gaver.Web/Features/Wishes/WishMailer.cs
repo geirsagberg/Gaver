@@ -7,8 +7,6 @@ using Gaver.Common.Exceptions;
 using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-
-using Gaver.Web.Constants;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Mail;
 using Gaver.Web.Features.Wishes.Requests;
@@ -42,9 +40,9 @@ namespace Gaver.Web.Features.Wishes
                 var token = new InvitationToken {
                     WishListId = wishListId
                 };
-                gaverContext.InvitationTokens.Add(token);
+                gaverContext.Set<InvitationToken>().Add(token);
 
-                var url = Url.Combine(request.Scheme + "://" + request.Host, "list", wishListId.ToString(), "?token=" + token.Id.ToString());
+                var url = Url.Combine(request.Scheme + "://" + request.Host, "invitations", token.Token.ToString());
                 var mail = new MailModel {
                     To = new[] { email },
                     From = "noreply@sagberg.net",
@@ -65,7 +63,7 @@ namespace Gaver.Web.Features.Wishes
         {
             var invalidEmails = emails.Where(e => !e.IsValidEmail()).ToList();
             if (invalidEmails.Any()) {
-                throw new FriendlyException(EventIds.InvalidEmail, "Ugyldig e-postformat: " + invalidEmails.ToJoinedString());
+                throw new FriendlyException("Ugyldig e-postformat: " + invalidEmails.ToJoinedString());
             }
         }
     }

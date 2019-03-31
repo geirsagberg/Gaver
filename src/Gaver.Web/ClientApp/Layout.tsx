@@ -1,13 +1,15 @@
-import { AppBar, Icon, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Icon, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { FC, useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import Expander from './components/Expander'
 import { useOvermind } from './overmind'
+import AcceptInvitationPage from './pages/AcceptInvitation'
 import LoginPage from './pages/Login'
 import MyListPage from './pages/MyList'
 import NotFoundPage from './pages/NotFound'
 import { ShareListDialog } from './ShareListDialog'
+import SharedListPage from './pages/SharedList'
 
 export const useStyles = makeStyles({
   root: {
@@ -43,6 +45,32 @@ const Content: FC = () => {
       return isLoggedIn ? <MyListPage /> : <LoginPage />
     case 'notFound':
       return <NotFoundPage />
+    case 'acceptInvitation':
+      return <AcceptInvitationPage />
+    case 'sharedList':
+      return <SharedListPage />
+  }
+  return null
+}
+
+const Actions: FC = () => {
+  const {
+    state: {
+      routing: { currentPage },
+      auth: { isLoggedIn }
+    },
+    actions: {
+      myList: { startSharingList }
+    }
+  } = useOvermind()
+
+  switch (currentPage) {
+    case 'start':
+      return isLoggedIn ? (
+        <IconButton color="inherit" onClick={startSharingList}>
+          <Icon>share</Icon>
+        </IconButton>
+      ) : null
   }
   return null
 }
@@ -62,9 +90,12 @@ const LoggedInAvatar: FC = () => {
 
   return auth.isLoggedIn ? (
     <>
-      <IconButton color="inherit" onClick={showProfileMenu}>
-        <Icon>account_circle</Icon>
-      </IconButton>
+      <Tooltip title={auth.user.name}>
+        <IconButton color="inherit" onClick={showProfileMenu}>
+          <Icon>account_circle</Icon>
+        </IconButton>
+      </Tooltip>
+
       <Menu anchorEl={menuAnchorEl} open={!!menuAnchorEl} onClose={hideProfileMenu}>
         <MenuItem onClick={logOut}>Logg ut</MenuItem>
       </Menu>
@@ -75,25 +106,25 @@ const LoggedInAvatar: FC = () => {
 const Layout: FC = () => {
   const classes = useStyles()
   const {
-    actions: {
-      myList: { startSharingList }
+    state: {
+      auth: { isLoggedIn }
     }
   } = useOvermind()
 
   return (
     <div className={classes.root}>
-      <AppBar>
-        <Toolbar>
-          <Typography variant="h6" color="inherit" style={{ marginRight: '1rem' }}>
-            Gaver
-          </Typography>
-          <Expander />
-          <IconButton color="inherit" onClick={startSharingList}>
-            <Icon>share</Icon>
-          </IconButton>
-          <LoggedInAvatar />
-        </Toolbar>
-      </AppBar>
+      {isLoggedIn && (
+        <AppBar>
+          <Toolbar>
+            <Typography variant="h6" color="inherit" style={{ marginRight: '1rem' }}>
+              Gaver
+            </Typography>
+            <Expander />
+            <Actions />
+            <LoggedInAvatar />
+          </Toolbar>
+        </AppBar>
+      )}
       <div className={classes.content}>
         <Content />
       </div>

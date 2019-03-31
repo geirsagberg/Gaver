@@ -4,11 +4,8 @@ namespace Gaver.Common.Exceptions
 {
     public class FriendlyException : Exception
     {
-        public int EventId { get; }
-
-        public FriendlyException(int eventId, string message) : base(message)
+        public FriendlyException(string message) : base(message)
         {
-            EventId = eventId;
         }
     }
 }

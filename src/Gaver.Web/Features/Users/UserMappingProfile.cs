@@ -11,7 +11,7 @@ namespace Gaver.Web.Features.Users
         public UserMappingProfile()
         {
             CreateMap<User, CurrentUserModel>()
-                .MapMember(m => m.WishListId, u => u.WishLists.FirstOrDefault().Id);
+                .MapMember(m => m.WishListId, u => u.WishList.Id);
 
             CreateMap<User, UserModel>();
         }

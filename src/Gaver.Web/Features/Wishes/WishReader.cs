@@ -8,7 +8,6 @@ using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Data.Exceptions;
-using Gaver.Web.Constants;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
@@ -62,7 +61,7 @@ namespace Gaver.Web.Features.Wishes
             var sharedListModel = context.Set<WishList>()
                 .Where(wl => wl.Id == message.WishListId)
                 .ProjectTo<SharedListModel>(mapper.MapperConfiguration)
-                .SingleOrThrow(new FriendlyException(EventIds.SharedListMissing, "Listen finnes ikke"));
+                .SingleOrThrow(new FriendlyException("Listen finnes ikke"));
             return Task.FromResult(sharedListModel);
         }
 

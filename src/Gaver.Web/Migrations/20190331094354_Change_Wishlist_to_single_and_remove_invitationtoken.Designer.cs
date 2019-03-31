@@ -3,15 +3,17 @@ using System;
 using Gaver.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Gaver.Web.Migrations
 {
     [DbContext(typeof(GaverContext))]
-    partial class GaverContextModelSnapshot : ModelSnapshot
+    [Migration("20190331094354_Change_Wishlist_to_single_and_remove_invitationtoken")]
+    partial class Change_Wishlist_to_single_and_remove_invitationtoken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,28 +58,6 @@ namespace Gaver.Web.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Invitations");
-                });
-
-            modelBuilder.Entity("Gaver.Data.Entities.InvitationToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTimeOffset?>("Accepted");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<Guid>("Token");
-
-                    b.Property<int>("WishListId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WishListId");
-
-                    b.ToTable("InvitationTokens");
                 });
 
             modelBuilder.Entity("Gaver.Data.Entities.User", b =>
@@ -175,14 +155,6 @@ namespace Gaver.Web.Migrations
 
                     b.HasOne("Gaver.Data.Entities.WishList", "WishList")
                         .WithMany("Invitations")
-                        .HasForeignKey("WishListId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Gaver.Data.Entities.InvitationToken", b =>
-                {
-                    b.HasOne("Gaver.Data.Entities.WishList")
-                        .WithMany("InvitationTokens")
                         .HasForeignKey("WishListId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

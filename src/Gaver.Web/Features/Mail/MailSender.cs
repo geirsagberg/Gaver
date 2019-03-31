@@ -4,7 +4,6 @@ using Flurl.Http;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
-using Gaver.Web.Constants;
 using Gaver.Web.Contracts;
 using Gaver.Web.Extensions;
 using Gaver.Web.Options;
@@ -28,7 +27,7 @@ namespace Gaver.Web.Features.Mail
         public async Task SendAsync(MailModel mail)
         {
             if (options.SendGridApiKey.IsNullOrEmpty()) {
-                throw new FriendlyException(EventIds.SendGridApiKeyMissing, "Mangler API-nøkkel for SendGrid");
+                throw new FriendlyException("Mangler API-nøkkel for SendGrid");
             }
             var sendGridMail = mapper.Map<SendGridMail>(mail);
             try {
@@ -37,7 +36,7 @@ namespace Gaver.Web.Features.Mail
                     .PostJsonAsync(sendGridMail);
                 logger.LogInformation("Mail sent to {To}", mail.To);
             } catch (Exception e) {
-                logger.LogErrorAndThrow(EventIds.ShareListFailed, e, "Failed to share list");
+                logger.LogErrorAndThrow(e, "Failed to share list");
             }
         }
     }

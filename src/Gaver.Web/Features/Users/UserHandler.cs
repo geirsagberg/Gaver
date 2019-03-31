@@ -7,7 +7,6 @@ using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.Constants;
 using Gaver.Web.Options;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
@@ -45,9 +44,7 @@ namespace Gaver.Web.Features.Users
                     Name = userInfo.Name,
                     PictureUrl = userInfo.Picture,
                     PrimaryIdentityId = request.PrimaryIdentityId,
-                    WishLists = {
-                        new WishList()
-                    }
+                    WishList = new WishList()
                 };
                 context.Add(user);
                 await context.SaveChangesAsync(cancellationToken);
@@ -62,7 +59,7 @@ namespace Gaver.Web.Features.Users
                 .ProjectTo<CurrentUserModel>(mapper.MapperConfiguration).SingleOrDefaultAsync(token);
 
             if (userModel == null) {
-                throw new FriendlyException(EventIds.UnknownUserId, "Bruker finnes ikke");
+                throw new FriendlyException("Bruker finnes ikke");
             }
 
             return userModel;
