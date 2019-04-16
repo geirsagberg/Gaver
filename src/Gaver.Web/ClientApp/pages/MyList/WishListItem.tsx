@@ -8,17 +8,19 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    '&:hover': {
+    '&:hover,&:focus-within': {
       '& $actions': {
-        display: 'initial'
+        // display: 'initial'
+        opacity: 1
       }
     },
-    padding: '1rem',
-    minHeight: '5rem',
+    padding: '0 1rem',
+    minHeight: '3rem',
     marginBottom: '1rem'
   },
   actions: {
-    display: 'none'
+    // display: 'none',
+    opacity: 0.3
   }
 })
 
@@ -35,7 +37,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   const wish = wishes[wishId]
   return (
     <Paper className={classes.root}>
-      <Typography variant="h6">{wish.title}</Typography>
+      <Typography variant="body1">{wish.title}</Typography>
       <div className={classes.actions}>
         <IconButton onClick={() => startEditingWish(wishId)}>
           <Icon>edit</Icon>

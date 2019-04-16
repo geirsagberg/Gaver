@@ -15,6 +15,9 @@ const useStyles = makeStyles({
     maxWidth: pageWidth,
     position: 'relative'
   },
+  list: {
+    padding: '1rem 0'
+  },
   fabWrapper: {
     position: 'absolute',
     bottom: '1rem',
@@ -43,7 +46,7 @@ const MyListPage: FC = () => {
 
   return (
     <div className={classes.root}>
-      <List>
+      <List className={classes.list}>
         {map(wishes, wish => (
           <WishListItem key={wish.id} wishId={wish.id} />
         ))}
