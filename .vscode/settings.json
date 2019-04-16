@@ -14,5 +14,10 @@
     ".idea*": true
   },
   "eslint.enable": true,
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#073615",
+    "titleBar.activeBackground": "#094B1E",
+    "titleBar.activeForeground": "#F0FDF4"
+  }
 }

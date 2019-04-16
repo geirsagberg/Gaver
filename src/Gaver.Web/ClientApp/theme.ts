@@ -10,12 +10,12 @@ export const gaverColors = {
   fifth: '#DD395A'
 }
 const palette: PaletteOptions = {
-  primary: { main: '#3F51B5' },
-  secondary: { main: '#AB47BC' },
-  type: 'dark',
-  background: {
-    paper: '#222'
-  }
+  // primary: { main: '#3F51B5' },
+  // secondary: { main: '#AB47BC' },
+  // type: 'dark',
+  // background: {
+  //   paper: '#222'
+  // }
 }
 
 const theme = createMuiTheme({

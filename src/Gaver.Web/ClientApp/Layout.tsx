@@ -1,5 +1,4 @@
 import { AppBar, Icon, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
 import React, { FC, useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import Expander from './components/Expander'
@@ -8,8 +7,9 @@ import AcceptInvitationPage from './pages/AcceptInvitation'
 import LoginPage from './pages/Login'
 import MyListPage from './pages/MyList'
 import NotFoundPage from './pages/NotFound'
-import { ShareListDialog } from './ShareListDialog'
 import SharedListPage from './pages/SharedList'
+import { ShareListDialog } from './ShareListDialog'
+import { makeStyles } from '@material-ui/styles'
 
 export const useStyles = makeStyles({
   root: {

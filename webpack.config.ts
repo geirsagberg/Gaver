@@ -9,12 +9,18 @@ const mode = isDevelopment ? 'development' : 'production'
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const baseDir = process.cwd()
 
 const commonPlugins = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': `'${mode}'`
+  }),
+  new HtmlWebpackPlugin({
+    inject: false,
+    template: 'Features/Shared/_Layout.template.cshtml',
+    filename: '../../Features/Shared/_Layout.cshtml'
   })
 ]
 
@@ -25,7 +31,7 @@ const productionPlugins = [
     tsconfig: path.join(__dirname, 'tsconfig.json')
   }),
   new MiniCssExtractPlugin({
-    filename: '[name].css'
+    filename: 'styles.css'
   })
 ]
 

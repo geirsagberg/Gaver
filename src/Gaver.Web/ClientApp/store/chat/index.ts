@@ -1,9 +1,7 @@
-import { tryOrNotify } from '~/utils'
-import * as api from './api'
-import { ChatMessage } from '~/types/data'
-import { createAction, ActionsUnion } from '~/utils/reduxUtils'
-import { combineReducers } from 'redux'
 import produce from 'immer';
+import { combineReducers } from 'redux';
+import { ChatMessage } from '~/types/data';
+import { ActionsUnion, createAction } from '~/utils/reduxUtils';
 
 type ChatState = Dictionary<ChatMessage>
 
