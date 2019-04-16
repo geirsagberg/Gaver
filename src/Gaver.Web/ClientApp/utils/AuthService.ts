@@ -22,6 +22,7 @@ export default class AuthService {
   static logout() {
     localStorage.removeItem(AccessTokenKey)
     localStorage.removeItem(ExpiresAtKey)
+    auth.logout({ returnTo: location.origin })
   }
 
   static handleAuthentication(
