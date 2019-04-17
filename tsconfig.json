@@ -19,7 +19,8 @@
     "noImplicitAny": false,
     "strictNullChecks": false,
     "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "compileOnSave": false,
   "exclude": ["node_modules", "**/wwwroot"],
