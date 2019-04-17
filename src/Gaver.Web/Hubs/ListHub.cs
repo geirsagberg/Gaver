@@ -16,7 +16,7 @@ namespace Gaver.Web.Hubs
     [Authorize]
     public class ListHub : Hub<IListHubClient>
     {
-        private static readonly HashSet<UserListConnection> userListConnections
+        private static readonly HashSet<UserListConnection> UserListConnections
             = new HashSet<UserListConnection>();
 
         private readonly IAccessChecker accessChecker;
@@ -35,7 +35,7 @@ namespace Gaver.Web.Hubs
         }
 
         public static string[] GetConnectionIdsForUser(int userId)
-            => userListConnections.Where(ulc => ulc.UserId == userId).Select(ulc => ulc.ConnectionId).ToArray();
+            => UserListConnections.Where(ulc => ulc.UserId == userId).Select(ulc => ulc.ConnectionId).ToArray();
 
         public static string GetGroup(int listId) => $"List-{listId}";
 
@@ -45,7 +45,7 @@ namespace Gaver.Web.Hubs
             var userId = principal.GetUserId();
             await accessChecker.CheckWishListInvitations(listId, userId);
             var connectionId = Context.ConnectionId;
-            userListConnections.Add(new UserListConnection {
+            UserListConnections.Add(new UserListConnection {
                 UserId = userId,
                 ListId = listId,
                 ConnectionId = connectionId
@@ -61,7 +61,7 @@ namespace Gaver.Web.Hubs
 
         public Task Unsubscribe(int listId)
         {
-            userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
+            UserListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
             var status = GetStatus(listId);
             var groupName = GetGroup(listId);
             return Clients.Group(groupName).UpdateUsers(status);
@@ -69,10 +69,10 @@ namespace Gaver.Web.Hubs
 
         public Task UnsubscribeAll()
         {
-            var listIds = userListConnections
+            var listIds = UserListConnections
                 .Where(c => c.ConnectionId == Context.ConnectionId)
                 .Select(c => c.ListId).ToList();
-            userListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
+            UserListConnections.RemoveWhere(c => c.ConnectionId == Context.ConnectionId);
             var tasks = listIds.Select(listId => {
                 var status = GetStatus(listId);
                 var groupName = GetGroup(listId);
@@ -83,7 +83,7 @@ namespace Gaver.Web.Hubs
 
         private SubscriptionStatus GetStatus(int listId)
         {
-            var connections = userListConnections.Where(c => c.ListId == listId).ToList();
+            var connections = UserListConnections.Where(c => c.ListId == listId).ToList();
             var userIds = connections.Select(c => c.UserId).ToList();
             var users = gaverContext.Users.Where(u => userIds.Contains(u.Id));
             var userModels = mapper.Map<UserModel[]>(users);

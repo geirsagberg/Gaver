@@ -11,6 +11,8 @@
     <ApplicationInsightsResourceId>/subscriptions/0d60de30-59ab-484b-b845-244c39b366ce/resourcegroups/Gaver/providers/microsoft.insights/components/Gaver</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/0d60de30-59ab-484b-b845-244c39b366ce/resourcegroups/Gaver/providers/microsoft.insights/components/Gaver</ApplicationInsightsAnnotationResourceId>
     <LangVersion>latest</LangVersion>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <TieredCompilation>true</TieredCompilation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>

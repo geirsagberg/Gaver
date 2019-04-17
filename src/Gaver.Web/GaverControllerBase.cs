@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Gaver.Web
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public abstract class GaverControllerBase : Controller
     {

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
@@ -7,11 +8,12 @@ using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
+using Gaver.Web.Exceptions;
 using Gaver.Web.Options;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using EntityFrameworkQueryableExtensions = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions;
 
 namespace Gaver.Web.Features.Users
 {
@@ -35,7 +37,8 @@ namespace Gaver.Web.Features.Users
 
         public async Task<User> Handle(GetOrCreateUserRequest request, CancellationToken cancellationToken)
         {
-            var user = await context.Set<User>().SingleOrDefaultAsync(u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);
+            var user = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(context.Set<User>(),
+                u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);
 
             if (user == null) {
                 var userInfo = await GetUserInfo(cancellationToken);
@@ -82,7 +85,12 @@ namespace Gaver.Web.Features.Users
 
         private async Task<UserInfo> GetUserInfo(CancellationToken token)
         {
-            var accessToken = await httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            var httpContextItems = httpContextAccessor.HttpContext.Items;
+            if (!httpContextItems.ContainsKey("access_token")) {
+                throw new HttpException(HttpStatusCode.InternalServerError, "Access token missing");
+            }
+
+            var accessToken = httpContextItems["access_token"].ToString();
             var userInfo = await $"https://{auth0Settings.Domain}/userinfo"
                 .WithOAuthBearerToken(accessToken)
                 .GetJsonAsync<UserInfo>(token);

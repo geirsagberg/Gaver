@@ -23,12 +23,19 @@ namespace Gaver.Web.MvcUtils
                 return principal;
             }
 
+            if (principal.HasClaim(c => c.Type == GaverClaimTypes.GaverUserId)) {
+                return principal;
+            }
+
+            var transformed = new ClaimsPrincipal();
+            transformed.AddIdentities(principal.Identities);
+
             var user = await mediator.Send(new GetOrCreateUserRequest(providerId));
             var gaverIdentity = new ClaimsIdentity(new[] {
                 new Claim(GaverClaimTypes.GaverUserId, user.Id.ToString(), ClaimValueTypes.Integer32)
             });
-            principal.AddIdentity(gaverIdentity);
-            return principal;
+            transformed.AddIdentity(gaverIdentity);
+            return transformed;
         }
     }
 }
