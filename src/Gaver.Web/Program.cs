@@ -43,6 +43,7 @@ namespace Gaver.Web
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) => WebHost.CreateDefaultBuilder(args)
             .UseStartup<Startup>()
+            .UseApplicationInsights()
             .UseSerilog();
     }
 }
