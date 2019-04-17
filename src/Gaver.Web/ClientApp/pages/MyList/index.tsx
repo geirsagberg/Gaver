@@ -17,7 +17,8 @@ const useStyles = createStylesHook(theme => ({
     height: '100%',
     width: '100%',
     maxWidth: pageWidth,
-    position: 'relative'
+    position: 'relative',
+    paddingBottom: '4rem'
   },
   list: {
     padding: '1rem',
@@ -74,6 +75,7 @@ const MyListPage: FC = () => {
       <div className={classNames(classes.list, { [classes.listEmpty]: !size(orderedWishes) })}>
         {size(orderedWishes) ? (
           <Container
+            style={{ paddingBottom: '4.5rem' }}
             onDrop={e => wishOrderChanged({ oldIndex: e.removedIndex, newIndex: e.addedIndex, wishId: e.payload })}
             getChildPayload={i => orderedWishes[i].id}>
             {map(orderedWishes, wish => (

@@ -29,7 +29,7 @@ const AddWishDialog: FC = () => {
           onChange={event => setNewWishTitle(event.currentTarget.value)}
           autoFocus
           fullWidth
-          onKeyPress={e => e.key === 'Enter' && addWish()}
+          onKeyPress={e => newWish.title && e.key === 'Enter' && addWish()}
           value={newWish.title}
         />
       </DialogContent>

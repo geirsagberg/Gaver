@@ -13,7 +13,8 @@ import { createStylesHook } from './utils/materialUtils'
 
 export const useStyles = createStylesHook(theme => ({
   root: {
-    height: '100%'
+    height: '100%',
+    position: 'relative'
   },
   content: {
     display: 'flex',
