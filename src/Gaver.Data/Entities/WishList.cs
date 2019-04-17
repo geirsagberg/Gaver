@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Gaver.Data.Contracts;
 
 namespace Gaver.Data.Entities
@@ -8,6 +9,8 @@ namespace Gaver.Data.Entities
         public int Id { get; set; }
         public string Title { get; set; }
         public int UserId { get; set; }
+
+        public int[] WishesOrder { get; set; } = new int[0];
 
         public virtual User User { get; set; }
         public virtual ICollection<Wish> Wishes { get; set; } = new HashSet<Wish>();

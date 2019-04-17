@@ -42,6 +42,12 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(request);
         }
 
+        [HttpPost("Order")]
+        public Task SetWishesOrder(SetWishesOrderRequest request)
+        {
+            return mediator.Send(request);
+        }
+
         [HttpPut("{listId:int}/{wishId:int}/Title")]
         public Task<WishModel> SetTitle(int listId, int wishId, SetTitleRequest request)
         {
@@ -75,7 +81,7 @@ namespace Gaver.Web.Features.Wishes
         }
 
         [HttpDelete("{listId:int}/{wishId:int}")]
-        public Task Delete(int listId, int wishId)
+        public Task<DeleteWishResponse> Delete(int listId, int wishId)
         {
             return mediator.Send(new DeleteWishRequest { WishId = wishId, WishListId = listId });
         }

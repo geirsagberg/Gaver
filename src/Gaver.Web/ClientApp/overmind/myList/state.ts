@@ -1,6 +1,7 @@
 import { Wish } from '~/types/data'
+import { Derive } from '..'
 
-export interface MyListState {
+export type MyListState = {
   id?: number
   editingWish?: Wish
   shareEmails: string[]
@@ -8,6 +9,9 @@ export interface MyListState {
   wishes: Dictionary<Wish>
   isAddingWish: boolean
   newWish?: Wish
+  wishesLoaded?: boolean
+  wishesOrder: number[]
+  orderedWishes: Derive<MyListState, Wish[]>
 }
 
 export const getEmptyWish = () => ({
@@ -18,5 +22,7 @@ export const state: MyListState = {
   shareEmails: [],
   wishes: {},
   isAddingWish: false,
-  isSharingList: false
+  isSharingList: false,
+  wishesOrder: [],
+  orderedWishes: state => state.wishesOrder.map(i => state.wishes[i])
 }

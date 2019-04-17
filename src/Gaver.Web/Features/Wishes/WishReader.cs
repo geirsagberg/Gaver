@@ -50,7 +50,7 @@ namespace Gaver.Web.Features.Wishes
             return ListAccessStatus.NotInvited;
         }
 
-        public  Task<MyListModel> Handle(GetMyListRequest message, CancellationToken token = default)
+        public Task<MyListModel> Handle(GetMyListRequest message, CancellationToken token = default)
         {
             var myList = GetMyList(message);
             return Task.FromResult(myList);
@@ -74,6 +74,9 @@ namespace Gaver.Web.Features.Wishes
             model.Invitations = context.Invitations.Where(i => i.UserId == message.UserId)
                 .ProjectTo<InvitationModel>(mapper.MapperConfiguration)
                 .ToList();
+            if (model.WishesOrder?.Length != model.Wishes.Count) {
+                model.WishesOrder = model.Wishes.Select(w => w.Id).ToArray();
+            }
             return model;
         }
     }

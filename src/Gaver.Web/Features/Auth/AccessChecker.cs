@@ -4,7 +4,6 @@ using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
-using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Auth
@@ -18,18 +17,34 @@ namespace Gaver.Web.Features.Auth
             this.context = context;
         }
 
-        [AssertionMethod]
-        public async Task CheckWishListInvitations(int wishListId, int userId, CancellationToken cancellationToken)
+        public async Task CheckWishListInvitations(int wishListId, int userId,
+            CancellationToken cancellationToken = default)
         {
-            if (!await context.Invitations.AnyAsync(i => i.WishListId == wishListId && i.UserId == userId, cancellationToken))
+            if (!await context.Invitations.AnyAsync(i => i.WishListId == wishListId && i.UserId == userId,
+                cancellationToken))
                 throw new FriendlyException("Du har ikke blitt invitert til å se denne listen");
         }
 
-        [AssertionMethod]
-        public async Task CheckNotOwner(int wishListId, int userId, CancellationToken cancellationToken)
+        public async Task CheckNotOwner(int wishListId, int userId, CancellationToken cancellationToken = default)
         {
-            if (await context.Set<WishList>().AnyAsync(wl => wl.Id == wishListId && wl.UserId == userId))
+            if (await context.Set<WishList>()
+                .AnyAsync(wl => wl.Id == wishListId && wl.UserId == userId, cancellationToken))
                 throw new FriendlyException("Du kan ikke se din egen liste");
+        }
+
+        public async Task CheckOwner(int wishListId, int userId, CancellationToken cancellationToken = default)
+        {
+            if (!await context.WishLists.AnyAsync(wl => wl.Id == wishListId && wl.UserId == userId, cancellationToken)
+            )
+                throw new FriendlyException("Denne listen finnes ikke eller tilhører noen andre");
+        }
+
+        public async Task CheckWishOwner(int wishId, int wishListId, int userId,
+            CancellationToken cancellationToken = default)
+        {
+            if (!await context.Wishes.AnyAsync(w =>
+                w.Id == wishId && w.WishListId == wishListId && w.WishList.UserId == userId, cancellationToken))
+                throw new FriendlyException("Dette ønsket finnes ikke, eller tilhører en annen liste");
         }
     }
 }

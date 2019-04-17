@@ -15,7 +15,10 @@ namespace Gaver.Data
             var entity = new T {
                 Id = id
             };
-            context.Set<T>().Attach(entity);
+            if (context.Entry(entity).State == EntityState.Detached) {
+                context.Attach(entity);
+            }
+
             context.Entry(entity).State = EntityState.Deleted;
         }
 

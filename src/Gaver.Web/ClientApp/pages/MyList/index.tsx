@@ -9,7 +9,8 @@ import EditWishDialog from './EditWishDialog'
 import WishListItem from './WishListItem'
 import Color from 'color'
 import classNames from 'classnames'
-import { Flipper, Flipped } from 'react-flip-toolkit'
+import { Container, Draggable } from 'react-smooth-dnd'
+import Loading from '~/components/Loading'
 
 const useStyles = createStylesHook(theme => ({
   root: {
@@ -19,18 +20,17 @@ const useStyles = createStylesHook(theme => ({
     position: 'relative'
   },
   list: {
-    padding: '1rem 0',
+    padding: '1rem',
     height: '100%',
-    background: Color(theme.palette.background.paper)
-      .fade(0.5)
-      .toString(),
     borderRadius: theme.shape.borderRadius,
     position: 'relative',
     transition: 'all 0.5s',
     userSelect: 'none'
   },
-  listNotEmpty: {
-    background: 'transparent'
+  listEmpty: {
+    background: Color(theme.palette.background.paper)
+      .fade(0.5)
+      .toString()
   },
   fabWrapper: {
     position: 'absolute',
@@ -59,29 +59,29 @@ const MyListPage: FC = () => {
   const classes = useStyles()
   const {
     state: {
-      myList: { wishes }
+      myList: { orderedWishes, wishesLoaded }
     },
     actions: {
-      myList: { startAddingWish, loadWishes }
+      myList: { startAddingWish, loadWishes, wishOrderChanged }
     }
   } = useOvermind()
   useEffect(() => {
     loadWishes()
   }, [])
 
-  return (
+  return wishesLoaded ? (
     <div className={classes.root}>
-      <div className={classNames(classes.list, { [classes.listNotEmpty]: !!size(wishes) })}>
-        {size(wishes) ? (
-          <Flipper flipKey={map(wishes, wish => wish.id).join()}>
-            {map(wishes, wish => (
-              <Flipped key={wish.id} flipId={wish.id.toString()}>
-                <div draggable>
-                  <WishListItem wishId={wish.id} />
-                </div>
-              </Flipped>
+      <div className={classNames(classes.list, { [classes.listEmpty]: !size(orderedWishes) })}>
+        {size(orderedWishes) ? (
+          <Container
+            onDrop={e => wishOrderChanged({ oldIndex: e.removedIndex, newIndex: e.addedIndex, wishId: e.payload })}
+            getChildPayload={i => orderedWishes[i].id}>
+            {map(orderedWishes, wish => (
+              <Draggable key={wish.id}>
+                <WishListItem wishId={wish.id} />
+              </Draggable>
             ))}
-          </Flipper>
+          </Container>
         ) : (
           <Typography className={classes.addWishHint}>Legg til et ønske ➔</Typography>
         )}
@@ -96,6 +96,8 @@ const MyListPage: FC = () => {
       <AddWishDialog />
       <EditWishDialog />
     </div>
+  ) : (
+    <Loading />
   )
 }
 

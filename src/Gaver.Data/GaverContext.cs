@@ -1,5 +1,6 @@
 using Gaver.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Gaver.Data
 {
@@ -25,11 +26,17 @@ namespace Gaver.Data
                     .HasDefaultValueSql("NOW()")
                     ;
             });
-            modelBuilder.Entity<Invitation>(entity => { entity.HasKey(i => new {i.WishListId, i.UserId}); });
+            modelBuilder.Entity<Invitation>(entity => { entity.HasKey(i => new { i.WishListId, i.UserId }); });
             modelBuilder.Entity<InvitationToken>(entity => {
                 entity.Property(e => e.Created)
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("NOW()");
+            });
+            var jsonSerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            modelBuilder.Entity<WishList>(entity => {
+                entity.Property(e => e.WishesOrder).HasConversion(
+                    array => JsonConvert.SerializeObject(array, jsonSerializerSettings),
+                    json => JsonConvert.DeserializeObject<int[]>(json, jsonSerializerSettings));
             });
         }
     }

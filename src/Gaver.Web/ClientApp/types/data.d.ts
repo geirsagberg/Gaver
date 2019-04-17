@@ -9,6 +9,13 @@ export interface SharedWishModel extends Wish {
   boughtByUser?: UserModel
 }
 
+export interface WishListModel {
+  id: number
+  wishes: number[]
+  invitations: number[]
+  wishesOrder: number[]
+}
+
 export interface Wish {
   id?: number
   wishListId?: number
@@ -35,6 +42,7 @@ export interface MyListModel {
     wishes: Dictionary<Wish>
     invitations: Dictionary<Invitation>
     users: Dictionary<UserModel>
+    wishLists: Dictionary<WishListModel>
   }
 }
 
@@ -47,4 +55,8 @@ export interface InvitationTokenStatus {
 
 export interface AcceptInvitationResponse {
   wishListId: number
+}
+
+export interface DeleteWishResponse {
+  wishesOrder: number[]
 }

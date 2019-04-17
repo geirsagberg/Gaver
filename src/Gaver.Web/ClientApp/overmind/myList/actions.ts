@@ -1,8 +1,8 @@
 import { without } from 'lodash-es'
 import * as schemas from '~/schemas'
-import { MyListModel, Wish } from '~/types/data'
+import { MyListModel, Wish, DeleteWishResponse } from '~/types/data'
 import { tryOrNotify } from '~/utils'
-import { getJson, postJson, putJson, deleteJson } from '~/utils/ajax'
+import { deleteJson, getJson, postJson, putJson } from '~/utils/ajax'
 import { showError, showSuccess } from '~/utils/notifications'
 import { Action } from '..'
 import { getEmptyWish } from './state'
@@ -12,6 +12,7 @@ export const addWish: Action = ({ state: { myList } }) =>
     const wish = await postJson<Wish>('/api/WishList', myList.newWish)
     myList.wishes[wish.id] = wish
     myList.isAddingWish = false
+    myList.wishesOrder.push(wish.id)
   })
 
 export const startAddingWish: Action = ({ state: { myList } }) => {
@@ -32,7 +33,8 @@ export const startEditingWish: Action<number> = ({ state: { myList } }, wishId) 
 export const confirmDeleteWish: Action<number> = ({ state: { myList } }, wishId) =>
   tryOrNotify(async () => {
     if (confirm('Er du sikker på at du vil slette dette ønsket?')) {
-      await deleteJson(`/api/WishList/${myList.id}/${wishId}`)
+      const response = await deleteJson<DeleteWishResponse>(`/api/WishList/${myList.id}/${wishId}`)
+      myList.wishesOrder = response.wishesOrder
       delete myList.wishes[wishId]
     }
   })
@@ -65,12 +67,15 @@ export const setNewWishTitle: Action<string> = ({ state }, title) => {
 }
 
 export const loadWishes: Action = async ({ state: { myList } }) => {
+  const model = await getJson<MyListModel>('/api/WishList', schemas.wishList)
   const {
     result,
-    entities: { wishes = {} }
-  } = await getJson<MyListModel>('/api/WishList', schemas.wishList)
+    entities: { wishes = {}, wishLists = {} }
+  } = model
   myList.wishes = wishes
   myList.id = result
+  myList.wishesOrder = wishLists[result].wishesOrder
+  myList.wishesLoaded = true
 }
 
 export const startSharingList: Action = ({ state: { myList } }) => {
@@ -103,3 +108,24 @@ export const shareList: Action = ({ state: { myList } }) =>
     showSuccess('Ønskeliste delt')
     myList.isSharingList = false
   })
+
+interface WishOrderChangedParams {
+  oldIndex: number
+  newIndex: number
+  wishId: number
+}
+export const wishOrderChanged: Action<WishOrderChangedParams> = async ({ state: { myList } }, payload) => {
+  if (payload.newIndex === payload.oldIndex) {
+    return
+  }
+  var originalOrder = myList.wishesOrder.slice()
+  myList.wishesOrder.splice(payload.oldIndex, 1)
+  myList.wishesOrder.splice(payload.newIndex, 0, payload.wishId)
+
+  try {
+    await postJson('/api/WishList/Order', { wishesOrder: myList.wishesOrder })
+  } catch (error) {
+    myList.wishesOrder = originalOrder
+    showError(error)
+  }
+}

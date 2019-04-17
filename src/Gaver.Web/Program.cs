@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Gaver.Common.Contracts;
 using Gaver.Data;
 using Microsoft.AspNetCore;
@@ -19,6 +20,7 @@ namespace Gaver.Web
                 .CreateLogger();
 
             try {
+                Log.Information("Process {ProcessId} started", Process.GetCurrentProcess().Id);
                 var host = CreateWebHostBuilder(args)
                     .Build();
 
