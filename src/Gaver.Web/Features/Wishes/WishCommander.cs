@@ -63,8 +63,12 @@ namespace Gaver.Web.Features.Wishes
         {
             var wish = await context.Set<Wish>().Include(w => w.WishList)
                 .SingleAsync(w => w.Id == message.WishId, token);
-            wish.WishList.WishesOrder = wish.WishList.WishesOrder.Except(new[] {message.WishId}).ToArray();
+
             context.Remove(wish);
+            await context.SaveChangesAsync(token);
+            wish.WishList.WishesOrder = wish.WishList.WishesOrder != null
+                ? wish.WishList.WishesOrder.Except(new[] {message.WishId}).ToArray()
+                : wish.WishList.Wishes.Select(w => w.Id).ToArray();
             await context.SaveChangesAsync(token);
             await clientNotifier.RefreshListAsync(message.WishListId);
             return new DeleteWishResponse {

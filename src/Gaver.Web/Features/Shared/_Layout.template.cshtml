@@ -25,9 +25,11 @@
 
   <title>@(ViewData["Title"] ?? "Gaver") - Gaver.Web</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="~/icomoon/style.css" asp-append-version="true"/>
+  <link rel="stylesheet" href="~/icomoon/style.css" asp-append-version="true">
   <environment names="Production">
-    <link rel="stylesheet" href="~/dist/styles.css" asp-append-version="true"/>
+  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.chunks[chunk].css %>" asp-append-version="true">
+    <% } %>
   </environment>
   <script>
     window.AppSettings = {

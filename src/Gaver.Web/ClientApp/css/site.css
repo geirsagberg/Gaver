@@ -49,3 +49,12 @@ input[type='checkbox'] {
     font-size: 150%;
   }
 }
+
+#nprogress {
+  .spinner {
+    display: none;
+  }
+  .bar {
+    background: #f50057;
+  }
+}

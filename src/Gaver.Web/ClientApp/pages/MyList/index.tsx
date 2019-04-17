@@ -23,15 +23,24 @@ const useStyles = createStylesHook(theme => ({
   list: {
     padding: '1rem',
     height: '100%',
-    borderRadius: theme.shape.borderRadius,
     position: 'relative',
     transition: 'all 0.5s',
     userSelect: 'none'
   },
-  listEmpty: {
+  background: {
+    height: '100%',
+    width: '100%',
+    transition: 'all 0.5s',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    borderRadius: theme.shape.borderRadius,
     background: Color(theme.palette.background.paper)
       .fade(0.5)
       .toString()
+  },
+  emptyBackground: {
+    opacity: 0
   },
   fabWrapper: {
     position: 'absolute',
@@ -72,21 +81,20 @@ const MyListPage: FC = () => {
 
   return wishesLoaded ? (
     <div className={classes.root}>
-      <div className={classNames(classes.list, { [classes.listEmpty]: !size(orderedWishes) })}>
-        {size(orderedWishes) ? (
-          <Container
-            style={{ paddingBottom: '4.5rem' }}
-            onDrop={e => wishOrderChanged({ oldIndex: e.removedIndex, newIndex: e.addedIndex, wishId: e.payload })}
-            getChildPayload={i => orderedWishes[i].id}>
-            {map(orderedWishes, wish => (
-              <Draggable key={wish.id}>
-                <WishListItem wishId={wish.id} />
-              </Draggable>
-            ))}
-          </Container>
-        ) : (
-          <Typography className={classes.addWishHint}>Legg til et ønske ➔</Typography>
-        )}
+      <div className={classNames(classes.background, { [classes.emptyBackground]: !!size(orderedWishes) })}>
+        <Typography className={classes.addWishHint}>Legg til et ønske ➔</Typography>
+      </div>
+      <div className={classNames(classes.list)}>
+        <Container
+          style={{ marginBottom: '4.5rem' }}
+          onDrop={e => wishOrderChanged({ oldIndex: e.removedIndex, newIndex: e.addedIndex, wishId: e.payload })}
+          getChildPayload={i => orderedWishes[i].id}>
+          {map(orderedWishes, wish => (
+            <Draggable key={wish.id}>
+              <WishListItem wishId={wish.id} />
+            </Draggable>
+          ))}
+        </Container>
       </div>
 
       <div className={classes.fabWrapper}>

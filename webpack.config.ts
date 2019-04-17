@@ -31,7 +31,7 @@ const productionPlugins = [
     tsconfig: path.join(__dirname, 'tsconfig.json')
   }),
   new MiniCssExtractPlugin({
-    filename: 'styles.css'
+    filename: '[name].css'
   })
 ]
 
