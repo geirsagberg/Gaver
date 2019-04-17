@@ -1,14 +1,17 @@
-import { Fab, Icon, List } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
-import { map } from 'lodash-es'
+import { Fab, Icon, Typography } from '@material-ui/core'
+import { map, size } from 'lodash-es'
 import React, { FC, useEffect } from 'react'
 import { useOvermind } from '~/overmind'
-import WishListItem from './WishListItem'
+import { pageWidth } from '~/theme'
+import { createStylesHook } from '~/utils/materialUtils'
 import AddWishDialog from './AddWishDialog'
 import EditWishDialog from './EditWishDialog'
-import { pageWidth } from '~/theme'
+import WishListItem from './WishListItem'
+import Color from 'color'
+import classNames from 'classnames'
+import { Flipper, Flipped } from 'react-flip-toolkit'
 
-const useStyles = makeStyles({
+const useStyles = createStylesHook(theme => ({
   root: {
     height: '100%',
     width: '100%',
@@ -16,7 +19,18 @@ const useStyles = makeStyles({
     position: 'relative'
   },
   list: {
-    padding: '1rem 0'
+    padding: '1rem 0',
+    height: '100%',
+    background: Color(theme.palette.background.paper)
+      .fade(0.5)
+      .toString(),
+    borderRadius: theme.shape.borderRadius,
+    position: 'relative',
+    transition: 'all 0.5s',
+    userSelect: 'none'
+  },
+  listNotEmpty: {
+    background: 'transparent'
   },
   fabWrapper: {
     position: 'absolute',
@@ -27,8 +41,19 @@ const useStyles = makeStyles({
   },
   addWishButton: {
     position: 'fixed'
+  },
+  emptyList: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%'
+  },
+  addWishHint: {
+    position: 'absolute',
+    bottom: '2rem',
+    right: '5rem'
   }
-})
+}))
 
 const MyListPage: FC = () => {
   const classes = useStyles()
@@ -46,11 +71,21 @@ const MyListPage: FC = () => {
 
   return (
     <div className={classes.root}>
-      <List className={classes.list}>
-        {map(wishes, wish => (
-          <WishListItem key={wish.id} wishId={wish.id} />
-        ))}
-      </List>
+      <div className={classNames(classes.list, { [classes.listNotEmpty]: !!size(wishes) })}>
+        {size(wishes) ? (
+          <Flipper flipKey={map(wishes, wish => wish.id).join()}>
+            {map(wishes, wish => (
+              <Flipped key={wish.id} flipId={wish.id.toString()}>
+                <div draggable>
+                  <WishListItem wishId={wish.id} />
+                </div>
+              </Flipped>
+            ))}
+          </Flipper>
+        ) : (
+          <Typography className={classes.addWishHint}>Legg til et ønske ➔</Typography>
+        )}
+      </div>
 
       <div className={classes.fabWrapper}>
         <Fab color="secondary" onClick={startAddingWish} className={classes.addWishButton}>

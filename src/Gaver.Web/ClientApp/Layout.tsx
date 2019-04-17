@@ -9,9 +9,9 @@ import MyListPage from './pages/MyList'
 import NotFoundPage from './pages/NotFound'
 import SharedListPage from './pages/SharedList'
 import { ShareListDialog } from './ShareListDialog'
-import { makeStyles } from '@material-ui/styles'
+import { createStylesHook } from './utils/materialUtils'
 
-export const useStyles = makeStyles({
+export const useStyles = createStylesHook(theme => ({
   root: {
     height: '100%'
   },
@@ -20,7 +20,10 @@ export const useStyles = makeStyles({
     alignItems: 'flex-start',
     justifyContent: 'center',
     height: '100%',
-    paddingTop: '4rem'
+    paddingTop: '4rem',
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: '3.5rem'
+    }
   },
   profileImage: {
     width: '2rem',
@@ -30,7 +33,7 @@ export const useStyles = makeStyles({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center'
   }
-})
+}))
 
 const Content: FC = () => {
   const {

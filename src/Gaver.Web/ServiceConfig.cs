@@ -21,22 +21,6 @@ namespace Gaver.Web
 {
     public static class ServiceConfig
     {
-        //private static async Task OnTokenValidated(TokenValidatedContext tokenContext)
-        //{
-        //    var identity = tokenContext.Principal.Identity as ClaimsIdentity;
-        //    var providerId = identity?.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        //    if (providerId == null) {
-        //        return;
-        //    }
-
-        //    var userHandler = tokenContext.HttpContext.RequestServices.GetRequiredService<UserHandler>();
-
-        //    var userId = await userHandler.GetUserIdOrNullAsync(providerId);
-        //    if (userId != null) {
-        //        identity.AddClaim(new Claim("GaverUserId", userId.Value.ToString(), ClaimValueTypes.Integer32));
-        //    }
-        //}
-
         public static void AddCustomAuth(this IServiceCollection services, IConfiguration configuration)
         {
             var authSettings = configuration.GetSection("auth0").Get<Auth0Settings>();

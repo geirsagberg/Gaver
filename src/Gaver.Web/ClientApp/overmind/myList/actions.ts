@@ -67,7 +67,7 @@ export const setNewWishTitle: Action<string> = ({ state }, title) => {
 export const loadWishes: Action = async ({ state: { myList } }) => {
   const {
     result,
-    entities: { wishes }
+    entities: { wishes = {} }
   } = await getJson<MyListModel>('/api/WishList', schemas.wishList)
   myList.wishes = wishes
   myList.id = result
