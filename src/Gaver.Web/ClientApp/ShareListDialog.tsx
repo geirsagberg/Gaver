@@ -1,9 +1,10 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
+import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
 import ChipInput from 'material-ui-chip-input'
 import React, { FC } from 'react'
 import { KeyCodes } from '~/types'
+import { ResponsiveDialog } from './components/ResponsiveDialog'
 import { useOvermind } from './overmind'
-import { makeStyles } from '@material-ui/styles'
 
 export const useStyles = makeStyles({
   overflowDialog: {
@@ -23,7 +24,11 @@ export const ShareListDialog: FC = () => {
     }
   } = useOvermind()
   return (
-    <Dialog fullWidth classes={{ paper: classes.overflowDialog }} open={isSharingList} onClose={cancelSharingList}>
+    <ResponsiveDialog
+      fullWidth
+      classes={{ paper: classes.overflowDialog }}
+      open={isSharingList}
+      onClose={cancelSharingList}>
       <DialogTitle>Del din ønskeliste</DialogTitle>
       <DialogContent className={classes.overflowDialog}>
         <DialogContentText>Legg inn e-postadressene til de du vil dele listen med</DialogContentText>
@@ -50,6 +55,6 @@ export const ShareListDialog: FC = () => {
         </Button>
         <Button onClick={cancelSharingList}>Avbryt</Button>
       </DialogActions>
-    </Dialog>
+    </ResponsiveDialog>
   )
 }
