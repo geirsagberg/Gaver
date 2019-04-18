@@ -1,6 +1,7 @@
 import { Icon, IconButton, Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import React, { FC } from 'react'
+import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
 
 const useStyles = makeStyles({
@@ -10,17 +11,17 @@ const useStyles = makeStyles({
     alignItems: 'center',
     '&:hover,&:focus-within': {
       '& $actions': {
-        // display: 'initial'
         opacity: 1
       }
     },
-    padding: '0 1rem',
-    minHeight: '3rem',
-    marginBottom: '1rem'
+    paddingLeft: '1rem',
+    minHeight: '3rem'
   },
   actions: {
-    // display: 'none',
     opacity: 0.3
+  },
+  dragHandle: {
+    padding: 12
   }
 })
 
@@ -38,6 +39,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   return (
     <Paper className={classes.root}>
       <Typography variant="body1">{wish.title}</Typography>
+      <Expander />
       <div className={classes.actions}>
         <IconButton onClick={() => startEditingWish(wishId)}>
           <Icon>edit</Icon>

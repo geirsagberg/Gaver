@@ -1,16 +1,16 @@
 import { Fab, Icon, Typography } from '@material-ui/core'
+import classNames from 'classnames'
+import Color from 'color'
 import { map, size } from 'lodash-es'
 import React, { FC, useEffect } from 'react'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import Loading from '~/components/Loading'
 import { useOvermind } from '~/overmind'
 import { pageWidth } from '~/theme'
 import { createStylesHook } from '~/utils/materialUtils'
 import AddWishDialog from './AddWishDialog'
 import EditWishDialog from './EditWishDialog'
 import WishListItem from './WishListItem'
-import Color from 'color'
-import classNames from 'classnames'
-import { Container, Draggable } from 'react-smooth-dnd'
-import Loading from '~/components/Loading'
 
 const useStyles = createStylesHook(theme => ({
   root: {
@@ -62,6 +62,12 @@ const useStyles = createStylesHook(theme => ({
     position: 'absolute',
     bottom: '2rem',
     right: '5rem'
+  },
+  droppable: {
+    marginBottom: '5.5rem'
+  },
+  listItem: {
+    marginBottom: '1rem'
   }
 }))
 
@@ -85,16 +91,44 @@ const MyListPage: FC = () => {
         <Typography className={classes.addWishHint}>Legg til et ønske ➔</Typography>
       </div>
       <div className={classNames(classes.list)}>
-        <Container
-          style={{ marginBottom: '4.5rem' }}
-          onDrop={e => wishOrderChanged({ oldIndex: e.removedIndex, newIndex: e.addedIndex, wishId: e.payload })}
-          getChildPayload={i => orderedWishes[i].id}>
-          {map(orderedWishes, wish => (
-            <Draggable key={wish.id}>
-              <WishListItem wishId={wish.id} />
-            </Draggable>
-          ))}
-        </Container>
+        <DragDropContext
+          // style={{ marginBottom: '4.5rem' }}
+          // onDrop={e => wishOrderChanged({ oldIndex: e.removedIndex, newIndex: e.addedIndex, wishId: e.payload })}
+          // getChildPayload={i => orderedWishes[i].id}
+          // dragHandleSelector={'[data-draghandle]'}
+          // onDragEnd={() => setDragging(false)}
+
+          onDragEnd={result => {
+            if (!result.destination) {
+              return
+            }
+            wishOrderChanged({
+              oldIndex: result.source.index,
+              newIndex: result.destination.index,
+              wishId: +result.draggableId
+            })
+          }}>
+          <Droppable droppableId="myList">
+            {(provided, snapshot) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className={classes.droppable}>
+                {map(orderedWishes, (wish, i) => (
+                  <Draggable key={wish.id} draggableId={wish.id.toString()} index={i}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        className={classes.listItem}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}>
+                        <WishListItem wishId={wish.id} />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
 
       <div className={classes.fabWrapper}>
