@@ -9,19 +9,16 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    '&:hover,&:focus-within': {
-      '& $actions': {
-        opacity: 1
-      }
-    },
+    // '&:hover,&:focus-within': {
+    //   '& $actions': {
+    //     opacity: 1
+    //   }
+    // },
     paddingLeft: '1rem',
     minHeight: '3rem'
   },
   actions: {
-    opacity: 0.3
-  },
-  dragHandle: {
-    padding: 12
+    // opacity: 0.3
   }
 })
 
@@ -29,7 +26,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   const classes = useStyles()
   const {
     state: {
-      myList: { wishes }
+      myList: { wishes, isDeleting }
     },
     actions: {
       myList: { startEditingWish, confirmDeleteWish }
@@ -41,12 +38,15 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
       <Typography variant="body1">{wish.title}</Typography>
       <Expander />
       <div className={classes.actions}>
-        <IconButton onClick={() => startEditingWish(wishId)}>
-          <Icon>edit</Icon>
-        </IconButton>
-        <IconButton onClick={() => confirmDeleteWish(wishId)}>
-          <Icon>delete</Icon>
-        </IconButton>
+        {isDeleting ? (
+          <IconButton onClick={() => confirmDeleteWish(wishId)}>
+            <Icon>delete</Icon>
+          </IconButton>
+        ) : (
+          <IconButton onClick={() => startEditingWish(wishId)}>
+            <Icon>edit</Icon>
+          </IconButton>
+        )}
       </div>
     </Paper>
   )

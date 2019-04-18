@@ -62,19 +62,25 @@ const Actions: FC = () => {
   const {
     state: {
       routing: { currentPage },
-      auth: { isLoggedIn }
+      auth: { isLoggedIn },
+      myList: { isDeleting }
     },
     actions: {
-      myList: { startSharingList }
+      myList: { startSharingList, toggleDeleting }
     }
   } = useOvermind()
 
   switch (currentPage) {
     case 'start':
       return isLoggedIn ? (
-        <IconButton color="inherit" onClick={startSharingList}>
-          <Icon>share</Icon>
-        </IconButton>
+        <>
+          <IconButton color="inherit" onClick={toggleDeleting}>
+            <Icon>{isDeleting ? 'close' : 'delete'}</Icon>
+          </IconButton>
+          <IconButton color="inherit" onClick={startSharingList}>
+            <Icon>share</Icon>
+          </IconButton>
+        </>
       ) : null
   }
   return null

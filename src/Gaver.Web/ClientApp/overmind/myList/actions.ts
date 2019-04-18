@@ -32,11 +32,11 @@ export const startEditingWish: Action<number> = ({ state: { myList } }, wishId) 
 
 export const confirmDeleteWish: Action<number> = ({ state: { myList } }, wishId) =>
   tryOrNotify(async () => {
-    if (confirm('Er du sikker på at du vil slette dette ønsket?')) {
-      const response = await deleteJson<DeleteWishResponse>(`/api/WishList/${myList.id}/${wishId}`)
-      myList.wishesOrder = response.wishesOrder
-      delete myList.wishes[wishId]
-    }
+    // if (confirm('Er du sikker på at du vil slette dette ønsket?')) {
+    const response = await deleteJson<DeleteWishResponse>(`/api/WishList/${myList.id}/${wishId}`)
+    myList.wishesOrder = response.wishesOrder
+    delete myList.wishes[wishId]
+    // }
   })
 
 export const cancelEditingWish: Action = ({ state: { myList } }) => {
@@ -81,6 +81,10 @@ export const loadWishes: Action = async ({ state: { myList } }) => {
 export const startSharingList: Action = ({ state: { myList } }) => {
   myList.isSharingList = true
   myList.shareEmails = []
+}
+
+export const toggleDeleting: Action = ({ state: { myList } }) => {
+  myList.isDeleting = !myList.isDeleting
 }
 
 export const cancelSharingList: Action = ({ state: { myList } }) => {

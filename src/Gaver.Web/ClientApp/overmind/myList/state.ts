@@ -12,6 +12,7 @@ export type MyListState = {
   wishesLoaded?: boolean
   wishesOrder: number[]
   orderedWishes: Derive<MyListState, Wish[]>
+  isDeleting?: boolean
 }
 
 export const getEmptyWish = () => ({
