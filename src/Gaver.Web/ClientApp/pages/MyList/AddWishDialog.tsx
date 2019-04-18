@@ -1,7 +1,14 @@
-import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core'
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField
+} from '@material-ui/core'
 import React, { FC } from 'react'
 import { useOvermind } from '~/overmind'
-import { ResponsiveDialog } from '~/components/ResponsiveDialog'
 
 const AddWishDialog: FC = () => {
   const {
@@ -14,7 +21,7 @@ const AddWishDialog: FC = () => {
     }
   } = useOvermind()
   return newWish ? (
-    <ResponsiveDialog fullWidth open={isAddingWish} onClose={cancelAddingWish}>
+    <Dialog fullWidth open={isAddingWish} onClose={cancelAddingWish}>
       <DialogTitle>Nytt ønske</DialogTitle>
       <DialogContent>
         <DialogContentText>Hva ønsker du deg?</DialogContentText>
@@ -32,7 +39,7 @@ const AddWishDialog: FC = () => {
         </Button>
         <Button onClick={cancelAddingWish}>Avbryt</Button>
       </DialogActions>
-    </ResponsiveDialog>
+    </Dialog>
   ) : null
 }
 

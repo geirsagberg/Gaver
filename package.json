@@ -9,7 +9,7 @@
     "clean:www": "del-cli src/Gaver.Web/wwwroot/dist/",
     "start": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet run",
     "start:prod": "cd src/Gaver.Web && webpack && dotnet run",
-    "watch": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
+    "watch": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run --urls http://0.0.0.0:5000",
     "build": "dotnet build",
     "webpack": "cd src/Gaver.Web && webpack --mode production",
     "webpack:dev": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development webpack --mode development",

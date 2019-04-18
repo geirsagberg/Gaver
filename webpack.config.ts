@@ -86,7 +86,7 @@ const configuration: Configuration = {
     ]
   },
   entry: {
-    main: './ClientApp/app'
+    main: './ClientApp/index'
   },
   output: {
     path: path.join(baseDir, 'wwwroot', 'dist'),

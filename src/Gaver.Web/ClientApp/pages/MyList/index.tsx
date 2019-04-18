@@ -43,7 +43,7 @@ const useStyles = createStylesHook(theme => ({
     opacity: 0
   },
   fabWrapper: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: '1rem',
     right: '1rem',
     width: 56,

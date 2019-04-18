@@ -22,6 +22,13 @@ const theme = createMuiTheme({
   palette,
   typography: {
     useNextVariants: true
+  },
+  overrides: {
+    MuiDialog: {
+      container: {
+        alignItems: 'flex-start'
+      }
+    }
   }
 })
 
