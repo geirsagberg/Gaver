@@ -92,12 +92,6 @@ const MyListPage: FC = () => {
       </div>
       <div className={classNames(classes.list)}>
         <DragDropContext
-          // style={{ marginBottom: '4.5rem' }}
-          // onDrop={e => wishOrderChanged({ oldIndex: e.removedIndex, newIndex: e.addedIndex, wishId: e.payload })}
-          // getChildPayload={i => orderedWishes[i].id}
-          // dragHandleSelector={'[data-draghandle]'}
-          // onDragEnd={() => setDragging(false)}
-
           onDragEnd={result => {
             if (!result.destination) {
               return
@@ -109,11 +103,11 @@ const MyListPage: FC = () => {
             })
           }}>
           <Droppable droppableId="myList">
-            {(provided, snapshot) => (
+            {provided => (
               <div {...provided.droppableProps} ref={provided.innerRef} className={classes.droppable}>
                 {map(orderedWishes, (wish, i) => (
                   <Draggable key={wish.id} draggableId={wish.id.toString()} index={i}>
-                    {(provided, snapshot) => (
+                    {provided => (
                       <div
                         ref={provided.innerRef}
                         className={classes.listItem}

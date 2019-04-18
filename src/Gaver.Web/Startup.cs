@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using AutoMapper;
-using Gaver.Common;
 using Gaver.Common.Contracts;
 using Gaver.Common.Extensions;
 using Gaver.Common.Utils;
@@ -12,7 +9,6 @@ using Gaver.Data;
 using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Hubs;
-using Gaver.Web.Middleware;
 using Gaver.Web.Options;
 using JetBrains.Annotations;
 using MediatR;
@@ -113,7 +109,7 @@ namespace Gaver.Web
             app.UseAuthentication();
 
             app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
-            
+
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
@@ -139,11 +135,12 @@ namespace Gaver.Web
             });
         }
 
-        [Conditional("RELEASE")]
         private static void SetupForProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+#if !DEBUG
             app.UseHttpsRedirection();
             app.UseHsts();
+#endif
         }
 
         private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory,
