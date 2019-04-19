@@ -1,4 +1,18 @@
-import { AppBar, Icon, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@material-ui/core'
+import {
+  AppBar,
+  Icon,
+  IconButton,
+  List,
+  ListItem,
+  Menu,
+  MenuItem,
+  MuiThemeProvider,
+  SwipeableDrawer,
+  Toolbar,
+  Tooltip,
+  Typography,
+  ListItemText
+} from '@material-ui/core'
 import React, { FC, useState } from 'react'
 import { hot } from 'react-hot-loader/root'
 import Expander from './components/Expander'
@@ -9,6 +23,7 @@ import MyListPage from './pages/MyList'
 import NotFoundPage from './pages/NotFound'
 import SharedListPage from './pages/SharedList'
 import { ShareListDialog } from './ShareListDialog'
+import { darkTheme } from './theme'
 import { createStylesHook } from './utils/materialUtils'
 
 export const useStyles = createStylesHook(theme => ({
@@ -35,11 +50,17 @@ export const useStyles = createStylesHook(theme => ({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center'
   },
-  menu: {
+  menuIcon: {
     marginRight: '0.5rem'
   },
   toolbar: {
     padding: '0 0.5rem'
+  },
+  menuPaper: {
+    background: theme.palette.primary.dark
+  },
+  menu: {
+    width: 256
   }
 }))
 
@@ -69,7 +90,6 @@ const Actions: FC = () => {
   const {
     state: {
       routing: { currentPage },
-      auth: { isLoggedIn },
       myList: { isDeleting }
     },
     actions: {
@@ -78,8 +98,8 @@ const Actions: FC = () => {
   } = useOvermind()
 
   switch (currentPage) {
-    case 'start':
-      return isLoggedIn ? (
+    case 'myList':
+      return (
         <>
           <IconButton color="inherit" onClick={toggleDeleting}>
             <Icon>{isDeleting ? 'close' : 'delete'}</Icon>
@@ -88,7 +108,7 @@ const Actions: FC = () => {
             <Icon>share</Icon>
           </IconButton>
         </>
-      ) : null
+      )
   }
   return null
 }
@@ -125,10 +145,14 @@ const Layout: FC = () => {
   const classes = useStyles()
   const {
     state: {
-      auth: { isLoggedIn }
+      auth: { isLoggedIn },
+      app: { isMenuShowing }
     },
     actions: {
-      app: { showMenu }
+      app: { showMenu, hideMenu }
+    },
+    effects: {
+      routing: { showMyList }
     }
   } = useOvermind()
 
@@ -137,7 +161,7 @@ const Layout: FC = () => {
       {isLoggedIn && (
         <AppBar>
           <Toolbar disableGutters className={classes.toolbar}>
-            <IconButton color="inherit" className={classes.menu} onClick={showMenu}>
+            <IconButton color="inherit" className={classes.menuIcon} onClick={showMenu}>
               <Icon>menu</Icon>
             </IconButton>
             <Typography variant="h6" color="inherit" style={{ marginRight: '1rem' }}>
@@ -152,6 +176,22 @@ const Layout: FC = () => {
       <div className={classes.content}>
         <Content />
       </div>
+      <MuiThemeProvider theme={darkTheme}>
+        <SwipeableDrawer
+          open={isMenuShowing}
+          onOpen={showMenu}
+          onClose={hideMenu}
+          classes={{ paper: classes.menuPaper }}>
+          <div className={classes.menu}>
+            <List>
+              <ListItem button onClick={showMyList}>
+                <ListItemText primary="Min liste" />
+              </ListItem>
+            </List>
+          </div>
+        </SwipeableDrawer>
+      </MuiThemeProvider>
+
       <ShareListDialog />
       <div id="portal-overlay" style={{ position: 'relative', zIndex: 1100 }} />
     </div>

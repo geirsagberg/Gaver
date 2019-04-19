@@ -7,3 +7,11 @@ export const incrementAjaxCounter: Action = ({ state: { app } }) => {
 export const decrementAjaxCounter: Action = ({ state: { app } }) => {
   app.ajaxCounter -= 1
 }
+
+export const showMenu: Action = ({ state: { app } }) => {
+  app.isMenuShowing = true
+}
+
+export const hideMenu: Action = ({ state: { app } }) => {
+  app.isMenuShowing = false
+}

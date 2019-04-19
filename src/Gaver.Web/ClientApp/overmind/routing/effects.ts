@@ -15,4 +15,5 @@ export const start = pageJs.start
 export const redirect = pageJs.redirect
 
 export const showStartPage = () => pageJs.show('/')
+export const showMyList = () => pageJs.show('/myList')
 export const showSharedList = (wishListId: number) => pageJs.show(`/list/${wishListId}`)

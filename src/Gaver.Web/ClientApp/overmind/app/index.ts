@@ -5,11 +5,13 @@ import { subscribe, Topic } from '~/utils/pubSub'
 type AppState = {
   ajaxCounter: number
   isSavingOrLoading: Derive<AppState, boolean>
+  isMenuShowing: boolean
 }
 
 const state: AppState = {
   ajaxCounter: 0,
-  isSavingOrLoading: state => state.ajaxCounter > 0
+  isSavingOrLoading: state => state.ajaxCounter > 0,
+  isMenuShowing: false
 }
 
 const onInitialize: OnInitialize = ({
