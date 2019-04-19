@@ -16,6 +16,7 @@ using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,10 +30,12 @@ namespace Gaver.Web
 {
     public class Startup
     {
+        private readonly IHostingEnvironment hostingEnvironment;
         private readonly List<string> missingOptions = new List<string>();
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
+            this.hostingEnvironment = hostingEnvironment;
             Configuration = configuration;
         }
 
@@ -63,6 +66,10 @@ namespace Gaver.Web
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
 
             ConfigureOptions(services);
+
+            if (hostingEnvironment.IsProduction()) {
+                services.Configure<HttpsRedirectionOptions>(options => options.HttpsPort = 443);
+            }
         }
 
         private void ConfigureOptions(IServiceCollection services)
@@ -137,8 +144,8 @@ namespace Gaver.Web
 
         private static void SetupForProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-#if !DEBUG
             app.UseHttpsRedirection();
+#if !DEBUG
             app.UseHsts();
 #endif
         }
