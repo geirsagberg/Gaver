@@ -42,15 +42,24 @@ const useStyles = createStylesHook(theme => ({
   emptyBackground: {
     opacity: 0
   },
-  fabWrapper: {
+  fabOuterWrapper: {
+    width: '100%',
+    maxWidth: pageWidth,
     position: 'fixed',
-    bottom: '1rem',
-    right: '1rem',
-    width: 56,
-    height: 56
+    bottom: 0,
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
+  fabWrapper: {
+    // position: 'fixed',
+    // bottom: '1rem'
+    // // right: '1rem'
+    // width: 56,
+    // height: 56
   },
   addWishButton: {
-    position: 'fixed'
+    // position: 'fixed',
+    margin: '1rem'
   },
   emptyList: {
     display: 'flex',
@@ -125,10 +134,12 @@ const MyListPage: FC = () => {
         </DragDropContext>
       </div>
 
-      <div className={classes.fabWrapper}>
-        <Fab color="secondary" onClick={startAddingWish} className={classes.addWishButton}>
-          <Icon>add_icon</Icon>
-        </Fab>
+      <div className={classes.fabOuterWrapper}>
+        <div className={classes.fabWrapper}>
+          <Fab color="secondary" onClick={startAddingWish} className={classes.addWishButton}>
+            <Icon>add_icon</Icon>
+          </Fab>
+        </div>
       </div>
 
       <AddWishDialog />
