@@ -34,20 +34,27 @@ export const useStyles = createStylesHook(theme => ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center'
+  },
+  menu: {
+    marginRight: '0.5rem'
+  },
+  toolbar: {
+    padding: '0 0.5rem'
   }
 }))
 
 const Content: FC = () => {
   const {
     state: {
-      routing: { currentPage },
-      auth: { isLoggedIn }
+      routing: { currentPage }
     }
   } = useOvermind()
 
   switch (currentPage) {
+    case 'myList':
+      return <MyListPage />
     case 'start':
-      return isLoggedIn ? <MyListPage /> : <LoginPage />
+      return <LoginPage />
     case 'notFound':
       return <NotFoundPage />
     case 'acceptInvitation':
@@ -119,6 +126,9 @@ const Layout: FC = () => {
   const {
     state: {
       auth: { isLoggedIn }
+    },
+    actions: {
+      app: { showMenu }
     }
   } = useOvermind()
 
@@ -126,7 +136,10 @@ const Layout: FC = () => {
     <div className={classes.root}>
       {isLoggedIn && (
         <AppBar>
-          <Toolbar>
+          <Toolbar disableGutters className={classes.toolbar}>
+            <IconButton color="inherit" className={classes.menu} onClick={showMenu}>
+              <Icon>menu</Icon>
+            </IconButton>
             <Typography variant="h6" color="inherit" style={{ marginRight: '1rem' }}>
               Gaver
             </Typography>

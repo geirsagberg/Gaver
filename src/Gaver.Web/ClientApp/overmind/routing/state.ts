@@ -1,4 +1,4 @@
-export type Page = 'start' | 'authCallback' | 'notFound' | 'acceptInvitation' | 'sharedList'
+export type Page = 'start' | 'authCallback' | 'notFound' | 'acceptInvitation' | 'sharedList' | 'myList'
 
 export interface RoutingState {
   currentPage: Page

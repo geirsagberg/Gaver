@@ -7,6 +7,16 @@ import { showError, showSuccess } from '~/utils/notifications'
 import { Action } from '..'
 import { getEmptyWish } from './state'
 
+export const handleMyList: Action = async ({
+  actions: {
+    routing: { setCurrentPage },
+    myList: { loadWishes }
+  }
+}) => {
+  setCurrentPage('myList')
+  await loadWishes()
+}
+
 export const addWish: Action = ({ state: { myList } }) =>
   tryOrNotify(async () => {
     const wish = await postJson<Wish>('/api/WishList', myList.newWish)
@@ -66,17 +76,18 @@ export const setNewWishTitle: Action<string> = ({ state }, title) => {
   state.myList.newWish.title = title
 }
 
-export const loadWishes: Action = async ({ state: { myList } }) => {
-  const model = await getJson<MyListModel>('/api/WishList', schemas.wishList)
-  const {
-    result,
-    entities: { wishes = {}, wishLists = {} }
-  } = model
-  myList.wishes = wishes
-  myList.id = result
-  myList.wishesOrder = wishLists[result].wishesOrder
-  myList.wishesLoaded = true
-}
+export const loadWishes: Action = ({ state: { myList } }) =>
+  tryOrNotify(async () => {
+    const model = await getJson<MyListModel>('/api/WishList', schemas.wishList)
+    const {
+      result,
+      entities: { wishes = {}, wishLists = {} }
+    } = model
+    myList.wishes = wishes
+    myList.id = result
+    myList.wishesOrder = wishLists[result].wishesOrder
+    myList.wishesLoaded = true
+  })
 
 export const startSharingList: Action = ({ state: { myList } }) => {
   myList.isSharingList = true

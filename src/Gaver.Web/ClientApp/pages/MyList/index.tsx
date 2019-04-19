@@ -2,7 +2,7 @@ import { Fab, Icon, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import Color from 'color'
 import { map, size } from 'lodash-es'
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import Loading from '~/components/Loading'
 import { useOvermind } from '~/overmind'
@@ -17,8 +17,7 @@ const useStyles = createStylesHook(theme => ({
     height: '100%',
     width: '100%',
     maxWidth: pageWidth,
-    position: 'relative',
-    paddingBottom: '4rem'
+    position: 'relative'
   },
   list: {
     padding: '1rem',
@@ -50,15 +49,8 @@ const useStyles = createStylesHook(theme => ({
     display: 'flex',
     justifyContent: 'flex-end'
   },
-  fabWrapper: {
-    // position: 'fixed',
-    // bottom: '1rem'
-    // // right: '1rem'
-    // width: 56,
-    // height: 56
-  },
+  fabWrapper: {},
   addWishButton: {
-    // position: 'fixed',
     margin: '1rem'
   },
   emptyList: {
@@ -87,12 +79,9 @@ const MyListPage: FC = () => {
       myList: { orderedWishes, wishesLoaded }
     },
     actions: {
-      myList: { startAddingWish, loadWishes, wishOrderChanged }
+      myList: { startAddingWish, wishOrderChanged }
     }
   } = useOvermind()
-  useEffect(() => {
-    loadWishes()
-  }, [])
 
   return wishesLoaded ? (
     <div className={classes.root}>
