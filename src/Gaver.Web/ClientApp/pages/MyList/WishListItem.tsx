@@ -1,10 +1,10 @@
 import { Icon, IconButton, Paper, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
+import { createStylesHook } from '~/utils/materialUtils'
 
-const useStyles = makeStyles({
+const useStyles = createStylesHook({
   root: {
     display: 'flex',
     justifyContent: 'space-between',

@@ -37,7 +37,7 @@ export const ShareListDialog: FC = () => {
           onKeyPress={e => e.key === 'Enter' && shareList()}
           blurBehavior="add"
           required
-          newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.SemiColon, KeyCodes.Comma]}
+          newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.Comma]}
         />
       </DialogContent>
       <DialogActions>

@@ -1,17 +1,17 @@
-import { Wish } from '~/types/data'
+import { WishModel } from '~/types/data'
 import { Derive } from '..'
 
 export type MyListState = {
   id?: number
-  editingWish?: Wish
+  editingWish?: WishModel
   shareEmails: string[]
   isSharingList: boolean
-  wishes: Dictionary<Wish>
+  wishes: Dictionary<WishModel>
   isAddingWish: boolean
-  newWish?: Wish
+  newWish?: WishModel
   wishesLoaded?: boolean
   wishesOrder: number[]
-  orderedWishes: Derive<MyListState, Wish[]>
+  orderedWishes: Derive<MyListState, WishModel[]>
   isDeleting?: boolean
 }
 

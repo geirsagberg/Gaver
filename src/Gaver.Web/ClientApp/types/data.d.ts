@@ -1,3 +1,8 @@
+// Separate types from API vs store
+// Store per entity type?
+// No, MyList is separate
+//
+
 export interface UserModel {
   id?: number
   name?: string
@@ -5,20 +10,23 @@ export interface UserModel {
   pictureUrl?: string
 }
 
-export interface SharedWishModel extends Wish {
-  boughtByUser?: UserModel
+export interface SharedWishModel extends WishModel {
+  boughtByUserId?: number
 }
 
 export interface WishListModel {
   id: number
-  wishes: number[]
-  invitations: number[]
+  wishes: WishModel[]
   wishesOrder: number[]
 }
 
-export interface Wish {
+export interface SharedListModel extends WishListModel {
+  ownerUserId: number
+  users: UserModel[]
+}
+
+export interface WishModel {
   id?: number
-  wishListId?: number
   title: string
   url?: string
   description?: string
@@ -36,14 +44,10 @@ export interface ChatMessage {
   user: number
 }
 
-export interface MyListModel {
-  result: number
-  entities: {
-    wishes: Dictionary<Wish>
-    invitations: Dictionary<Invitation>
-    users: Dictionary<UserModel>
-    wishLists: Dictionary<WishListModel>
-  }
+export interface MyListModel extends WishListModel {}
+
+export interface SharedListsModel {
+  invitations: Invitation[]
 }
 
 export interface InvitationTokenStatus {

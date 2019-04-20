@@ -18,7 +18,8 @@ namespace Gaver.Web.Features.Wishes
 {
     public class WishReader : IRequestHandler<GetMyListRequest, MyListModel>,
         IRequestHandler<GetSharedListRequest, SharedListModel>,
-        IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
+        IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>,
+        IRequestHandler<GetSharedListsRequest, SharedListsModel>
     {
         private readonly IAccessChecker accessChecker;
         private readonly GaverContext context;
@@ -65,18 +66,29 @@ namespace Gaver.Web.Features.Wishes
             return Task.FromResult(sharedListModel);
         }
 
+        public async Task<SharedListsModel> Handle(GetSharedListsRequest request, CancellationToken cancellationToken)
+        {
+            var invitations = await context.Set<Invitation>()
+                .Where(i => i.UserId == request.UserId)
+                .ProjectTo<InvitationModel>(mapper.MapperConfiguration)
+                .ToListAsync(cancellationToken);
+
+            return new SharedListsModel {
+                Invitations = invitations
+            };
+        }
+
         private MyListModel GetMyList(GetMyListRequest message)
         {
             var model = context.Set<WishList>()
                 .Where(wl => wl.UserId == message.UserId)
                 .ProjectTo<MyListModel>(mapper.MapperConfiguration)
                 .Single();
-            model.Invitations = context.Invitations.Where(i => i.UserId == message.UserId)
-                .ProjectTo<InvitationModel>(mapper.MapperConfiguration)
-                .ToList();
+
             if (model.WishesOrder?.Length != model.Wishes.Count) {
                 model.WishesOrder = model.Wishes.Select(w => w.Id).ToArray();
             }
+
             return model;
         }
     }

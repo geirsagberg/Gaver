@@ -84,7 +84,7 @@ namespace Gaver.Web
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GaverContext>(options => {
-                    options.ConfigureWarnings(b => b.Throw(RelationalEventId.QueryClientEvaluationWarning));
+//                    options.ConfigureWarnings(b => b.Throw(RelationalEventId.QueryClientEvaluationWarning));
                     options
                         .UseNpgsql(connectionString, b => b
                             .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));

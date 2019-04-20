@@ -61,7 +61,8 @@ namespace Gaver.Web.Tests
                 UserId = james.Id
             });
 
-            result.Owner.Should().Be("Bob");
+            result.OwnerUserId.Should().Be(bob.Id);
+            result.Users.Should().Contain(u => u.Id == bob.Id);
         }
     }
 }

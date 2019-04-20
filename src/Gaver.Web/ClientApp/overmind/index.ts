@@ -6,7 +6,7 @@ import routing from './routing'
 import myList from './myList'
 import app from './app'
 import invitations from './invitations'
-import sharedList from './sharedList'
+import sharedLists from './sharedLists'
 
 export interface Config extends IConfig<typeof config> {}
 
@@ -24,7 +24,7 @@ const config = namespaced({
   myList,
   app,
   invitations,
-  sharedList
+  sharedLists
 })
 
 const overmind = new Overmind(config)

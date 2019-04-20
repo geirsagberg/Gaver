@@ -1,20 +1,23 @@
 import {
   AppBar,
+  Divider,
   Icon,
   IconButton,
   List,
   ListItem,
+  ListItemIcon,
+  ListItemText,
   Menu,
   MenuItem,
   MuiThemeProvider,
   SwipeableDrawer,
   Toolbar,
   Tooltip,
-  Typography,
-  ListItemText
+  Typography
 } from '@material-ui/core'
-import React, { FC, useState } from 'react'
-import { hot } from 'react-hot-loader/root'
+import classNames from 'classnames'
+import { map } from 'lodash-es'
+import React, { FC, useEffect, useState } from 'react'
 import Expander from './components/Expander'
 import { useOvermind } from './overmind'
 import AcceptInvitationPage from './pages/AcceptInvitation'
@@ -61,7 +64,8 @@ export const useStyles = createStylesHook(theme => ({
   },
   menu: {
     width: 256
-  }
+  },
+  current: {}
 }))
 
 const Content: FC = () => {
@@ -146,15 +150,20 @@ const Layout: FC = () => {
   const {
     state: {
       auth: { isLoggedIn },
-      app: { isMenuShowing }
+      app: { isMenuShowing },
+      routing: { currentPage, currentSharedListId },
+      invitations: { sharedLists }
     },
     actions: {
-      app: { showMenu, hideMenu }
+      app: { showMenu, hideMenu, loadSharedLists }
     },
     effects: {
-      routing: { showMyList }
+      routing: { showMyList, showSharedList }
     }
   } = useOvermind()
+  useEffect(() => {
+    loadSharedLists()
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -184,9 +193,35 @@ const Layout: FC = () => {
           classes={{ paper: classes.menuPaper }}>
           <div className={classes.menu}>
             <List>
-              <ListItem button onClick={showMyList}>
+              <ListItem
+                button
+                onClick={() => {
+                  showMyList()
+                  hideMenu()
+                }}
+                selected={currentPage === 'myList'}
+                className={classNames({ [classes.current]: currentPage === 'myList' })}>
+                <ListItemIcon>
+                  <Icon>home</Icon>
+                </ListItemIcon>
                 <ListItemText primary="Min liste" />
               </ListItem>
+              <ListItem>
+                <Typography>Delte lister</Typography>
+              </ListItem>
+              <Divider />
+              {map(sharedLists, sharedList => (
+                <ListItem
+                  key={sharedList.wishListId}
+                  button
+                  selected={currentSharedListId === sharedList.wishListId}
+                  onClick={() => {
+                    showSharedList(sharedList.wishListId)
+                    hideMenu()
+                  }}>
+                  <ListItemText primary={sharedList.wishListUserName} />
+                </ListItem>
+              ))}
             </List>
           </div>
         </SwipeableDrawer>
@@ -198,4 +233,4 @@ const Layout: FC = () => {
   )
 }
 
-export default hot(Layout)
+export default Layout

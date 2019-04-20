@@ -7,19 +7,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class WishListController : GaverControllerBase
+    public class WishListsController : GaverControllerBase
     {
         private readonly IMediator mediator;
 
-        public WishListController(IMediator mediator)
+        public WishListsController(IMediator mediator)
         {
             this.mediator = mediator;
         }
 
         [HttpGet]
-        public Task<MyListModel> Get()
+        public Task<MyListModel> GetMyList()
         {
             return mediator.Send(new GetMyListRequest());
+        }
+
+        [HttpGet("Shared")]
+        public Task<SharedListsModel> GetSharedLists()
+        {
+            return mediator.Send(new GetSharedListsRequest());
         }
 
         [HttpGet("{listId:int}")]

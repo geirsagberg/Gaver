@@ -8,7 +8,7 @@ const onInitialize: OnInitialize = ({
     routing: { setCurrentPage, handleStart },
     auth: { handleAuthentication, requireLogin },
     invitations: { handleInvitation },
-    sharedList: { handleSharedList },
+    sharedLists: { handleSharedList },
     myList: { handleMyList }
   },
   effects: {
