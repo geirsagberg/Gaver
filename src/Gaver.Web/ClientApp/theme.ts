@@ -1,7 +1,7 @@
 import { createMuiTheme } from '@material-ui/core'
+import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 import { PaletteOptions } from '@material-ui/core/styles/createPalette'
 import { CSSProperties } from '@material-ui/styles/withStyles'
-import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 import { merge } from 'lodash-es'
 
 export const gaverColors = {
@@ -42,7 +42,7 @@ const darkThemeOptions: ThemeOptions = {
   }
 }
 
-export const darkTheme = createMuiTheme(darkThemeOptions)
+export const darkTheme = createMuiTheme(merge(commonThemeOptions, darkThemeOptions))
 
 export default theme
 
