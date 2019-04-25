@@ -4,6 +4,7 @@ import { getJson } from '~/utils/ajax'
 import { normalizeArrays } from '~/utils/normalize'
 import { Action } from '..'
 import { RouteCallbackArgs } from '../routing/effects'
+import { some } from 'lodash-es'
 
 export const handleSharedList: Action<RouteCallbackArgs> = async (
   {
@@ -12,7 +13,7 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
       sharedLists: { loadSharedList },
       auth: { checkSession }
     },
-    state: { auth },
+    state: { auth, invitations },
     effects: {
       routing: { redirect }
     }
@@ -23,6 +24,8 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
   await checkSession()
   if (listId === auth.user.wishListId) {
     redirect('/')
+  } else if (!some(invitations.sharedLists, list => list.wishListId === listId)) {
+    redirect('/notfound')
   } else {
     setCurrentPage('sharedList')
     setCurrentSharedList(listId)

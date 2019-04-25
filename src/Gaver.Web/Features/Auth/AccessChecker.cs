@@ -1,9 +1,11 @@
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
+using Gaver.Web.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Auth
@@ -22,7 +24,7 @@ namespace Gaver.Web.Features.Auth
         {
             if (!await context.Invitations.AnyAsync(i => i.WishListId == wishListId && i.UserId == userId,
                 cancellationToken))
-                throw new FriendlyException("Du har ikke blitt invitert til å se denne listen");
+                throw new HttpException(HttpStatusCode.Forbidden, "Du har ikke blitt invitert til å se denne listen");
         }
 
         public async Task CheckNotOwner(int wishListId, int userId, CancellationToken cancellationToken = default)

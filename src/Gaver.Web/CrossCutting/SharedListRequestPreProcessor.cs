@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Gaver.Web.Contracts;
@@ -6,7 +5,7 @@ using MediatR.Pipeline;
 
 namespace Gaver.Web.CrossCutting
 {
-    public class SharedListRequestPreProcessor : IRequestPreProcessor<ISharedListRequest>
+    public class SharedListRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
     {
         private readonly IAccessChecker accessChecker;
 
@@ -15,10 +14,14 @@ namespace Gaver.Web.CrossCutting
             this.accessChecker = accessChecker;
         }
 
-        public async Task Process(ISharedListRequest request, CancellationToken cancellationToken)
+        public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
-            await accessChecker.CheckWishListInvitations(request.WishListId, request.UserId, cancellationToken);
-            await accessChecker.CheckNotOwner(request.WishListId, request.UserId, cancellationToken);
+            if (request is ISharedListRequest sharedListRequest) {
+                await accessChecker.CheckWishListInvitations(sharedListRequest.WishListId, sharedListRequest.UserId,
+                    cancellationToken);
+                await accessChecker.CheckNotOwner(sharedListRequest.WishListId, sharedListRequest.UserId,
+                    cancellationToken);
+            }
         }
     }
 }

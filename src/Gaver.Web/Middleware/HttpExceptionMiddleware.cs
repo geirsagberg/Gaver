@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Gaver.Web.Exceptions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
+using Newtonsoft.Json;
 
 namespace Gaver.Web.Middleware
 {
@@ -20,8 +20,14 @@ namespace Gaver.Web.Middleware
                 await next(context);
             } catch (HttpException httpException) {
                 context.Response.StatusCode = httpException.StatusCode;
-                var responseFeature = context.Features.Get<IHttpResponseFeature>();
-                responseFeature.ReasonPhrase = httpException.Message;
+                if (!context.Response.HasStarted) {
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(new {
+                        error = new {
+                            message = httpException.Message
+                        }
+                    }));
+                }
             }
         }
     }

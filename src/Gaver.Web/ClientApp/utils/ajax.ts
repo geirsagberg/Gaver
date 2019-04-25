@@ -22,7 +22,11 @@ const handleResponse = schema => async response => {
   if (contentType && contentType.indexOf('json') !== -1) {
     const data = await response.json()
     if (!response.ok) {
-      const message = Array.isArray(data) ? data.map(d => d.message).join() : data.message
+      const message = Array.isArray(data)
+        ? data.map(d => d.message).join()
+        : data.message || data.error
+        ? data.error.message
+        : undefined
       throw new Error(message)
     }
     return schema ? normalize(data, schema) : data
