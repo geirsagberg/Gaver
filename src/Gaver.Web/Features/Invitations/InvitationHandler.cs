@@ -21,7 +21,7 @@ namespace Gaver.Web.Features.Invitations
         }
 
 
-        public async Task<AcceptInvitationResponse> Handle(AcceptInvitationRequest request, CancellationToken cancellationToken)
+        public async Task<AcceptInvitationResponse> Handle(AcceptInvitationRequest request, CancellationToken cancellationToken = default)
         {
             var invitationToken = await CheckInvitationStatus(request.Token, request.UserId);
             var invitation = new Invitation {
@@ -37,7 +37,7 @@ namespace Gaver.Web.Features.Invitations
         }
 
         public async Task<InvitationStatusModel> Handle(GetInvitationStatusRequest request,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken = default)
         {
             try {
                 await CheckInvitationStatus(request.Token, request.UserId);
