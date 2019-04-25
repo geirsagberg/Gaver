@@ -20,12 +20,12 @@ namespace Gaver.Web.Filters
                 if (operation.Parameters == null)
                     operation.Parameters = new List<IParameter>();
 
-                operation.Parameters.Add(new NonBodyParameter {
-                    Name = "Authorization",
-                    In = "header",
-                    Description = "access token",
-                    Required = true,
-                    Type = "string"
+                if (operation.Security == null) {
+                    operation.Security = new List<IDictionary<string, IEnumerable<string>>>();
+                }
+
+                operation.Security.Add(new Dictionary<string, IEnumerable<string>> {
+                    {"Bearer", new[] {""}}
                 });
             }
         }

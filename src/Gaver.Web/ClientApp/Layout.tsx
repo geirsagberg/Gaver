@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core'
 import classNames from 'classnames'
 import { map } from 'lodash-es'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import Expander from './components/Expander'
 import { useOvermind } from './overmind'
 import AcceptInvitationPage from './pages/AcceptInvitation'
@@ -155,15 +155,12 @@ const Layout: FC = () => {
       invitations: { sharedLists }
     },
     actions: {
-      app: { showMenu, hideMenu, loadSharedLists }
+      app: { showMenu, hideMenu }
     },
     effects: {
       routing: { showMyList, showSharedList }
     }
   } = useOvermind()
-  useEffect(() => {
-    loadSharedLists()
-  }, [])
 
   return (
     <div className={classes.root}>

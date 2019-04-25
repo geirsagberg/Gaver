@@ -14,7 +14,7 @@ export const logIn: Action = () => {
   AuthService.login()
 }
 
-export const checkSession: Action = ({ state, effects }) =>
+export const checkSession: Action = ({ state, effects, actions }) =>
   tryOrNotify(async () => {
     if (state.auth.isLoggedIn) return
 
@@ -23,6 +23,7 @@ export const checkSession: Action = ({ state, effects }) =>
         state.auth.isLoggingIn = true
         state.auth.user = await effects.auth.getUserInfo()
         state.auth.isLoggedIn = true
+        await actions.app.loadSharedLists()
       } finally {
         state.auth.isLoggingIn = false
       }
