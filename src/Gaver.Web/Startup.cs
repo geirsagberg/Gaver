@@ -65,6 +65,8 @@ namespace Gaver.Web
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
             services.AddScoped(typeof(IRequestPreProcessor<>), typeof(SharedListRequestPreProcessor<>));
+            services.AddScoped(typeof(IRequestPreProcessor<>), typeof(MyListRequestPreProcessor<>));
+            services.AddScoped(typeof(IRequestPreProcessor<>), typeof(MyWishRequestPreProcessor<>));
 
             ConfigureOptions(services);
 

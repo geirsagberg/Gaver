@@ -1,7 +1,6 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
@@ -31,14 +30,14 @@ namespace Gaver.Web.Features.Auth
         {
             if (await context.Set<WishList>()
                 .AnyAsync(wl => wl.Id == wishListId && wl.UserId == userId, cancellationToken))
-                throw new FriendlyException("Du kan ikke se din egen liste");
+                throw new HttpException(HttpStatusCode.Forbidden, "Du kan ikke se din egen liste");
         }
 
         public async Task CheckOwner(int wishListId, int userId, CancellationToken cancellationToken = default)
         {
             if (!await context.WishLists.AnyAsync(wl => wl.Id == wishListId && wl.UserId == userId, cancellationToken)
             )
-                throw new FriendlyException("Denne listen finnes ikke eller tilhører noen andre");
+                throw new HttpException(HttpStatusCode.Forbidden, "Denne listen finnes ikke eller tilhører noen andre");
         }
 
         public async Task CheckWishOwner(int wishId, int wishListId, int userId,
@@ -46,7 +45,8 @@ namespace Gaver.Web.Features.Auth
         {
             if (!await context.Wishes.AnyAsync(w =>
                 w.Id == wishId && w.WishListId == wishListId && w.WishList.UserId == userId, cancellationToken))
-                throw new FriendlyException("Dette ønsket finnes ikke, eller tilhører en annen liste");
+                throw new HttpException(HttpStatusCode.Forbidden,
+                    "Dette ønsket finnes ikke, eller tilhører en annen liste");
         }
     }
 }

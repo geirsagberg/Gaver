@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -66,12 +65,19 @@ namespace Gaver.Web
 
         public static void AddCustomSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Info {
+            services.AddSwaggerGen(config => {
+                config.SwaggerDoc("v1", new Info {
                     Title = "My API",
                     Version = "v1"
                 });
-                c.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+                config.AddSecurityDefinition("Bearer", new ApiKeyScheme {
+                    Description =
+                        "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                config.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
             });
         }
 

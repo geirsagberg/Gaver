@@ -6,9 +6,9 @@ namespace Gaver.Web.Features.Wishes.Requests
 {
     public class SetWishesOrderRequest : IRequest, IAuthenticatedRequest
     {
+        public int[] WishesOrder { get; set; } = new int[0];
+
         [JsonIgnore]
         public int UserId { get; set; }
-
-        public int[] WishesOrder { get; set; } = new int[0];
     }
 }

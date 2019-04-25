@@ -5,7 +5,7 @@ using MediatR.Pipeline;
 
 namespace Gaver.Web.CrossCutting
 {
-    public class MyListRequestPreProcessor : IRequestPreProcessor<IMyListRequest>
+    public class MyListRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
     {
         private readonly IAccessChecker accessChecker;
 
@@ -14,9 +14,11 @@ namespace Gaver.Web.CrossCutting
             this.accessChecker = accessChecker;
         }
 
-        public async Task Process(IMyListRequest request, CancellationToken cancellationToken)
+        public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
-            await accessChecker.CheckOwner(request.WishListId, request.UserId, cancellationToken);
+            if (request is IMyListRequest myListRequest) {
+                await accessChecker.CheckOwner(myListRequest.WishListId, myListRequest.UserId, cancellationToken);
+            }
         }
     }
 }
