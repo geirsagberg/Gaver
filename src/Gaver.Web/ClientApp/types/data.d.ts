@@ -23,6 +23,7 @@ export interface WishListModel {
 export interface SharedListModel extends WishListModel {
   ownerUserId: number
   users: UserModel[]
+  wishes: SharedWishModel[]
 }
 
 export interface WishModel {

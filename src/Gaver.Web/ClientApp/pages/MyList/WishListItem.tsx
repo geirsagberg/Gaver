@@ -9,17 +9,10 @@ const useStyles = createStylesHook({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // '&:hover,&:focus-within': {
-    //   '& $actions': {
-    //     opacity: 1
-    //   }
-    // },
     paddingLeft: '1rem',
     minHeight: '3rem'
   },
-  actions: {
-    // opacity: 0.3
-  }
+  actions: {}
 })
 
 const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {

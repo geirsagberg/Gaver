@@ -25,15 +25,13 @@ const useStyles = createStylesHook({
 const SharedListPage: FC = () => {
   const classes = useStyles()
   const {
-    state: {
-      routing: { currentSharedList }
-    }
+    state: { currentSharedList }
   } = useOvermind()
   return currentSharedList ? (
     <div className={classes.root}>
       <div className={classes.list}>
         {map(currentSharedList.wishes, wish => (
-          <SharedWishListItem key={wish.id} wish={wish} />
+          <SharedWishListItem key={wish.id} wishId={wish.id} />
         ))}
       </div>
     </div>

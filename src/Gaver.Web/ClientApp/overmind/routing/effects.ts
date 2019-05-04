@@ -13,6 +13,7 @@ export function route(route: string, ...actions: RouteCallback[]) {
 }
 export const start = pageJs.start
 export const redirect = pageJs.redirect
+export const exit = pageJs.exit
 
 export const showStartPage = () => pageJs.show('/')
 export const showMyList = () => pageJs.show('/myList')
