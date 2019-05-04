@@ -123,26 +123,7 @@ namespace Gaver.Web
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
-            UseCustomMvc(app);
-        }
-
-        private static void UseCustomMvc(IApplicationBuilder app)
-        {
-            app.UseMvc(routes => {
-                routes.MapRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new {
-                    controller = "Error",
-                    action = "NotFound"
-                });
-                routes.MapSpaFallbackRoute(
-                    "spa-fallback",
-                    new {
-                        controller = "Home",
-                        action = "Index"
-                    });
-            });
+            app.UseCustomMvc();
         }
 
         private static void SetupForProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
@@ -167,5 +148,28 @@ namespace Gaver.Web
                 }
             });
         }
+    }
+
+    public static class StartupExtensions
+    {
+        public static void UseCustomMvc(this IApplicationBuilder app)
+        {
+            app.UseMvc(routes => {
+                routes.MapRoute(
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute("API 404", "api/{*anything}", new {
+                    controller = "Error",
+                    action = "NotFound"
+                });
+                routes.MapSpaFallbackRoute(
+                    "spa-fallback",
+                    new {
+                        controller = "Home",
+                        action = "Index"
+                    });
+            });
+        }
+
     }
 }

@@ -16,7 +16,7 @@ import {
   Typography
 } from '@material-ui/core'
 import classNames from 'classnames'
-import { map } from 'lodash-es'
+import { map, some } from 'lodash-es'
 import React, { FC, useState } from 'react'
 import Expander from './components/Expander'
 import { useOvermind } from './overmind'
@@ -203,22 +203,37 @@ const Layout: FC = () => {
                 </ListItemIcon>
                 <ListItemText primary="Min liste" />
               </ListItem>
+              {some(sharedLists) && (
+                <>
+                  <ListItem>
+                    <ListItemText secondary="Delte lister" />
+                    {/* <Typography>Delte lister</Typography> */}
+                  </ListItem>
+                  <Divider />
+                  {map(sharedLists, sharedList => (
+                    <ListItem
+                      key={sharedList.wishListId}
+                      button
+                      selected={currentSharedListId === sharedList.wishListId}
+                      onClick={() => {
+                        showSharedList(sharedList.wishListId)
+                        hideMenu()
+                      }}>
+                      <ListItemText primary={sharedList.wishListUserName} />
+                    </ListItem>
+                  ))}
+                </>
+              )}
               <ListItem>
-                <Typography>Delte lister</Typography>
+                <ListItemText primary="&nbsp;" />
               </ListItem>
               <Divider />
-              {map(sharedLists, sharedList => (
-                <ListItem
-                  key={sharedList.wishListId}
-                  button
-                  selected={currentSharedListId === sharedList.wishListId}
-                  onClick={() => {
-                    showSharedList(sharedList.wishListId)
-                    hideMenu()
-                  }}>
-                  <ListItemText primary={sharedList.wishListUserName} />
-                </ListItem>
-              ))}
+              <ListItem button href="/dist/licenses.txt" component="a" target="_blank">
+                <ListItemIcon>
+                  <Icon>copyright</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Softwarelisenser" />
+              </ListItem>
             </List>
           </div>
         </SwipeableDrawer>

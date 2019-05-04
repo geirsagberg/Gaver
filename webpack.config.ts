@@ -10,6 +10,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin
 
 const baseDir = process.cwd()
 
@@ -32,6 +33,9 @@ const productionPlugins = [
   }),
   new MiniCssExtractPlugin({
     filename: '[name].css'
+  }),
+  new LicenseWebpackPlugin({
+    perChunkOutput: false
   })
 ]
 
