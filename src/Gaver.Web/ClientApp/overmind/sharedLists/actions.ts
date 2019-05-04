@@ -33,13 +33,21 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
   }
 }
 
-export const loadSharedList: Action<number> = ({ state: { sharedLists } }, listId) =>
+export const loadSharedList: Action<number> = (
+  {
+    state: {
+      sharedLists,
+      auth: { user }
+    }
+  },
+  listId
+) =>
   tryOrNotify(async () => {
     const result = await getJson<SharedListModel>('/api/WishLists/' + listId)
     const normalized = normalizeArrays(result)
     const { users, ...sharedList } = normalized
     sharedLists.wishLists[sharedList.id] = sharedList
-    sharedLists.users = { ...sharedLists.users, ...users }
+    sharedLists.users = { ...sharedLists.users, ...users, [user.id]: user }
   })
 
 export const setBought: Action<{ wishId: number; isBought: boolean }> = (
