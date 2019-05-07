@@ -31,12 +31,12 @@
     "@types/node": "^12.0.0",
     "@types/page": "^1.8.0",
     "@types/react": "^16.8.16",
-    "@types/react-beautiful-dnd": "^11.0.1",
+    "@types/react-beautiful-dnd": "^11.0.2",
     "@types/react-dom": "^16.8.4",
     "@types/react-redux": "^7.0.8",
     "@types/react-select": "^2.0.17",
     "@types/redux-first-router": "^2.1.1",
-    "@types/webpack": "^4.4.29",
+    "@types/webpack": "^4.4.31",
     "@types/webpack-env": "^1.13.9",
     "aspnet-webpack-react": "^4.0.0",
     "autoprefixer": "^9.5.1",
@@ -63,7 +63,7 @@
     "typescript": "^3.4.5",
     "url-loader": "^1.1.2",
     "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.1",
+    "webpack-cli": "^3.3.2",
     "webpack-dev-middleware": "^3.6.2",
     "webpack-hot-middleware": "^2.24.4"
   },
@@ -76,7 +76,7 @@
     "aspnet-webpack": "^3.0.0",
     "auth0-js": "^9.10.2",
     "classnames": "^2.2.6",
-    "cloc": "^2.4.0",
+    "cloc": "^2.5.0",
     "color": "^3.1.1",
     "cross-env": "^5.2.0",
     "history": "^4.9.0",
@@ -97,8 +97,10 @@
     "react-beautiful-dnd": "^11.0.2",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.8.4",
+    "react-redux": "^7.1.0-alpha.4",
+    "redux": "^4.0.1",
     "toastr": "^2.1.4",
-    "trianglify": "^2.0.0"
+    "trianglify": "github:geirsagberg/trianglify"
   },
   "husky": {
     "hooks": {
