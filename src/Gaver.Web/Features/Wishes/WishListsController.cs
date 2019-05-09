@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class WishListsController : GaverControllerBase
+    public class MyListController : GaverControllerBase
     {
         private readonly IMediator mediator;
 
-        public WishListsController(IMediator mediator)
+        public MyListController(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -54,10 +54,9 @@ namespace Gaver.Web.Features.Wishes
             return mediator.Send(request);
         }
 
-        [HttpPut("{listId:int}/{wishId:int}/Title")]
-        public Task<WishModel> SetTitle(int listId, int wishId, SetTitleRequest request)
+        [HttpPut("{wishId:int}/Title")]
+        public Task<WishModel> SetTitle(int wishId, SetTitleRequest request)
         {
-            request.WishListId = listId;
             request.WishId = wishId;
             return mediator.Send(request);
         }

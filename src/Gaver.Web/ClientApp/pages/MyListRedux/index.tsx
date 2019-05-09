@@ -2,23 +2,29 @@ import { Fab, Icon, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import { map, size } from 'lodash-es'
 import React, { FC } from 'react'
+import { connect } from 'react-redux'
 import Loading from '~/components/Loading'
-import { useOvermind } from '~/overmind'
+import { startAddingWish } from '~/redux/reducers/myList/actions'
+import { createMapDispatchToProps } from '~/redux/reduxUtils'
+import { ReduxState } from '~/redux/store'
 import AddWishDialog from './AddWishDialog'
 import EditWishDialog from './EditWishDialog'
 import { useStyles } from './styles'
 import WishListItem from './WishListItem'
 
-const MyListPage: FC = () => {
+const mapStateToProps = (state: ReduxState) => ({
+  orderedWishes: state.myList.wishesOrder.map(i => state.myList.wishes[i]),
+  wishesLoaded: state.myList.wishesLoaded
+})
+
+const mapDispatchToProps = createMapDispatchToProps({
+  startAddingWish
+})
+
+type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
+
+const MyListPage: FC<Props> = ({ orderedWishes, wishesLoaded, startAddingWish }) => {
   const classes = useStyles()
-  const {
-    state: {
-      myList: { orderedWishes, wishesLoaded }
-    },
-    actions: {
-      myList: { startAddingWish }
-    }
-  } = useOvermind()
 
   return wishesLoaded ? (
     <div className={classes.root}>
@@ -51,4 +57,7 @@ const MyListPage: FC = () => {
   )
 }
 
-export default MyListPage
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyListPage)

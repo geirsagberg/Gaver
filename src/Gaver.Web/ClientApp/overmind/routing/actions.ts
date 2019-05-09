@@ -1,12 +1,8 @@
-import { Action } from '..'
+import { Action } from 'overmind'
 import { Page } from './state'
 
 export const setCurrentPage: Action<Page> = ({ state }, page) => {
   state.routing.currentPage = page
-}
-
-export const setCurrentSharedList: Action<number> = ({ state }, listId) => {
-  state.routing.currentSharedListId = listId
 }
 
 export const handleStart: Action = async ({
@@ -25,4 +21,14 @@ export const handleStart: Action = async ({
   } else if (!auth.isLoggingIn) {
     setCurrentPage('start')
   }
+}
+
+export const handleMyList: Action = async ({
+  actions: {
+    routing: { setCurrentPage },
+    myList: { loadWishes }
+  }
+}) => {
+  setCurrentPage('myList')
+  await loadWishes()
 }

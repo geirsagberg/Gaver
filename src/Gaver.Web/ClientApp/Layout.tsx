@@ -24,8 +24,6 @@ import AcceptInvitationPage from './pages/AcceptInvitation'
 import LoginPage from './pages/Login'
 import MyListPage from './pages/MyList'
 import NotFoundPage from './pages/NotFound'
-import SharedListPage from './pages/SharedList'
-import { ShareListDialog } from './ShareListDialog'
 import { darkTheme } from './theme'
 import { createStylesHook } from './utils/materialUtils'
 
@@ -84,8 +82,6 @@ const Content: FC = () => {
       return <NotFoundPage />
     case 'acceptInvitation':
       return <AcceptInvitationPage />
-    case 'sharedList':
-      return <SharedListPage />
   }
   return null
 }
@@ -93,26 +89,13 @@ const Content: FC = () => {
 const Actions: FC = () => {
   const {
     state: {
-      routing: { currentPage },
-      myList: { isDeleting }
-    },
-    actions: {
-      myList: { startSharingList, toggleDeleting }
+      routing: { currentPage }
     }
   } = useOvermind()
 
   switch (currentPage) {
     case 'myList':
-      return (
-        <>
-          <IconButton color="inherit" onClick={toggleDeleting}>
-            <Icon>{isDeleting ? 'close' : 'delete'}</Icon>
-          </IconButton>
-          <IconButton color="inherit" onClick={startSharingList}>
-            <Icon>share</Icon>
-          </IconButton>
-        </>
-      )
+      return <></>
   }
   return null
 }
@@ -238,8 +221,6 @@ const Layout: FC = () => {
           </div>
         </SwipeableDrawer>
       </MuiThemeProvider>
-
-      <ShareListDialog />
       <div id="portal-overlay" style={{ position: 'relative', zIndex: 1100 }} />
     </div>
   )

@@ -1,6 +1,6 @@
 import * as actions from './actions'
-import { OnInitialize, Derive } from '..'
 import { subscribe, Topic } from '~/utils/pubSub'
+import { Derive, OnInitialize } from 'overmind'
 
 type AppState = {
   ajaxCounter: number

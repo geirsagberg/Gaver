@@ -1,5 +1,5 @@
 import { WishModel } from '~/types/data'
-import { Derive } from '..'
+import { Derive } from 'overmind'
 
 export type MyListState = {
   id?: number

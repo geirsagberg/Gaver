@@ -2,7 +2,7 @@ import { orderBy } from 'lodash-es'
 import { SharedListsModel } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { getJson } from '~/utils/ajax'
-import { Action } from '../'
+import { Action } from 'overmind'
 
 export const incrementAjaxCounter: Action = ({ state: { app } }) => {
   app.ajaxCounter += 1

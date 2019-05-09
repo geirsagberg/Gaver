@@ -9,16 +9,15 @@ import {
 } from '@material-ui/core'
 import React, { FC } from 'react'
 import { useOvermind } from '~/overmind'
-import { useMyList } from '~/overmind/myList'
 
 const EditWishDialog: FC = () => {
   const {
-    state: { editingWish },
-    actions: { cancelEditingWish, updateEditingWish, saveEditingWish }
-  } = useMyList()
-  const {
     state: {
+      myList: { editingWish },
       app: { isSavingOrLoading }
+    },
+    actions: {
+      myList: { cancelEditingWish, updateEditingWish, saveEditingWish }
     }
   } = useOvermind()
   return editingWish ? (
@@ -27,7 +26,7 @@ const EditWishDialog: FC = () => {
       <DialogContent>
         <DialogContentText>Hva ønsker du deg?</DialogContentText>
         <TextField
-          onChange={event => updateEditingWish({ field: 'title', value: event.target.value })}
+          onChange={event => updateEditingWish({ title: event.target.value })}
           autoFocus
           fullWidth
           onKeyPress={e => e.key === 'Enter' && saveEditingWish()}

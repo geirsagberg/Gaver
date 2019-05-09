@@ -47,7 +47,7 @@ namespace Gaver.Web.Features.Wishes
             context.Add(wish);
             await context.SaveChangesAsync(token);
             if (wishList.WishesOrder != null) {
-                wishList.WishesOrder = wishList.WishesOrder.Concat(new[] {wish.Id}).ToArray();
+                wishList.WishesOrder = wishList.WishesOrder.Concat(new[] { wish.Id }).ToArray();
             } else {
                 var wishesOrder = await context.Wishes.Where(w => w.WishList == wishList).Select(w => w.Id)
                     .ToArrayAsync(token);
@@ -67,7 +67,7 @@ namespace Gaver.Web.Features.Wishes
             context.Remove(wish);
             await context.SaveChangesAsync(token);
             wish.WishList.WishesOrder = wish.WishList.WishesOrder != null
-                ? wish.WishList.WishesOrder.Except(new[] {message.WishId}).ToArray()
+                ? wish.WishList.WishesOrder.Except(new[] { message.WishId }).ToArray()
                 : wish.WishList.Wishes.Select(w => w.Id).ToArray();
             await context.SaveChangesAsync(token);
             await clientNotifier.RefreshListAsync(message.WishListId);
@@ -103,7 +103,7 @@ namespace Gaver.Web.Features.Wishes
 
         public async Task<WishModel> Handle(SetTitleRequest request, CancellationToken cancellationToken)
         {
-            var wish = GetWish(request.WishId, request.WishListId);
+            var wish = context.GetOrDie<Wish>(request.WishId);
             wish.Title = request.Title;
             await context.SaveChangesAsync(cancellationToken);
             await clientNotifier.RefreshListAsync(request.WishListId);

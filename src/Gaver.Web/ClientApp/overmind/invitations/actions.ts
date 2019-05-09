@@ -1,7 +1,7 @@
 import { AcceptInvitationResponse, InvitationTokenStatus } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { getJson, postJson } from '~/utils/ajax'
-import { Action } from '..'
+import { Action } from 'overmind'
 import { RouteCallbackArgs } from '../routing/effects'
 
 export const checkInvitationStatus: Action<string> = ({ state: { invitations } }, token) =>

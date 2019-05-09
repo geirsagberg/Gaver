@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes.Requests
 {
-    public class SetTitleRequest : IRequest<WishModel>, IMyWishRequest
+    public class SetTitleRequest : IRequest<WishModel>, IAuthenticatedRequest
     {
         [MinLength(1)]
         [MaxLength(255)]

@@ -5,7 +5,7 @@ export type RouteCallbackArgs = {
   next: () => any
 }
 
-export type RouteCallback = (args: RouteCallbackArgs) => any
+export type RouteCallback = (args: RouteCallbackArgs) => void
 
 export function route(route: string, ...actions: RouteCallback[]) {
   const callbacks = actions.map(action => ({ params }, next) => action({ params, next }))

@@ -99,6 +99,7 @@
     "react-hot-loader": "^4.8.4",
     "react-redux": "^7.1.0-alpha.4",
     "redux": "^4.0.1",
+    "redux-starter-kit": "^0.5.1",
     "toastr": "^2.1.4",
     "trianglify": "github:geirsagberg/trianglify"
   },

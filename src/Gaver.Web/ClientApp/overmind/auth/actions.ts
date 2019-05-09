@@ -1,7 +1,7 @@
 import { tryOrNotify } from '~/utils'
 import AuthService from '~/utils/AuthService'
 import { showError } from '~/utils/notifications'
-import { Action } from '..'
+import { Action } from 'overmind'
 import { RouteCallbackArgs } from '../routing/effects'
 
 export const logOut: Action = ({ state, effects }) => {
@@ -23,7 +23,6 @@ export const checkSession: Action = ({ state, effects, actions }) =>
         state.auth.isLoggingIn = true
         state.auth.user = await effects.auth.getUserInfo()
         state.auth.isLoggedIn = true
-        await actions.app.loadSharedLists()
       } finally {
         state.auth.isLoggingIn = false
       }

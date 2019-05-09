@@ -1,15 +1,13 @@
-import { OnInitialize } from '..'
+import { OnInitialize } from 'overmind'
 import * as actions from './actions'
 import * as effects from './effects'
 import { state } from './state'
 
 const onInitialize: OnInitialize = ({
   actions: {
-    routing: { setCurrentPage, handleStart, setCurrentSharedList },
+    routing: { setCurrentPage, handleStart, handleMyList },
     auth: { handleAuthentication, requireLogin },
-    invitations: { handleInvitation },
-    sharedLists: { handleSharedList },
-    myList: { handleMyList }
+    invitations: { handleInvitation }
   },
   effects: {
     routing: { route, start, exit }
@@ -19,10 +17,8 @@ const onInitialize: OnInitialize = ({
   route('/mylist', requireLogin, handleMyList)
   route('/callback', handleAuthentication)
   route('/invitations/:token', requireLogin, handleInvitation)
-  route('/list/:listId', requireLogin, handleSharedList)
   route('*', () => setCurrentPage('notFound'))
   exit('/list/:listId', (_, next) => {
-    setCurrentSharedList(null)
     next()
   })
   start()
