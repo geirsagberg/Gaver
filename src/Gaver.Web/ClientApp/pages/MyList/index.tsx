@@ -8,8 +8,8 @@ import Loading from '~/components/Loading'
 import { useOvermind } from '~/overmind'
 import { pageWidth } from '~/theme'
 import { createStylesHook } from '~/utils/materialUtils'
-import AddWishDialog from './AddWishDialog'
-import EditWishDialog from './EditWishDialog'
+import AddWishDialog from './WishDetails/AddWishDialog'
+import EditWishDialog from './WishDetails/EditWishDialog'
 import WishListItem from './WishListItem'
 
 const useStyles = createStylesHook(theme => ({

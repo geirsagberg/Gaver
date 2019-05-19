@@ -20,18 +20,16 @@ export const addWish: Action = ({ state: { myList } }) =>
   tryOrNotify(async () => {
     const wish = await postJson<WishModel>('/api/WishLists', myList.newWish)
     myList.wishes[wish.id] = wish
-    myList.isAddingWish = false
+    myList.newWish = null
     myList.wishesOrder.push(wish.id)
   })
 
 export const startAddingWish: Action = ({ state: { myList } }) => {
   myList.newWish = getEmptyWish()
-  myList.isAddingWish = true
 }
 
 export const cancelAddingWish: Action = ({ state: { myList } }) => {
-  myList.newWish = getEmptyWish()
-  myList.isAddingWish = false
+  myList.newWish = null
 }
 
 export const startEditingWish: Action<number> = ({ state: { myList } }, wishId) => {
@@ -52,15 +50,11 @@ export const cancelEditingWish: Action = ({ state: { myList } }) => {
   myList.editingWish = null
 }
 
-export const updateEditingWish: Action<{ field: keyof WishModel; value }> = (
-  {
-    state: {
-      myList: { editingWish }
-    }
-  },
-  { field, value }
-) => {
-  editingWish[field] = value
+export const updateEditingWish: Action<Partial<WishModel>> = ({ state: { myList } }, update) => {
+  myList.editingWish = {
+    ...myList.editingWish,
+    ...update
+  }
 }
 
 export const saveEditingWish: Action = ({ state: { myList } }) =>
@@ -71,8 +65,11 @@ export const saveEditingWish: Action = ({ state: { myList } }) =>
     myList.editingWish = null
   })
 
-export const setNewWishTitle: Action<string> = ({ state }, title) => {
-  state.myList.newWish.title = title
+export const updateNewWish: Action<Partial<WishModel>> = ({ state }, update) => {
+  state.myList.newWish = {
+    ...state.myList.newWish,
+    ...update
+  }
 }
 
 export const loadWishes: Action = ({ state }) =>

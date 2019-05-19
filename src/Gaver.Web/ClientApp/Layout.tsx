@@ -28,6 +28,7 @@ import SharedListPage from './pages/SharedList'
 import { ShareListDialog } from './ShareListDialog'
 import { darkTheme } from './theme'
 import { createStylesHook } from './utils/materialUtils'
+import { hot } from 'react-hot-loader/root'
 
 export const useStyles = createStylesHook(theme => ({
   root: {
@@ -245,4 +246,4 @@ const Layout: FC = () => {
   )
 }
 
-export default Layout
+export default hot(Layout)

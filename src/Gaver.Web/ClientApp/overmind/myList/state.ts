@@ -7,7 +7,6 @@ export type MyListState = {
   shareEmails: string[]
   isSharingList: boolean
   wishes: Dictionary<WishModel>
-  isAddingWish: boolean
   newWish?: WishModel
   wishesLoaded?: boolean
   wishesOrder: number[]
@@ -22,7 +21,6 @@ export const getEmptyWish = () => ({
 export const state: MyListState = {
   shareEmails: [],
   wishes: {},
-  isAddingWish: false,
   isSharingList: false,
   wishesOrder: [],
   orderedWishes: state => state.wishesOrder.map(i => state.wishes[i])
