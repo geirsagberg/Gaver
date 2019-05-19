@@ -1,7 +1,8 @@
 using Gaver.Web.Contracts;
+using Gaver.Web.Features.Wishes.Requests;
 using MediatR;
 
-namespace Gaver.Web.Features.Wishes.Requests
+namespace Gaver.Web.Features.MyList
 {
     public class DeleteWishRequest : IRequest<DeleteWishResponse>, IMyWishRequest
     {

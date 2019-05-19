@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Gaver.Web.Features.Wishes.Requests;
 using Gaver.Web.Models;
+using HybridModelBinding;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,9 +41,8 @@ namespace Gaver.Web.Features.MyList
         }
 
         [HttpPatch("{wishId:int}")]
-        public Task UpdateWish(int wishId, UpdateWishRequest request)
+        public Task UpdateWish([FromHybrid] UpdateWishRequest request)
         {
-            request.WishId = wishId;
             return mediator.Send(request);
         }
 

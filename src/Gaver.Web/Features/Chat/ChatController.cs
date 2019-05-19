@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
+using HybridModelBinding;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Chat
@@ -14,18 +14,17 @@ namespace Gaver.Web.Features.Chat
             this.mediator = mediator;
         }
 
-        [HttpPost("{listId:int}")]
-        public Task<ChatMessageModel> AddMessage(int listId, AddMessageRequest request)
+        [HttpPost("{wishListId:int}")]
+        public Task<ChatMessageModel> AddMessage([FromHybrid] AddMessageRequest request)
         {
-            request.WishListId = listId;
             return mediator.Send(request);
         }
 
-        [HttpGet("{listId:int}")]
-        public Task<ChatModel> GetMessages(int listId)
+        [HttpGet("{wishListId:int}")]
+        public Task<ChatModel> GetMessages(int wishListId)
         {
             return mediator.Send(new GetMessagesRequest {
-                WishListId = listId
+                WishListId = wishListId
             });
         }
     }

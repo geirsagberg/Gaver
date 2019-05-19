@@ -64,6 +64,7 @@ namespace Gaver.Web
                     o.ViewLocationFormats.Add("/Features/{0}.cshtml");
                 }).AddJsonOptions(o => o.UseCamelCasing(true))
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .AddHybridModelBinder()
                 ;
         }
 
