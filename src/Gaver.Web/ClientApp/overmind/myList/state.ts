@@ -14,7 +14,7 @@ export type MyListState = {
   isDeleting?: boolean
 }
 
-export const getEmptyWish = () => ({
+export const getEmptyWish = (): WishModel => ({
   title: ''
 })
 

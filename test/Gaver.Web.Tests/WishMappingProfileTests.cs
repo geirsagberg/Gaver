@@ -5,7 +5,7 @@ using Gaver.Common.Utils;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
 using Gaver.Web.Features.Wishes;
-using Gaver.Web.Features.Wishes.Models;
+using Gaver.Web.Models;
 using LightInject;
 using Xunit;
 

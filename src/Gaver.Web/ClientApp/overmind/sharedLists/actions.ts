@@ -43,7 +43,7 @@ export const loadSharedList: Action<number> = (
   listId
 ) =>
   tryOrNotify(async () => {
-    const result = await getJson<SharedListModel>('/api/WishLists/' + listId)
+    const result = await getJson<SharedListModel>('/api/SharedLists/' + listId)
     const normalized = normalizeArrays(result)
     const { users, ...sharedList } = normalized
     sharedLists.wishLists[sharedList.id] = sharedList
@@ -67,6 +67,6 @@ export const setBought: Action<{ wishId: number; isBought: boolean }> = (
       throw new Error('Du er ikke logget inn')
     }
     const listId = currentSharedList.id
-    await putJson(`/api/WishLists/${listId}/${wishId}/Bought`, { isBought })
+    await putJson(`/api/SharedLists/${listId}/${wishId}/Bought`, { isBought })
     currentSharedList.wishes[wishId].boughtByUserId = isBought ? user.id : null
   })

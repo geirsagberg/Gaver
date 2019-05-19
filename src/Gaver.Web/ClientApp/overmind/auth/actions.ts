@@ -21,7 +21,7 @@ export const checkSession: Action = ({ state, effects, actions }) =>
     if (AuthService.isAuthenticated()) {
       try {
         state.auth.isLoggingIn = true
-        state.auth.user = await effects.auth.getUserInfo()
+        state.auth.user = await effects.api.getUserInfo()
         state.auth.isLoggedIn = true
         await actions.app.loadSharedLists()
       } finally {

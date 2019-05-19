@@ -17,7 +17,7 @@ namespace Gaver.Web.CrossCutting
         public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
             if (request is IMyWishRequest myWishRequest) {
-                await accessChecker.CheckWishOwner(myWishRequest.WishId, myWishRequest.WishListId, myWishRequest.UserId,
+                await accessChecker.CheckWishOwner(myWishRequest.WishId, myWishRequest.UserId,
                     cancellationToken);
             }
         }

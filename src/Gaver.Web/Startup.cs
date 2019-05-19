@@ -10,6 +10,7 @@ using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Hubs;
 using Gaver.Web.Options;
+using Hellang.Middleware.ProblemDetails;
 using JetBrains.Annotations;
 using MediatR;
 using MediatR.Pipeline;
@@ -61,6 +62,8 @@ namespace Gaver.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSignalR();
             services.AddMediatR();
+            services.AddProblemDetails();
+            services.AddValidationProblemDetails();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
@@ -115,6 +118,8 @@ namespace Gaver.Web
 
             app.UseFileServer();
 
+            app.UseWhen(IsApiRequest, app2 => app2.UseProblemDetails());
+
             app.UseHttpException();
             app.UseAuthentication();
 
@@ -124,6 +129,13 @@ namespace Gaver.Web
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
             app.UseCustomMvc();
+        }
+
+        private static bool IsApiRequest(HttpContext context)
+        {
+            var requestHeaders = context.Request.GetTypedHeaders();
+            return requestHeaders.Accept.EmptyIfNull().Any(h => h.MediaType == "application/json") ||
+                requestHeaders.ContentType?.MediaType == "application/json";
         }
 
         private static void SetupForProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
@@ -170,6 +182,5 @@ namespace Gaver.Web
                     });
             });
         }
-
     }
 }

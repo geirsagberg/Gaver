@@ -9,27 +9,32 @@ using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Data.Exceptions;
 using Gaver.Web.Contracts;
-using Gaver.Web.Features.Wishes.Models;
 using Gaver.Web.Features.Wishes.Requests;
+using Gaver.Web.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Features.Wishes
 {
-    public class WishReader : IRequestHandler<GetMyListRequest, MyListModel>,
+    public class SharedListHandler :
+        IRequestHandler<SetBoughtRequest, SharedWishModel>,
         IRequestHandler<GetSharedListRequest, SharedListModel>,
-        IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>,
-        IRequestHandler<GetSharedListsRequest, SharedListsModel>
+        IRequestHandler<GetSharedListsRequest, SharedListsModel>,
+        IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
     {
-        private readonly IAccessChecker accessChecker;
+        private readonly IClientNotifier clientNotifier;
         private readonly GaverContext context;
+        private readonly ILogger<SharedListHandler> logger;
         private readonly IMapperService mapper;
 
-        public WishReader(GaverContext context, IMapperService mapper, IAccessChecker accessChecker)
+        public SharedListHandler(GaverContext context, IMapperService mapper, IClientNotifier clientNotifier,
+            ILogger<SharedListHandler> logger)
         {
             this.context = context;
             this.mapper = mapper;
-            this.accessChecker = accessChecker;
+            this.clientNotifier = clientNotifier;
+            this.logger = logger;
         }
 
         public async Task<ListAccessStatus> Handle(CheckSharedListAccessRequest request,
@@ -49,12 +54,6 @@ namespace Gaver.Web.Features.Wishes
                 return ListAccessStatus.Invited;
 
             return ListAccessStatus.NotInvited;
-        }
-
-        public Task<MyListModel> Handle(GetMyListRequest message, CancellationToken token = default)
-        {
-            var myList = GetMyList(message);
-            return Task.FromResult(myList);
         }
 
         public Task<SharedListModel> Handle(GetSharedListRequest message, CancellationToken cancellationToken = default)
@@ -78,18 +77,27 @@ namespace Gaver.Web.Features.Wishes
             };
         }
 
-        private MyListModel GetMyList(GetMyListRequest message)
+        public async Task<SharedWishModel> Handle(SetBoughtRequest message, CancellationToken cancellationToken)
         {
-            var model = context.Set<WishList>()
-                .Where(wl => wl.UserId == message.UserId)
-                .ProjectTo<MyListModel>(mapper.MapperConfiguration)
-                .Single();
+            var wish = GetWish(message.WishId, message.WishListId);
+            var userId = message.UserId;
+            if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId)
+                throw new FriendlyException("Wish has already been bought by someone else");
 
-            if (model.WishesOrder?.Length != model.Wishes.Count) {
-                model.WishesOrder = model.Wishes.Select(w => w.Id).ToArray();
-            }
+            if (message.IsBought) wish.BoughtByUserId = userId;
+            else wish.BoughtByUserId = null;
+            await context.SaveChangesAsync(cancellationToken);
 
-            return model;
+            await clientNotifier.RefreshListAsync(message.WishListId, userId);
+            return mapper.Map<SharedWishModel>(wish);
+        }
+
+        private Wish GetWish(int wishId, int wishListId)
+        {
+            var wish = context.GetOrDie<Wish>(wishId);
+            if (wish.WishListId != wishListId)
+                throw new FriendlyException($"Wish {wishId} does not belong to list {wishListId}");
+            return wish;
         }
     }
 }

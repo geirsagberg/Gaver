@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Gaver.Web.Contracts;
 using Gaver.Web.CrossCutting;
-using Gaver.Web.Features.Wishes.Models;
+using Gaver.Web.Models;
 using MediatR;
 using Newtonsoft.Json;
 

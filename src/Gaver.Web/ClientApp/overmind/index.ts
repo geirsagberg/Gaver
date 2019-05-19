@@ -1,6 +1,7 @@
 import { IAction, IConfig, IContext, IDerive, IOnInitialize, IOperator, IState } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
+import api from './api'
 import app from './app'
 import auth from './auth'
 import invitations from './invitations'
@@ -38,7 +39,8 @@ export const config = merge(
     myList,
     app,
     invitations,
-    sharedLists
+    sharedLists,
+    api
   }),
   {
     state

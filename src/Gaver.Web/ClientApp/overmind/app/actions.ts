@@ -22,6 +22,6 @@ export const hideMenu: Action = ({ state: { app } }) => {
 
 export const loadSharedLists: Action = ({ state }) =>
   tryOrNotify(async () => {
-    const model = await getJson<SharedListsModel>('/api/WishLists/Shared')
+    const model = await getJson<SharedListsModel>('/api/SharedLists')
     state.invitations.sharedLists = orderBy(model.invitations, i => i.wishListUserName)
   })

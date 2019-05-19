@@ -66,11 +66,11 @@ export const getJson = <T = any>(url, schema?, includeCredentials = true) =>
     schema
   )
 
-export const postJson = <T = any>(url, data?, schema?, includeCredentials = true) =>
+const createJsonMethod = (method: string) => <T = any>(url, data?, schema?, includeCredentials = true) =>
   tryAjax<T>(
     () =>
       fetch(url, {
-        method: 'POST',
+        method,
         credentials: getCredentials(includeCredentials),
         headers: {
           ...jsonHeaders,
@@ -81,32 +81,10 @@ export const postJson = <T = any>(url, data?, schema?, includeCredentials = true
     schema
   )
 
-export const putJson = <T = any>(url, data?, schema?, includeCredentials = true) =>
-  tryAjax<T>(
-    () =>
-      fetch(url, {
-        method: 'PUT',
-        credentials: getCredentials(includeCredentials),
-        headers: {
-          ...jsonHeaders,
-          ...getAuthHeader()
-        },
-        body: JSON.stringify(data)
-      }),
-    schema
-  )
+export const postJson = createJsonMethod('POST')
 
-export const deleteJson = <T = any>(url, data?, schema?, includeCredentials = true) =>
-  tryAjax<T>(
-    () =>
-      fetch(url, {
-        method: 'DELETE',
-        credentials: getCredentials(includeCredentials),
-        headers: {
-          ...jsonHeaders,
-          ...getAuthHeader()
-        },
-        body: JSON.stringify(data)
-      }),
-    schema
-  )
+export const putJson = createJsonMethod('PUT')
+
+export const patchJson = createJsonMethod('PATCH')
+
+export const deleteJson = createJsonMethod('DELETE')

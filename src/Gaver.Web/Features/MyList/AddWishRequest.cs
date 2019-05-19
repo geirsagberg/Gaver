@@ -1,23 +1,18 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Gaver.Web.Contracts;
-using Gaver.Web.Features.Wishes.Models;
+using Gaver.Web.Models;
 using MediatR;
 using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Wishes.Requests
 {
-    public class SetTitleRequest : IRequest<WishModel>, IMyWishRequest
+
+    public class AddWishRequest : IRequest<WishModel>, IAuthenticatedRequest
     {
-        [MinLength(1)]
-        [MaxLength(255)]
         [Required]
+        [MinLength(1)]
         public string Title { get; set; }
-
-        [JsonIgnore]
-        public int WishListId { get; set; }
-
-        [JsonIgnore]
-        public int WishId { get; set; }
 
         [JsonIgnore]
         public int UserId { get; set; }

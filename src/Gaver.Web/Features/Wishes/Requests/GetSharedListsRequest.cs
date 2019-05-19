@@ -1,5 +1,5 @@
 using Gaver.Web.Contracts;
-using Gaver.Web.Features.Wishes.Models;
+using Gaver.Web.Models;
 using MediatR;
 
 namespace Gaver.Web.Features.Wishes.Requests

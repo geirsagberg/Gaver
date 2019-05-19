@@ -40,11 +40,11 @@ namespace Gaver.Web.Features.Auth
                 throw new HttpException(HttpStatusCode.Forbidden, "Denne listen finnes ikke eller tilhører noen andre");
         }
 
-        public async Task CheckWishOwner(int wishId, int wishListId, int userId,
+        public async Task CheckWishOwner(int wishId, int userId,
             CancellationToken cancellationToken = default)
         {
             if (!await context.Wishes.AnyAsync(w =>
-                w.Id == wishId && w.WishListId == wishListId && w.WishList.UserId == userId, cancellationToken))
+                w.Id == wishId && w.WishList.UserId == userId, cancellationToken))
                 throw new HttpException(HttpStatusCode.Forbidden,
                     "Dette ønsket finnes ikke, eller tilhører en annen liste");
         }

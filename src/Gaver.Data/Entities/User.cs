@@ -24,6 +24,7 @@ namespace Gaver.Data.Entities
         public string PictureUrl { get; set; }
 
         public WishList WishList { get; set; }
+
         public virtual ICollection<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
         public virtual ICollection<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
     }

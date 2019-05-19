@@ -1,10 +1,10 @@
+using AspNetCore.Testing.Authentication.ClaimInjector;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 
 namespace Gaver.Web.Tests
 {
-    public class CustomWebApplicationFactory : WebApplicationFactory<Startup>
+    public class CustomWebApplicationFactory : ClaimInjectorWebApplicationFactory<Startup>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {

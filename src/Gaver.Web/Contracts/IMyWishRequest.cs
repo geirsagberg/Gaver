@@ -1,6 +1,6 @@
 namespace Gaver.Web.Contracts
 {
-    public interface IMyWishRequest : IMyListRequest
+    public interface IMyWishRequest : IAuthenticatedRequest
     {
         int WishId { get; set; }
     }

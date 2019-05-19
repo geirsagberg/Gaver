@@ -9,8 +9,8 @@ import {
 } from '@material-ui/core'
 import React, { FC } from 'react'
 import { useOvermind } from '~/overmind'
-import { WishModel } from '~/types/data'
 import { selectIsSavingOrLoading } from '~/overmind/app/selectors'
+import { WishModel } from '~/types/data'
 
 type Props = {
   wish: WishModel
@@ -24,23 +24,38 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish }) =>
   const isSavingOrLoading = selectIsSavingOrLoading(state)
   return wish ? (
     <Dialog fullWidth open={true} onClose={onCancel}>
-      <DialogTitle>Nytt ønske</DialogTitle>
-      <DialogContent>
-        <DialogContentText>Hva ønsker du deg?</DialogContentText>
-        <TextField
-          onChange={event => updateWish({ title: event.target.value })}
-          autoFocus
-          fullWidth
-          onKeyPress={e => wish.title && e.key === 'Enter' && onSave()}
-          value={wish.title}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={isSavingOrLoading || !wish.title} variant="contained" color="primary" onClick={onSave}>
-          Lagre
-        </Button>
-        <Button onClick={onCancel}>Avbryt</Button>
-      </DialogActions>
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          onSave()
+        }}>
+        <DialogTitle>Nytt ønske</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Hva ønsker du deg?</DialogContentText>
+          <TextField
+            onChange={event => updateWish({ title: event.target.value })}
+            autoFocus
+            fullWidth
+            required
+            value={wish.title}
+            margin="dense"
+          />
+          <TextField
+            label="Link (valgfritt)"
+            margin="dense"
+            fullWidth
+            type="url"
+            onChange={event => updateWish({ url: event.target.value })}
+            value={wish.url || ''}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" disabled={isSavingOrLoading} variant="contained" color="primary">
+            Lagre
+          </Button>
+          <Button onClick={onCancel}>Avbryt</Button>
+        </DialogActions>
+      </form>
     </Dialog>
   ) : null
 }

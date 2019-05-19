@@ -1,4 +1,4 @@
-import { Icon, IconButton, Paper, Typography } from '@material-ui/core'
+import { Icon, IconButton, Paper, Typography, Link } from '@material-ui/core'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
@@ -11,6 +11,9 @@ const useStyles = createStylesHook({
     alignItems: 'center',
     paddingLeft: '1rem',
     minHeight: '3rem'
+  },
+  content: {
+    margin: '0.5rem 0'
   },
   actions: {}
 })
@@ -28,7 +31,14 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   const wish = wishes[wishId]
   return (
     <Paper className={classes.root}>
-      <Typography variant="body1">{wish.title}</Typography>
+      <div className={classes.content}>
+        <Typography variant="body1">{wish.title}</Typography>
+        {wish.url && (
+          <Link href={wish.url} variant="body2">
+            {wish.url}
+          </Link>
+        )}
+      </div>
       <Expander />
       <div className={classes.actions}>
         {isDeleting ? (

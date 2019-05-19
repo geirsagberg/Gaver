@@ -1,7 +1,7 @@
-import { keyBy, without } from 'lodash-es'
+import { keyBy, without, clone } from 'lodash-es'
 import { DeleteWishResponse, MyListModel, WishModel } from '~/types/data'
 import { tryOrNotify } from '~/utils'
-import { deleteJson, getJson, postJson, putJson } from '~/utils/ajax'
+import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
 import { showError, showSuccess } from '~/utils/notifications'
 import { Action } from '..'
 import { getEmptyWish } from './state'
@@ -18,7 +18,7 @@ export const handleMyList: Action = async ({
 
 export const addWish: Action = ({ state: { myList } }) =>
   tryOrNotify(async () => {
-    const wish = await postJson<WishModel>('/api/WishLists', myList.newWish)
+    const wish = await postJson<WishModel>('/api/MyList', myList.newWish)
     myList.wishes[wish.id] = wish
     myList.newWish = null
     myList.wishesOrder.push(wish.id)
@@ -39,11 +39,9 @@ export const startEditingWish: Action<number> = ({ state: { myList } }, wishId) 
 
 export const confirmDeleteWish: Action<number> = ({ state: { myList } }, wishId) =>
   tryOrNotify(async () => {
-    // if (confirm('Er du sikker på at du vil slette dette ønsket?')) {
-    const response = await deleteJson<DeleteWishResponse>(`/api/WishLists/${myList.id}/${wishId}`)
+    const response = await deleteJson<DeleteWishResponse>(`/api/MyList/${wishId}`)
     myList.wishesOrder = response.wishesOrder
     delete myList.wishes[wishId]
-    // }
   })
 
 export const cancelEditingWish: Action = ({ state: { myList } }) => {
@@ -60,8 +58,8 @@ export const updateEditingWish: Action<Partial<WishModel>> = ({ state: { myList 
 export const saveEditingWish: Action = ({ state: { myList } }) =>
   tryOrNotify(async () => {
     const wish = myList.editingWish
-    const result = await putJson<WishModel>(`/api/WishLists/${myList.id}/${wish.id}/title`, { title: wish.title })
-    myList.wishes[wish.id] = result
+    await patchJson<WishModel>(`/api/MyList/${wish.id}`, wish)
+    myList.wishes[wish.id] = clone(wish)
     myList.editingWish = null
   })
 
@@ -74,7 +72,7 @@ export const updateNewWish: Action<Partial<WishModel>> = ({ state }, update) => 
 
 export const loadWishes: Action = ({ state }) =>
   tryOrNotify(async () => {
-    const model = await getJson<MyListModel>('/api/WishLists')
+    const model = await getJson<MyListModel>('/api/MyList')
     const { myList } = state
     myList.wishes = keyBy(model.wishes, w => w.id)
     myList.id = model.id
@@ -112,7 +110,7 @@ export const emailDeleted: Action<string> = ({ state: { myList } }, email) => {
 
 export const shareList: Action = ({ state: { myList } }) =>
   tryOrNotify(async () => {
-    await postJson('/api/WishLists/Share', { emails: myList.shareEmails })
+    await postJson('/api/MyList/Share', { emails: myList.shareEmails })
     showSuccess('Ønskeliste delt')
     myList.isSharingList = false
   })
@@ -131,7 +129,7 @@ export const wishOrderChanged: Action<WishOrderChangedParams> = async ({ state: 
   myList.wishesOrder.splice(payload.newIndex, 0, payload.wishId)
 
   try {
-    await postJson('/api/WishLists/Order', { wishesOrder: myList.wishesOrder })
+    await postJson('/api/MyList/Order', { wishesOrder: myList.wishesOrder })
   } catch (error) {
     myList.wishesOrder = originalOrder
     showError(error)

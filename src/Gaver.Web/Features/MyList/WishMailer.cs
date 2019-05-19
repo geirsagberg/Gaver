@@ -13,7 +13,7 @@ using Gaver.Web.Features.Wishes.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace Gaver.Web.Features.Wishes
+namespace Gaver.Web.Features.MyList
 {
     public class WishMailer : IRequestHandler<ShareListRequest>
     {

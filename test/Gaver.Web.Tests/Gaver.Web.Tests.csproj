@@ -13,6 +13,7 @@
     <ProjectReference Include="..\Gaver.TestUtils\Gaver.TestUtils.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AspNetCore.Testing.Authentication.ClaimInjector" Version="0.2.64" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />

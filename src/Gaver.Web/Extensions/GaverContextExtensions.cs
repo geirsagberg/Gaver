@@ -36,5 +36,9 @@ namespace Gaver.Web.Extensions
 
         //        return user;
         //    }
+        public static async Task<int> GetUserWishListId(this GaverContext context, int userId)
+        {
+            return await context.Set<WishList>().Where(wl => wl.UserId == userId).Select(wl => wl.Id).SingleAsync();
+        }
     }
 }

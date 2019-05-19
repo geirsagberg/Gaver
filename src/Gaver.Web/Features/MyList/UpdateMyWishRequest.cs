@@ -1,20 +1,22 @@
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 using Gaver.Web.Contracts;
-using Gaver.Web.Features.Wishes.Models;
 using MediatR;
 using Newtonsoft.Json;
 
-namespace Gaver.Web.Features.Wishes.Requests
+namespace Gaver.Web.Features.MyList
 {
-
-    public class AddWishRequest : IRequest<WishModel>, IAuthenticatedRequest
+    public class UpdateMyWishRequest : IRequest, IMyWishRequest
     {
-        [Required]
         [MinLength(1)]
         public string Title { get; set; }
 
+        [Url]
+        public string Url { get; set; }
+
         [JsonIgnore]
         public int UserId { get; set; }
+
+        [JsonIgnore]
+        public int WishId { get; set; }
     }
 }

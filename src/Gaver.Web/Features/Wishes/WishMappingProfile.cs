@@ -2,7 +2,7 @@ using System.Linq;
 using AutoMapper;
 using Gaver.Common.Extensions;
 using Gaver.Data.Entities;
-using Gaver.Web.Features.Wishes.Models;
+using Gaver.Web.Models;
 
 namespace Gaver.Web.Features.Wishes
 {

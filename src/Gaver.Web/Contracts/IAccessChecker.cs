@@ -16,6 +16,6 @@ namespace Gaver.Web.Contracts
         Task CheckOwner(int wishListId, int userId, CancellationToken cancellationToken = default);
 
         [AssertionMethod]
-        Task CheckWishOwner(int wishId, int wishListId, int userId, CancellationToken cancellationToken = default);
+        Task CheckWishOwner(int wishId, int userId, CancellationToken cancellationToken = default);
     }
 }

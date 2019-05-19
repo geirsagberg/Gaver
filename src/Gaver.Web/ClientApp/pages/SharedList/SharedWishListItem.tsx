@@ -1,4 +1,4 @@
-import { Button, Paper, Typography, Checkbox } from '@material-ui/core'
+import { Button, Checkbox, Link, Paper, Typography } from '@material-ui/core'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
@@ -12,6 +12,9 @@ const useStyles = createStylesHook({
     alignItems: 'center',
     marginBottom: '1rem',
     justifyContent: 'space-between'
+  },
+  content: {
+    margin: '0.5rem 0'
   },
   boughtBy: {
     fontStyle: 'italic',
@@ -44,7 +47,14 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
 
   return (
     <Paper className={classes.root}>
-      <Typography variant="body1">{wish.title}</Typography>
+      <div className={classes.content}>
+        <Typography variant="body1">{wish.title}</Typography>
+        {wish.url && (
+          <Link href={wish.url} variant="body2">
+            {wish.url}
+          </Link>
+        )}
+      </div>
       <Expander />
       {boughtByUser ? (
         <>

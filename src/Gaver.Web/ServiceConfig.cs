@@ -9,6 +9,8 @@ using Gaver.Web.Filters;
 using Gaver.Web.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -49,18 +51,20 @@ namespace Gaver.Web
         public static void AddCustomMvc(this IServiceCollection services)
         {
             services.AddMvc(o => {
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
 
-                o.Filters.Add(new AuthorizeFilter(policy));
-                o.Filters.Add(new CustomExceptionFilterAttribute());
-            }).AddRazorOptions(o => {
-                o.ViewLocationFormats.Clear();
-                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
-            });
+                    o.Filters.Add(new AuthorizeFilter(policy));
+                    o.Filters.Add(new CustomExceptionFilterAttribute());
+                }).AddRazorOptions(o => {
+                    o.ViewLocationFormats.Clear();
+                    o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
+                    o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
+                    o.ViewLocationFormats.Add("/Features/{0}.cshtml");
+                }).AddJsonOptions(o => o.UseCamelCasing(true))
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                ;
         }
 
         public static void AddCustomSwagger(this IServiceCollection services)
@@ -90,7 +94,6 @@ namespace Gaver.Web
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GaverContext>(options => {
-//                    options.ConfigureWarnings(b => b.Throw(RelationalEventId.QueryClientEvaluationWarning));
                     options
                         .UseNpgsql(connectionString, b => b
                             .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));
@@ -108,5 +111,20 @@ namespace Gaver.Web
                     .WithSingletonLifetime();
             });
         }
+
+        public static IServiceCollection AddValidationProblemDetails(this IServiceCollection services) =>
+            services.Configure<ApiBehaviorOptions>(options => {
+                options.InvalidModelStateResponseFactory = context => {
+                    var problemDetails = new ValidationProblemDetails(context.ModelState) {
+                        Instance = context.HttpContext.Request.Path,
+                        Status = StatusCodes.Status400BadRequest,
+                        Type = "https://httpstatuses.com/400",
+                        Detail = "Please refer to the errors property for additional details."
+                    };
+                    return new BadRequestObjectResult(problemDetails) {
+                        ContentTypes = {"application/problem+json", "application/problem+xml"}
+                    };
+                };
+            });
     }
 }

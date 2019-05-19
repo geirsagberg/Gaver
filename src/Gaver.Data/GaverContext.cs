@@ -19,20 +19,24 @@ namespace Gaver.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(entity => { entity.HasIndex(u => u.PrimaryIdentityId).IsUnique(); });
+            modelBuilder.Entity<User>(entity => {
+                entity.HasIndex(u => u.PrimaryIdentityId).IsUnique();
+                entity.HasOne(u => u.WishList).WithOne(wl => wl.User);
+            });
             modelBuilder.Entity<ChatMessage>(entity => {
                 entity.Property(e => e.Created)
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("NOW()")
                     ;
             });
-            modelBuilder.Entity<Invitation>(entity => { entity.HasKey(i => new { i.WishListId, i.UserId }); });
+            modelBuilder.Entity<Invitation>(entity => { entity.HasKey(i => new {i.WishListId, i.UserId}); });
             modelBuilder.Entity<InvitationToken>(entity => {
                 entity.Property(e => e.Created)
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("NOW()");
             });
-            var jsonSerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+
+            var jsonSerializerSettings = new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore};
             modelBuilder.Entity<WishList>(entity => {
                 entity.Property(e => e.WishesOrder).HasConversion(
                     array => JsonConvert.SerializeObject(array, jsonSerializerSettings),

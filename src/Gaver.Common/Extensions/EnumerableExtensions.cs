@@ -23,5 +23,7 @@ namespace Gaver.Common.Extensions
         {
             return string.Join(separator, enumerable);
         }
+
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> enumerable) => enumerable ?? new T[0];
     }
 }
