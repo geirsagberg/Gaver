@@ -5,12 +5,11 @@ using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.MyList
 {
-    public class UpdateMyWishRequest : IRequest, IMyWishRequest
+    public class UpdateWishRequest : IRequest, IMyWishRequest
     {
         [MinLength(1)]
         public string Title { get; set; }
 
-        [Url]
         public string Url { get; set; }
 
         [JsonIgnore]

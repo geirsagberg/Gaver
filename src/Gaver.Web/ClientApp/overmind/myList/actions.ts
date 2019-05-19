@@ -37,6 +37,19 @@ export const startEditingWish: Action<number> = ({ state: { myList } }, wishId) 
   myList.editingWish = { ...wish }
 }
 
+export const deleteEditingWish: Action<number> = async (
+  {
+    state: { myList },
+    actions: {
+      myList: { confirmDeleteWish }
+    }
+  },
+  wishId
+) => {
+  await confirmDeleteWish(wishId)
+  myList.editingWish = null
+}
+
 export const confirmDeleteWish: Action<number> = ({ state: { myList } }, wishId) =>
   tryOrNotify(async () => {
     const response = await deleteJson<DeleteWishResponse>(`/api/MyList/${wishId}`)

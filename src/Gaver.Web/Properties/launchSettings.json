@@ -9,9 +9,10 @@
   },
   "profiles": {
     "dotnet watch": {
-      "commandName": "dotnet watch",
+      "commandName": "Executable",
       "executablePath": "C:\\Program Files\\dotnet\\dotnet.exe",
       "commandLineArgs": "watch run",
+      "workingDirectory": "../../..",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

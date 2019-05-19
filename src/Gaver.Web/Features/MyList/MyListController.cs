@@ -40,7 +40,7 @@ namespace Gaver.Web.Features.MyList
         }
 
         [HttpPatch("{wishId:int}")]
-        public Task UpdateWish(int wishId, UpdateMyWishRequest request)
+        public Task UpdateWish(int wishId, UpdateWishRequest request)
         {
             request.WishId = wishId;
             return mediator.Send(request);

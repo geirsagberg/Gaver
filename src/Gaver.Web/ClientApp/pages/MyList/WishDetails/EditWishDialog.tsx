@@ -8,7 +8,7 @@ const AddWishDialog: FC = () => {
       myList: { editingWish }
     },
     actions: {
-      myList: { cancelEditingWish, updateEditingWish, saveEditingWish }
+      myList: { cancelEditingWish, updateEditingWish, saveEditingWish, deleteEditingWish }
     }
   } = useOvermind()
   return (
@@ -17,6 +17,7 @@ const AddWishDialog: FC = () => {
       onCancel={cancelEditingWish}
       onSave={saveEditingWish}
       updateWish={updateEditingWish}
+      onDelete={deleteEditingWish}
     />
   )
 }

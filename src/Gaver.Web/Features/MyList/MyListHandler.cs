@@ -15,14 +15,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.MyList
 {
-    public class MyListHandler : IRequestHandler<UpdateMyWishRequest>,
+    public class MyListHandler : IRequestHandler<UpdateWishRequest>,
         IRequestHandler<GetMyListRequest, MyListModel>,
         IRequestHandler<SetWishesOrderRequest>,
         IRequestHandler<AddWishRequest, WishModel>,
         IRequestHandler<DeleteWishRequest, DeleteWishResponse>
     {
-        private readonly GaverContext context;
         private readonly IClientNotifier clientNotifier;
+        private readonly GaverContext context;
         private readonly IMapperService mapper;
 
         public MyListHandler(GaverContext context, IClientNotifier clientNotifier, IMapperService mapper)
@@ -32,41 +32,12 @@ namespace Gaver.Web.Features.MyList
             this.mapper = mapper;
         }
 
-        public async Task<Unit> Handle(UpdateMyWishRequest request, CancellationToken cancellationToken)
-        {
-            var wish = await context.GetOrDieAsync<Wish>(request.WishId);
-
-            if (request.Title != null) {
-                wish.Title = request.Title;
-            }
-
-            if (request.Url != null) {
-                wish.Url = request.Url;
-            }
-
-            await context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
-        public async Task<Unit> Handle(SetWishesOrderRequest request, CancellationToken cancellationToken)
-        {
-            var wishList = await context.Set<WishList>()
-                .SingleAsync(wl => wl.UserId == request.UserId, cancellationToken);
-            var wishIds = await context.Set<Wish>().Where(w => w.WishListId == wishList.Id).Select(w => w.Id)
-                .ToListAsync(cancellationToken);
-            if (wishIds.Intersect(request.WishesOrder).Count() != wishIds.Count) {
-                throw new FriendlyException("Ugyldig rekkefølge");
-            }
-
-            wishList.WishesOrder = request.WishesOrder;
-            await context.SaveChangesAsync(cancellationToken);
-            return Unit.Value;
-        }
         public async Task<WishModel> Handle(AddWishRequest message, CancellationToken token)
         {
             var wishList = context.WishLists.Single(wl => wl.UserId == message.UserId);
             var wish = new Wish {
                 Title = message.Title,
+                Url = message.Url,
                 WishList = wishList
             };
             context.Add(wish);
@@ -115,6 +86,38 @@ namespace Gaver.Web.Features.MyList
             }
 
             return Task.FromResult(model);
+        }
+
+        public async Task<Unit> Handle(SetWishesOrderRequest request, CancellationToken cancellationToken)
+        {
+            var wishList = await context.Set<WishList>()
+                .SingleAsync(wl => wl.UserId == request.UserId, cancellationToken);
+            var wishIds = await context.Set<Wish>().Where(w => w.WishListId == wishList.Id).Select(w => w.Id)
+                .ToListAsync(cancellationToken);
+            if (wishIds.Intersect(request.WishesOrder).Count() != wishIds.Count) {
+                throw new FriendlyException("Ugyldig rekkefølge");
+            }
+
+            wishList.WishesOrder = request.WishesOrder;
+            await context.SaveChangesAsync(cancellationToken);
+            return Unit.Value;
+        }
+
+        public async Task<Unit> Handle(UpdateWishRequest request, CancellationToken cancellationToken)
+        {
+            var wish = await context.GetOrDieAsync<Wish>(request.WishId);
+
+            if (request.Title != null) {
+                wish.Title = request.Title;
+            }
+
+            if (request.Url != null) {
+                wish.Url = request.Url;
+            }
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
         }
     }
 }

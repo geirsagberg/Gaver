@@ -5,22 +5,42 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  TextField
+  TextField,
+  Icon
 } from '@material-ui/core'
 import React, { FC } from 'react'
 import { useOvermind } from '~/overmind'
 import { selectIsSavingOrLoading } from '~/overmind/app/selectors'
 import { WishModel } from '~/types/data'
+import Expander from '~/components/Expander'
+import { createStylesHook } from '~/utils/materialUtils'
 
 type Props = {
   wish: WishModel
   onSave: () => void
   onCancel: () => void
+  onDelete?: (wishId: number) => void
   updateWish: (update: Partial<WishModel>) => void
 }
 
-const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish }) => {
+const useStyles = createStylesHook({
+  actions: {
+    margin: '1rem',
+    '& > :first-child': {
+      marginLeft: 0
+    },
+    '& > :last-child': {
+      marginRight: 0
+    }
+  },
+  leftIcon: {
+    marginRight: '0.5rem'
+  }
+})
+
+const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDelete }) => {
   const { state } = useOvermind()
+  const classes = useStyles()
   const isSavingOrLoading = selectIsSavingOrLoading(state)
   return wish ? (
     <Dialog fullWidth open={true} onClose={onCancel}>
@@ -49,7 +69,14 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish }) =>
             value={wish.url || ''}
           />
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={classes.actions}>
+          {onDelete && (
+            <Button onClick={() => onDelete(wish.id)}>
+              <Icon className={classes.leftIcon}>delete</Icon>
+              Slett
+            </Button>
+          )}
+          <Expander />
           <Button type="submit" disabled={isSavingOrLoading} variant="contained" color="primary">
             Lagre
           </Button>
