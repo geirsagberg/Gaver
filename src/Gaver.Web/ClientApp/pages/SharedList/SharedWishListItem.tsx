@@ -17,6 +17,7 @@ const useStyles = createStylesHook({
     margin: '0.5rem 0'
   },
   boughtBy: {
+    margin: '0.5rem 0',
     fontStyle: 'italic',
     '&:last-child': {
       marginRight: '1rem'
@@ -29,7 +30,7 @@ const useStyles = createStylesHook({
 })
 
 const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
-  const classes = useStyles()
+  const classes = useStyles({})
   const {
     actions: {
       sharedLists: { setBought }
@@ -42,6 +43,8 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   } = useOvermind()
 
   const wish = currentSharedList.wishes[wishId]
+
+  if (!wish) return null
 
   const boughtByUser = wish.boughtByUserId ? users[wish.boughtByUserId] : null
 

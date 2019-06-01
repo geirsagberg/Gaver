@@ -137,7 +137,7 @@ export const wishOrderChanged: Action<WishOrderChangedParams> = async ({ state: 
   if (payload.newIndex === payload.oldIndex) {
     return
   }
-  var originalOrder = myList.wishesOrder.slice()
+  const originalOrder = myList.wishesOrder.slice()
   myList.wishesOrder.splice(payload.oldIndex, 1)
   myList.wishesOrder.splice(payload.newIndex, 0, payload.wishId)
 

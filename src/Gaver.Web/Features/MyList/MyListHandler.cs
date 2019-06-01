@@ -32,7 +32,7 @@ namespace Gaver.Web.Features.MyList
             this.mapper = mapper;
         }
 
-        public async Task<WishModel> Handle(AddWishRequest message, CancellationToken token)
+        public async Task<WishModel> Handle(AddWishRequest message, CancellationToken cancellationToken)
         {
             var wishList = context.WishLists.Single(wl => wl.UserId == message.UserId);
             var wish = new Wish {
@@ -41,51 +41,51 @@ namespace Gaver.Web.Features.MyList
                 WishList = wishList
             };
             context.Add(wish);
-            await context.SaveChangesAsync(token);
+            await context.SaveChangesAsync(cancellationToken);
             if (wishList.WishesOrder != null) {
                 wishList.WishesOrder = wishList.WishesOrder.Concat(new[] {wish.Id}).ToArray();
             } else {
                 var wishesOrder = await context.Wishes.Where(w => w.WishList == wishList).Select(w => w.Id)
-                    .ToArrayAsync(token);
+                    .ToArrayAsync(cancellationToken);
                 wishList.WishesOrder = wishesOrder;
             }
 
-            await context.SaveChangesAsync(token);
+            await context.SaveChangesAsync(cancellationToken);
             await clientNotifier.RefreshListAsync(wishList.Id);
             return mapper.Map<WishModel>(wish);
         }
 
-        public async Task<DeleteWishResponse> Handle(DeleteWishRequest message, CancellationToken token)
+        public async Task<DeleteWishResponse> Handle(DeleteWishRequest message, CancellationToken cancellationToken)
         {
             var wish = await context.Set<Wish>().Include(w => w.WishList)
-                .SingleAsync(w => w.Id == message.WishId, token);
+                .SingleAsync(w => w.Id == message.WishId, cancellationToken);
 
             var wishListId = await context.GetUserWishListId(message.UserId);
 
             context.Remove(wish);
-            await context.SaveChangesAsync(token);
+            await context.SaveChangesAsync(cancellationToken);
             wish.WishList.WishesOrder = wish.WishList.WishesOrder != null
                 ? wish.WishList.WishesOrder.Except(new[] {message.WishId}).ToArray()
                 : wish.WishList.Wishes.Select(w => w.Id).ToArray();
-            await context.SaveChangesAsync(token);
+            await context.SaveChangesAsync(cancellationToken);
             await clientNotifier.RefreshListAsync(wishListId);
             return new DeleteWishResponse {
                 WishesOrder = wish.WishList.WishesOrder
             };
         }
 
-        public Task<MyListModel> Handle(GetMyListRequest message, CancellationToken token = default)
+        public async Task<MyListModel> Handle(GetMyListRequest message, CancellationToken cancellationToken = default)
         {
-            var model = context.Set<WishList>()
+            var model = await context.Set<WishList>()
                 .Where(wl => wl.UserId == message.UserId)
                 .ProjectTo<MyListModel>(mapper.MapperConfiguration)
-                .Single();
+                .SingleAsync(cancellationToken);
 
             if (model.WishesOrder?.Length != model.Wishes.Count) {
                 model.WishesOrder = model.Wishes.Select(w => w.Id).ToArray();
             }
 
-            return Task.FromResult(model);
+            return model;
         }
 
         public async Task<Unit> Handle(SetWishesOrderRequest request, CancellationToken cancellationToken)
@@ -100,6 +100,7 @@ namespace Gaver.Web.Features.MyList
 
             wishList.WishesOrder = request.WishesOrder;
             await context.SaveChangesAsync(cancellationToken);
+            await clientNotifier.RefreshListAsync(wishList.Id);
             return Unit.Value;
         }
 
@@ -116,7 +117,7 @@ namespace Gaver.Web.Features.MyList
             }
 
             await context.SaveChangesAsync(cancellationToken);
-
+            await clientNotifier.RefreshListAsync(wish.WishListId);
             return Unit.Value;
         }
     }

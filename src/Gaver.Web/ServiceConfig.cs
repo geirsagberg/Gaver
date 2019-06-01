@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -33,10 +34,20 @@ namespace Gaver.Web
                         IssuerSigningKey = authSettings.SigningKey
                     };
                     options.Events = new JwtBearerEvents {
-                        OnTokenValidated = OnTokenValidated
+                        OnTokenValidated = OnTokenValidated,
+                        OnMessageReceived = OnMessageReceived
                     };
                 });
             services.AddAuthorization();
+        }
+
+        private static Task OnMessageReceived(MessageReceivedContext context)
+        {
+            var accessToken = context.Request.Query["access_token"].FirstOrDefault();
+            if (context.HttpContext.Request.Path.StartsWithSegments("/listHub") && accessToken.IsNotEmpty()) {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
         }
 
         private static Task OnTokenValidated(TokenValidatedContext context)
@@ -44,25 +55,24 @@ namespace Gaver.Web
             if (context.SecurityToken is JwtSecurityToken jwtSecurityToken) {
                 context.HttpContext.Items["access_token"] = jwtSecurityToken.RawData;
             }
-
             return Task.CompletedTask;
         }
 
         public static void AddCustomMvc(this IServiceCollection services)
         {
             services.AddMvc(o => {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .Build();
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
 
-                    o.Filters.Add(new AuthorizeFilter(policy));
-                    o.Filters.Add(new CustomExceptionFilterAttribute());
-                }).AddRazorOptions(o => {
-                    o.ViewLocationFormats.Clear();
-                    o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                    o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                    o.ViewLocationFormats.Add("/Features/{0}.cshtml");
-                }).AddJsonOptions(o => o.UseCamelCasing(true))
+                o.Filters.Add(new AuthorizeFilter(policy));
+                o.Filters.Add(new CustomExceptionFilterAttribute());
+            }).AddRazorOptions(o => {
+                o.ViewLocationFormats.Clear();
+                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
+                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
+                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
+            }).AddJsonOptions(o => o.UseCamelCasing(true))
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
                 ;
@@ -123,7 +133,7 @@ namespace Gaver.Web
                         Detail = "Please refer to the errors property for additional details."
                     };
                     return new BadRequestObjectResult(problemDetails) {
-                        ContentTypes = {"application/problem+json", "application/problem+xml"}
+                        ContentTypes = { "application/problem+json", "application/problem+xml" }
                     };
                 };
             });

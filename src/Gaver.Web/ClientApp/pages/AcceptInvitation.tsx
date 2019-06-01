@@ -1,5 +1,4 @@
-import { Button, Typography, Avatar } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Button, Typography, Avatar, makeStyles } from '@material-ui/core'
 import React, { FC } from 'react'
 import ErrorView from '~/components/ErrorView'
 import Loading from '~/components/Loading'
@@ -18,7 +17,7 @@ const useStyles = makeStyles({
 })
 
 const AcceptInvitationPage: FC = () => {
-  const classes = useStyles()
+  const classes = useStyles({})
   const {
     state: { invitations },
     actions: {

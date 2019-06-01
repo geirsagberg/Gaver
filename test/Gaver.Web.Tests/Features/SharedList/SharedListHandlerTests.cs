@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Data.Entities;
@@ -15,8 +16,7 @@ namespace Gaver.Web.Tests.Features.SharedList
         {
             var bob = new User {
                 Name = "Bob",
-                WishList =
-                    new WishList()
+                WishList = new WishList()
             };
             var james = new User {
                 Name = "James"

@@ -7,9 +7,9 @@ namespace Gaver.Web.Features.LiveUpdates
 {
     public class ClientNotifier : IClientNotifier
     {
-        private readonly IHubContext<ListHub> hub;
+        private readonly IHubContext<ListHub, IListHubClient> hub;
 
-        public ClientNotifier(IHubContext<ListHub> hub)
+        public ClientNotifier(IHubContext<ListHub, IListHubClient> hub)
         {
             this.hub = hub;
         }

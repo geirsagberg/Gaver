@@ -9,6 +9,8 @@ import myList from './myList'
 import routing from './routing'
 import sharedLists from './sharedLists'
 import { SharedList } from './sharedLists/state'
+import { SharedWishModel } from '~/types/data'
+import { map } from 'lodash-es'
 
 export interface Config extends IConfig<typeof config> {}
 export interface OnInitialize extends IOnInitialize<Config> {}
@@ -22,13 +24,18 @@ export type ConfigState = Config['state']
 export type ResolvedState = Context['state']
 
 type SharedState = {
-  currentSharedList?: Derive<ConfigState, SharedList>
+  currentSharedList: Derive<ConfigState, SharedList>
+  currentSharedOrderedWishes: Derive<ConfigState, SharedWishModel[]>
 }
 
 const state: SharedState = {
   currentSharedList: state =>
     state.routing.currentSharedListId && state.sharedLists.wishLists[state.routing.currentSharedListId]
       ? state.sharedLists.wishLists[state.routing.currentSharedListId]
+      : null,
+  currentSharedOrderedWishes: state =>
+    state.currentSharedList && state.currentSharedList.wishesOrder
+      ? map(state.currentSharedList.wishesOrder, id => state.currentSharedList.wishes[id])
       : null
 }
 

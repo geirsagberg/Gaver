@@ -9,11 +9,11 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  MuiThemeProvider,
   SwipeableDrawer,
   Toolbar,
   Tooltip,
-  Typography
+  Typography,
+  Link
 } from '@material-ui/core'
 import classNames from 'classnames'
 import { map, some } from 'lodash-es'
@@ -27,10 +27,10 @@ import NotFoundPage from './pages/NotFound'
 import SharedListPage from './pages/SharedList'
 import { ShareListDialog } from './ShareListDialog'
 import { darkTheme } from './theme'
-import { createStylesHook } from './utils/materialUtils'
 import { hot } from 'react-hot-loader/root'
+import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles'
 
-export const useStyles = createStylesHook(theme => ({
+export const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
     position: 'relative',
@@ -147,7 +147,7 @@ const LoggedInAvatar: FC = () => {
 }
 
 const Layout: FC = () => {
-  const classes = useStyles()
+  const classes = useStyles({})
   const {
     state: {
       auth: { isLoggedIn },
@@ -208,7 +208,6 @@ const Layout: FC = () => {
                 <>
                   <ListItem>
                     <ListItemText secondary="Delte lister" />
-                    {/* <Typography>Delte lister</Typography> */}
                   </ListItem>
                   <Divider />
                   {map(sharedLists, sharedList => (
@@ -229,7 +228,7 @@ const Layout: FC = () => {
                 <ListItemText primary="&nbsp;" />
               </ListItem>
               <Divider />
-              <ListItem button href="/dist/licenses.txt" component="a" target="_blank">
+              <ListItem button href="/dist/licenses.txt" component={Link} target="_blank" color="inherit">
                 <ListItemIcon>
                   <Icon>copyright</Icon>
                 </ListItemIcon>

@@ -58,10 +58,6 @@ export interface InvitationTokenStatus {
   pictureUrl: string
 }
 
-export interface AcceptInvitationResponse {
-  wishListId: number
-}
-
 export interface DeleteWishResponse {
   wishesOrder: number[]
 }

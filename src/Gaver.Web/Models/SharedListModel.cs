@@ -9,5 +9,6 @@ namespace Gaver.Web.Models
         public IList<SharedWishModel> Wishes { get; set; } = new List<SharedWishModel>();
         public IList<UserModel> Users { get; set; } = new List<UserModel>();
         public int OwnerUserId { get; set; }
+        public int[] WishesOrder { get; set; } = new int[0];
     }
 }

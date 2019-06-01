@@ -1,4 +1,4 @@
-import { AcceptInvitationResponse, InvitationTokenStatus } from '~/types/data'
+import { InvitationTokenStatus, Invitation } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { getJson, postJson } from '~/utils/ajax'
 import { Action } from '..'
@@ -17,14 +17,13 @@ export const handleInvitation: Action<RouteCallbackArgs> = ({ actions }, { param
 }
 
 export const acceptInvitation: Action = ({
-  state: {
-    invitations: { token }
-  },
+  state: { invitations },
   effects: {
     routing: { showSharedList }
   }
 }) =>
   tryOrNotify(async () => {
-    const { wishListId } = await postJson<AcceptInvitationResponse>(`/api/invitations/${token}/accept`)
-    showSharedList(wishListId)
+    const invitation = await postJson<Invitation>(`/api/invitations/${invitations.token}/accept`)
+    invitations.sharedLists.push(invitation)
+    showSharedList(invitation.wishListId)
   })

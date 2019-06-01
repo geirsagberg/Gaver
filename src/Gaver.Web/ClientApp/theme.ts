@@ -22,9 +22,6 @@ const palette: PaletteOptions = {
 
 const commonThemeOptions: ThemeOptions = {
   palette,
-  typography: {
-    useNextVariants: true
-  },
   overrides: {
     MuiDialog: {
       container: {

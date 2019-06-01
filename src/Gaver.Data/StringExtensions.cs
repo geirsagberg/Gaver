@@ -19,6 +19,11 @@ namespace Gaver.Data
             return string.IsNullOrEmpty(str);
         }
 
+        public static bool IsNotEmpty(this string str)
+        {
+            return !string.IsNullOrEmpty(str);
+        }
+
         public static int ToInt(this string str)
         {
             return int.Parse(str);
@@ -53,7 +58,8 @@ namespace Gaver.Data
 
             try {
                 return new Regex(pattern, options, matchTimeout);
-            } catch {
+            }
+            catch {
                 // Fallback on error
             }
 

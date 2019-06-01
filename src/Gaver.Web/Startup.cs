@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Gaver.Common.Contracts;
 using Gaver.Common.Extensions;
 using Gaver.Common.Utils;
@@ -61,7 +62,7 @@ namespace Gaver.Web
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSignalR();
-            services.AddMediatR();
+            services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddProblemDetails();
             services.AddValidationProblemDetails();
 
@@ -111,7 +112,7 @@ namespace Gaver.Web
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
             if (env.IsDevelopment()) {
-                SetupForDevelopment(app, loggerFactory, env);
+                SetupForDevelopment(app, env);
             } else {
                 SetupForProduction(app, loggerFactory);
             }
@@ -146,8 +147,7 @@ namespace Gaver.Web
 #endif
         }
 
-        private static void SetupForDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory,
-            IHostingEnvironment env)
+        private static void SetupForDevelopment(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseDeveloperExceptionPage();
             UseRootNodeModules(env);

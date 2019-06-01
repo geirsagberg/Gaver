@@ -13,9 +13,10 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
       sharedLists: { loadSharedList },
       auth: { checkSession }
     },
-    state: { auth, invitations },
+    state: { auth, invitations, sharedLists },
     effects: {
-      routing: { redirect }
+      routing: { redirect },
+      sharedLists: { subscribeList }
     }
   },
   args
@@ -30,6 +31,15 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
     setCurrentPage('sharedList')
     setCurrentSharedList(listId)
     await loadSharedList(listId)
+    await subscribeList(listId, {
+      onRefresh: () => loadSharedList(listId),
+      onUpdateUsers: users => {
+        sharedLists.users = {
+          ...sharedLists.users,
+          ...users
+        }
+      }
+    })
   }
 }
 
@@ -44,7 +54,7 @@ export const loadSharedList: Action<number> = (
 ) =>
   tryOrNotify(async () => {
     const result = await getJson<SharedListModel>('/api/SharedLists/' + listId)
-    const normalized = normalizeArrays(result)
+    const normalized = normalizeArrays(result, ['wishesOrder'])
     const { users, ...sharedList } = normalized
     sharedLists.wishLists[sharedList.id] = sharedList
     sharedLists.users = { ...sharedLists.users, ...users, [user.id]: user }

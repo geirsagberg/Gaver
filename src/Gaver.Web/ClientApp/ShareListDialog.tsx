@@ -12,7 +12,7 @@ export const useStyles = makeStyles({
 })
 
 export const ShareListDialog: FC = () => {
-  const classes = useStyles()
+  const classes = useStyles({})
   const {
     actions: {
       myList: { cancelSharingList, emailAdded, emailDeleted, shareList }

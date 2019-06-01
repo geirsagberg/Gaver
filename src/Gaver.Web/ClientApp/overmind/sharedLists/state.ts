@@ -4,6 +4,7 @@ export interface SharedList {
   id: number
   ownerUserId: number
   wishes: Dictionary<SharedWishModel>
+  wishesOrder: number[]
 }
 
 export interface SharedListState {

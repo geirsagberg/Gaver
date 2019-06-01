@@ -40,7 +40,7 @@ const useStyles = createStylesHook({
 
 const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDelete }) => {
   const { state } = useOvermind()
-  const classes = useStyles()
+  const classes = useStyles({})
   const isSavingOrLoading = selectIsSavingOrLoading(state)
   return wish ? (
     <Dialog fullWidth open={true} onClose={onCancel}>

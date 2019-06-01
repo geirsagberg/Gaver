@@ -52,6 +52,7 @@ export default class AuthService {
   }
 
   static loadAccessToken() {
+    // TODO: Validate and refresh token
     return localStorage.getItem(AccessTokenKey)
   }
 

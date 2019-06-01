@@ -2,26 +2,30 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
+using Gaver.Web.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Invitations
 {
     public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, InvitationStatusModel>,
-        IRequestHandler<AcceptInvitationRequest, AcceptInvitationResponse>
+        IRequestHandler<AcceptInvitationRequest, InvitationModel>
     {
         private readonly GaverContext context;
+        private readonly IMapperService mapperService;
 
-        public InvitationHandler(GaverContext context)
+        public InvitationHandler(GaverContext context, IMapperService mapperService)
         {
             this.context = context;
+            this.mapperService = mapperService;
         }
 
-
-        public async Task<AcceptInvitationResponse> Handle(AcceptInvitationRequest request, CancellationToken cancellationToken = default)
+        public async Task<InvitationModel> Handle(AcceptInvitationRequest request,
+            CancellationToken cancellationToken = default)
         {
             var invitationToken = await CheckInvitationStatus(request.Token, request.UserId);
             var invitation = new Invitation {
@@ -31,9 +35,8 @@ namespace Gaver.Web.Features.Invitations
             context.Add(invitation);
             invitationToken.Accepted = DateTimeOffset.Now;
             await context.SaveChangesAsync(cancellationToken);
-            return new AcceptInvitationResponse {
-                WishListId = invitationToken.WishListId
-            };
+            await context.Entry(invitation).Reference(i => i.WishList).LoadAsync(cancellationToken);
+            return mapperService.Map<InvitationModel>(invitation);
         }
 
         public async Task<InvitationStatusModel> Handle(GetInvitationStatusRequest request,

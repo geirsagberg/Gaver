@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 })
 
 const LoginPage: FC = () => {
-  const classes = useStyles()
+  const classes = useStyles({})
   const {
     actions: {
       auth: { logIn }

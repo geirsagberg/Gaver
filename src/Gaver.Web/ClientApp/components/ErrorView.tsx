@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
-import { colors, Typography, Icon, Button } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { colors, Typography, Icon, Button, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles({
   root: {
@@ -18,14 +17,18 @@ const useStyles = makeStyles({
   }
 })
 
-const ErrorView: FC = ({ children }) => {
-  const classes = useStyles()
+interface Props {
+  onBackClicked?: () => any
+}
+
+const ErrorView: FC<Props> = ({ children, onBackClicked }) => {
+  const classes = useStyles({})
   return (
     <div className={classes.root}>
       <Typography variant="h1">Oisann!</Typography>
       <Icon className={classes.icon}>sentiment_very_dissatisfied</Icon>
       <Typography className={classes.content}>{children}</Typography>
-      <Button href="/" color="primary" variant="contained">
+      <Button href="/" color="primary" variant="contained" onClick={onBackClicked}>
         Tilbake
       </Button>
     </div>

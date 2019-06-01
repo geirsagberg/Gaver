@@ -19,7 +19,7 @@ const useStyles = createStylesHook({
 })
 
 const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
-  const classes = useStyles()
+  const classes = useStyles({})
   const {
     state: {
       myList: { wishes, isDeleting }

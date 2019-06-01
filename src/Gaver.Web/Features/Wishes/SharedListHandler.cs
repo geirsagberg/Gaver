@@ -25,16 +25,13 @@ namespace Gaver.Web.Features.Wishes
     {
         private readonly IClientNotifier clientNotifier;
         private readonly GaverContext context;
-        private readonly ILogger<SharedListHandler> logger;
         private readonly IMapperService mapper;
 
-        public SharedListHandler(GaverContext context, IMapperService mapper, IClientNotifier clientNotifier,
-            ILogger<SharedListHandler> logger)
+        public SharedListHandler(GaverContext context, IMapperService mapper, IClientNotifier clientNotifier)
         {
             this.context = context;
             this.mapper = mapper;
             this.clientNotifier = clientNotifier;
-            this.logger = logger;
         }
 
         public async Task<ListAccessStatus> Handle(CheckSharedListAccessRequest request,
@@ -62,6 +59,7 @@ namespace Gaver.Web.Features.Wishes
                 .Where(wl => wl.Id == message.WishListId)
                 .ProjectTo<SharedListModel>(mapper.MapperConfiguration)
                 .SingleOrThrow(new FriendlyException("Listen finnes ikke"));
+
             return Task.FromResult(sharedListModel);
         }
 

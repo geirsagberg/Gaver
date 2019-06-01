@@ -73,7 +73,7 @@ const useStyles = createStylesHook(theme => ({
 }))
 
 const MyListPage: FC = () => {
-  const classes = useStyles()
+  const classes = useStyles({})
   const {
     state: {
       myList: { orderedWishes, wishesLoaded }
