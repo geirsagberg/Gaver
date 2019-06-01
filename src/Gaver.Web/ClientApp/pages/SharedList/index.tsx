@@ -41,15 +41,17 @@ const SharedListPage: FC = () => {
           <SharedWishListItem key={wish.id} wishId={wish.id} />
         ))}
       </div>
-      <BottomNavigation
-        showLabels
-        color="primary"
-        className={classes.bottomNav}
-        value={tab}
-        onChange={(_, value) => setTab(value)}>
-        <BottomNavigationAction label="Liste" icon={<Icon>list</Icon>} />
-        <BottomNavigationAction label="Chat" icon={<Icon>chat</Icon>} />
-      </BottomNavigation>
+      {false && (
+        <BottomNavigation
+          showLabels
+          color="primary"
+          className={classes.bottomNav}
+          value={tab}
+          onChange={(_, value) => setTab(value)}>
+          <BottomNavigationAction label="Liste" icon={<Icon>list</Icon>} />
+          <BottomNavigationAction label="Chat" icon={<Icon>chat</Icon>} />
+        </BottomNavigation>
+      )}
     </div>
   ) : (
     <Loading />
