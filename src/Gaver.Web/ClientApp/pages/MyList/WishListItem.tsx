@@ -1,4 +1,4 @@
-import { Icon, IconButton, Paper, Typography, Link } from '@material-ui/core'
+import { Icon, IconButton, Link, Paper, Typography } from '@material-ui/core'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
@@ -13,9 +13,14 @@ const useStyles = createStylesHook({
     minHeight: '3rem'
   },
   content: {
-    margin: '0.5rem 0'
+    margin: '0.5rem 0',
+    minWidth: '2rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
-  actions: {}
+  link: {
+    whiteSpace: 'nowrap'
+  }
 })
 
 const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
@@ -34,13 +39,13 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
       <div className={classes.content}>
         <Typography variant="body1">{wish.title}</Typography>
         {wish.url && (
-          <Link href={wish.url} variant="body2">
+          <Link href={wish.url} variant="body2" className={classes.link}>
             {wish.url}
           </Link>
         )}
       </div>
       <Expander />
-      <div className={classes.actions}>
+      <div>
         {isDeleting ? (
           <IconButton onClick={() => confirmDeleteWish(wishId)}>
             <Icon>delete</Icon>

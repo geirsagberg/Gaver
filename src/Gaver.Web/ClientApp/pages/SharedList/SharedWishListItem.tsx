@@ -14,7 +14,10 @@ const useStyles = createStylesHook({
     justifyContent: 'space-between'
   },
   content: {
-    margin: '0.5rem 0'
+    margin: '0.5rem 0',
+    minWidth: '2rem',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden'
   },
   boughtBy: {
     margin: '0.5rem 0',
@@ -22,10 +25,16 @@ const useStyles = createStylesHook({
     '&:last-child': {
       marginRight: '1rem'
     },
-    textAlign: 'right'
+    textAlign: 'right',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    marginLeft: '1rem'
   },
   buyButton: {
     marginRight: 6
+  },
+  link: {
+    whiteSpace: 'nowrap'
   }
 })
 
@@ -53,7 +62,7 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
       <div className={classes.content}>
         <Typography variant="body1">{wish.title}</Typography>
         {wish.url && (
-          <Link href={wish.url} variant="body2">
+          <Link href={wish.url} variant="body2" className={classes.link}>
             {wish.url}
           </Link>
         )}

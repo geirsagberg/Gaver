@@ -1,7 +1,6 @@
-import { createMuiTheme } from '@material-ui/core'
+import { createMuiTheme, createStyles } from '@material-ui/core'
 import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 import { PaletteOptions } from '@material-ui/core/styles/createPalette'
-import { CSSProperties } from '@material-ui/styles/withStyles'
 import { merge } from 'lodash-es'
 
 export const gaverColors = {
@@ -26,6 +25,9 @@ const commonThemeOptions: ThemeOptions = {
     MuiDialog: {
       container: {
         alignItems: 'flex-start'
+      },
+      paper: {
+        margin: '0 1rem'
       }
     }
   }
@@ -45,10 +47,12 @@ export default theme
 
 export const pageWidth = 600
 
-export const centerContent: CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  alignSelf: 'center',
-  textAlign: 'center'
-}
+export const commonStyles = createStyles({
+  centerContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    alignSelf: 'center',
+    textAlign: 'center'
+  }
+})

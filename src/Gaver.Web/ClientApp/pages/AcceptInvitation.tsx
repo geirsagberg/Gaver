@@ -3,11 +3,11 @@ import React, { FC } from 'react'
 import ErrorView from '~/components/ErrorView'
 import Loading from '~/components/Loading'
 import { useOvermind } from '~/overmind'
-import { centerContent } from '~/theme'
+import { commonStyles } from '~/theme'
 
 const useStyles = makeStyles({
   root: {
-    ...centerContent
+    ...commonStyles.centerContent
   },
   avatar: {
     margin: '1rem',
