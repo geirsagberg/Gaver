@@ -59,6 +59,7 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
             required
             value={wish.title}
             margin="dense"
+            disabled={isSavingOrLoading}
           />
           <TextField
             label="Link (valgfritt)"
@@ -67,11 +68,12 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
             type="url"
             onChange={event => updateWish({ url: event.target.value })}
             value={wish.url || ''}
+            disabled={isSavingOrLoading}
           />
         </DialogContent>
         <DialogActions className={classes.actions}>
           {onDelete && (
-            <Button onClick={() => onDelete(wish.id)}>
+            <Button onClick={() => onDelete(wish.id)} disabled={isSavingOrLoading}>
               <Icon className={classes.leftIcon}>delete</Icon>
               Slett
             </Button>
@@ -80,7 +82,9 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
           <Button type="submit" disabled={isSavingOrLoading} variant="contained" color="primary">
             Lagre
           </Button>
-          <Button onClick={onCancel}>Avbryt</Button>
+          <Button onClick={onCancel} disabled={isSavingOrLoading}>
+            Avbryt
+          </Button>
         </DialogActions>
       </form>
     </Dialog>
