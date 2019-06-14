@@ -3,6 +3,7 @@ import {
   Divider,
   Icon,
   IconButton,
+  Link,
   List,
   ListItem,
   ListItemIcon,
@@ -12,13 +13,15 @@ import {
   SwipeableDrawer,
   Toolbar,
   Tooltip,
-  Typography,
-  Link
+  Typography
 } from '@material-ui/core'
+import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import { map, some } from 'lodash-es'
 import React, { FC, useState } from 'react'
+import { hot } from 'react-hot-loader/root'
 import Expander from './components/Expander'
+import Loading from './components/Loading'
 import { useOvermind } from './overmind'
 import AcceptInvitationPage from './pages/AcceptInvitation'
 import LoginPage from './pages/Login'
@@ -27,8 +30,6 @@ import NotFoundPage from './pages/NotFound'
 import SharedListPage from './pages/SharedList'
 import { ShareListDialog } from './ShareListDialog'
 import { darkTheme } from './theme'
-import { hot } from 'react-hot-loader/root'
-import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles(theme => ({
   root: {
@@ -88,7 +89,7 @@ const Content: FC = () => {
     case 'sharedList':
       return <SharedListPage />
   }
-  return null
+  return <Loading />
 }
 
 const Actions: FC = () => {

@@ -15,7 +15,7 @@ const auth = new auth0.WebAuth({
 
 export default class AuthService {
   static login() {
-    const returnUrl = location.pathname + location.search + location.hash
+    const returnUrl = location.pathname.includes('callback') ? '/' : location.pathname + location.search + location.hash
     auth.authorize({ state: returnUrl, prompt: 'none' })
   }
 

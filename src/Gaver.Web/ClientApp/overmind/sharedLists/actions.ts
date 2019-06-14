@@ -10,8 +10,7 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
   {
     actions: {
       routing: { setCurrentPage, setCurrentSharedList },
-      sharedLists: { loadSharedList },
-      auth: { checkSession }
+      sharedLists: { loadSharedList }
     },
     state: { auth, invitations, sharedLists },
     effects: {
@@ -22,7 +21,6 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
   args
 ) => {
   const listId = +args.params['listId']
-  await checkSession()
   if (listId === auth.user.wishListId) {
     redirect('/')
   } else if (!some(invitations.sharedLists, list => list.wishListId === listId)) {

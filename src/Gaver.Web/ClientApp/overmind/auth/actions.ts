@@ -7,7 +7,6 @@ import { RouteCallbackArgs } from '../routing/effects'
 export const logOut: Action = ({ state, effects }) => {
   AuthService.logout()
   state.auth = {}
-  effects.routing.showStartPage()
 }
 
 export const logIn: Action = () => {
@@ -31,12 +30,12 @@ export const checkSession: Action = ({ state, effects, actions }) =>
   })
 
 export const handleAuthentication: Action = ({ effects, actions }) => {
-  AuthService.handleAuthentication(({ returnUrl, error }) => {
+  AuthService.handleAuthentication(async ({ returnUrl, error }) => {
     if (error) {
       console.error(error)
       showError('Noe gikk galt ved innloggingen. Prøv igjen om litt.')
     } else {
-      actions.auth.checkSession()
+      // await actions.auth.checkSession()
       effects.routing.redirect(returnUrl)
     }
   })
