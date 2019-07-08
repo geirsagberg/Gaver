@@ -6,6 +6,7 @@ using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Chat
 {
@@ -20,15 +21,16 @@ namespace Gaver.Web.Features.Chat
             this.context = context;
         }
 
-        public Task<ChatModel> Handle(GetMessagesRequest message, CancellationToken token = default)
+        public async Task<ChatModel> Handle(GetMessagesRequest message, CancellationToken token = default)
         {
-            var messages = context.Set<ChatMessage>()
+            var messages = await context.Set<ChatMessage>()
                 .Where(cm => cm.WishListId == message.WishListId)
-                .ProjectTo<ChatMessageModel>(mapper.MapperConfiguration).ToList();
+                .OrderBy(cm => cm.Id)
+                .ProjectTo<ChatMessageModel>(mapper.MapperConfiguration).ToListAsync();
 
-            return Task.FromResult(new ChatModel {
+            return new ChatModel {
                 Messages = messages
-            });
+            };
         }
     }
 }

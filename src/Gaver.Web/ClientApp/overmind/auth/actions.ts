@@ -4,7 +4,7 @@ import { showError } from '~/utils/notifications'
 import { Action } from '..'
 import { RouteCallbackArgs } from '../routing/effects'
 
-export const logOut: Action = ({ state, effects }) => {
+export const logOut: Action = ({ state }) => {
   AuthService.logout()
   state.auth = {}
 }
@@ -35,16 +35,9 @@ export const handleAuthentication: Action = ({ effects, actions }) => {
       console.error(error)
       showError('Noe gikk galt ved innloggingen. Prøv igjen om litt.')
     } else {
-      // await actions.auth.checkSession()
       effects.routing.redirect(returnUrl)
     }
   })
-}
-
-export const requireLogin: Action<RouteCallbackArgs> = (_, { next }) => {
-  if (AuthService.isAuthenticated()) {
-    next()
-  }
 }
 
 export const redirectIfNotLoggedIn: Action<RouteCallbackArgs> = (

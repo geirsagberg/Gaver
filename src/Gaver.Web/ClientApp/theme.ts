@@ -10,6 +10,7 @@ export const gaverColors = {
   fourth: '#EC7D2B',
   fifth: '#DD395A'
 }
+
 const palette: PaletteOptions = {
   // primary: { main: '#3F51B5' },
   // secondary: { main: '#AB47BC' },
@@ -17,6 +18,23 @@ const palette: PaletteOptions = {
   // background: {
   //   paper: '#222'
   // }
+}
+
+const colors = {
+  darkGrey: '#121212',
+  white87: 'rgba(255, 255, 255, 0.87)',
+  white60: 'rgba(255, 255, 255, 0.60)',
+  white38: 'rgba(255, 255, 255, 0.38)',
+  white12: 'rgba(255, 255, 255, 0.12)',
+  darkGreyOverlay05: '#1e1e1e',
+  darkGreyOverlay07: '#222222',
+  darkGreyOverlay08: '#242424',
+  darkGreyOverlay09: '#242424',
+  darkGreyOverlay11: '#272727',
+  darkGreyOverlay12: '#2c2c2c',
+  darkGreyOverlay14: '#2d2d2d',
+  darkGreyOverlay15: '#333333',
+  darkGreyOverlay16: '#383838'
 }
 
 const commonThemeOptions: ThemeOptions = {
@@ -37,7 +55,33 @@ const theme = createMuiTheme(commonThemeOptions)
 
 const darkThemeOptions: ThemeOptions = {
   palette: {
-    type: 'dark'
+    type: 'dark',
+    background: {
+      paper: colors.darkGrey,
+      default: colors.darkGrey
+    },
+    text: {
+      primary: colors.white87,
+      secondary: colors.white60,
+      hint: colors.white60,
+      disabled: colors.white38
+    }
+  },
+  overrides: {
+    MuiPaper: {
+      elevation1: {
+        background: colors.darkGreyOverlay05
+      },
+      elevation2: {
+        background: colors.darkGreyOverlay07
+      },
+      elevation3: {
+        background: colors.darkGreyOverlay08
+      },
+      elevation4: {
+        background: colors.darkGreyOverlay09
+      }
+    }
   }
 }
 

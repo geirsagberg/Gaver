@@ -46,8 +46,8 @@ const configuration: Configuration = {
   devtool: isDevelopment ? 'source-map' : 'nosources-source-map',
   resolve: {
     alias: {
-      '~': path.join(baseDir, 'ClientApp'),
-      'react-dom': '@hot-loader/react-dom'
+      '~': path.join(baseDir, 'ClientApp')
+      // 'react-dom': '@hot-loader/react-dom'
     },
     extensions: ['.js', '.jsx', '.ts', '.tsx']
   },

@@ -4,14 +4,13 @@ using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
-using Gaver.Web.Extensions;
 using MediatR;
 
 namespace Gaver.Web.Features.Chat
 {
     public class AddMessageHandler : IRequestHandler<AddMessageRequest, ChatMessageModel>
     {
-        private readonly IClientNotifier _clientNotifier;
+        private readonly IClientNotifier clientNotifier;
         private readonly GaverContext context;
         private readonly IMapperService mapper;
 
@@ -19,7 +18,7 @@ namespace Gaver.Web.Features.Chat
         {
             this.mapper = mapper;
             this.context = context;
-            _clientNotifier = clientNotifier;
+            this.clientNotifier = clientNotifier;
         }
 
         public async Task<ChatMessageModel> Handle(AddMessageRequest request, CancellationToken token = default)
@@ -33,7 +32,7 @@ namespace Gaver.Web.Features.Chat
             context.Add(chatMessage);
             await context.SaveChangesAsync(token);
 
-            await _clientNotifier.RefreshListAsync(request.WishListId, userId);
+            await clientNotifier.RefreshListAsync(request.WishListId, userId);
             return mapper.Map<ChatMessageModel>(chatMessage);
         }
     }

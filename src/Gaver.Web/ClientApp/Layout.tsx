@@ -8,28 +8,22 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Menu,
-  MenuItem,
   SwipeableDrawer,
   Toolbar,
-  Tooltip,
   Typography
 } from '@material-ui/core'
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import { map, some } from 'lodash-es'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
 import { hot } from 'react-hot-loader/root'
 import Expander from './components/Expander'
-import Loading from './components/Loading'
 import { useOvermind } from './overmind'
-import AcceptInvitationPage from './pages/AcceptInvitation'
-import LoginPage from './pages/Login'
-import MyListPage from './pages/MyList'
-import NotFoundPage from './pages/NotFound'
-import SharedListPage from './pages/SharedList'
 import { ShareListDialog } from './ShareListDialog'
 import { darkTheme } from './theme'
+import { Actions } from './Actions'
+import { Content } from './Content'
+import { LoggedInAvatar } from './LoggedInAvatar'
 
 export const useStyles = makeStyles(theme => ({
   root: {
@@ -69,83 +63,6 @@ export const useStyles = makeStyles(theme => ({
   },
   current: {}
 }))
-
-const Content: FC = () => {
-  const {
-    state: {
-      routing: { currentPage }
-    }
-  } = useOvermind()
-
-  switch (currentPage) {
-    case 'myList':
-      return <MyListPage />
-    case 'start':
-      return <LoginPage />
-    case 'notFound':
-      return <NotFoundPage />
-    case 'acceptInvitation':
-      return <AcceptInvitationPage />
-    case 'sharedList':
-      return <SharedListPage />
-  }
-  return <Loading />
-}
-
-const Actions: FC = () => {
-  const {
-    state: {
-      routing: { currentPage },
-      myList: { isDeleting }
-    },
-    actions: {
-      myList: { startSharingList, toggleDeleting }
-    }
-  } = useOvermind()
-
-  switch (currentPage) {
-    case 'myList':
-      return (
-        <>
-          <IconButton color="inherit" onClick={toggleDeleting}>
-            <Icon>{isDeleting ? 'close' : 'delete'}</Icon>
-          </IconButton>
-          <IconButton color="inherit" onClick={startSharingList}>
-            <Icon>share</Icon>
-          </IconButton>
-        </>
-      )
-  }
-  return null
-}
-
-const LoggedInAvatar: FC = () => {
-  const {
-    state: { auth },
-    actions: {
-      auth: { logOut }
-    }
-  } = useOvermind()
-  const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement>(null)
-
-  const showProfileMenu = (event: React.MouseEvent<HTMLElement>) => setMenuAnchorEl(event.currentTarget)
-
-  const hideProfileMenu = () => setMenuAnchorEl(null)
-
-  return auth.isLoggedIn ? (
-    <>
-      <Tooltip title={auth.user.name}>
-        <IconButton color="inherit" onClick={showProfileMenu}>
-          <Icon>account_circle</Icon>
-        </IconButton>
-      </Tooltip>
-
-      <Menu anchorEl={menuAnchorEl} open={!!menuAnchorEl} onClose={hideProfileMenu}>
-        <MenuItem onClick={logOut}>Logg ut</MenuItem>
-      </Menu>
-    </>
-  ) : null
-}
 
 const Layout: FC = () => {
   const classes = useStyles({})

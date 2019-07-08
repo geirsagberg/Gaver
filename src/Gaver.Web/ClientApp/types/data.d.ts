@@ -38,11 +38,11 @@ export interface Invitation {
   wishListUserName: string
 }
 
-export interface ChatMessage {
+export interface ChatMessageModel {
   id: number
   text: string
-  created: Date
-  user: number
+  created: string
+  user: UserModel
 }
 
 export interface MyListModel extends WishListModel {}

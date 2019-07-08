@@ -3,5 +3,6 @@ import 'nprogress/nprogress.css'
 import './css/site.css'
 import './initial'
 import { setupProgress } from './utils/progress'
+import 'simplebar/dist/simplebar.min.css'
 
 setupProgress()

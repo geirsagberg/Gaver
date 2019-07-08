@@ -8,6 +8,7 @@ import invitations from './invitations'
 import myList from './myList'
 import routing from './routing'
 import sharedLists from './sharedLists'
+import chat from './chat'
 import { SharedList } from './sharedLists/state'
 import { SharedWishModel } from '~/types/data'
 import { map } from 'lodash-es'
@@ -47,7 +48,8 @@ export const config = merge(
     app,
     invitations,
     sharedLists,
-    api
+    api,
+    chat
   }),
   {
     state

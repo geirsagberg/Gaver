@@ -18,7 +18,7 @@ const jsonHeaders = {
 }
 
 const handleResponse = schema => async response => {
-  var contentType = response.headers.get('content-type')
+  const contentType = response.headers.get('content-type')
   if (contentType && contentType.indexOf('json') !== -1) {
     const data = await response.json()
     if (!response.ok) {

@@ -1,18 +1,26 @@
 import { some } from 'lodash-es'
-import { SharedListModel } from '~/types/data'
+import { SharedListModel, UserModel } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { getJson, putJson } from '~/utils/ajax'
 import { normalizeArrays } from '~/utils/normalize'
 import { Action } from '..'
 import { RouteCallbackArgs } from '../routing/effects'
 
+export const onUpdateUsers: Action<Dictionary<UserModel>> = ({ state }, users) => {
+  state.sharedLists.users = {
+    ...state.sharedLists.users,
+    users
+  }
+}
+
 export const handleSharedList: Action<RouteCallbackArgs> = async (
   {
     actions: {
       routing: { setCurrentPage, setCurrentSharedList },
-      sharedLists: { loadSharedList }
+      sharedLists: { loadSharedList, onUpdateUsers },
+      chat: { clearMessages, loadMessages }
     },
-    state: { auth, invitations, sharedLists },
+    state: { auth, invitations },
     effects: {
       routing: { redirect },
       sharedLists: { subscribeList }
@@ -28,15 +36,12 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
   } else {
     setCurrentPage('sharedList')
     setCurrentSharedList(listId)
+    clearMessages()
     await loadSharedList(listId)
+    await loadMessages(listId)
     await subscribeList(listId, {
       onRefresh: () => loadSharedList(listId),
-      onUpdateUsers: users => {
-        sharedLists.users = {
-          ...sharedLists.users,
-          ...users
-        }
-      }
+      onUpdateUsers
     })
   }
 }

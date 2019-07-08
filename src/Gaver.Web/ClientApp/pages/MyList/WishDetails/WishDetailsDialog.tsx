@@ -1,18 +1,9 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Icon
-} from '@material-ui/core'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, TextField } from '@material-ui/core'
 import React, { FC } from 'react'
+import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
 import { selectIsSavingOrLoading } from '~/overmind/app/selectors'
 import { WishModel } from '~/types/data'
-import Expander from '~/components/Expander'
 import { createStylesHook } from '~/utils/materialUtils'
 
 type Props = {
@@ -49,9 +40,8 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
           e.preventDefault()
           onSave()
         }}>
-        <DialogTitle>Nytt ønske</DialogTitle>
+        <DialogTitle>Hva ønsker du deg?</DialogTitle>
         <DialogContent>
-          <DialogContentText>Hva ønsker du deg?</DialogContentText>
           <TextField
             onChange={event => updateWish({ title: event.target.value })}
             autoFocus

@@ -5,8 +5,9 @@ import Loading from '~/components/Loading'
 import { useOvermind } from '~/overmind'
 import { pageWidth } from '~/theme'
 import SharedWishListItem from './SharedWishListItem'
+import Chat from '~/components/Chat'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   root: {
     width: '100%',
     height: '100%',
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     right: 0
   }
-}))
+})
 
 const SharedListPage: FC = () => {
   const classes = useStyles({})
@@ -41,6 +42,7 @@ const SharedListPage: FC = () => {
           <SharedWishListItem key={wish.id} wishId={wish.id} />
         ))}
       </div>
+      <Chat />
       {false && (
         <BottomNavigation
           showLabels

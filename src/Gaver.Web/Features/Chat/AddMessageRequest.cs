@@ -11,11 +11,12 @@ namespace Gaver.Web.Features.Chat
     {
         [Required]
         [MinLength(1)]
+        [MaxLength(500)]
         public string Text { get; set; }
 
         [JsonIgnore]
         public int WishListId { get; set; }
-        
+
         [JsonIgnore]
         public int UserId { get; set; }
     }

@@ -26,7 +26,7 @@
       "name": "Attach to Chrome",
       "port": 9222,
       "webRoot": "${workspaceRoot}/src/Gaver.Web",
-      "urlFilter": "http://localhost:5000/",
+      "urlFilter": "http://localhost:5000/*",
       "sourceMaps": true,
       "smartStep": true,
       "skipFiles": ["node_modules/**"],

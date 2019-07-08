@@ -6,7 +6,7 @@ import { state } from './state'
 const onInitialize: OnInitialize = ({
   actions: {
     routing: { setCurrentPage, handleStart, setCurrentSharedList },
-    auth: { handleAuthentication, requireLogin, checkSession },
+    auth: { handleAuthentication, redirectIfNotLoggedIn, checkSession },
     invitations: { handleInvitation },
     sharedLists: { handleSharedList },
     myList: { handleMyList }
@@ -20,10 +20,10 @@ const onInitialize: OnInitialize = ({
     next()
   })
   route('/', handleStart)
-  route('/mylist', requireLogin, handleMyList)
+  route('/mylist', redirectIfNotLoggedIn, handleMyList)
   route('/callback', handleAuthentication)
-  route('/invitations/:token', requireLogin, handleInvitation)
-  route('/list/:listId', requireLogin, handleSharedList)
+  route('/invitations/:token', redirectIfNotLoggedIn, handleInvitation)
+  route('/list/:listId', redirectIfNotLoggedIn, handleSharedList)
   route('*', () => setCurrentPage('notFound'))
   exit('/list/:listId', async (_, next) => {
     await setCurrentSharedList(null)
