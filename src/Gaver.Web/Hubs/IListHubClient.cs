@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Gaver.Web.Features.Chat;
 
 namespace Gaver.Web.Hubs
 {
@@ -6,5 +7,6 @@ namespace Gaver.Web.Hubs
     {
         Task UpdateUsers(SubscriptionStatus status);
         Task Refresh();
+        Task MessageAdded(ChatMessageModel message);
     }
 }

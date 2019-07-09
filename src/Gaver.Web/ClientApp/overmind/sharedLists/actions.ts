@@ -18,7 +18,7 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
     actions: {
       routing: { setCurrentPage, setCurrentSharedList },
       sharedLists: { loadSharedList, onUpdateUsers },
-      chat: { clearMessages, loadMessages }
+      chat: { clearMessages, loadMessages, onMessageAdded }
     },
     state: { auth, invitations },
     effects: {
@@ -41,7 +41,8 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
     await loadMessages(listId)
     await subscribeList(listId, {
       onRefresh: () => loadSharedList(listId),
-      onUpdateUsers
+      onUpdateUsers,
+      onMessageAdded
     })
   }
 }

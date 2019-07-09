@@ -1,5 +1,6 @@
 import { getJson, postJson } from '~/utils/ajax'
 import { Action } from '..'
+import { ChatMessageModel } from '~/types/data'
 
 export const toggleChat: Action = async ({
   state: { chat },
@@ -40,4 +41,17 @@ export const clearMessages: Action = async ({ state }) => {
 export const loadMessages: Action<number> = async ({ state }, listId) => {
   const { messages } = await getJson(`/api/chat/${listId}`)
   state.chat.messages = messages
+}
+
+export const onMessageAdded: Action<ChatMessageModel> = (
+  {
+    state,
+    effects: {
+      chat: { scrollChat }
+    }
+  },
+  chatMessage
+) => {
+  state.chat.messages.push(chatMessage)
+  scrollChat()
 }

@@ -32,8 +32,9 @@ namespace Gaver.Web.Features.Chat
             context.Add(chatMessage);
             await context.SaveChangesAsync(token);
 
-            await clientNotifier.RefreshListAsync(request.WishListId, userId);
-            return mapper.Map<ChatMessageModel>(chatMessage);
+            var chatMessageModel = mapper.Map<ChatMessageModel>(chatMessage);
+            await clientNotifier.MessageAdded(request.WishListId, chatMessageModel);
+            return chatMessageModel;
         }
     }
 }
