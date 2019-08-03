@@ -7,6 +7,7 @@ using Gaver.Common;
 using Gaver.Data;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Filters;
+using Gaver.Web.MvcUtils;
 using Gaver.Web.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -47,6 +48,7 @@ namespace Gaver.Web
             if (context.HttpContext.Request.Path.StartsWithSegments("/listHub") && accessToken.IsNotEmpty()) {
                 context.Token = accessToken;
             }
+
             return Task.CompletedTask;
         }
 
@@ -55,24 +57,24 @@ namespace Gaver.Web
             if (context.SecurityToken is JwtSecurityToken jwtSecurityToken) {
                 context.HttpContext.Items["access_token"] = jwtSecurityToken.RawData;
             }
+
             return Task.CompletedTask;
         }
 
         public static void AddCustomMvc(this IServiceCollection services)
         {
             services.AddMvc(o => {
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-
-                o.Filters.Add(new AuthorizeFilter(policy));
-                o.Filters.Add(new CustomExceptionFilterAttribute());
-            }).AddRazorOptions(o => {
-                o.ViewLocationFormats.Clear();
-                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
-            }).AddJsonOptions(o => o.UseCamelCasing(true))
+                    var policy = new AuthorizationPolicyBuilder()
+                        .AddRequirements(new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
+                        .Build();
+                    o.Filters.Add(new AuthorizeFilter(policy));
+                    o.Filters.Add(new CustomExceptionFilterAttribute());
+                }).AddRazorOptions(o => {
+                    o.ViewLocationFormats.Clear();
+                    o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
+                    o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
+                    o.ViewLocationFormats.Add("/Features/{0}.cshtml");
+                }).AddJsonOptions(o => o.UseCamelCasing(true))
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
                 ;
@@ -133,7 +135,7 @@ namespace Gaver.Web
                         Detail = "Please refer to the errors property for additional details."
                     };
                     return new BadRequestObjectResult(problemDetails) {
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
+                        ContentTypes = {"application/problem+json", "application/problem+xml"}
                     };
                 };
             });

@@ -42,6 +42,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
     <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="2.3.0" />
+    <PackageReference Include="WebEssentials.AspNetCore.PWA" Version="1.0.49" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">
@@ -49,6 +50,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Constants" />
+    <Watch Include="../../webpack.config.ts"/>
   </ItemGroup>
 </Project>

@@ -1,7 +1,17 @@
 {
   "name": "Gaver",
+  "short_name": "Gaver",
   "display": "standalone",
+  "start_url": "/",
   "icons": [
+    {
+      "src": "/images/icon192x192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/icon512x512.png",
+      "sizes": "512x512"
+    },
     {
       "src": "/android-icon-36x36.png",
       "sizes": "36x36",

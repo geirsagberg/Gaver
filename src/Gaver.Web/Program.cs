@@ -5,6 +5,7 @@ using Gaver.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -44,6 +45,7 @@ namespace Gaver.Web
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) => WebHost.CreateDefaultBuilder(args)
             .UseStartup<Startup>()
             .UseApplicationInsights()
+            .ConfigureAppConfiguration(config => config.AddUserSecrets<Startup>())
             .UseSerilog();
     }
 }

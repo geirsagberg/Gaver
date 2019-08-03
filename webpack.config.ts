@@ -1,16 +1,15 @@
-import { Configuration } from 'webpack'
-
-const path = require('path')
-const webpack = require('webpack')
+import path from 'path'
+import webpack, { Configuration } from 'webpack'
 
 const isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
 
 const mode = isDevelopment ? 'development' : 'production'
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { LicenseWebpackPlugin } from 'license-webpack-plugin'
+import OfflinePlugin from 'offline-plugin'
 
 const baseDir = process.cwd()
 
@@ -18,10 +17,15 @@ const commonPlugins = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': `'${mode}'`
   }),
+  new OfflinePlugin({
+    excludes: ['**/*.map', '**/_Layout.generated.cshtml', '/dist/../../Features/Shared/_Layout.generated.cshtml'],
+    externals: ['/'],
+    appShell: '/'
+  }),
   new HtmlWebpackPlugin({
     inject: false,
     template: 'Features/Shared/_Layout.template.cshtml',
-    filename: '../../Features/Shared/_Layout.cshtml'
+    filename: '../../Features/Shared/_Layout.generated.cshtml'
   })
 ]
 
@@ -105,4 +109,4 @@ const configuration: Configuration = {
   plugins: commonPlugins.concat(isDevelopment ? developmentPlugins : productionPlugins)
 }
 
-module.exports = configuration
+export default configuration

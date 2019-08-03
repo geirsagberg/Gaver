@@ -4,5 +4,8 @@ import './css/site.css'
 import './initial'
 import { setupProgress } from './utils/progress'
 import 'simplebar/dist/simplebar.min.css'
+import OfflinePluginRuntime from 'offline-plugin/runtime'
 
 setupProgress()
+
+OfflinePluginRuntime.install()

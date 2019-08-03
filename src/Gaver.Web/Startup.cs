@@ -24,6 +24,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using WebEssentials.AspNetCore.Pwa;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
 [assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
@@ -65,6 +66,8 @@ namespace Gaver.Web
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddProblemDetails();
             services.AddValidationProblemDetails();
+            services.AddWebManifest();
+            services.AddTransient<PwaOptions>();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
@@ -117,7 +120,7 @@ namespace Gaver.Web
                 SetupForProduction(app, loggerFactory);
             }
 
-            app.UseFileServer();
+            SetupStaticFiles(app, env);
 
             app.UseWhen(IsApiRequest, app2 => app2.UseProblemDetails());
 
@@ -130,6 +133,14 @@ namespace Gaver.Web
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
             app.UseCustomMvc();
+        }
+
+        private static void SetupStaticFiles(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            var cachePeriod = (int)(env.IsDevelopment() ? TimeSpan.FromMinutes(10).TotalSeconds : TimeSpan.FromDays(365).TotalSeconds);
+            app.UseStaticFiles(new StaticFileOptions {
+                OnPrepareResponse = ctx => ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={cachePeriod}")
+            });
         }
 
         private static bool IsApiRequest(HttpContext context)
