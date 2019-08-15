@@ -18,7 +18,7 @@ const commonPlugins = [
     'process.env.NODE_ENV': `'${mode}'`
   }),
   new OfflinePlugin({
-    excludes: ['**/*.map', '**/_Layout.generated.cshtml', '/dist/../../Features/Shared/_Layout.generated.cshtml'],
+    excludes: ['**/*.map', '**/*.cshtml'],
     externals: ['/'],
     appShell: '/'
   }),
