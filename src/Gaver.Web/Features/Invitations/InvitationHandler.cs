@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
@@ -16,12 +15,10 @@ namespace Gaver.Web.Features.Invitations
         IRequestHandler<AcceptInvitationRequest, InvitationModel>
     {
         private readonly GaverContext context;
-        private readonly IMapperService mapperService;
 
-        public InvitationHandler(GaverContext context, IMapperService mapperService)
+        public InvitationHandler(GaverContext context)
         {
             this.context = context;
-            this.mapperService = mapperService;
         }
 
         public async Task<InvitationModel> Handle(AcceptInvitationRequest request,
@@ -35,8 +32,11 @@ namespace Gaver.Web.Features.Invitations
             context.Add(invitation);
             invitationToken.Accepted = DateTimeOffset.Now;
             await context.SaveChangesAsync(cancellationToken);
-            await context.Entry(invitation).Reference(i => i.WishList).LoadAsync(cancellationToken);
-            return mapperService.Map<InvitationModel>(invitation);
+            var userName = await context.Set<User>().Where(u => u.WishList.Id == invitationToken.WishListId).Select(u => u.Name).SingleAsync();
+            return new InvitationModel {
+                WishListId = invitationToken.WishListId,
+                WishListUserName = userName
+            };
         }
 
         public async Task<InvitationStatusModel> Handle(GetInvitationStatusRequest request,

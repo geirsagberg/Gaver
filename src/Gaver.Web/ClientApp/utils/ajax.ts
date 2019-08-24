@@ -24,9 +24,7 @@ const handleResponse = schema => async response => {
     if (!response.ok) {
       const message = Array.isArray(data)
         ? data.map(d => d.message).join()
-        : data.message || data.error
-        ? data.error.message
-        : undefined
+        : data.message || (data.error ? data.error.message : undefined)
       throw new Error(message)
     }
     return schema ? normalize(data, schema) : data

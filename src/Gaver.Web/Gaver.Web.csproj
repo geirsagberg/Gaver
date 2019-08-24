@@ -13,6 +13,7 @@
     <LangVersion>latest</LangVersion>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <TieredCompilation>true</TieredCompilation>
+    <RazorCompileOnBuild>false</RazorCompileOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>

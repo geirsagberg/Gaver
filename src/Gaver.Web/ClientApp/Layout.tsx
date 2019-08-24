@@ -59,7 +59,10 @@ export const useStyles = makeStyles(theme => ({
     background: theme.palette.primary.dark
   },
   menu: {
-    width: 256
+    width: 256,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
   },
   current: {}
 }))
@@ -107,53 +110,49 @@ const Layout: FC = () => {
           onOpen={showMenu}
           onClose={hideMenu}
           classes={{ paper: classes.menuPaper }}>
-          <div className={classes.menu}>
-            <List>
-              <ListItem
-                button
-                onClick={() => {
-                  showMyList()
-                  hideMenu()
-                }}
-                selected={currentPage === 'myList'}
-                className={classNames({ [classes.current]: currentPage === 'myList' })}>
-                <ListItemIcon>
-                  <Icon>home</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Min liste" />
-              </ListItem>
-              {some(sharedLists) && (
-                <>
-                  <ListItem>
-                    <ListItemText secondary="Delte lister" />
+          <List className={classes.menu}>
+            <ListItem
+              button
+              onClick={() => {
+                showMyList()
+                hideMenu()
+              }}
+              selected={currentPage === 'myList'}
+              className={classNames({ [classes.current]: currentPage === 'myList' })}>
+              <ListItemIcon>
+                <Icon>home</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Min liste" />
+            </ListItem>
+            {some(sharedLists) && (
+              <>
+                <ListItem>
+                  <ListItemText secondary="Delte lister" />
+                </ListItem>
+                <Divider />
+                {map(sharedLists, sharedList => (
+                  <ListItem
+                    key={sharedList.wishListId}
+                    button
+                    selected={currentSharedListId === sharedList.wishListId}
+                    onClick={() => {
+                      showSharedList(sharedList.wishListId)
+                      hideMenu()
+                    }}>
+                    <ListItemText primary={sharedList.wishListUserName} />
                   </ListItem>
-                  <Divider />
-                  {map(sharedLists, sharedList => (
-                    <ListItem
-                      key={sharedList.wishListId}
-                      button
-                      selected={currentSharedListId === sharedList.wishListId}
-                      onClick={() => {
-                        showSharedList(sharedList.wishListId)
-                        hideMenu()
-                      }}>
-                      <ListItemText primary={sharedList.wishListUserName} />
-                    </ListItem>
-                  ))}
-                </>
-              )}
-              <ListItem>
-                <ListItemText primary="&nbsp;" />
-              </ListItem>
-              <Divider />
-              <ListItem button href="/dist/licenses.txt" component={Link} target="_blank" color="inherit">
-                <ListItemIcon>
-                  <Icon>copyright</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Softwarelisenser" />
-              </ListItem>
-            </List>
-          </div>
+                ))}
+              </>
+            )}
+            <Divider />
+            <Expander />
+            <ListItem button href="/dist/licenses.txt" component={Link} target="_blank" color="inherit">
+              <ListItemIcon>
+                <Icon>copyright</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Softwarelisenser" />
+            </ListItem>
+          </List>
         </SwipeableDrawer>
       </MuiThemeProvider>
 

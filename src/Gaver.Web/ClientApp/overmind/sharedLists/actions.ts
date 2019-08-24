@@ -9,7 +9,7 @@ import { RouteCallbackArgs } from '../routing/effects'
 export const onUpdateUsers: Action<Dictionary<UserModel>> = ({ state }, users) => {
   state.sharedLists.users = {
     ...state.sharedLists.users,
-    users
+    ...users
   }
 }
 
