@@ -17,14 +17,13 @@ import classNames from 'classnames'
 import { map, some } from 'lodash-es'
 import React, { FC } from 'react'
 import { hot } from 'react-hot-loader/root'
+import { Actions } from './Actions'
 import Expander from './components/Expander'
+import { Content } from './Content'
+import FeedbackDialog from './FeedbackDialog'
 import { useOvermind } from './overmind'
 import { ShareListDialog } from './ShareListDialog'
 import { darkTheme } from './theme'
-import { Actions } from './Actions'
-import { Content } from './Content'
-import { LoggedInAvatar } from './LoggedInAvatar'
-import FeedbackDialog from './FeedbackDialog'
 
 export const useStyles = makeStyles(theme => ({
   root: {
@@ -73,12 +72,13 @@ const Layout: FC = () => {
   const {
     state: {
       auth: { isLoggedIn },
-      app: { isMenuShowing },
+      app: { isMenuShowing, title },
       routing: { currentPage, currentSharedListId },
       invitations: { sharedLists }
     },
     actions: {
-      app: { showMenu, hideMenu, showFeedback }
+      app: { showMenu, hideMenu, showFeedback },
+      auth: { logOut }
     },
     effects: {
       routing: { showMyList, showSharedList }
@@ -94,11 +94,10 @@ const Layout: FC = () => {
               <Icon>menu</Icon>
             </IconButton>
             <Typography variant="h6" color="inherit" style={{ marginRight: '1rem' }}>
-              Gaver
+              {title ? title : 'Gaver'}
             </Typography>
             <Expander />
             <Actions />
-            <LoggedInAvatar />
           </Toolbar>
         </AppBar>
       )}
@@ -147,11 +146,23 @@ const Layout: FC = () => {
             )}
             <Divider />
             <Expander />
-            <ListItem button onClick={showFeedback} color="inherit">
+            <ListItem
+              button
+              onClick={() => {
+                hideMenu()
+                showFeedback()
+              }}
+              color="inherit">
               <ListItemIcon>
                 <Icon>feedback</Icon>
               </ListItemIcon>
               <ListItemText primary="Gi tilbakemelding" />
+            </ListItem>
+            <ListItem button onClick={logOut}>
+              <ListItemIcon>
+                <Icon>logout</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Logg ut" />
             </ListItem>
             <ListItem button href="/dist/licenses.txt" component={Link} target="_blank" color="inherit">
               <ListItemIcon>

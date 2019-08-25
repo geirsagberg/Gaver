@@ -11,6 +11,7 @@ import { createStylesHook } from '~/utils/materialUtils'
 import AddWishDialog from './WishDetails/AddWishDialog'
 import EditWishDialog from './WishDetails/EditWishDialog'
 import WishListItem from './WishListItem'
+import { useNavContext } from '~/utils/hooks'
 
 const useStyles = createStylesHook(theme => ({
   root: {
@@ -82,6 +83,7 @@ const MyListPage: FC = () => {
       myList: { startAddingWish, wishOrderChanged }
     }
   } = useOvermind()
+  useNavContext({ title: 'Mine ønsker' }, [])
 
   return wishesLoaded ? (
     <div className={classes.root}>

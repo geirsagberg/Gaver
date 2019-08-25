@@ -2,11 +2,16 @@ import * as actions from './actions'
 import { OnInitialize, Derive } from '..'
 import { subscribe, Topic } from '~/utils/pubSub'
 
+export interface NavContext {
+  title: string
+}
+
 type AppState = {
   ajaxCounter: number
   isSavingOrLoading: Derive<AppState, boolean>
   isMenuShowing: boolean
   feedback?: boolean
+  title?: string
 }
 
 const state: AppState = {

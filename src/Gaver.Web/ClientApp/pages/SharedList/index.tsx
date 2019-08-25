@@ -6,6 +6,7 @@ import { useOvermind } from '~/overmind'
 import { pageWidth } from '~/theme'
 import SharedWishListItem from './SharedWishListItem'
 import Chat from '~/components/Chat'
+import { useNavContext } from '~/utils/hooks'
 
 const useStyles = makeStyles({
   root: {
@@ -32,8 +33,14 @@ const useStyles = makeStyles({
 const SharedListPage: FC = () => {
   const classes = useStyles({})
   const {
-    state: { currentSharedOrderedWishes }
+    state: { currentSharedOrderedWishes, currentSharedListOwner }
   } = useOvermind()
+  useNavContext(
+    {
+      title: currentSharedListOwner ? currentSharedListOwner.name : null
+    },
+    [currentSharedListOwner]
+  )
   const [tab, setTab] = useState(0)
   return currentSharedOrderedWishes ? (
     <div className={classes.root}>

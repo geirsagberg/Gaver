@@ -1,17 +1,17 @@
+import { map } from 'lodash-es'
 import { IAction, IConfig, IContext, IDerive, IOnInitialize, IOperator, IState } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
+import { SharedWishModel, UserModel } from '~/types/data'
 import api from './api'
 import app from './app'
 import auth from './auth'
+import chat from './chat'
 import invitations from './invitations'
 import myList from './myList'
 import routing from './routing'
 import sharedLists from './sharedLists'
-import chat from './chat'
 import { SharedList } from './sharedLists/state'
-import { SharedWishModel } from '~/types/data'
-import { map } from 'lodash-es'
 
 export interface Config extends IConfig<typeof config> {}
 export interface OnInitialize extends IOnInitialize<Config> {}
@@ -27,6 +27,7 @@ export type ResolvedState = Context['state']
 type SharedState = {
   currentSharedList: Derive<ConfigState, SharedList>
   currentSharedOrderedWishes: Derive<ConfigState, SharedWishModel[]>
+  currentSharedListOwner: Derive<ConfigState, UserModel>
 }
 
 const state: SharedState = {
@@ -37,7 +38,9 @@ const state: SharedState = {
   currentSharedOrderedWishes: state =>
     state.currentSharedList && state.currentSharedList.wishesOrder
       ? map(state.currentSharedList.wishesOrder, id => state.currentSharedList.wishes[id])
-      : null
+      : null,
+  currentSharedListOwner: state =>
+    state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null
 }
 
 export const config = merge(

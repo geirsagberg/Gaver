@@ -4,6 +4,7 @@ import { tryOrNotify } from '~/utils'
 import { getJson } from '~/utils/ajax'
 import { Action } from '../'
 import { showSuccess } from '~/utils/notifications'
+import { NavContext } from '.'
 
 export const incrementAjaxCounter: Action = ({ state: { app } }) => {
   app.ajaxCounter += 1
@@ -27,6 +28,10 @@ export const showFeedback: Action = ({ state: { app } }) => {
 
 export const cancelFeedback: Action = ({ state: { app } }) => {
   app.feedback = false
+}
+
+export const setNavContext: Action<NavContext> = ({ state: { app } }, navContext) => {
+  app.title = navContext.title
 }
 
 export interface FeedbackModel {

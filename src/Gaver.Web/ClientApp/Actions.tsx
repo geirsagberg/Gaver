@@ -2,6 +2,7 @@ import { Icon, IconButton } from '@material-ui/core'
 import React, { FC } from 'react'
 import { useOvermind } from './overmind'
 
+// TODO: Move to NavContext
 export const Actions: FC = () => {
   const {
     state: {
