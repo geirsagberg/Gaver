@@ -24,6 +24,7 @@ import { darkTheme } from './theme'
 import { Actions } from './Actions'
 import { Content } from './Content'
 import { LoggedInAvatar } from './LoggedInAvatar'
+import FeedbackDialog from './FeedbackDialog'
 
 export const useStyles = makeStyles(theme => ({
   root: {
@@ -77,7 +78,7 @@ const Layout: FC = () => {
       invitations: { sharedLists }
     },
     actions: {
-      app: { showMenu, hideMenu }
+      app: { showMenu, hideMenu, showFeedback }
     },
     effects: {
       routing: { showMyList, showSharedList }
@@ -146,6 +147,12 @@ const Layout: FC = () => {
             )}
             <Divider />
             <Expander />
+            <ListItem button onClick={showFeedback} color="inherit">
+              <ListItemIcon>
+                <Icon>feedback</Icon>
+              </ListItemIcon>
+              <ListItemText primary="Gi tilbakemelding" />
+            </ListItem>
             <ListItem button href="/dist/licenses.txt" component={Link} target="_blank" color="inherit">
               <ListItemIcon>
                 <Icon>copyright</Icon>
@@ -157,6 +164,7 @@ const Layout: FC = () => {
       </MuiThemeProvider>
 
       <ShareListDialog />
+      <FeedbackDialog />
       <div id="portal-overlay" style={{ position: 'relative', zIndex: 1100 }} />
     </div>
   )

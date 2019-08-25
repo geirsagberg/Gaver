@@ -5,6 +5,6 @@ namespace Gaver.Web.Contracts
 {
     public interface IMailSender
     {
-        Task SendAsync(MailModel mail);
+        Task SendAsync(MailModel mail, System.Threading.CancellationToken cancellationToken = default);
     }
 }

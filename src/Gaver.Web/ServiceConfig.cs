@@ -64,17 +64,17 @@ namespace Gaver.Web
         public static void AddCustomMvc(this IServiceCollection services)
         {
             services.AddMvc(o => {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .AddRequirements(new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
-                        .Build();
-                    o.Filters.Add(new AuthorizeFilter(policy));
-                    o.Filters.Add(new CustomExceptionFilterAttribute());
-                }).AddRazorOptions(o => {
-                    o.ViewLocationFormats.Clear();
-                    o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                    o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                    o.ViewLocationFormats.Add("/Features/{0}.cshtml");
-                }).AddJsonOptions(o => o.UseCamelCasing(true))
+                var policy = new AuthorizationPolicyBuilder()
+                    .AddRequirements(new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
+                    .Build();
+                o.Filters.Add(new AuthorizeFilter(policy));
+                o.Filters.Add(new CustomExceptionFilterAttribute());
+            }).AddRazorOptions(o => {
+                o.ViewLocationFormats.Clear();
+                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
+                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
+                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
+            }).AddJsonOptions(o => o.UseCamelCasing(true))
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
                 ;
@@ -117,11 +117,10 @@ namespace Gaver.Web
         {
             services.Scan(scan => {
                 scan.FromAssemblyOf<ICommonAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
-                scan.FromEntryAssembly().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
-                scan.FromEntryAssembly().AddClasses().AsSelf().WithTransientLifetime();
-
-                scan.FromEntryAssembly().AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>()
-                    .WithSingletonLifetime();
+                scan.FromAssemblyOf<Startup>()
+                    .AddClasses().AsImplementedInterfaces().WithTransientLifetime()
+                    .AddClasses().AsSelf().WithTransientLifetime()
+                    .AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
             });
         }
 
@@ -135,7 +134,7 @@ namespace Gaver.Web
                         Detail = "Please refer to the errors property for additional details."
                     };
                     return new BadRequestObjectResult(problemDetails) {
-                        ContentTypes = {"application/problem+json", "application/problem+xml"}
+                        ContentTypes = { "application/problem+json", "application/problem+xml" }
                     };
                 };
             });

@@ -43,10 +43,12 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
         <DialogTitle>Hva ønsker du deg?</DialogTitle>
         <DialogContent>
           <TextField
+            label="Beskrivelse"
             onChange={event => updateWish({ title: event.target.value })}
             autoFocus
             fullWidth
             required
+            InputLabelProps={{ required: false }}
             value={wish.title}
             margin="dense"
             disabled={isSavingOrLoading}

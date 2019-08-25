@@ -46,6 +46,9 @@ const commonThemeOptions: ThemeOptions = {
       },
       paper: {
         margin: '0 1rem'
+      },
+      paperFullWidth: {
+        width: `calc(100% - 2rem)`
       }
     }
   }

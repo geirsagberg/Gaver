@@ -51,6 +51,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Watch Include="../../webpack.config.ts"/>
+    <Watch Include="../../webpack.config.ts" />
   </ItemGroup>
 </Project>

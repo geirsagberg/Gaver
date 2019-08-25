@@ -6,6 +6,7 @@ type AppState = {
   ajaxCounter: number
   isSavingOrLoading: Derive<AppState, boolean>
   isMenuShowing: boolean
+  feedback?: boolean
 }
 
 const state: AppState = {

@@ -29,6 +29,7 @@ export const ShareListDialog: FC = () => {
         <DialogContentText>Legg inn e-postadressene til de du vil dele listen med</DialogContentText>
         <ChipInput
           fullWidth
+          placeholder="abc@example.com, ..."
           classes={{}}
           value={shareEmails}
           onAdd={emailAdded}
@@ -48,7 +49,9 @@ export const ShareListDialog: FC = () => {
           onClick={shareList}>
           Del liste
         </Button>
-        <Button onClick={cancelSharingList}>Avbryt</Button>
+        <Button disabled={isSavingOrLoading} onClick={cancelSharingList}>
+          Avbryt
+        </Button>
       </DialogActions>
     </Dialog>
   )
