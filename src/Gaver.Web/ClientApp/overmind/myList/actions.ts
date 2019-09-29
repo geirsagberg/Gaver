@@ -5,6 +5,7 @@ import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
 import { showError, showSuccess } from '~/utils/notifications'
 import { Action } from '..'
 import { getEmptyWish } from './state'
+import { isEmailValid } from '~/utils/validation'
 
 export const handleMyList: Action = async ({
   actions: {
@@ -107,10 +108,8 @@ export const cancelSharingList: Action = ({ state: { myList } }) => {
   myList.shareEmails = []
 }
 
-const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
 export const emailAdded: Action<string> = ({ state: { myList } }, email) => {
-  if (emailRegex.test(email)) {
+  if (isEmailValid(email)) {
     myList.shareEmails.push(email)
   } else {
     showError('Ugyldig e-postadresse')
