@@ -49,6 +49,9 @@ const commonThemeOptions: ThemeOptions = {
       },
       paperFullWidth: {
         width: `calc(100% - 2rem)`
+      },
+      paperScrollPaper: {
+        maxHeight: '100%'
       }
     }
   }
