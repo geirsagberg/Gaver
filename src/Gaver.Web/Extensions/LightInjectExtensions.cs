@@ -21,14 +21,12 @@ namespace Gaver.Web.Extensions
 
         public static LogEventLevel ToSerilogEventLevel(this LogLevel logLevel)
         {
-            switch (logLevel) {
-                case LogLevel.Info:
-                    return LogEventLevel.Information;
-                case LogLevel.Warning:
-                    return LogEventLevel.Warning;
-                default:
-                    throw new ArgumentException("Unknown loglevel");
-            }
+            return logLevel switch
+            {
+                LogLevel.Info => LogEventLevel.Information,
+                LogLevel.Warning => LogEventLevel.Warning,
+                _ => throw new ArgumentException("Unknown loglevel"),
+            };
         }
     }
 }

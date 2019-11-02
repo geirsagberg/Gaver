@@ -1,4 +1,4 @@
-namespace Gaver.Web
+namespace Gaver.Web.MvcUtils
 {
     public static class GaverClaimTypes
     {

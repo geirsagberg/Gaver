@@ -16,15 +16,15 @@ using JetBrains.Annotations;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using WebEssentials.AspNetCore.Pwa;
+//using WebEssentials.AspNetCore.Pwa;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
 [assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
@@ -33,18 +33,18 @@ namespace Gaver.Web
 {
     public class Startup
     {
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IHostEnvironment hostEnvironment;
         private readonly List<string> missingOptions = new List<string>();
 
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
-            this.hostingEnvironment = hostingEnvironment;
+            this.hostEnvironment = hostEnvironment;
             Configuration = configuration;
         }
 
         private IConfiguration Configuration { get; }
 
-        private static void UseRootNodeModules(IHostingEnvironment hostingEnvironment)
+        private static void UseRootNodeModules(IHostEnvironment hostingEnvironment)
         {
             var nodeDir = Path.Combine(hostingEnvironment.ContentRootPath, "../../node_modules");
             Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
@@ -57,7 +57,7 @@ namespace Gaver.Web
             services.AddCustomAuth(Configuration);
 
             services.AddCustomMvc();
-            services.AddCustomSwagger();
+            services.AddCustomSwagger(Configuration);
             services.AddCustomDbContext(Configuration);
 
             services.AddSingleton<IMapperService, MapperService>();
@@ -66,8 +66,8 @@ namespace Gaver.Web
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddProblemDetails();
             services.AddValidationProblemDetails();
-            services.AddWebManifest();
-            services.AddTransient<PwaOptions>();
+//            services.AddWebManifest();
+//            services.AddTransient<PwaOptions>();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
@@ -77,7 +77,7 @@ namespace Gaver.Web
 
             ConfigureOptions(services);
 
-            if (hostingEnvironment.IsProduction()) {
+            if (hostEnvironment.IsProduction()) {
                 services.Configure<HttpsRedirectionOptions>(options => options.HttpsPort = 443);
             }
         }
@@ -112,7 +112,7 @@ namespace Gaver.Web
             services.AddScoped(provider => provider.GetService<IOptionsSnapshot<T>>().Value);
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostEnvironment env)
         {
             if (env.IsDevelopment()) {
                 SetupForDevelopment(app, env);
@@ -121,21 +121,28 @@ namespace Gaver.Web
             }
 
             SetupStaticFiles(app, env);
+            app.UseRouting();
 
             app.UseWhen(IsApiRequest, app2 => app2.UseProblemDetails());
 
             app.UseHttpException();
             app.UseAuthentication();
 
-            app.UseSignalR(routes => routes.MapHub<ListHub>("/listHub"));
-
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
-            app.UseCustomMvc();
+            app.UseEndpoints(endpoints => {
+                endpoints.MapHub<ListHub>("/listHub");
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute("API 404", "api/{*anything}", new {
+                    controller = "Error",
+                    action = "NotFound"
+                });
+                endpoints.MapFallbackToController("Index", "Home");
+            });
         }
 
-        private static void SetupStaticFiles(IApplicationBuilder app, IHostingEnvironment env)
+        private static void SetupStaticFiles(IApplicationBuilder app, IHostEnvironment env)
         {
             var cachePeriod = (int)(env.IsDevelopment() ? TimeSpan.FromMinutes(10).TotalSeconds : TimeSpan.FromDays(365).TotalSeconds);
             app.UseStaticFiles(new StaticFileOptions {
@@ -158,7 +165,7 @@ namespace Gaver.Web
 #endif
         }
 
-        private static void SetupForDevelopment(IApplicationBuilder app, IHostingEnvironment env)
+        private static void SetupForDevelopment(IApplicationBuilder app, IHostEnvironment env)
         {
             app.UseDeveloperExceptionPage();
             UseRootNodeModules(env);
@@ -175,23 +182,5 @@ namespace Gaver.Web
 
     public static class StartupExtensions
     {
-        public static void UseCustomMvc(this IApplicationBuilder app)
-        {
-            app.UseMvc(routes => {
-                routes.MapRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute("API 404", "api/{*anything}", new {
-                    controller = "Error",
-                    action = "NotFound"
-                });
-                routes.MapSpaFallbackRoute(
-                    "spa-fallback",
-                    new {
-                        controller = "Home",
-                        action = "Index"
-                    });
-            });
-        }
     }
 }

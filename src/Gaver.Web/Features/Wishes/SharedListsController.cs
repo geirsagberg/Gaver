@@ -16,6 +16,7 @@ namespace Gaver.Web.Features.Wishes
             this.mediator = mediator;
         }
 
+        [HttpGet]
         public Task<SharedListsModel> GetSharedLists()
         {
             return mediator.Send(new GetSharedListsRequest());

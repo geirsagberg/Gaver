@@ -108,11 +108,13 @@ export const cancelSharingList: Action = ({ state: { myList } }) => {
   myList.shareEmails = []
 }
 
-export const emailAdded: Action<string> = ({ state: { myList } }, email) => {
+export const emailAdded: Action<string, boolean> = ({ state: { myList } }, email) => {
   if (isEmailValid(email)) {
     myList.shareEmails.push(email)
+    return true
   } else {
     showError('Ugyldig e-postadresse')
+    return false
   }
 }
 

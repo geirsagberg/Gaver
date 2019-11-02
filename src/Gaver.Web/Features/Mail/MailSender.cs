@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Gaver.Common.Attributes;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Features.Mail
 {
+    [Service]
     public class MailSender : IMailSender
     {
         private readonly ILogger<MailSender> logger;
@@ -29,7 +31,7 @@ namespace Gaver.Web.Features.Mail
             if (options.SendGridApiKey.IsNullOrEmpty()) {
                 throw new FriendlyException("Mangler API-nøkkel for SendGrid");
             }
-            mail.From = mail.From ?? "noreply@sagberg.net";
+            mail.From ??= "noreply@sagberg.net";
             var sendGridMail = mapper.Map<SendGridMail>(mail);
             try {
                 await options.SendGridUrl

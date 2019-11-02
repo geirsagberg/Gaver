@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using Gaver.Common;
+using Gaver.Common.Attributes;
 using Gaver.Data;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Filters;
@@ -18,7 +21,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
+using Scrutor;
 
 namespace Gaver.Web
 {
@@ -45,18 +49,16 @@ namespace Gaver.Web
         private static Task OnMessageReceived(MessageReceivedContext context)
         {
             var accessToken = context.Request.Query["access_token"].FirstOrDefault();
-            if (context.HttpContext.Request.Path.StartsWithSegments("/listHub") && accessToken.IsNotEmpty()) {
+            if (context.HttpContext.Request.Path.StartsWithSegments("/listHub") && accessToken.IsNotEmpty())
                 context.Token = accessToken;
-            }
 
             return Task.CompletedTask;
         }
 
         private static Task OnTokenValidated(TokenValidatedContext context)
         {
-            if (context.SecurityToken is JwtSecurityToken jwtSecurityToken) {
+            if (context.SecurityToken is JwtSecurityToken jwtSecurityToken)
                 context.HttpContext.Items["access_token"] = jwtSecurityToken.RawData;
-            }
 
             return Task.CompletedTask;
         }
@@ -64,46 +66,62 @@ namespace Gaver.Web
         public static void AddCustomMvc(this IServiceCollection services)
         {
             services.AddMvc(o => {
-                var policy = new AuthorizationPolicyBuilder()
-                    .AddRequirements(new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
-                    .Build();
-                o.Filters.Add(new AuthorizeFilter(policy));
-                o.Filters.Add(new CustomExceptionFilterAttribute());
-            }).AddRazorOptions(o => {
-                o.ViewLocationFormats.Clear();
-                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
-            }).AddJsonOptions(o => o.UseCamelCasing(true))
+                    var policy = new AuthorizationPolicyBuilder()
+                        .AddRequirements(
+                            new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
+                        .Build();
+                    o.Filters.Add(new AuthorizeFilter(policy));
+                    o.Filters.Add(new CustomExceptionFilterAttribute());
+                }).AddRazorOptions(o => {
+                    o.ViewLocationFormats.Clear();
+                    o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
+                    o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
+                    o.ViewLocationFormats.Add("/Features/{0}.cshtml");
+                })
+                .AddRazorRuntimeCompilation()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
+                .AddNewtonsoftJson(options => options.UseCamelCasing(true))
                 ;
         }
 
-        public static void AddCustomSwagger(this IServiceCollection services)
+        public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)
         {
+            var authSettings = configuration.GetSection("auth0").Get<Auth0Settings>();
             services.AddSwaggerGen(config => {
-                config.SwaggerDoc("v1", new Info {
+                config.SwaggerDoc("v1", new OpenApiInfo {
                     Title = "My API",
                     Version = "v1"
                 });
-                config.AddSecurityDefinition("Bearer", new ApiKeyScheme {
-                    Description =
-                        "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey"
+                config.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows {
+                        Password = new OpenApiOAuthFlow {
+                            TokenUrl = new Uri($"https://{authSettings.Domain}/token"),
+                            Scopes = new Dictionary<string, string> {
+                                {"openid", "Standard openid scope"},
+                                {"profile", "Standard openid scope"},
+                                {"email", "Standard openid scope"}
+                            }
+                        },
+                        Implicit = new OpenApiOAuthFlow {
+                            AuthorizationUrl = new Uri($"https://{authSettings.Domain}/authorize"),
+                            Scopes = new Dictionary<string, string> {
+                                {"openid", "Standard openid scope"},
+                                {"profile", "Standard openid scope"},
+                                {"email", "Standard openid scope"}
+                            }
+                        }
+                    }
                 });
-                config.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+                config.OperationFilter<SecurityRequirementsOperationFilter>();
             });
         }
 
         public static void AddCustomDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("GaverContext");
-            if (connectionString.IsNullOrEmpty()) {
-                throw new ConfigurationException("ConnectionStrings:GaverContext");
-            }
+            if (connectionString.IsNullOrEmpty()) throw new ConfigurationException("ConnectionStrings:GaverContext");
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<GaverContext>(options => {
@@ -116,13 +134,19 @@ namespace Gaver.Web
         public static void ScanAssemblies(this IServiceCollection services)
         {
             services.Scan(scan => {
-                scan.FromAssemblyOf<ICommonAssembly>().AddClasses().AsImplementedInterfaces().WithTransientLifetime();
+                scan.FromAssemblyOf<ICommonAssembly>()
+                    .AddServices();
                 scan.FromAssemblyOf<Startup>()
-                    .AddClasses().AsImplementedInterfaces().WithTransientLifetime()
-                    .AddClasses().AsSelf().WithTransientLifetime()
+                    .AddServices()
                     .AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
             });
         }
+
+        private static IImplementationTypeSelector AddServices(this IImplementationTypeSelector implementationTypeSelector) => implementationTypeSelector
+            .AddClasses(classes => classes.WithoutAttribute<SingletonServiceAttribute>().Where(c => c.Name.EndsWith("Service"))).AsImplementedInterfaces()
+            .WithScopedLifetime()
+            .AddClasses(classes => classes.WithAttribute<ServiceAttribute>()).AsImplementedInterfaces().WithScopedLifetime()
+            .AddClasses(classes => classes.WithAttribute<SingletonServiceAttribute>()).AsImplementedInterfaces().WithSingletonLifetime();
 
         public static IServiceCollection AddValidationProblemDetails(this IServiceCollection services) =>
             services.Configure<ApiBehaviorOptions>(options => {
@@ -134,7 +158,7 @@ namespace Gaver.Web
                         Detail = "Please refer to the errors property for additional details."
                     };
                     return new BadRequestObjectResult(problemDetails) {
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
+                        ContentTypes = {"application/problem+json", "application/problem+xml"}
                     };
                 };
             });

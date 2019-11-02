@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Gaver.Common.Attributes;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Chat;
 using Gaver.Web.Hubs;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Gaver.Web.Features.LiveUpdates
 {
+    [Service]
     public class ClientNotifier : IClientNotifier
     {
         private readonly IHubContext<ListHub, IListHubClient> hub;

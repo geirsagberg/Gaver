@@ -1,6 +1,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Gaver.Common.Attributes;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Auth
 {
+    [Service]
     public class AccessChecker : IAccessChecker
     {
         private readonly GaverContext context;

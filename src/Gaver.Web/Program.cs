@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Gaver.Web
@@ -22,7 +23,7 @@ namespace Gaver.Web
 
             try {
                 Log.Information("Process {ProcessId} started", Process.GetCurrentProcess().Id);
-                var host = CreateWebHostBuilder(args)
+                var host = CreateHostBuilder(args)
                     .Build();
 
                 host.Services.GetRequiredService<IMapperService>().ValidateMappings();
@@ -42,9 +43,9 @@ namespace Gaver.Web
             }
         }
 
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args) => WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .UseApplicationInsights()
+        private static IHostBuilder CreateHostBuilder(string[] args) => Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
             .ConfigureAppConfiguration(config => config.AddUserSecrets<Startup>())
             .UseSerilog();
     }

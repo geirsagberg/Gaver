@@ -17,9 +17,8 @@ namespace Gaver.Data
             builder.AppendLine("import { Schema, arrayOf } from 'normalizr'");
 
             foreach (var entityType in model.GetEntityTypes().OrderBy(t => t.Name))
-            {
-                builder.AppendLine($"export const {entityType.ClrType.Name} = new Schema('{entityType.Relational().TableName.ToCamelCase()}')");
-            }
+                builder.AppendLine(
+                    $"export const {entityType.ClrType.Name} = new Schema('{entityType.GetTableName().ToCamelCase()}')");
             return builder.ToString();
         }
 

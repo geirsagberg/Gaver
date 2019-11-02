@@ -1,12 +1,14 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Gaver.Common.Attributes;
 using Gaver.Web.Features.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Gaver.Web.MvcUtils
 {
+    [Service]
     public class ClaimsTransformer : IClaimsTransformation
     {
         private readonly IMediator mediator;

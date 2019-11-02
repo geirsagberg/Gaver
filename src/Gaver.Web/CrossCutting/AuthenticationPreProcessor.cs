@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Gaver.Common.Exceptions;
 using Gaver.Web.Contracts;
 using Gaver.Web.Exceptions;
+using Gaver.Web.MvcUtils;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Http;
 
@@ -19,7 +20,7 @@ namespace Gaver.Web.CrossCutting
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public Task Process(TRequest request, CancellationToken cancellationToken)
+        public async Task Process(TRequest request, CancellationToken cancellationToken)
         {
             if (request is IAuthenticatedRequest authenticatedRequest) {
                 var user = httpContextAccessor.HttpContext.User;
@@ -31,8 +32,6 @@ namespace Gaver.Web.CrossCutting
 
                 authenticatedRequest.UserId = int.Parse(userId);
             }
-
-            return Task.CompletedTask;
         }
     }
 }

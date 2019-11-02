@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Gaver.Common.Attributes;
 using Gaver.Common.Contracts;
 
 namespace Gaver.Common.Utils
 {
+    [SingletonService]
     public class MapperService : IMapperService
     {
         private readonly IMapper mapper;
@@ -16,7 +18,6 @@ namespace Gaver.Common.Utils
                 foreach (var profile in Profiles) {
                     config.AddProfile(profile);
                 }
-                config.CreateMissingTypeMaps = false;
             });
             mapper = MapperConfiguration.CreateMapper();
         }
