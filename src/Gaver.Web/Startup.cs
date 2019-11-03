@@ -179,8 +179,4 @@ namespace Gaver.Web
             });
         }
     }
-
-    public static class StartupExtensions
-    {
-    }
 }

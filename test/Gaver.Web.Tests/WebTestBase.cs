@@ -15,7 +15,7 @@ namespace Gaver.Web.Tests
         protected WebTestBase(CustomWebApplicationFactory webAppFactory)
         {
             Client = webAppFactory.CreateClient();
-            serviceScope = webAppFactory.Server.Host.Services.CreateScope();
+            serviceScope = webAppFactory.Services.CreateScope();
             RoleConfig = webAppFactory.RoleConfig;
         }
 

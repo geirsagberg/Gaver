@@ -9,11 +9,11 @@ using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Data.Exceptions;
 using Gaver.Web.Contracts;
+using Gaver.Web.Features.Users;
 using Gaver.Web.Features.Wishes.Requests;
 using Gaver.Web.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Features.Wishes
 {
@@ -53,14 +53,21 @@ namespace Gaver.Web.Features.Wishes
             return ListAccessStatus.NotInvited;
         }
 
-        public Task<SharedListModel> Handle(GetSharedListRequest message, CancellationToken cancellationToken = default)
+        public async Task<SharedListModel> Handle(GetSharedListRequest message, CancellationToken cancellationToken = default)
         {
-            var sharedListModel = context.Set<WishList>()
+            var results = await context.Set<WishList>()
                 .Where(wl => wl.Id == message.WishListId)
                 .ProjectTo<SharedListModel>(mapper.MapperConfiguration)
-                .SingleOrThrow(new FriendlyException("Listen finnes ikke"));
+                .ToListAsync(cancellationToken);
 
-            return Task.FromResult(sharedListModel);
+            var model = results.SingleOrThrow(new FriendlyException("Listen finnes ikke"));
+            var owner = await context.Set<User>()
+                .Where(u => u.WishList.Id == message.WishListId)
+                .ProjectTo<UserModel>(mapper.MapperConfiguration)
+                .SingleAsync(cancellationToken);
+
+            model.Users.Add(owner);
+            return model;
         }
 
         public async Task<SharedListsModel> Handle(GetSharedListsRequest request, CancellationToken cancellationToken)

@@ -3,6 +3,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <UserSecretsId>Gaver-d5fca685-5997-4e8a-9069-0750a83f161e</UserSecretsId>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Gaver.Web\Gaver.Web.csproj" />

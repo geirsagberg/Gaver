@@ -1,4 +1,4 @@
-namespace Gaver.Web.Features.Wishes.Requests
+namespace Gaver.Web.Features.MyList
 {
     public class DeleteWishResponse
     {

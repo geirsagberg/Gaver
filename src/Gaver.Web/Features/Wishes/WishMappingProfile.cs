@@ -13,7 +13,7 @@ namespace Gaver.Web.Features.Wishes
             CreateMap<WishList, SharedListModel>()
                 .MapMember(m => m.OwnerUserId, wl => wl.UserId)
                 .MapMember(m => m.Users,
-                    wl => wl.Wishes.Select(w => w.BoughtByUser).Where(u => u != null).Concat(new[] {wl.User}));
+                    wl => wl.Wishes.Select(w => w.BoughtByUser).Where(u => u != null));
             CreateMap<WishList, MyListModel>();
             CreateMap<Invitation, InvitationModel>();
             CreateMap<Wish, WishModel>();
