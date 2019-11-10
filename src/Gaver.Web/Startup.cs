@@ -129,7 +129,13 @@ namespace Gaver.Web
             app.UseAuthentication();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.OAuthClientId(Configuration["auth0:ClientId"]);
+                c.OAuthAdditionalQueryStringParams(new Dictionary<string, string> {
+                    {"audience", Configuration["auth0:Audience"]}
+                });
+            });
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapHub<ListHub>("/listHub");
@@ -170,7 +176,9 @@ namespace Gaver.Web
             app.UseDeveloperExceptionPage();
             UseRootNodeModules(env);
 
+#pragma warning disable 618
             app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
+#pragma warning restore 618
                 HotModuleReplacement = true,
                 ReactHotModuleReplacement = true,
                 HotModuleReplacementClientOptions = new Dictionary<string, string> {

@@ -7,7 +7,9 @@
       "label": "typescript",
       "type": "shell",
       "command": "node_modules/typescript/bin/tsc --noEmit",
-      "problemMatcher": ["$tsc"],
+      "problemMatcher": [
+        "$tsc"
+      ],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -17,7 +19,9 @@
       "label": "dotnet build",
       "type": "shell",
       "command": "dotnet build",
-      "problemMatcher": ["$msCompile"],
+      "problemMatcher": [
+        "$msCompile"
+      ],
       "group": "build"
     }
   ]

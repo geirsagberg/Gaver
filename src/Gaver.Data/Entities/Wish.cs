@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Gaver.Data.Contracts;
 
@@ -16,10 +17,9 @@ namespace Gaver.Data.Entities
         [MaxLength(255)]
         public string Url { get; set; }
 
-        [MaxLength(4000)]
-        public string Description { get; set; }
-
         public virtual User BoughtByUser { get; set; }
         public virtual WishList WishList { get; set; }
+
+        public ICollection<WishOption> Options { get; set; } = new List<WishOption>();
     }
 }

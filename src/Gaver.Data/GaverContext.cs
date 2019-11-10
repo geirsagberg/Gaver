@@ -16,6 +16,7 @@ namespace Gaver.Data
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
         public DbSet<InvitationToken> InvitationTokens { get; set; }
+        public DbSet<WishOption> WishOptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

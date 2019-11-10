@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.Web.Tests", "test\Gav
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaver.Common", "src\Gaver.Common\Gaver.Common.csproj", "{CB2EC93B-206B-4FA8-8296-B82216B62C83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpTypeGen", "src\SharpTypeGen\SharpTypeGen.csproj", "{678E2A1D-09F8-4166-A7B6-94FC3B6F3362}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{CB2EC93B-206B-4FA8-8296-B82216B62C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB2EC93B-206B-4FA8-8296-B82216B62C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB2EC93B-206B-4FA8-8296-B82216B62C83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{678E2A1D-09F8-4166-A7B6-94FC3B6F3362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{678E2A1D-09F8-4166-A7B6-94FC3B6F3362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{678E2A1D-09F8-4166-A7B6-94FC3B6F3362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{678E2A1D-09F8-4166-A7B6-94FC3B6F3362}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{A18A41AC-8DAD-4DA4-B586-58B1F91B0DDF} = {C5500253-6FAD-42EB-AFDF-BE1859C96417}
 		{FA923F66-653C-40AF-82ED-005B3DEB48E3} = {C5500253-6FAD-42EB-AFDF-BE1859C96417}
 		{CB2EC93B-206B-4FA8-8296-B82216B62C83} = {001F6C8D-7AFE-4668-80BD-48DD18D95220}
+		{678E2A1D-09F8-4166-A7B6-94FC3B6F3362} = {001F6C8D-7AFE-4668-80BD-48DD18D95220}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2171A279-10A6-46F0-A3C9-497E809C2368}

@@ -51,5 +51,8 @@ namespace Gaver.Web.Features.MyList
         {
             return mediator.Send(new DeleteWishRequest {WishId = wishId});
         }
+
+        [HttpPost("{wishId:int}/Option")]
+        public Task<WishOptionModel> AddWishOption([FromHybrid] AddWishOptionRequest request) => mediator.Send(request);
     }
 }

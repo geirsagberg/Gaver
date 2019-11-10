@@ -32,5 +32,33 @@ namespace Gaver.Web.Tests.Features.MyList
 
             result.Title.Should().Be("My list");
         }
+
+        [Fact]
+        public async Task MyList_includes_wishes_and_options()
+        {
+            var user = new User {
+                Name = "Bob",
+                WishList = new WishList {
+                    Wishes = {
+                        new Wish {
+                            Title = "Sjokolade",
+                            Options = {
+                                new WishOption {
+                                    Title = "Lakris"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            Context.Add(user);
+            Context.SaveChanges();
+
+            var result = await TestSubject.Handle(new GetMyListRequest {
+                UserId = user.Id
+            });
+
+            result.Wishes.Should().ContainSingle().Which.Options.Should().ContainSingle().Which.Title.Should().Be("Lakris");
+        }
     }
 }

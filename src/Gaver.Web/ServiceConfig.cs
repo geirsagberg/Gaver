@@ -96,15 +96,16 @@ namespace Gaver.Web
                 config.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows {
-                        Password = new OpenApiOAuthFlow {
-                            TokenUrl = new Uri($"https://{authSettings.Domain}/token"),
-                            Scopes = new Dictionary<string, string> {
-                                {"openid", "Standard openid scope"},
-                                {"profile", "Standard openid scope"},
-                                {"email", "Standard openid scope"}
-                            }
-                        },
+//                        Password = new OpenApiOAuthFlow {
+//                            TokenUrl = new Uri($"https://{authSettings.Domain}/token"),
+//                            Scopes = new Dictionary<string, string> {
+//                                {"openid", "Standard openid scope"},
+//                                {"profile", "Standard openid scope"},
+//                                {"email", "Standard openid scope"}
+//                            }
+//                        },
                         Implicit = new OpenApiOAuthFlow {
+                            TokenUrl = new Uri($"https://{authSettings.Domain}/token"),
                             AuthorizationUrl = new Uri($"https://{authSettings.Domain}/authorize"),
                             Scopes = new Dictionary<string, string> {
                                 {"openid", "Standard openid scope"},

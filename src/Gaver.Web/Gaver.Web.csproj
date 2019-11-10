@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Gaver.Common\Gaver.Common.csproj" />
     <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />
+    <ProjectReference Include="..\SharpTypeTask\SharpTypeTask.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
@@ -44,6 +45,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
     <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.2.0" />
+
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">

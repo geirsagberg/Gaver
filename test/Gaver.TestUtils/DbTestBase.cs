@@ -29,6 +29,6 @@ namespace Gaver.TestUtils
             Container.Register<GaverContext>(new PerContainerLifetime());
         }
 
-        public GaverContext Context => Get<GaverContext>();
+        protected GaverContext Context => Get<GaverContext>();
     }
 }

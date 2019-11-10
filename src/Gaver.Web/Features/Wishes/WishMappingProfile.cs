@@ -18,6 +18,7 @@ namespace Gaver.Web.Features.Wishes
             CreateMap<Invitation, InvitationModel>();
             CreateMap<Wish, WishModel>();
             CreateMap<Wish, SharedWishModel>();
+            CreateMap<WishOption, WishOptionModel>();
         }
     }
 }

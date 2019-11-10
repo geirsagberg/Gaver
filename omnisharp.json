@@ -12,5 +12,9 @@
     "NewLineForElse": false,
     "TabSize": 4,
     "UseTabs": false
+  },
+  "script": {
+    "enableScriptNuGetReferences": true,
+    "defaultTargetFramework": "netcoreapp3.0"
   }
 }
