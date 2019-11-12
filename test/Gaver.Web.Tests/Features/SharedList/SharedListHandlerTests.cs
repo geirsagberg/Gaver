@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
-using Gaver.Web.Features.Wishes;
-using Gaver.Web.Features.Wishes.Requests;
+using Gaver.Web.Features.SharedList;
+using Gaver.Web.Features.SharedList.Requests;
 using Xunit;
 
 namespace Gaver.Web.Tests.Features.SharedList

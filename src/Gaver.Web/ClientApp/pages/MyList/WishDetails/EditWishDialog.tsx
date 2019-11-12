@@ -12,13 +12,7 @@ const AddWishDialog: FC = () => {
     }
   } = useOvermind()
   return (
-    <WishDetailsDialog
-      wish={editingWish}
-      onCancel={cancelEditingWish}
-      onSave={saveEditingWish}
-      updateWish={updateEditingWish}
-      onDelete={deleteEditingWish}
-    />
+    <WishDetailsDialog wish={editingWish} onCancel={cancelEditingWish} onSave={saveEditingWish} updateWish={updateEditingWish} onDelete={deleteEditingWish} />
   )
 }
 

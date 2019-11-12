@@ -9,7 +9,6 @@ using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Mail;
-using Gaver.Web.Features.Wishes.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 

@@ -15,7 +15,7 @@ namespace Gaver.Web.Features.Users
         }
 
         [HttpGet]
-        public Task<CurrentUserModel> GetUserInfo()
+        public Task<CurrentUserDto> GetUserInfo()
         {
             return mediator.Send(new GetUserInfoRequest());
         }

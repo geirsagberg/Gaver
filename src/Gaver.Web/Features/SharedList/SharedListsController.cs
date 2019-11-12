@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
-using Gaver.Web.Features.Wishes.Requests;
-using Gaver.Web.Models;
+using Gaver.Web.Features.SharedList.Requests;
 using HybridModelBinding;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Gaver.Web.Features.Wishes
+namespace Gaver.Web.Features.SharedList
 {
     public class SharedListsController : GaverControllerBase
     {
@@ -17,13 +16,13 @@ namespace Gaver.Web.Features.Wishes
         }
 
         [HttpGet]
-        public Task<SharedListsModel> GetSharedLists()
+        public Task<SharedListsDto> GetSharedLists()
         {
             return mediator.Send(new GetSharedListsRequest());
         }
 
         [HttpGet("{wishListId:int}")]
-        public Task<SharedListModel> Get(int wishListId)
+        public Task<SharedListDto> Get(int wishListId)
         {
             return mediator.Send(new GetSharedListRequest {
                 WishListId = wishListId
@@ -31,7 +30,7 @@ namespace Gaver.Web.Features.Wishes
         }
 
         [HttpPut("{wishListId:int}/{wishId:int}/Bought")]
-        public Task<SharedWishModel> SetBought([FromHybrid] SetBoughtRequest request)
+        public Task<SharedWishDto> SetBought([FromHybrid] SetBoughtRequest request)
         {
             return mediator.Send(request);
         }

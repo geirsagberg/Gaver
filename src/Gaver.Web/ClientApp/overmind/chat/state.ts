@@ -1,7 +1,7 @@
-import { ChatMessageModel } from '~/types/data'
+import { ChatMessageDto } from '~/types/data'
 
 export interface ChatState {
-  messages: ChatMessageModel[]
+  messages: ChatMessageDto[]
   visible: boolean
 }
 

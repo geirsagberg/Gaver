@@ -2,7 +2,7 @@ import { Paper, Typography, makeStyles } from '@material-ui/core'
 import React from 'react'
 import PictureAvatar from './PictureAvatar'
 import { DateTime } from 'luxon'
-import { ChatMessageModel } from '~/types/data'
+import { ChatMessageDto } from '~/types/data'
 import { useOvermind } from '~/overmind'
 import classNames from 'classnames'
 import Color from 'color'
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   avatar: {}
 }))
 
-const ChatMessage = ({ message }: { message: ChatMessageModel }) => {
+const ChatMessage = ({ message }: { message: ChatMessageDto }) => {
   const {
     state: {
       auth: { user }

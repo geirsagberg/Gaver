@@ -10,10 +10,10 @@ namespace Gaver.Web.Features.Users
     {
         public UserMappingProfile()
         {
-            CreateMap<User, CurrentUserModel>()
+            CreateMap<User, CurrentUserDto>()
                 .MapMember(m => m.WishListId, u => u.WishList.Id);
 
-            CreateMap<User, UserModel>();
+            CreateMap<User, UserDto>();
         }
     }
 }

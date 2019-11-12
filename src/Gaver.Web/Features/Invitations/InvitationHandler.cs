@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Invitations
 {
-    public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, InvitationStatusModel>,
-        IRequestHandler<AcceptInvitationRequest, InvitationModel>
+    public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, InvitationStatusDto>,
+        IRequestHandler<AcceptInvitationRequest, InvitationDto>
     {
         private readonly GaverContext context;
 
@@ -21,7 +20,7 @@ namespace Gaver.Web.Features.Invitations
             this.context = context;
         }
 
-        public async Task<InvitationModel> Handle(AcceptInvitationRequest request,
+        public async Task<InvitationDto> Handle(AcceptInvitationRequest request,
             CancellationToken cancellationToken = default)
         {
             var invitationToken = await CheckInvitationStatus(request.Token, request.UserId);
@@ -33,13 +32,13 @@ namespace Gaver.Web.Features.Invitations
             invitationToken.Accepted = DateTimeOffset.Now;
             await context.SaveChangesAsync(cancellationToken);
             var userName = await context.Set<User>().Where(u => u.WishList.Id == invitationToken.WishListId).Select(u => u.Name).SingleAsync();
-            return new InvitationModel {
+            return new InvitationDto {
                 WishListId = invitationToken.WishListId,
                 WishListUserName = userName
             };
         }
 
-        public async Task<InvitationStatusModel> Handle(GetInvitationStatusRequest request,
+        public async Task<InvitationStatusDto> Handle(GetInvitationStatusRequest request,
             CancellationToken cancellationToken = default)
         {
             try {
@@ -52,7 +51,7 @@ namespace Gaver.Web.Features.Invitations
             var owner = await context.Users.FirstAsync(
                 u => u.WishList.InvitationTokens.Any(t => t.Token == request.Token), cancellationToken);
 
-            return new InvitationStatusModel {
+            return new InvitationStatusDto {
                 Ok = true,
                 Owner = owner.Name,
                 PictureUrl = owner.PictureUrl

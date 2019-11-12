@@ -1,13 +1,10 @@
-using System.Security.Claims;
 using Gaver.Web.Contracts;
-using Gaver.Web.CrossCutting;
-using Gaver.Web.Models;
 using MediatR;
 using Newtonsoft.Json;
 
-namespace Gaver.Web.Features.Wishes.Requests
+namespace Gaver.Web.Features.SharedList.Requests
 {
-    public class SetBoughtRequest : IRequest<SharedWishModel>, ISharedListRequest
+    public class SetBoughtRequest : IRequest<SharedWishDto>, ISharedListRequest
     {
         public bool IsBought { get; set; }
 

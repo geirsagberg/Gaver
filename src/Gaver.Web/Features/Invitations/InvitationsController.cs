@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Gaver.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +15,13 @@ namespace Gaver.Web.Features.Invitations
         }
 
         [HttpGet("{token:guid}/Status")]
-        public Task<InvitationStatusModel> GetInvitationStatus(Guid token)
+        public Task<InvitationStatusDto> GetInvitationStatus(Guid token)
         {
             return mediator.Send(new GetInvitationStatusRequest(token));
         }
 
         [HttpPost("{token:guid}/Accept")]
-        public Task<InvitationModel> AcceptInvitation(Guid token)
+        public Task<InvitationDto> AcceptInvitation(Guid token)
         {
             return mediator.Send(new AcceptInvitationRequest(token));
         }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Gaver.Web.Features.Users
 {
-    public class GetUserInfoRequest : IRequest<CurrentUserModel>, IAuthenticatedRequest
+    public class GetUserInfoRequest : IRequest<CurrentUserDto>, IAuthenticatedRequest
     {
         public int UserId { get; set; }
     }

@@ -15,13 +15,13 @@ namespace Gaver.Web.Features.Chat
         }
 
         [HttpPost("{wishListId:int}")]
-        public Task<ChatMessageModel> AddMessage([FromHybrid] AddMessageRequest request)
+        public Task<ChatMessageDto> AddMessage([FromHybrid] AddMessageRequest request)
         {
             return mediator.Send(request);
         }
 
         [HttpGet("{wishListId:int}")]
-        public Task<ChatModel> GetMessages(int wishListId)
+        public Task<ChatDto> GetMessages(int wishListId)
         {
             return mediator.Send(new GetMessagesRequest {
                 WishListId = wishListId

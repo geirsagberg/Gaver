@@ -26,9 +26,9 @@ namespace Gaver.Web.Tests
                 UserId = user.Id
             });
 
-            result.Should().BeEquivalentTo(new ChatMessageModel {
+            result.Should().BeEquivalentTo(new ChatMessageDto {
                 Text = "Hello",
-                User = new UserModel {
+                User = new UserDto {
                     Id = user.Id,
                     Name = user.Name
                 }

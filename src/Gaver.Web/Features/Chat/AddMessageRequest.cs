@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class AddMessageRequest : IRequest<ChatMessageModel>, ISharedListRequest
+    public class AddMessageRequest : IRequest<ChatMessageDto>, ISharedListRequest
     {
         [Required]
         [MinLength(1)]

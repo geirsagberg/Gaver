@@ -4,8 +4,8 @@ using FluentAssertions;
 using Gaver.Common.Utils;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
-using Gaver.Web.Features.Wishes;
-using Gaver.Web.Models;
+using Gaver.Web.Features.Invitations;
+using Gaver.Web.Features.SharedList;
 using LightInject;
 using Xunit;
 
@@ -33,9 +33,9 @@ namespace Gaver.Web.Tests
                 }
             };
 
-            var model = mapperService.Map<InvitationModel>(invitation);
+            var model = mapperService.Map<InvitationDto>(invitation);
 
-            model.Should().BeEquivalentTo(new InvitationModel {
+            model.Should().BeEquivalentTo(new InvitationDto {
                 WishListUserName = "OwnerMan",
                 WishListId = 3
             });

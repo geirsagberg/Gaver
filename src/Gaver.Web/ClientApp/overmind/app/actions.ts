@@ -1,5 +1,5 @@
 import { orderBy } from 'lodash-es'
-import { SharedListsModel } from '~/types/data'
+import { SharedListsDto } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { getJson } from '~/utils/ajax'
 import { Action } from '../'
@@ -34,12 +34,12 @@ export const setNavContext: Action<NavContext> = ({ state: { app } }, navContext
   app.title = navContext.title
 }
 
-export interface FeedbackModel {
+export interface FeedbackDto {
   message: string
   anonymous: boolean
 }
 
-export const sendFeedback: Action<FeedbackModel> = async (
+export const sendFeedback: Action<FeedbackDto> = async (
   {
     state: { app },
     effects: {
@@ -56,6 +56,6 @@ export const sendFeedback: Action<FeedbackModel> = async (
 
 export const loadSharedLists: Action = ({ state }) =>
   tryOrNotify(async () => {
-    const model = await getJson<SharedListsModel>('/api/SharedLists')
+    const model = await getJson<SharedListsDto>('/api/SharedLists')
     state.invitations.sharedLists = orderBy(model.invitations, i => i.wishListUserName)
   })

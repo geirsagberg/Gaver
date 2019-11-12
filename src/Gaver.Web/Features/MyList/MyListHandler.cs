@@ -8,17 +8,15 @@ using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
 using Gaver.Web.Extensions;
-using Gaver.Web.Features.Wishes.Requests;
-using Gaver.Web.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.MyList
 {
     public class MyListHandler : IRequestHandler<UpdateWishRequest>,
-        IRequestHandler<GetMyListRequest, MyListModel>,
+        IRequestHandler<GetMyListRequest, MyListDto>,
         IRequestHandler<SetWishesOrderRequest>,
-        IRequestHandler<AddWishRequest, WishModel>,
+        IRequestHandler<AddWishRequest, WishDto>,
         IRequestHandler<DeleteWishRequest, DeleteWishResponse>
     {
         private readonly IClientNotifier clientNotifier;
@@ -32,7 +30,7 @@ namespace Gaver.Web.Features.MyList
             this.mapper = mapper;
         }
 
-        public async Task<WishModel> Handle(AddWishRequest message, CancellationToken cancellationToken)
+        public async Task<WishDto> Handle(AddWishRequest message, CancellationToken cancellationToken)
         {
             var wishList = context.WishLists.Single(wl => wl.UserId == message.UserId);
             var wish = new Wish {
@@ -52,7 +50,7 @@ namespace Gaver.Web.Features.MyList
 
             await context.SaveChangesAsync(cancellationToken);
             await clientNotifier.RefreshListAsync(wishList.Id);
-            return mapper.Map<WishModel>(wish);
+            return mapper.Map<WishDto>(wish);
         }
 
         public async Task<DeleteWishResponse> Handle(DeleteWishRequest message, CancellationToken cancellationToken)
@@ -74,11 +72,11 @@ namespace Gaver.Web.Features.MyList
             };
         }
 
-        public async Task<MyListModel> Handle(GetMyListRequest message, CancellationToken cancellationToken = default)
+        public async Task<MyListDto> Handle(GetMyListRequest message, CancellationToken cancellationToken = default)
         {
             var model = await context.Set<WishList>()
                 .Where(wl => wl.UserId == message.UserId)
-                .ProjectTo<MyListModel>(mapper.MapperConfiguration)
+                .ProjectTo<MyListDto>(mapper.MapperConfiguration)
                 .SingleAsync(cancellationToken);
 
             if (model.WishesOrder?.Length != model.Wishes.Count) {

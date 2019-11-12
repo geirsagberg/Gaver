@@ -9,18 +9,18 @@ using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Data.Exceptions;
 using Gaver.Web.Contracts;
+using Gaver.Web.Features.Invitations;
+using Gaver.Web.Features.SharedList.Requests;
 using Gaver.Web.Features.Users;
-using Gaver.Web.Features.Wishes.Requests;
-using Gaver.Web.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gaver.Web.Features.Wishes
+namespace Gaver.Web.Features.SharedList
 {
     public class SharedListHandler :
-        IRequestHandler<SetBoughtRequest, SharedWishModel>,
-        IRequestHandler<GetSharedListRequest, SharedListModel>,
-        IRequestHandler<GetSharedListsRequest, SharedListsModel>,
+        IRequestHandler<SetBoughtRequest, SharedWishDto>,
+        IRequestHandler<GetSharedListRequest, SharedListDto>,
+        IRequestHandler<GetSharedListsRequest, SharedListsDto>,
         IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
     {
         private readonly IClientNotifier clientNotifier;
@@ -53,36 +53,36 @@ namespace Gaver.Web.Features.Wishes
             return ListAccessStatus.NotInvited;
         }
 
-        public async Task<SharedListModel> Handle(GetSharedListRequest message, CancellationToken cancellationToken = default)
+        public async Task<SharedListDto> Handle(GetSharedListRequest message, CancellationToken cancellationToken = default)
         {
             var results = await context.Set<WishList>()
                 .Where(wl => wl.Id == message.WishListId)
-                .ProjectTo<SharedListModel>(mapper.MapperConfiguration)
+                .ProjectTo<SharedListDto>(mapper.MapperConfiguration)
                 .ToListAsync(cancellationToken);
 
             var model = results.SingleOrThrow(new FriendlyException("Listen finnes ikke"));
             var owner = await context.Set<User>()
                 .Where(u => u.WishList.Id == message.WishListId)
-                .ProjectTo<UserModel>(mapper.MapperConfiguration)
+                .ProjectTo<UserDto>(mapper.MapperConfiguration)
                 .SingleAsync(cancellationToken);
 
             model.Users.Add(owner);
             return model;
         }
 
-        public async Task<SharedListsModel> Handle(GetSharedListsRequest request, CancellationToken cancellationToken)
+        public async Task<SharedListsDto> Handle(GetSharedListsRequest request, CancellationToken cancellationToken)
         {
             var invitations = await context.Set<Invitation>()
                 .Where(i => i.UserId == request.UserId)
-                .ProjectTo<InvitationModel>(mapper.MapperConfiguration)
+                .ProjectTo<InvitationDto>(mapper.MapperConfiguration)
                 .ToListAsync(cancellationToken);
 
-            return new SharedListsModel {
+            return new SharedListsDto {
                 Invitations = invitations
             };
         }
 
-        public async Task<SharedWishModel> Handle(SetBoughtRequest message, CancellationToken cancellationToken)
+        public async Task<SharedWishDto> Handle(SetBoughtRequest message, CancellationToken cancellationToken)
         {
             var wish = GetWish(message.WishId, message.WishListId);
             var userId = message.UserId;
@@ -94,7 +94,7 @@ namespace Gaver.Web.Features.Wishes
             await context.SaveChangesAsync(cancellationToken);
 
             await clientNotifier.RefreshListAsync(message.WishListId, userId);
-            return mapper.Map<SharedWishModel>(wish);
+            return mapper.Map<SharedWishDto>(wish);
         }
 
         private Wish GetWish(int wishId, int wishListId)

@@ -1,11 +1,12 @@
-import { keyBy, without, clone } from 'lodash-es'
-import { DeleteWishResponse, MyListModel, WishModel } from '~/types/data'
+import { clone, keyBy, without } from 'lodash-es'
+import { AddWishRequest, DeleteWishResponse, MyListDto, UpdateWishRequest } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
+import { normalizeArrays } from '~/utils/normalize'
 import { showError, showSuccess } from '~/utils/notifications'
-import { Action } from '..'
-import { getEmptyWish } from './state'
 import { isEmailValid } from '~/utils/validation'
+import { Action } from '..'
+import { getEmptyWish, Wish } from './state'
 
 export const handleMyList: Action = async ({
   actions: {
@@ -19,7 +20,12 @@ export const handleMyList: Action = async ({
 
 export const addWish: Action = ({ state: { myList } }) =>
   tryOrNotify(async () => {
-    const wish = await postJson<WishModel>('/api/MyList', myList.newWish)
+    const { title, url } = myList.newWish
+    const addWishRequest: AddWishRequest = {
+      title,
+      url
+    }
+    const wish = await postJson('/api/MyList', addWishRequest)
     myList.wishes[wish.id] = wish
     myList.newWish = null
     myList.wishesOrder.push(wish.id)
@@ -62,7 +68,7 @@ export const cancelEditingWish: Action = ({ state: { myList } }) => {
   myList.editingWish = null
 }
 
-export const updateEditingWish: Action<Partial<WishModel>> = ({ state: { myList } }, update) => {
+export const updateEditingWish: Action<Partial<Wish>> = ({ state: { myList } }, update) => {
   myList.editingWish = {
     ...myList.editingWish,
     ...update
@@ -72,12 +78,12 @@ export const updateEditingWish: Action<Partial<WishModel>> = ({ state: { myList 
 export const saveEditingWish: Action = ({ state: { myList } }) =>
   tryOrNotify(async () => {
     const wish = myList.editingWish
-    await patchJson<WishModel>(`/api/MyList/${wish.id}`, wish)
+    await patchJson<UpdateWishRequest>(`/api/MyList/${wish.id}`, wish)
     myList.wishes[wish.id] = clone(wish)
     myList.editingWish = null
   })
 
-export const updateNewWish: Action<Partial<WishModel>> = ({ state }, update) => {
+export const updateNewWish: Action<Partial<Wish>> = ({ state }, update) => {
   state.myList.newWish = {
     ...state.myList.newWish,
     ...update
@@ -86,9 +92,9 @@ export const updateNewWish: Action<Partial<WishModel>> = ({ state }, update) => 
 
 export const loadWishes: Action = ({ state }) =>
   tryOrNotify(async () => {
-    const model = await getJson<MyListModel>('/api/MyList')
+    const model = await getJson<MyListDto>('/api/MyList')
     const { myList } = state
-    myList.wishes = keyBy(model.wishes, w => w.id)
+    myList.wishes = keyBy(normalizeArrays(model.wishes), w => w.id)
     myList.id = model.id
     myList.wishesOrder = model.wishesOrder
     myList.wishesLoaded = true

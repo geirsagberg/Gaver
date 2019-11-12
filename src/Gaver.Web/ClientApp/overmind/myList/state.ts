@@ -1,20 +1,23 @@
-import { WishModel } from '~/types/data'
+import { WishDto } from '~/types/data'
 import { Derive } from '..'
+import { Normalized } from '~/utils/normalize'
+
+export type Wish = Partial<Normalized<WishDto>>
 
 export type MyListState = {
   id?: number
-  editingWish?: WishModel
+  editingWish?: Wish
   shareEmails: string[]
   isSharingList: boolean
-  wishes: Dictionary<WishModel>
-  newWish?: WishModel
+  wishes: Dictionary<Wish>
+  newWish?: Wish
   wishesLoaded?: boolean
   wishesOrder: number[]
-  orderedWishes: Derive<MyListState, WishModel[]>
+  orderedWishes: Derive<MyListState, Wish[]>
   isDeleting?: boolean
 }
 
-export const getEmptyWish = (): WishModel => ({
+export const getEmptyWish = (): Wish => ({
   title: ''
 })
 

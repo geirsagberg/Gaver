@@ -1,11 +1,11 @@
-import { UserModel } from '~/types/data'
+import { CurrentUserDto } from '~/types/data'
 import { getJson, postJson } from '~/utils/ajax'
-import { FeedbackModel } from '../app/actions'
+import { FeedbackDto } from '../app/actions'
 
 export const getUserInfo = () => {
-  return getJson<UserModel>('/api/user')
+  return getJson<CurrentUserDto>('/api/user')
 }
 
-export const sendFeedback = (feedback: FeedbackModel) => {
+export const sendFeedback = (feedback: FeedbackDto) => {
   return postJson('/api/feedback', feedback)
 }

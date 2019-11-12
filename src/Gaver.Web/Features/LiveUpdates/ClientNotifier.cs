@@ -22,7 +22,7 @@ namespace Gaver.Web.Features.LiveUpdates
             return hub.RefreshDataAsync(wishListId, excludeUserId);
         }
 
-        public Task MessageAdded(int wishListId, ChatMessageModel chatMessage)
+        public Task MessageAdded(int wishListId, ChatMessageDto chatMessage)
         {
             return hub.Clients.GroupExcept(ListHub.GetGroup(wishListId),
                     ListHub.GetConnectionIdsForUser(chatMessage.User.Id))

@@ -1,7 +1,7 @@
-import { UserModel } from '~/types/data'
+import { CurrentUserDto } from '~/types/data'
 
 export interface AuthState {
-  user?: UserModel
+  user?: CurrentUserDto
   isLoggedIn?: boolean
   isLoggingIn?: boolean
 }

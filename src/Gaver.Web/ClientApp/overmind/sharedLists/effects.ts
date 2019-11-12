@@ -1,6 +1,6 @@
 import { HubConnectionBuilder, LogLevel } from '@aspnet/signalr'
 import { keyBy } from 'lodash-es'
-import { UserModel, ChatMessageModel } from '~/types/data'
+import { UserDto, ChatMessageDto } from '~/types/data'
 import { isDevelopment } from '~/utils'
 import AuthService from '~/utils/AuthService'
 
@@ -12,8 +12,8 @@ export const subscribeList = async (
     onMessageAdded
   }: {
     onRefresh: () => any
-    onUpdateUsers: (users: Dictionary<UserModel>) => any
-    onMessageAdded: (message: ChatMessageModel) => any
+    onUpdateUsers: (users: Dictionary<UserDto>) => any
+    onMessageAdded: (message: ChatMessageDto) => any
   }
 ) => {
   const hubConnection = new HubConnectionBuilder()
@@ -23,7 +23,7 @@ export const subscribeList = async (
     .configureLogging(isDevelopment ? LogLevel.Debug : LogLevel.Warning)
     .build()
   hubConnection.on('refresh', onRefresh)
-  hubConnection.on('updateUsers', (users: UserModel[]) => {
+  hubConnection.on('updateUsers', (users: UserDto[]) => {
     onUpdateUsers(keyBy(users, u => u.id))
   })
   hubConnection.on('messageAdded', onMessageAdded)

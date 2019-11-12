@@ -1,6 +1,6 @@
 namespace Gaver.Web.Features.Users
 {
-    public class UserModel
+    public class UserDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -17,7 +17,7 @@ using EntityFrameworkQueryableExtensions = Microsoft.EntityFrameworkCore.EntityF
 
 namespace Gaver.Web.Features.Users
 {
-    public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserModel>,
+    public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
         IRequestHandler<UpdateUserInfoRequest>,
         IRequestHandler<GetOrCreateUserRequest, User>
     {
@@ -56,10 +56,10 @@ namespace Gaver.Web.Features.Users
             return user;
         }
 
-        public async Task<CurrentUserModel> Handle(GetUserInfoRequest request, CancellationToken token)
+        public async Task<CurrentUserDto> Handle(GetUserInfoRequest request, CancellationToken token)
         {
             var userModel = await context.Users.Where(u => u.Id == request.UserId)
-                .ProjectTo<CurrentUserModel>(mapper.MapperConfiguration).SingleOrDefaultAsync(token);
+                .ProjectTo<CurrentUserDto>(mapper.MapperConfiguration).SingleOrDefaultAsync(token);
 
             if (userModel == null) {
                 throw new FriendlyException("Bruker finnes ikke");

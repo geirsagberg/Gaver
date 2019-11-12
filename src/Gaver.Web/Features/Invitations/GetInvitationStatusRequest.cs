@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Gaver.Web.Features.Invitations
 {
-    public class GetInvitationStatusRequest : IRequest<InvitationStatusModel>, IAuthenticatedRequest
+    public class GetInvitationStatusRequest : IRequest<InvitationStatusDto>, IAuthenticatedRequest
     {
         public GetInvitationStatusRequest(Guid token)
         {

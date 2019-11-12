@@ -1,6 +1,6 @@
 import { getJson, postJson } from '~/utils/ajax'
 import { Action } from '..'
-import { ChatMessageModel } from '~/types/data'
+import { ChatMessageDto } from '~/types/data'
 
 export const toggleChat: Action = async ({
   state: { chat },
@@ -30,8 +30,8 @@ export const hideChat: Action = async ({ state: { chat } }) => {
 
 export const addMessage: Action<string> = async ({ state }, text) => {
   const wishListId = state.routing.currentSharedListId
-  const messageModel = await postJson(`/api/chat/${wishListId}`, { text })
-  state.chat.messages.push(messageModel)
+  const messageDto = await postJson(`/api/chat/${wishListId}`, { text })
+  state.chat.messages.push(messageDto)
 }
 
 export const clearMessages: Action = async ({ state }) => {
@@ -43,7 +43,7 @@ export const loadMessages: Action<number> = async ({ state }, listId) => {
   state.chat.messages = messages
 }
 
-export const onMessageAdded: Action<ChatMessageModel> = (
+export const onMessageAdded: Action<ChatMessageDto> = (
   {
     state,
     effects: {

@@ -7,6 +7,6 @@ namespace Gaver.Web.Hubs
     {
         Task UpdateUsers(SubscriptionStatus status);
         Task Refresh();
-        Task MessageAdded(ChatMessageModel message);
+        Task MessageAdded(ChatMessageDto message);
     }
 }

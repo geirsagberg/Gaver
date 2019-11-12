@@ -3,15 +3,15 @@ import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
 import { selectIsSavingOrLoading } from '~/overmind/app/selectors'
-import { WishModel } from '~/types/data'
+import { Wish } from '~/overmind/myList/state'
 import { createStylesHook } from '~/utils/materialUtils'
 
 type Props = {
-  wish: WishModel
+  wish: Wish
   onSave: () => void
   onCancel: () => void
   onDelete?: (wishId: number) => void
-  updateWish: (update: Partial<WishModel>) => void
+  updateWish: (update: Partial<Wish>) => void
 }
 
 const useStyles = createStylesHook({

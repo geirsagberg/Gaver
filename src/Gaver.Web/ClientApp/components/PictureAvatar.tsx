@@ -1,9 +1,9 @@
 import React from 'react'
 import { Avatar } from '@material-ui/core'
-import { UserModel } from '~/types/data'
+import { UserDto } from '~/types/data'
 import { AvatarProps } from '@material-ui/core/Avatar'
 
-const PictureAvatar = ({ user, ...rest }: { user: UserModel } & AvatarProps) => {
+const PictureAvatar = ({ user, ...rest }: { user: UserDto } & AvatarProps) => {
   return user.pictureUrl ? (
     <Avatar src={user.pictureUrl} {...rest} />
   ) : (

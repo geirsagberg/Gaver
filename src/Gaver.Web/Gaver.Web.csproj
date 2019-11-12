@@ -14,6 +14,7 @@
     <TieredCompilation>true</TieredCompilation>
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
     <NoWarn>CS1998</NoWarn>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
@@ -23,7 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Gaver.Common\Gaver.Common.csproj" />
     <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />
-    <ProjectReference Include="..\SharpTypeTask\SharpTypeTask.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="2.4.2" />

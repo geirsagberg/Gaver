@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class GetMessagesRequest : IRequest<ChatModel>, ISharedListRequest
+    public class GetMessagesRequest : IRequest<ChatDto>, ISharedListRequest
     {
         [JsonIgnore]
         public int WishListId { get; set; }

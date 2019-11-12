@@ -1,6 +1,6 @@
 namespace Gaver.Web.Features.Users
 {
-    public class CurrentUserModel : UserModel
+    public class CurrentUserDto : UserDto
     {
         public int WishListId { get; set; }
     }

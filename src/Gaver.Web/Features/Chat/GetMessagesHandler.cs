@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class GetMessagesHandler : IRequestHandler<GetMessagesRequest, ChatModel>
+    public class GetMessagesHandler : IRequestHandler<GetMessagesRequest, ChatDto>
     {
         private readonly GaverContext context;
         private readonly IMapperService mapper;
@@ -21,14 +21,14 @@ namespace Gaver.Web.Features.Chat
             this.context = context;
         }
 
-        public async Task<ChatModel> Handle(GetMessagesRequest message, CancellationToken token = default)
+        public async Task<ChatDto> Handle(GetMessagesRequest message, CancellationToken token = default)
         {
             var messages = await context.Set<ChatMessage>()
                 .Where(cm => cm.WishListId == message.WishListId)
                 .OrderBy(cm => cm.Id)
-                .ProjectTo<ChatMessageModel>(mapper.MapperConfiguration).ToListAsync();
+                .ProjectTo<ChatMessageDto>(mapper.MapperConfiguration).ToListAsync();
 
-            return new ChatModel {
+            return new ChatDto {
                 Messages = messages
             };
         }

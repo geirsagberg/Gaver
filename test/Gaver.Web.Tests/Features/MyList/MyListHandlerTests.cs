@@ -4,7 +4,6 @@ using Gaver.Common.Contracts;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
 using Gaver.Web.Features.MyList;
-using Gaver.Web.Features.Wishes.Requests;
 using Xunit;
 
 namespace Gaver.Web.Tests.Features.MyList

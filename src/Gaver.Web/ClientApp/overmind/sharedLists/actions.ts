@@ -1,12 +1,13 @@
 import { some } from 'lodash-es'
-import { SharedListModel, UserModel } from '~/types/data'
+import { SharedListDto } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { getJson, putJson } from '~/utils/ajax'
 import { normalizeArrays } from '~/utils/normalize'
 import { Action } from '..'
 import { RouteCallbackArgs } from '../routing/effects'
+import { User } from './state'
 
-export const onUpdateUsers: Action<Dictionary<UserModel>> = ({ state }, users) => {
+export const onUpdateUsers: Action<Dictionary<User>> = ({ state }, users) => {
   state.sharedLists.users = {
     ...state.sharedLists.users,
     ...users
@@ -57,7 +58,7 @@ export const loadSharedList: Action<number> = (
   listId
 ) =>
   tryOrNotify(async () => {
-    const result = await getJson<SharedListModel>('/api/SharedLists/' + listId)
+    const result = await getJson<SharedListDto>('/api/SharedLists/' + listId)
     const normalized = normalizeArrays(result, ['wishesOrder'])
     const { users, ...sharedList } = normalized
     sharedLists.wishLists[sharedList.id] = sharedList

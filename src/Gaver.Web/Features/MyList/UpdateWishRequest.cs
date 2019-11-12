@@ -8,9 +8,9 @@ namespace Gaver.Web.Features.MyList
     public class UpdateWishRequest : IRequest, IMyWishRequest
     {
         [MinLength(1)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         [JsonIgnore]
         public int UserId { get; set; }

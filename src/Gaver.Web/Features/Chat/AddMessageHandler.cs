@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Gaver.Web.Features.Chat
 {
-    public class AddMessageHandler : IRequestHandler<AddMessageRequest, ChatMessageModel>
+    public class AddMessageHandler : IRequestHandler<AddMessageRequest, ChatMessageDto>
     {
         private readonly IClientNotifier clientNotifier;
         private readonly GaverContext context;
@@ -21,7 +21,7 @@ namespace Gaver.Web.Features.Chat
             this.clientNotifier = clientNotifier;
         }
 
-        public async Task<ChatMessageModel> Handle(AddMessageRequest request, CancellationToken token = default)
+        public async Task<ChatMessageDto> Handle(AddMessageRequest request, CancellationToken token = default)
         {
             var userId = request.UserId;
             var chatMessage = new ChatMessage {
@@ -32,7 +32,7 @@ namespace Gaver.Web.Features.Chat
             context.Add(chatMessage);
             await context.SaveChangesAsync(token);
 
-            var chatMessageModel = mapper.Map<ChatMessageModel>(chatMessage);
+            var chatMessageModel = mapper.Map<ChatMessageDto>(chatMessage);
             await clientNotifier.MessageAdded(request.WishListId, chatMessageModel);
             return chatMessageModel;
         }

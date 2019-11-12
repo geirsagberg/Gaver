@@ -7,7 +7,7 @@ namespace Gaver.Web.Features.Chat
     {
         public ChatMappingProfile()
         {
-            CreateMap<ChatMessage, ChatMessageModel>();
+            CreateMap<ChatMessage, ChatMessageDto>();
         }
     }
 }

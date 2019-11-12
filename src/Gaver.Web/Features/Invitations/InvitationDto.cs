@@ -1,6 +1,6 @@
-namespace Gaver.Web.Models
+﻿namespace Gaver.Web.Features.Invitations
 {
-    public class InvitationModel
+    public class InvitationDto
     {
         public int WishListId { get; set; }
         public string WishListUserName { get; set; }

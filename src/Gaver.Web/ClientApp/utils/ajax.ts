@@ -1,7 +1,8 @@
 import 'isomorphic-fetch'
+import { first, values } from 'lodash-es'
 import { normalize } from 'normalizr'
-import { publish, Topic } from './pubSub'
 import AuthService from './AuthService'
+import { publish, Topic } from './pubSub'
 
 const acceptJsonHeader = {
   Accept: 'application/json',
@@ -24,7 +25,7 @@ const handleResponse = schema => async response => {
     if (!response.ok) {
       const message = Array.isArray(data)
         ? data.map(d => d.message).join()
-        : data.message || (data.error ? data.error.message : undefined)
+        : data.message || (data.error ? data.error.message : undefined) || (typeof data.errors === 'object' ? first(values(data.errors)) : '')
       throw new Error(message)
     }
     return schema ? normalize(data, schema) : data

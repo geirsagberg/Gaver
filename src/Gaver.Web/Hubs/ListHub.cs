@@ -86,7 +86,7 @@ namespace Gaver.Web.Hubs
             var connections = UserListConnections.Where(c => c.ListId == listId).ToList();
             var userIds = connections.Select(c => c.UserId).ToList();
             var users = gaverContext.Users.Where(u => userIds.Contains(u.Id));
-            var userModels = mapper.Map<UserModel[]>(users);
+            var userModels = mapper.Map<UserDto[]>(users);
             return new SubscriptionStatus {
                 CurrentUsers = userModels
             };

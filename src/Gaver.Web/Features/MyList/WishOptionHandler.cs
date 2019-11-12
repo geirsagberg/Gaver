@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.Models;
+using Gaver.Web.Features.Shared.Models;
 using MediatR;
 
 namespace Gaver.Web.Features.MyList
 {
-    public class WishOptionHandler : IRequestHandler<AddWishOptionRequest, WishOptionModel>
+    public class WishOptionHandler : IRequestHandler<AddWishOptionRequest, WishOptionDto>
     {
         private readonly GaverContext context;
         private readonly IMapperService mapperService;
@@ -19,7 +19,7 @@ namespace Gaver.Web.Features.MyList
             this.mapperService = mapperService;
         }
 
-        public async Task<WishOptionModel> Handle(AddWishOptionRequest request, CancellationToken cancellationToken)
+        public async Task<WishOptionDto> Handle(AddWishOptionRequest request, CancellationToken cancellationToken)
         {
             var wishOption = new WishOption {
                 Title = request.Title,
@@ -28,7 +28,7 @@ namespace Gaver.Web.Features.MyList
             };
             context.WishOptions.Add(wishOption);
             await context.SaveChangesAsync(cancellationToken);
-            return mapperService.Map<WishOptionModel>(wishOption);
+            return mapperService.Map<WishOptionDto>(wishOption);
         }
     }
 }

@@ -1,15 +1,15 @@
-import { SharedWishModel, UserModel } from '~/types/data'
+import { SharedWishDto, UserDto, SharedListDto } from '~/types/data'
+import { Normalized } from '~/utils/normalize'
 
-export interface SharedList {
-  id: number
-  ownerUserId: number
-  wishes: Dictionary<SharedWishModel>
-  wishesOrder: number[]
-}
+export type SharedWish = Normalized<SharedWishDto>
+
+export type User = UserDto
+
+export type SharedList = Omit<Normalized<SharedListDto>, 'users'>
 
 export interface SharedListState {
   wishLists: Dictionary<SharedList>
-  users: Dictionary<UserModel>
+  users: Dictionary<User>
 }
 
 export const state: SharedListState = {
