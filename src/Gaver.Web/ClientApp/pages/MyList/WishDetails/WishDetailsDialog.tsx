@@ -62,6 +62,9 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
             value={wish.url || ''}
             disabled={isSavingOrLoading}
           />
+          <Button disabled={isSavingOrLoading} variant="contained" color="inherit">
+            Legg til alternativ
+          </Button>
         </DialogContent>
         <DialogActions className={classes.actions}>
           {onDelete && (
