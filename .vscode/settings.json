@@ -18,5 +18,8 @@
     "activityBar.background": "#073615",
     "titleBar.activeBackground": "#094B1E",
     "titleBar.activeForeground": "#F0FDF4"
-  }
+  },
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.jsxBracketSameLine": true
 }

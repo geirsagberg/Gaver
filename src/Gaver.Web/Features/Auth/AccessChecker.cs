@@ -46,7 +46,7 @@ namespace Gaver.Web.Features.Auth
             CancellationToken cancellationToken = default)
         {
             if (!await context.Wishes.AnyAsync(w =>
-                w.Id == wishId && w.WishList.UserId == userId, cancellationToken))
+                w.Id == wishId && w.WishList!.UserId == userId, cancellationToken))
                 throw new HttpException(HttpStatusCode.Forbidden,
                     "Dette ønsket finnes ikke, eller tilhører en annen liste");
         }

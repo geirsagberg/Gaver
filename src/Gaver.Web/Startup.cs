@@ -66,8 +66,8 @@ namespace Gaver.Web
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddProblemDetails();
             services.AddValidationProblemDetails();
-//            services.AddWebManifest();
-//            services.AddTransient<PwaOptions>();
+            //            services.AddWebManifest();
+            //            services.AddTransient<PwaOptions>();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
@@ -150,7 +150,7 @@ namespace Gaver.Web
 
         private static void SetupStaticFiles(IApplicationBuilder app, IHostEnvironment env)
         {
-            var cachePeriod = (int)(env.IsDevelopment() ? TimeSpan.FromMinutes(10).TotalSeconds : TimeSpan.FromDays(365).TotalSeconds);
+            var cachePeriod = (int) (env.IsDevelopment() ? TimeSpan.FromMinutes(10).TotalSeconds : TimeSpan.FromDays(365).TotalSeconds);
             app.UseStaticFiles(new StaticFileOptions {
                 OnPrepareResponse = ctx => ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={cachePeriod}")
             });

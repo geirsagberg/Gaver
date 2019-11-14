@@ -12,13 +12,13 @@ namespace Gaver.Data.Entities
 
         [Required]
         [MaxLength(255)]
-        public string Title { get; set; }
+        public string Title { get; set; } = "";
 
         [MaxLength(255)]
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
-        public virtual User BoughtByUser { get; set; }
-        public virtual WishList WishList { get; set; }
+        public virtual User? BoughtByUser { get; set; }
+        public virtual WishList? WishList { get; set; }
 
         public ICollection<WishOption> Options { get; set; } = new List<WishOption>();
     }

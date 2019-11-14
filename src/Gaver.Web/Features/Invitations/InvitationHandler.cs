@@ -31,7 +31,7 @@ namespace Gaver.Web.Features.Invitations
             context.Add(invitation);
             invitationToken.Accepted = DateTimeOffset.Now;
             await context.SaveChangesAsync(cancellationToken);
-            var userName = await context.Set<User>().Where(u => u.WishList.Id == invitationToken.WishListId).Select(u => u.Name).SingleAsync();
+            var userName = await context.Set<User>().Where(u => u.WishList!.Id == invitationToken.WishListId).Select(u => u.Name).SingleAsync();
             return new InvitationDto {
                 WishListId = invitationToken.WishListId,
                 WishListUserName = userName
@@ -49,7 +49,7 @@ namespace Gaver.Web.Features.Invitations
             }
 
             var owner = await context.Users.FirstAsync(
-                u => u.WishList.InvitationTokens.Any(t => t.Token == request.Token), cancellationToken);
+                u => u.WishList!.InvitationTokens.Any(t => t.Token == request.Token), cancellationToken);
 
             return new InvitationStatusDto {
                 Ok = true,
@@ -67,7 +67,7 @@ namespace Gaver.Web.Features.Invitations
                 throw new FriendlyException("Denne invitasjonen finnes ikke.");
             if (invitation.Accepted.HasValue)
                 throw new FriendlyException("Denne invitasjonen er allerede brukt.");
-            if (invitation.WishList.UserId == userId)
+            if (invitation.WishList!.UserId == userId)
                 throw new FriendlyException("Du kan ikke godta en invitasjon til din egen liste.");
 
             if (await context.Set<Invitation>()

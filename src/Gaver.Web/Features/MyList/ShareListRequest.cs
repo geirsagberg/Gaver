@@ -10,7 +10,7 @@ namespace Gaver.Web.Features.MyList
         [Required]
         [MinLength(1)]
         [MaxLength(10)]
-        public string[] Emails { get; set; }
+        public string[] Emails { get; set; } = new string[0];
 
         [JsonIgnore]
         public int UserId { get; set; }

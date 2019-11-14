@@ -24,7 +24,7 @@ namespace Gaver.Web.Features.LiveUpdates
 
         public Task MessageAdded(int wishListId, ChatMessageDto chatMessage)
         {
-            return hub.Clients.GroupExcept(ListHub.GetGroup(wishListId),
+            return chatMessage.User == null ? Task.CompletedTask : hub.Clients.GroupExcept(ListHub.GetGroup(wishListId),
                     ListHub.GetConnectionIdsForUser(chatMessage.User.Id))
                 .MessageAdded(chatMessage);
         }

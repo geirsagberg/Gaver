@@ -5,6 +5,6 @@ namespace Gaver.Web.Hubs
 {
     public class SubscriptionStatus
     {
-        public IEnumerable<UserDto> CurrentUsers { get; set; }
+        public IEnumerable<UserDto> CurrentUsers { get; set; } = new UserDto[0];
     }
 }

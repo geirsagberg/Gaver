@@ -3,6 +3,6 @@
     public class InvitationDto
     {
         public int WishListId { get; set; }
-        public string WishListUserName { get; set; }
+        public string? WishListUserName { get; set; }
     }
 }

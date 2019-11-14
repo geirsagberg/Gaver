@@ -10,22 +10,22 @@ namespace Gaver.Data.Entities
 
         [MaxLength(255)]
         [Required]
-        public string PrimaryIdentityId { get; set; }
+        public string PrimaryIdentityId { get; set; } = "";
 
         [MaxLength(40)]
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [MaxLength(255)]
         [Required]
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         [MaxLength(255)]
-        public string PictureUrl { get; set; }
+        public string? PictureUrl { get; set; } = "";
 
-        public WishList WishList { get; set; }
+        public WishList? WishList { get; set; }
 
-        public virtual ICollection<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
-        public virtual ICollection<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
+        public ICollection<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
+        public ICollection<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
     }
 }

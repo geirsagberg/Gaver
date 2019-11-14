@@ -10,11 +10,11 @@ namespace Gaver.Data.Entities
 
         [Required]
         [MaxLength(255)]
-        public string Title { get; set; }
+        public string Title { get; set; } = "";
 
         [MaxLength(255)]
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
-        public Wish Wish { get; set; }
+        public Wish? Wish { get; set; }
     }
 }

@@ -1,15 +1,15 @@
-import React, { FC, useState } from 'react'
 import {
+  Button,
   Dialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
   DialogContentText,
-  TextField,
-  DialogActions,
-  Button,
+  DialogTitle,
+  FormControlLabel,
   Switch,
-  FormControlLabel
+  TextField
 } from '@material-ui/core'
+import React, { FC, useState } from 'react'
 import { useOvermind } from './overmind'
 
 const FeedbackDialog: FC = () => {
@@ -35,6 +35,7 @@ const FeedbackDialog: FC = () => {
           Hva liker du med appen? Hva kan bli bedre? Skjedde det en feil eller noe du ikke forventet?
         </DialogContentText>
         <TextField
+          autoFocus
           placeholder="Skriv her..."
           fullWidth
           multiline

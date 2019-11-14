@@ -4,14 +4,14 @@ namespace Gaver.Web.Utils
 {
     internal class StandaloneScopeManager : IScopeManager
     {
-        private readonly LogicalThreadStorage<Scope> currentScope = new LogicalThreadStorage<Scope>();
+        private readonly LogicalThreadStorage<Scope?> currentScope = new LogicalThreadStorage<Scope?>();
 
         public StandaloneScopeManager(IServiceFactory serviceFactory)
         {
             ServiceFactory = serviceFactory;
         }
 
-        public Scope CurrentScope {
+        public Scope? CurrentScope {
             get => currentScope.Value;
             set => currentScope.Value = value;
         }

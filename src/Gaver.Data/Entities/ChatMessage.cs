@@ -15,9 +15,9 @@ namespace Gaver.Data.Entities
 
         [MaxLength(255)]
         [Required]
-        public string Text { get; set; }
+        public string Text { get; set; } = "";
 
-        public virtual User User { get; set; }
-        public virtual WishList WishList { get; set; }
+        public virtual User? User { get; set; }
+        public virtual WishList? WishList { get; set; }
     }
 }

@@ -11,6 +11,6 @@ namespace Gaver.Data.Entities
         public int WishListId { get; set; }
         public DateTimeOffset? Accepted { get; set; }
 
-        public WishList WishList { get; set; }
+        public WishList? WishList { get; set; }
     }
 }

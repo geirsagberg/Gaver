@@ -7,7 +7,7 @@ namespace SharpTypeGen
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             var types = typeof(Startup).Assembly.ExportedTypes.Where(t => !t.IsAbstract && !t.IsInterface &&
                 (t.Name.EndsWith("Dto") || t.Name.EndsWith("Response") || t.Name.EndsWith("Request")));

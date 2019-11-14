@@ -77,7 +77,7 @@ namespace SharpTypeGen
             var nestedTypes = new List<Type>();
 
             var classType = GetClassType(type);
-            if (classType == null) return;
+            if (classType?.FullName == null) return;
 
             if (duplicatesGuard.Contains(classType.FullName)) return;
 
@@ -110,7 +110,7 @@ namespace SharpTypeGen
 
         private static bool IsNullable(Type type) => Nullable.GetUnderlyingType(type) != null;
 
-        private static Type GetClassType(Type type)
+        private static Type? GetClassType(Type? type)
         {
             while (true) {
                 if (type == null) return null;
@@ -134,13 +134,13 @@ namespace SharpTypeGen
                 return (Types[type], false);
 
             if (type.IsArray)
-                return ($"{GetTypeSymbol(type.GetElementType()).symbol}[]", false);
+                return ($"{GetTypeSymbol(type.GetElementType()!).symbol}[]", false);
 
             if (typeof(IEnumerable).IsAssignableFrom(type) && type.GenericTypeArguments.Length == 1)
                 return ($"{GetTypeSymbol(type.GenericTypeArguments[0]).symbol}[]", false);
 
             if (IsNullable(type))
-                return (GetTypeSymbol(Nullable.GetUnderlyingType(type)).symbol, true);
+                return (GetTypeSymbol(Nullable.GetUnderlyingType(type)!).symbol, true);
 
             return IsUserClass(type) ? (type.Name, false) : ("any", true);
         }

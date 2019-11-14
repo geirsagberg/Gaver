@@ -2,11 +2,13 @@ using System;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 
+using System.Diagnostics.CodeAnalysis;
 namespace Gaver.Data
 {
     public static class StringExtensions
     {
-        public static string ToCamelCase(this string str)
+        [return: NotNullIfNotNull("str")]
+        public static string? ToCamelCase(this string? str)
         {
             if (str == null || str.Length < 2)
                 return str;
@@ -14,12 +16,12 @@ namespace Gaver.Data
             return str.Substring(0, 1).ToLower() + str.Substring(1);
         }
 
-        public static bool IsNullOrEmpty(this string str)
+        public static bool IsNullOrEmpty(this string? str)
         {
             return string.IsNullOrEmpty(str);
         }
 
-        public static bool IsNotEmpty(this string str)
+        public static bool IsNotEmpty([NotNullWhen(true)] this string? str)
         {
             return !string.IsNullOrEmpty(str);
         }
@@ -58,8 +60,7 @@ namespace Gaver.Data
 
             try {
                 return new Regex(pattern, options, matchTimeout);
-            }
-            catch {
+            } catch {
                 // Fallback on error
             }
 

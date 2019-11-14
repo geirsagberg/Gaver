@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -10,6 +12,7 @@ using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Options;
+using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -43,8 +46,8 @@ namespace Gaver.Web.Features.Users
             if (user == null) {
                 var userInfo = await GetUserInfo(cancellationToken);
                 user = new User {
-                    Email = userInfo.Email,
-                    Name = userInfo.Name,
+                    Email = userInfo.Email ?? throw new FriendlyException("Email not found"),
+                    Name = userInfo.Name ?? throw new FriendlyException("Name not found"),
                     PictureUrl = userInfo.Picture,
                     PrimaryIdentityId = request.PrimaryIdentityId,
                     WishList = new WishList()
@@ -74,8 +77,8 @@ namespace Gaver.Web.Features.Users
 
             var user = await context.GetOrDieAsync<User>(request.UserId);
 
-            user.Email = userInfo.Email;
-            user.Name = userInfo.Name;
+            user.Email = userInfo.Email ?? throw new FriendlyException("Email not found");
+            user.Name = userInfo.Name ?? throw new FriendlyException("Name not found");
             user.PictureUrl = userInfo.Picture;
 
             await context.SaveChangesAsync(cancellationToken);
@@ -106,10 +109,10 @@ namespace Gaver.Web.Features.Users
 
         public class UserInfo
         {
-            public string Email { get; set; }
-            public string Picture { get; set; }
-            public string Nickname { get; set; }
-            public string Name { get; set; }
+            public string? Email { get; set; }
+            public string? Picture { get; set; }
+            public string? Nickname { get; set; }
+            public string? Name { get; set; }
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Gaver.Web.Features.MyList
         [Required]
         [MinLength(1)]
         [MaxLength(64)]
-        public string Title { get; set; }
+        public string Title { get; set; } = "";
 
         public string? Url { get; set; }
 

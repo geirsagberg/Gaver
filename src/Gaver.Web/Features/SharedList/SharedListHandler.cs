@@ -62,7 +62,7 @@ namespace Gaver.Web.Features.SharedList
 
             var model = results.SingleOrThrow(new FriendlyException("Listen finnes ikke"));
             var owner = await context.Set<User>()
-                .Where(u => u.WishList.Id == message.WishListId)
+                .Where(u => u.WishList!.Id == message.WishListId)
                 .ProjectTo<UserDto>(mapper.MapperConfiguration)
                 .SingleAsync(cancellationToken);
 
