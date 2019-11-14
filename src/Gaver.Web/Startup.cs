@@ -127,6 +127,7 @@ namespace Gaver.Web
 
             app.UseHttpException();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseSwagger();
             app.UseSwaggerUI(c => {
