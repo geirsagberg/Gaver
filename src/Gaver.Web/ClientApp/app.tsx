@@ -7,7 +7,7 @@ import { Provider } from 'overmind-react'
 import { createOvermind } from 'overmind'
 import { config } from './overmind'
 import ErrorView from './components/ErrorView'
-import { MuiThemeProvider, WithStyles } from '@material-ui/core/styles'
+import { ThemeProvider, WithStyles } from '@material-ui/core/styles'
 
 const overmind = createOvermind(config)
 
@@ -44,13 +44,13 @@ const ErrorBoundary = withStyles(styles)(ErrorBoundaryInner)
 
 render(
   <Provider value={overmind}>
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline>
         <ErrorBoundary>
           <Layout />
         </ErrorBoundary>
       </CssBaseline>
-    </MuiThemeProvider>
+    </ThemeProvider>
   </Provider>,
   document.getElementById('react-app')
 )

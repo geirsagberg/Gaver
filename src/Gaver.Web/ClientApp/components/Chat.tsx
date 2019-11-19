@@ -1,5 +1,5 @@
 import { makeStyles, SwipeableDrawer, TextField, Typography } from '@material-ui/core'
-import { MuiThemeProvider } from '@material-ui/core/styles'
+import { ThemeProvider } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useOvermind } from '~/overmind'
 import { darkTheme } from '~/theme'
@@ -90,7 +90,7 @@ const ChatView = () => {
 }
 
 export default () => (
-  <MuiThemeProvider theme={darkTheme}>
+  <ThemeProvider theme={darkTheme}>
     <ChatView />
-  </MuiThemeProvider>
+  </ThemeProvider>
 )

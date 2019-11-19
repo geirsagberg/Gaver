@@ -25,7 +25,7 @@
       "name": "Attach to Chrome",
       "port": 9222,
       "webRoot": "${workspaceRoot}/src/Gaver.Web",
-      "urlFilter": "http://localhost:5000/*",
+      "urlFilter": "https://localhost:5001/*",
       "sourceMaps": true,
       "smartStep": true,
       "skipFiles": ["node_modules/**"],
@@ -47,7 +47,11 @@
       "type": "coreclr",
       "request": "launch",
       "program": "dotnet",
-      "args": ["exec", "C:/Users/Geir/.dotnet/tools/.store/dotnet-script/0.50.1/dotnet-script/0.50.1/tools/netcoreapp3.0/any/dotnet-script.dll", "${file}"],
+      "args": [
+        "exec",
+        "C:/Users/Geir/.dotnet/tools/.store/dotnet-script/0.50.1/dotnet-script/0.50.1/tools/netcoreapp3.0/any/dotnet-script.dll",
+        "${file}"
+      ],
       "cwd": "${workspaceRoot}",
       "stopAtEntry": true
     }

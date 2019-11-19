@@ -12,7 +12,7 @@ import {
   Toolbar,
   Typography
 } from '@material-ui/core'
-import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles'
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import { map, some } from 'lodash-es'
 import React, { FC } from 'react'
@@ -104,8 +104,9 @@ const Layout: FC = () => {
       <div className={classes.content}>
         <Content />
       </div>
-      <MuiThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={darkTheme}>
         <SwipeableDrawer
+          disableDiscovery
           open={isMenuShowing}
           onOpen={showMenu}
           onClose={hideMenu}
@@ -172,7 +173,7 @@ const Layout: FC = () => {
             </ListItem>
           </List>
         </SwipeableDrawer>
-      </MuiThemeProvider>
+      </ThemeProvider>
 
       <ShareListDialog />
       <FeedbackDialog />
