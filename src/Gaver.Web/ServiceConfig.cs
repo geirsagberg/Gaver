@@ -66,18 +66,18 @@ namespace Gaver.Web
         public static void AddCustomMvc(this IServiceCollection services)
         {
             services.AddMvc(o => {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .AddRequirements(
-                            new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
-                        .Build();
-                    o.Filters.Add(new AuthorizeFilter(policy));
-                    o.Filters.Add(new CustomExceptionFilterAttribute());
-                }).AddRazorOptions(o => {
-                    o.ViewLocationFormats.Clear();
-                    o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                    o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                    o.ViewLocationFormats.Add("/Features/{0}.cshtml");
-                })
+                var policy = new AuthorizationPolicyBuilder()
+                    .AddRequirements(
+                        new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
+                    .Build();
+                o.Filters.Add(new AuthorizeFilter(policy));
+                o.Filters.Add(new CustomExceptionFilterAttribute());
+            }).AddRazorOptions(o => {
+                o.ViewLocationFormats.Clear();
+                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
+                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
+                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
+            })
                 .AddRazorRuntimeCompilation()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
@@ -96,14 +96,14 @@ namespace Gaver.Web
                 config.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows {
-//                        Password = new OpenApiOAuthFlow {
-//                            TokenUrl = new Uri($"https://{authSettings.Domain}/token"),
-//                            Scopes = new Dictionary<string, string> {
-//                                {"openid", "Standard openid scope"},
-//                                {"profile", "Standard openid scope"},
-//                                {"email", "Standard openid scope"}
-//                            }
-//                        },
+                        //                        Password = new OpenApiOAuthFlow {
+                        //                            TokenUrl = new Uri($"https://{authSettings.Domain}/token"),
+                        //                            Scopes = new Dictionary<string, string> {
+                        //                                {"openid", "Standard openid scope"},
+                        //                                {"profile", "Standard openid scope"},
+                        //                                {"email", "Standard openid scope"}
+                        //                            }
+                        //                        },
                         Implicit = new OpenApiOAuthFlow {
                             TokenUrl = new Uri($"https://{authSettings.Domain}/token"),
                             AuthorizationUrl = new Uri($"https://{authSettings.Domain}/authorize"),
@@ -128,7 +128,8 @@ namespace Gaver.Web
                 .AddDbContext<GaverContext>(options => {
                     options
                         .UseNpgsql(connectionString, b => b
-                            .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));
+                            .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
+                            .SetPostgresVersion(9, 6));
                 });
         }
 
@@ -159,7 +160,7 @@ namespace Gaver.Web
                         Detail = "Please refer to the errors property for additional details."
                     };
                     return new BadRequestObjectResult(problemDetails) {
-                        ContentTypes = {"application/problem+json", "application/problem+xml"}
+                        ContentTypes = { "application/problem+json", "application/problem+xml" }
                     };
                 };
             });
