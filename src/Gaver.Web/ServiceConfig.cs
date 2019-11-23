@@ -162,9 +162,13 @@ namespace Gaver.Web
                 };
             });
 
-        public static void AddCustomHealthChecks(this IServiceCollection services)
+        public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddNpgSql(configuration.GetConnectionString("GaverContext"))
+                ;
+
+            services.AddHealthChecksUI();
         }
     }
 }

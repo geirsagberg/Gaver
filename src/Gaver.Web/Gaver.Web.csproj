@@ -26,6 +26,8 @@
     <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="3.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.4" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="3.1.0" />
     <PackageReference Include="HybridModelBinding" Version="0.16.0" />

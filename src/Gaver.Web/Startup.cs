@@ -11,11 +11,13 @@ using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Hubs;
 using Gaver.Web.Options;
+using HealthChecks.UI.Client;
 using Hellang.Middleware.ProblemDetails;
 using JetBrains.Annotations;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -24,6 +26,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+
 //using WebEssentials.AspNetCore.Pwa;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
@@ -59,7 +63,7 @@ namespace Gaver.Web
             services.AddCustomMvc();
             services.AddCustomSwagger(Configuration);
             services.AddCustomDbContext(Configuration);
-            services.AddCustomHealthChecks();
+            services.AddCustomHealthChecks(Configuration);
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -138,7 +142,10 @@ namespace Gaver.Web
             });
 
             app.UseEndpoints(endpoints => {
-                endpoints.MapHealthChecks("/health");
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions {
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI();
                 endpoints.MapHub<ListHub>("/listHub");
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllerRoute("API 404", "api/{*anything}", new {
