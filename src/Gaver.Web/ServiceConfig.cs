@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scrutor;
@@ -162,12 +163,13 @@ namespace Gaver.Web
                 };
             });
 
-        public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration,
+            IHostEnvironment hostEnvironment)
         {
-            services.AddHealthChecks()
-                .AddNpgSql(configuration.GetConnectionString("GaverContext"))
-                ;
+            if (hostEnvironment.IsEnvironment("Test")) return;
 
+            services.AddHealthChecks()
+                .AddNpgSql(configuration.GetConnectionString("GaverContext"));
             services.AddHealthChecksUI();
         }
     }

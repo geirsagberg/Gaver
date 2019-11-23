@@ -9,6 +9,7 @@ using Gaver.Common.Utils;
 using Gaver.Data;
 using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
+using Gaver.Web.Extensions;
 using Gaver.Web.Hubs;
 using Gaver.Web.Options;
 using HealthChecks.UI.Client;
@@ -64,7 +65,7 @@ namespace Gaver.Web
             services.AddCustomMvc();
             services.AddCustomSwagger(Configuration);
             services.AddCustomDbContext(Configuration);
-            services.AddCustomHealthChecks(Configuration);
+            services.AddCustomHealthChecks(Configuration, hostEnvironment);
             services.AddFeatureManagement(Configuration.GetSection("Features"));
 
             services.AddSingleton<IMapperService, MapperService>();
@@ -145,10 +146,12 @@ namespace Gaver.Web
             });
 
             app.UseEndpoints(endpoints => {
-                endpoints.MapHealthChecks("/health", new HealthCheckOptions {
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-                endpoints.MapHealthChecksUI();
+                if (!hostEnvironment.IsTest()) {
+                    endpoints.MapHealthChecks("/health", new HealthCheckOptions {
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
+                    endpoints.MapHealthChecksUI();
+                }
                 endpoints.MapHub<ListHub>("/listHub");
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllerRoute("API 404", "api/{*anything}", new {
