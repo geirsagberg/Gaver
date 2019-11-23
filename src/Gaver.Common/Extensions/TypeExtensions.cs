@@ -24,12 +24,11 @@ namespace Gaver.Common.Extensions
 
             var interfaces = type.GetInterfaces();
 
-            if (interfaceTypeInfo.IsGenericType) {
-                return interfaces.Any(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == interfaceType);
-            }
-            else {
-                return interfaces.Any(i => i == interfaceType);
-            }
+            return interfaceTypeInfo.IsGenericType
+                ? interfaces.Any(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == interfaceType)
+                : interfaces.Any(i => i == interfaceType);
         }
+
+        public static bool HasAttribute<T>(this Type type) => type.GetCustomAttribute(typeof(T)) != null;
     }
 }

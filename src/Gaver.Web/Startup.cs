@@ -26,6 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
 
 //using WebEssentials.AspNetCore.Pwa;
@@ -64,6 +65,7 @@ namespace Gaver.Web
             services.AddCustomSwagger(Configuration);
             services.AddCustomDbContext(Configuration);
             services.AddCustomHealthChecks(Configuration);
+            services.AddFeatureManagement(Configuration.GetSection("Features"));
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -91,6 +93,7 @@ namespace Gaver.Web
 
             ConfigureOptions<MailOptions>(services, "mail");
             ConfigureOptions<Auth0Settings>(services, "auth0");
+            ConfigureOptions<FeatureFlags>(services, "Features");
 
             if (missingOptions.Any()) {
                 throw new Exception("Missing settings: " + missingOptions.ToJoinedString());

@@ -1,3 +1,4 @@
+export interface FeatureFlags { wishOptions: boolean; }
 export interface CurrentUserDto { wishListId: number; id: number; name: string; pictureUrl: string; }
 export interface GetOrCreateUserRequest { primaryIdentityId: string; }
 export interface GetUserInfoRequest { userId: number; }

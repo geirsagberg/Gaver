@@ -1,5 +1,7 @@
+@using Gaver.Web.Extensions
 @using Gaver.Web.Options
 @inject Auth0Settings Auth0Settings
+@inject FeatureFlags FeatureFlags
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -37,7 +39,8 @@
     window['AppSettings'] = {
       domain: '@Auth0Settings.Domain',
       clientId: '@Auth0Settings.ClientId',
-      audience: '@Auth0Settings.Audience'
+      audience: '@Auth0Settings.Audience',
+      features: @FeatureFlags.ToJsonHtml()
     }
   </script>
   <partial name="_Styles.cshtml"></partial>

@@ -5,6 +5,7 @@ import { useOvermind } from '~/overmind'
 import { selectIsSavingOrLoading } from '~/overmind/app/selectors'
 import { Wish } from '~/overmind/myList/state'
 import { createStylesHook } from '~/utils/materialUtils'
+import AppSettings from '~/utils/appSettings'
 
 type Props = {
   wish: Wish
@@ -39,7 +40,8 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
         onSubmit={e => {
           e.preventDefault()
           onSave()
-        }}>
+        }}
+      >
         <DialogTitle>Hva ønsker du deg?</DialogTitle>
         <DialogContent>
           <TextField
@@ -62,9 +64,11 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
             value={wish.url || ''}
             disabled={isSavingOrLoading}
           />
-          <Button disabled={isSavingOrLoading} variant="contained" color="inherit">
-            Legg til alternativ
-          </Button>
+          {AppSettings.features.wishOptions && (
+            <Button disabled={isSavingOrLoading} variant="contained" color="inherit">
+              Legg til alternativ
+            </Button>
+          )}
         </DialogContent>
         <DialogActions className={classes.actions}>
           {onDelete && (
