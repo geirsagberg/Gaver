@@ -161,5 +161,10 @@ namespace Gaver.Web
                     };
                 };
             });
+
+        public static void AddCustomHealthChecks(this IServiceCollection services)
+        {
+            services.AddHealthChecks();
+        }
     }
 }

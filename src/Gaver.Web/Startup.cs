@@ -59,6 +59,7 @@ namespace Gaver.Web
             services.AddCustomMvc();
             services.AddCustomSwagger(Configuration);
             services.AddCustomDbContext(Configuration);
+            services.AddCustomHealthChecks();
 
             services.AddSingleton<IMapperService, MapperService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -66,8 +67,6 @@ namespace Gaver.Web
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddProblemDetails();
             services.AddValidationProblemDetails();
-            //            services.AddWebManifest();
-            //            services.AddTransient<PwaOptions>();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
@@ -139,6 +138,7 @@ namespace Gaver.Web
             });
 
             app.UseEndpoints(endpoints => {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapHub<ListHub>("/listHub");
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllerRoute("API 404", "api/{*anything}", new {
