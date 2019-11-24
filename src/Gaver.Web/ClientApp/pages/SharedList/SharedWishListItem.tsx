@@ -62,7 +62,7 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
       <div className={classes.content}>
         <Typography variant="body1">{wish.title}</Typography>
         {wish.url && (
-          <Link href={wish.url} variant="body2" className={classes.link}>
+          <Link target="_blank" href={wish.url} variant="body2" className={classes.link}>
             {wish.url}
           </Link>
         )}
@@ -79,7 +79,8 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
         <Button
           color="primary"
           onClick={() => setBought({ wishId: wish.id, isBought: true })}
-          className={classes.buyButton}>
+          className={classes.buyButton}
+        >
           Kjøp
         </Button>
       )}

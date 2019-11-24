@@ -39,7 +39,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
       <div className={classes.content}>
         <Typography variant="body1">{wish.title}</Typography>
         {wish.url && (
-          <Link href={wish.url} variant="body2" className={classes.link}>
+          <Link target="_blank" href={wish.url} variant="body2" className={classes.link}>
             {wish.url}
           </Link>
         )}
