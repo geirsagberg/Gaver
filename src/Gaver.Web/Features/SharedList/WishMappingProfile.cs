@@ -15,7 +15,8 @@ namespace Gaver.Web.Features.SharedList
             CreateMap<WishList, SharedListDto>()
                 .MapMember(m => m.OwnerUserId, wl => wl.UserId)
                 .MapMember(m => m.Users,
-                    wl => wl.Wishes.Select(w => w.BoughtByUser).Where(u => u != null));
+                    wl => wl.Wishes.Select(w => w.BoughtByUser).Where(u => u != null))
+                .IgnoreMember(m => m.CanSeeMyList);
             CreateMap<WishList, MyListDto>();
             CreateMap<Invitation, InvitationDto>();
             CreateMap<Wish, WishDto>();

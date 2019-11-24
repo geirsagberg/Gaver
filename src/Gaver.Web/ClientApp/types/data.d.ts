@@ -5,7 +5,7 @@ export interface GetUserInfoRequest { userId: number; }
 export interface UpdateUserInfoRequest { userId: number; }
 export interface UserDto { id: number; name: string; pictureUrl: string; }
 export interface WishOptionDto { id: number; title: string; url: string; }
-export interface SharedListDto { id: number; wishes: SharedWishDto[]; users: UserDto[]; ownerUserId: number; wishesOrder: number[]; }
+export interface SharedListDto { id: number; wishes: SharedWishDto[]; users: UserDto[]; ownerUserId: number; wishesOrder: number[]; canSeeMyList: boolean; }
 export interface SharedWishDto { id: number; title: string; url: string; options: WishOptionDto[]; boughtByUserId?: number; }
 export interface SharedListsDto { invitations: InvitationDto[]; }
 export interface InvitationDto { wishListId: number; wishListUserName: string; }

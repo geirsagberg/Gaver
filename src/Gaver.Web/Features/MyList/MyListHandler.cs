@@ -17,7 +17,8 @@ namespace Gaver.Web.Features.MyList
         IRequestHandler<GetMyListRequest, MyListDto>,
         IRequestHandler<SetWishesOrderRequest>,
         IRequestHandler<AddWishRequest, WishDto>,
-        IRequestHandler<DeleteWishRequest, DeleteWishResponse>
+        IRequestHandler<DeleteWishRequest, DeleteWishResponse>,
+        IRequestHandler<InviteUserRequest>
     {
         private readonly IClientNotifier clientNotifier;
         private readonly GaverContext context;
@@ -116,6 +117,21 @@ namespace Gaver.Web.Features.MyList
 
             await context.SaveChangesAsync(cancellationToken);
             await clientNotifier.RefreshListAsync(wish.WishListId);
+            return Unit.Value;
+        }
+
+        public async Task<Unit> Handle(InviteUserRequest request, CancellationToken cancellationToken)
+        {
+            var myListId = await context.Set<User>().Where(u => u.Id == request.UserId).Select(u => u.WishList.Id)
+                .SingleAsync(cancellationToken);
+
+            var invitation = new Invitation {
+                WishListId = myListId,
+                UserId = request.InviteUserId
+            };
+            context.Add(invitation);
+            await context.SaveChangesAsync(cancellationToken);
+
             return Unit.Value;
         }
     }

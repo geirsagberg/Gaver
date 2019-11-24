@@ -10,5 +10,6 @@ namespace Gaver.Web.Features.SharedList
         public IList<UserDto> Users { get; set; } = new List<UserDto>();
         public int OwnerUserId { get; set; }
         public int[] WishesOrder { get; set; } = new int[0];
+        public bool CanSeeMyList { get; set; }
     }
 }

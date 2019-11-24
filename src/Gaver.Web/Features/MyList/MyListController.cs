@@ -39,6 +39,12 @@ namespace Gaver.Web.Features.MyList
             return mediator.Send(request);
         }
 
+        [HttpPost("InviteUser")]
+        public Task InviteUser(InviteUserRequest request)
+        {
+            return mediator.Send(request);
+        }
+
         [HttpPatch("{wishId:int}")]
         public Task UpdateWish([FromHybrid] UpdateWishRequest request)
         {

@@ -53,7 +53,8 @@ namespace Gaver.Web.Features.SharedList
             return ListAccessStatus.NotInvited;
         }
 
-        public async Task<SharedListDto> Handle(GetSharedListRequest message, CancellationToken cancellationToken = default)
+        public async Task<SharedListDto> Handle(GetSharedListRequest message,
+            CancellationToken cancellationToken = default)
         {
             var results = await context.Set<WishList>()
                 .Where(wl => wl.Id == message.WishListId)
@@ -61,10 +62,16 @@ namespace Gaver.Web.Features.SharedList
                 .ToListAsync(cancellationToken);
 
             var model = results.SingleOrThrow(new FriendlyException("Listen finnes ikke"));
+
             var owner = await context.Set<User>()
                 .Where(u => u.WishList!.Id == message.WishListId)
                 .ProjectTo<UserDto>(mapper.MapperConfiguration)
                 .SingleAsync(cancellationToken);
+
+            var canSeeMyList = await context.Set<Invitation>()
+                .AnyAsync(i => i.WishList.UserId == message.UserId && i.UserId == owner.Id, cancellationToken);
+
+            model.CanSeeMyList = canSeeMyList;
 
             model.Users.Add(owner);
             return model;

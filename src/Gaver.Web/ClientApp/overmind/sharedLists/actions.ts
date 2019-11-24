@@ -1,11 +1,12 @@
 import { some } from 'lodash-es'
 import { SharedListDto } from '~/types/data'
 import { tryOrNotify } from '~/utils'
-import { getJson, putJson } from '~/utils/ajax'
+import { getJson, putJson, postJson } from '~/utils/ajax'
 import { normalizeArrays } from '~/utils/normalize'
 import { Action } from '..'
 import { RouteCallbackArgs } from '../routing/effects'
 import { User } from './state'
+import { showSuccess } from '~/utils/notifications'
 
 export const onUpdateUsers: Action<Dictionary<User>> = ({ state }, users) => {
   state.sharedLists.users = {
@@ -84,4 +85,16 @@ export const setBought: Action<{ wishId: number; isBought: boolean }> = (
     const listId = currentSharedList.id
     await putJson(`/api/SharedLists/${listId}/${wishId}/Bought`, { isBought })
     currentSharedList.wishes[wishId].boughtByUserId = isBought ? user.id : null
+  })
+
+export const shareWithCurrentOwner: Action = ({ state: { currentSharedList, currentSharedListOwner } }) =>
+  tryOrNotify(async () => {
+    if (!currentSharedList || !currentSharedListOwner) {
+      throw new Error('Ønskelisten er ikke lastet')
+    }
+    if (confirm(`Du har ikke enda delt din liste med ${currentSharedListOwner.name}. Vil du gjøre det nå?`)) {
+      await postJson(`/api/MyList/InviteUser`, { inviteUserId: currentSharedList.ownerUserId })
+      currentSharedList.canSeeMyList = true
+      showSuccess(`Din ønskeliste er nå delt med ${currentSharedListOwner.name}`)
+    }
   })

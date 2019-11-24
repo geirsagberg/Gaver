@@ -49,17 +49,18 @@ export const ShareListDialog: FC = () => {
           onUpdateInput={e => setEmailInput(e.target.value)}
           blurBehavior="add"
           required
-          newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.Comma]}
+          newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.Comma, KeyCodes.Space]}
         />
       </DialogContent>
       <DialogActions>
         <Button
           disabled={
-            isSavingOrLoading || ((!!emailInput && !isEmailValid(emailInput)) || (!shareEmails.length && !emailInput))
+            isSavingOrLoading || (!!emailInput && !isEmailValid(emailInput)) || (!shareEmails.length && !emailInput)
           }
           variant="contained"
           color="primary"
-          onClick={addAndShareList}>
+          onClick={addAndShareList}
+        >
           Del liste
         </Button>
         <Button disabled={isSavingOrLoading} onClick={cancel}>
