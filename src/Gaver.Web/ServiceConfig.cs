@@ -133,9 +133,12 @@ namespace Gaver.Web
                     .AddServices();
                 scan.FromAssemblyOf<Startup>()
                     .AddServices()
-                    .AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
+                    .AddMappingProfiles();
             });
         }
+
+        private static IImplementationTypeSelector AddMappingProfiles(this IImplementationTypeSelector selector)
+            => selector.AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
 
         private static IImplementationTypeSelector AddServices(
             this IImplementationTypeSelector implementationTypeSelector) => implementationTypeSelector
