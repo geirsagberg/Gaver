@@ -4,8 +4,10 @@ namespace Gaver.Web.Migrations
 {
     public partial class Convert_Identity : Migration
     {
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("UPDATE \"WishLists\" SET \"WishesOrder\" = '' WHERE \"WishesOrder\" IS NULL");
             migrationBuilder.AlterColumn<string>(
                 name: "WishesOrder",
                 table: "WishLists",
