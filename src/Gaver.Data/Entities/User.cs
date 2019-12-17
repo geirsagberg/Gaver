@@ -27,5 +27,6 @@ namespace Gaver.Data.Entities
 
         public ICollection<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
         public ICollection<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
+        public ICollection<UserGroupConnection> UserGroupConnections { get; set; } = new HashSet<UserGroupConnection>();
     }
 }

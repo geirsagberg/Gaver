@@ -122,7 +122,7 @@ namespace Gaver.Web.Features.MyList
 
         public async Task<Unit> Handle(InviteUserRequest request, CancellationToken cancellationToken)
         {
-            var myListId = await context.Set<User>().Where(u => u.Id == request.UserId).Select(u => u.WishList.Id)
+            var myListId = await context.Set<User>().Where(u => u.Id == request.UserId).Select(u => u.WishList!.Id)
                 .SingleAsync(cancellationToken);
 
             var invitation = new Invitation {

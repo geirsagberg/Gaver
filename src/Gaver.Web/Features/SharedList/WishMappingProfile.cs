@@ -5,6 +5,7 @@ using Gaver.Data.Entities;
 using Gaver.Web.Features.Invitations;
 using Gaver.Web.Features.MyList;
 using Gaver.Web.Features.Shared.Models;
+using Gaver.Web.Features.UserGroups;
 
 namespace Gaver.Web.Features.SharedList
 {
@@ -22,6 +23,8 @@ namespace Gaver.Web.Features.SharedList
             CreateMap<Wish, WishDto>();
             CreateMap<Wish, SharedWishDto>();
             CreateMap<WishOption, WishOptionDto>();
+            CreateMap<UserGroup, UserGroupDto>()
+                .MapMember(m => m.UserIds, m => m.UserGroupConnections.Select(c => c.UserId));
         }
     }
 }

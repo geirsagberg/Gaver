@@ -6,12 +6,14 @@ using Gaver.Web.Features.MyList;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Gaver.Web.Tests.Features.Errors
 {
     public class ModelValidationTests : WebTestBase
     {
-        public ModelValidationTests(CustomWebApplicationFactory webAppFactory) : base(webAppFactory)
+        public ModelValidationTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) :
+            base(webAppFactory, testOutputHelper)
         {
         }
 

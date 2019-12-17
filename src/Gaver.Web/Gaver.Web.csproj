@@ -15,6 +15,7 @@
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
     <NoWarn>CS1998</NoWarn>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>

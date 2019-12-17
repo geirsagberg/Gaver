@@ -69,7 +69,7 @@ namespace Gaver.Web.Features.SharedList
                 .SingleAsync(cancellationToken);
 
             var canSeeMyList = await context.Set<Invitation>()
-                .AnyAsync(i => i.WishList.UserId == message.UserId && i.UserId == owner.Id, cancellationToken);
+                .AnyAsync(i => i.WishList!.UserId == message.UserId && i.UserId == owner.Id, cancellationToken);
 
             model.CanSeeMyList = canSeeMyList;
 

@@ -6,20 +6,24 @@ using Gaver.Data.Entities;
 using Gaver.TestUtils;
 using Gaver.Web.Features.Invitations;
 using Gaver.Web.Features.SharedList;
+using Gaver.Web.Features.UserGroups;
 using LightInject;
 using Xunit;
 
 namespace Gaver.Web.Tests
 {
-    public class WishMappingProfileTests : TestBase
+    public class WishMappingProfileTests : TestBase<MapperService>
     {
-        [Fact]
-        public void Invitation_is_mapped_correctly()
+        public WishMappingProfileTests()
         {
             Container.Register<IEnumerable<Profile>>(factory => new Profile[] {
                 factory.Create<WishMappingProfile>()
             });
-            var mapperService = Container.Create<MapperService>();
+        }
+
+        [Fact]
+        public void Invitation_is_mapped_correctly()
+        {
             var invitation = new Invitation {
                 WishListId = 3,
                 UserId = 2,
@@ -33,11 +37,34 @@ namespace Gaver.Web.Tests
                 }
             };
 
-            var model = mapperService.Map<InvitationDto>(invitation);
+            var model = TestSubject.Map<InvitationDto>(invitation);
 
             model.Should().BeEquivalentTo(new InvitationDto {
                 WishListUserName = "OwnerMan",
                 WishListId = 3
+            });
+        }
+
+        [Fact]
+        public void UserGroup_is_mapped_correctly()
+        {
+            var userGroup = new UserGroup {
+                Id = 1,
+                Name = "Familien",
+                CreatedByUserId = 2,
+                UserGroupConnections = {
+                    new UserGroupConnection {
+                        UserId = 3
+                    }
+                }
+            };
+
+            var model = TestSubject.Map<UserGroupDto>(userGroup);
+
+            model.Should().BeEquivalentTo(new UserGroupDto {
+                Id = 1,
+                Name = "Familien",
+                UserIds = {3}
             });
         }
     }
