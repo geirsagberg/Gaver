@@ -1,4 +1,4 @@
-import { Fab, Icon, Typography } from '@material-ui/core'
+import { Fab, Icon, makeStyles, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import Color from 'color'
 import { map, size } from 'lodash-es'
@@ -7,13 +7,12 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import Loading from '~/components/Loading'
 import { useOvermind } from '~/overmind'
 import { pageWidth } from '~/theme'
-import { createStylesHook } from '~/utils/materialUtils'
+import { useNavContext } from '~/utils/hooks'
 import AddWishDialog from './WishDetails/AddWishDialog'
 import EditWishDialog from './WishDetails/EditWishDialog'
 import WishListItem from './WishListItem'
-import { useNavContext } from '~/utils/hooks'
 
-const useStyles = createStylesHook(theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
     width: '100%',
@@ -53,12 +52,6 @@ const useStyles = createStylesHook(theme => ({
   fabWrapper: {},
   addWishButton: {
     margin: '1rem'
-  },
-  emptyList: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%'
   },
   addWishHint: {
     position: 'absolute',

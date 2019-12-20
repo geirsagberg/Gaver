@@ -10,11 +10,13 @@ import invitations from './invitations'
 import myList from './myList'
 import routing from './routing'
 import sharedLists from './sharedLists'
+import userGroups from './userGroups'
 import { SharedList, SharedWish, User } from './sharedLists/state'
 
 export interface Config extends IConfig<typeof config> {}
 export interface OnInitialize extends IOnInitialize<Config> {}
-export interface Action<Input = void, ReturnValue = void | Promise<void> | Promise<boolean>> extends IAction<Config, Input, ReturnValue> {}
+export interface Action<Input = void, ReturnValue = void | Promise<void> | Promise<boolean>>
+  extends IAction<Config, Input, ReturnValue> {}
 export interface Operator<Input = void, Output = Input> extends IOperator<Config, Input, Output> {}
 export interface Derive<Parent extends IState, Output> extends IDerive<Config, Parent, Output> {}
 export interface Context extends IContext<typeof config> {}
@@ -34,8 +36,11 @@ const state: SharedState = {
       ? state.sharedLists.wishLists[state.routing.currentSharedListId]
       : null,
   currentSharedOrderedWishes: state =>
-    state.currentSharedList && state.currentSharedList.wishesOrder ? map(state.currentSharedList.wishesOrder, id => state.currentSharedList.wishes[id]) : null,
-  currentSharedListOwner: state => (state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null)
+    state.currentSharedList && state.currentSharedList.wishesOrder
+      ? map(state.currentSharedList.wishesOrder, id => state.currentSharedList.wishes[id])
+      : null,
+  currentSharedListOwner: state =>
+    state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null
 }
 
 export const config = merge(
@@ -47,7 +52,8 @@ export const config = merge(
     invitations,
     sharedLists,
     api,
-    chat
+    chat,
+    userGroups
   }),
   {
     state

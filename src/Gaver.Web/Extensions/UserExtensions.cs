@@ -1,8 +1,3 @@
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
-using Gaver.Web.Exceptions;
-
 namespace Gaver.Web.Extensions
 {
     public static class UserExtensions

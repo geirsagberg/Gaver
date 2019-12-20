@@ -1,9 +1,7 @@
 using System;
-using System.Security.Claims;
 using AutoMapper;
 using Gaver.Common.Contracts;
 using Gaver.Common.Utils;
-using Gaver.Data.Entities;
 using LightInject;
 using NSubstitute;
 
@@ -32,14 +30,14 @@ namespace Gaver.TestUtils
 
     public abstract class TestBase<TSut> : TestBase where TSut : class
     {
-        private readonly Lazy<TSut> _testSubject;
+        private readonly Lazy<TSut> testSubjectLazy;
 
         protected TestBase()
         {
-            _testSubject = new Lazy<TSut>(() => Container.Create<TSut>());
+            testSubjectLazy = new Lazy<TSut>(() => Container.Create<TSut>());
             Container.RegisterAssembly(typeof(TSut).Assembly, (service, implementation) => service == typeof(Profile));
         }
 
-        protected TSut TestSubject => _testSubject.Value;
+        protected TSut TestSubject => testSubjectLazy.Value;
     }
 }

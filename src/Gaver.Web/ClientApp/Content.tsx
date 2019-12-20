@@ -6,6 +6,7 @@ import LoginPage from './pages/Login'
 import MyListPage from './pages/MyList'
 import NotFoundPage from './pages/NotFound'
 import SharedListPage from './pages/SharedList'
+import UserGroupsPage from './pages/UserGroups'
 
 export const Content: FC = () => {
   const {
@@ -24,6 +25,8 @@ export const Content: FC = () => {
       return <AcceptInvitationPage />
     case 'sharedList':
       return <SharedListPage />
+    case 'userGroups':
+      return <UserGroupsPage />
   }
   return <Loading />
 }

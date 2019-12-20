@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using Gaver.Common.Contracts;
 using Gaver.Data;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

@@ -1,4 +1,4 @@
-import { clone, keyBy, without } from 'lodash-es'
+import { clone, without } from 'lodash-es'
 import { AddWishRequest, DeleteWishResponse, MyListDto, UpdateWishRequest } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
@@ -94,7 +94,7 @@ export const loadWishes: Action = ({ state }) =>
   tryOrNotify(async () => {
     const model = await getJson<MyListDto>('/api/MyList')
     const { myList } = state
-    myList.wishes = keyBy(normalizeArrays(model.wishes), w => w.id)
+    myList.wishes = normalizeArrays(model.wishes)
     myList.id = model.id
     myList.wishesOrder = model.wishesOrder
     myList.wishesLoaded = true

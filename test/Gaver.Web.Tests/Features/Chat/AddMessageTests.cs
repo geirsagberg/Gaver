@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Data.Entities;
@@ -7,7 +6,7 @@ using Gaver.Web.Features.Chat;
 using Gaver.Web.Features.Users;
 using Xunit;
 
-namespace Gaver.Web.Tests
+namespace Gaver.Web.Tests.Features.Chat
 {
     public class AddMessageTests : DbTestBase<AddMessageHandler>
     {

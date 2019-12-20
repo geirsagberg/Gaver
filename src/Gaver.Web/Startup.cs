@@ -28,7 +28,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
-using Newtonsoft.Json;
 
 //using WebEssentials.AspNetCore.Pwa;
 
@@ -123,7 +122,7 @@ namespace Gaver.Web
             if (env.IsDevelopment()) {
                 SetupForDevelopment(app, env);
             } else {
-                SetupForProduction(app, loggerFactory);
+                SetupForProduction(app);
             }
 
             SetupStaticFiles(app, env);
@@ -176,7 +175,7 @@ namespace Gaver.Web
                 requestHeaders.ContentType?.MediaType == "application/json";
         }
 
-        private static void SetupForProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        private static void SetupForProduction(IApplicationBuilder app)
         {
             app.UseHttpsRedirection();
 #if !DEBUG

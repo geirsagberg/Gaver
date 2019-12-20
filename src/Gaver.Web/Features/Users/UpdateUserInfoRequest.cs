@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Gaver.Web.Contracts;
 using MediatR;
 

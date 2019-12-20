@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using AspNetCore.Testing.Authentication.ClaimInjector;
+using Gaver.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Xunit;
@@ -17,6 +18,8 @@ namespace Gaver.Web.Tests
 
         protected WebTestBase(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper)
         {
+            webAppFactory.TestOutputHelper = testOutputHelper;
+            webAppFactory.ResetDatabase();
             clientLazy = new Lazy<HttpClient>(webAppFactory.CreateClient);
             serviceScope = webAppFactory.Services.CreateScope();
             RoleConfig = webAppFactory.RoleConfig;
@@ -26,6 +29,8 @@ namespace Gaver.Web.Tests
                 .WriteTo.TestOutput(testOutputHelper)
                 .CreateLogger();
         }
+
+        protected GaverContext GaverContext => ServiceProvider.GetRequiredService<GaverContext>();
 
         protected IServiceProvider ServiceProvider => serviceScope.ServiceProvider;
 

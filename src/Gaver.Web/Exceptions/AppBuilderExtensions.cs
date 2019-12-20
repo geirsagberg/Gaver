@@ -1,10 +1,5 @@
-using System.Linq;
-using Gaver.Common.Extensions;
 using Gaver.Web.Middleware;
-using Gaver.Web.Options;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 
 namespace Gaver.Web.Exceptions
 {

@@ -9,7 +9,8 @@ const onInitialize: OnInitialize = ({
     auth: { handleAuthentication, redirectIfNotLoggedIn, checkSession },
     invitations: { handleInvitation },
     sharedLists: { handleSharedList },
-    myList: { handleMyList }
+    myList: { handleMyList },
+    userGroups: { handleUserGroups }
   },
   effects: {
     routing: { route, start, exit, enter }
@@ -24,6 +25,7 @@ const onInitialize: OnInitialize = ({
   route('/callback', handleAuthentication)
   route('/invitations/:token', redirectIfNotLoggedIn, handleInvitation)
   route('/list/:listId', redirectIfNotLoggedIn, handleSharedList)
+  route('/userGroups', redirectIfNotLoggedIn, handleUserGroups)
   route('*', () => setCurrentPage('notFound'))
   exit('/list/:listId', async (_, next) => {
     await setCurrentSharedList(null)

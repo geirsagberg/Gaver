@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -12,7 +10,6 @@ using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Options;
-using JetBrains.Annotations;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

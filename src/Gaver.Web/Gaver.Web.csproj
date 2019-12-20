@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <Version>1.1.0</Version>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Gaver.Web</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>Gaver.Web</PackageId>
@@ -14,8 +14,8 @@
     <TieredCompilation>true</TieredCompilation>
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
     <NoWarn>CS1998</NoWarn>
-    <Nullable>enable</Nullable>
     <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <StartAction>Project</StartAction>
@@ -28,19 +28,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="3.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.4" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.7" />
     <PackageReference Include="Flurl.Http" Version="2.4.2" />
     <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="3.1.0" />
     <PackageReference Include="HybridModelBinding" Version="0.16.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0" />
     <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="1.0.0-preview-009000001-1251" />
     <PackageReference Include="Scrutor" Version="3.1.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.1.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
     <PackageReference Include="MediatR" Version="7.0.0" />

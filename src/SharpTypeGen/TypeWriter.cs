@@ -85,9 +85,7 @@ namespace SharpTypeGen
 
             var properties = classType.GetProperties();
 
-            if (filters.Any()) {
-                properties = properties.Where(p => filters.All(f => f(p))).ToArray();
-            }
+            if (filters.Any()) properties = properties.Where(p => filters.All(f => f(p))).ToArray();
 
             if (properties.Length == 0) return;
 

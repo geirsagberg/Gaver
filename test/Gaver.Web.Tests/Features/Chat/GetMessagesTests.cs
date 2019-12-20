@@ -6,7 +6,7 @@ using Gaver.TestUtils;
 using Gaver.Web.Features.Chat;
 using Xunit;
 
-namespace Gaver.Web.Tests
+namespace Gaver.Web.Tests.Features.Chat
 {
     public class GetMessagesTests : DbTestBase<GetMessagesHandler>
     {

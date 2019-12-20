@@ -1,11 +1,7 @@
 using System.Linq;
-using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Extensions

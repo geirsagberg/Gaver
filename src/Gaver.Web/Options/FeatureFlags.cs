@@ -6,5 +6,6 @@ namespace Gaver.Web.Options
     public class FeatureFlags
     {
         public bool WishOptions { get; set; }
+        public bool UserGroups { get; set; }
     }
 }

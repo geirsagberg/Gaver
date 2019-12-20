@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using Gaver.Data.Contracts;
 
 namespace Gaver.Data.Entities

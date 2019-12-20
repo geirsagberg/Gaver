@@ -7,10 +7,6 @@ namespace Gaver.Data
 {
     public class NormalizrSchemaGenerator
     {
-        public NormalizrSchemaGenerator()
-        {
-        }
-
         public static string GetSchema(IModel model)
         {
             var builder = new StringBuilder();
