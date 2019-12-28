@@ -148,7 +148,7 @@ namespace Gaver.Web
                     endpoints.MapHealthChecks("/health", new HealthCheckOptions {
                         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                     });
-                    endpoints.MapHealthChecksUI();
+                    // endpoints.MapHealthChecksUI();
                 }
                 endpoints.MapHub<ListHub>("/listHub");
                 endpoints.MapDefaultControllerRoute();

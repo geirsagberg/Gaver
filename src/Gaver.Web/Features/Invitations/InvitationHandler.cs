@@ -24,14 +24,43 @@ namespace Gaver.Web.Features.Invitations
             CancellationToken cancellationToken = default)
         {
             var invitationToken = await CheckInvitationStatus(request.Token, request.UserId);
+
             var invitation = new Invitation {
                 UserId = request.UserId,
                 WishListId = invitationToken.WishListId
             };
             context.Add(invitation);
+
+            var wishList = await context.WishLists.Include(wl => wl.User)
+                .SingleAsync(wl => wl.Id == invitationToken.WishListId, cancellationToken);
+            var user = await context.Users.Include(u => u.WishList)
+                .SingleAsync(u => u.Id == request.UserId, cancellationToken);
+            if (!await context.Invitations.AnyAsync(
+                i => i.WishListId == user.WishList!.Id && i.UserId == wishList.UserId,
+                cancellationToken)) {
+                var otherInvitation = new Invitation {
+                    UserId = wishList.UserId,
+                    WishListId = user.WishList!.Id
+                };
+                context.Add(otherInvitation);
+            }
+
+            context.AddRange(
+                new UserFriendConnection {
+                    UserId = request.UserId,
+                    FriendId = wishList.UserId
+                },
+                new UserFriendConnection {
+                    UserId = wishList.UserId,
+                    FriendId = request.UserId
+                }
+            );
+
             invitationToken.Accepted = DateTimeOffset.Now;
+
             await context.SaveChangesAsync(cancellationToken);
-            var userName = await context.Set<User>().Where(u => u.WishList!.Id == invitationToken.WishListId).Select(u => u.Name).SingleAsync();
+            var userName = await context.Set<User>().Where(u => u.WishList!.Id == invitationToken.WishListId)
+                .Select(u => u.Name).SingleAsync(cancellationToken);
             return new InvitationDto {
                 WishListId = invitationToken.WishListId,
                 WishListUserName = userName
@@ -60,21 +89,21 @@ namespace Gaver.Web.Features.Invitations
 
         private async Task<InvitationToken> CheckInvitationStatus(Guid token, int userId)
         {
-            var invitation = await context.Set<InvitationToken>()
+            var invitationToken = await context.Set<InvitationToken>()
                 .Include(t => t.WishList)
                 .SingleOrDefaultAsync(t => t.Token == token);
-            if (invitation == null)
+            if (invitationToken == null)
                 throw new FriendlyException("Denne invitasjonen finnes ikke.");
-            if (invitation.Accepted.HasValue)
+            if (invitationToken.Accepted.HasValue)
                 throw new FriendlyException("Denne invitasjonen er allerede brukt.");
-            if (invitation.WishList!.UserId == userId)
+            if (invitationToken.WishList!.UserId == userId)
                 throw new FriendlyException("Du kan ikke godta en invitasjon til din egen liste.");
 
             if (await context.Set<Invitation>()
-                .AnyAsync(i => i.UserId == userId && i.WishListId == invitation.WishListId))
+                .AnyAsync(i => i.UserId == userId && i.WishListId == invitationToken.WishListId))
                 throw new FriendlyException("Du har allerede tilgang til denne listen.");
 
-            return invitation;
+            return invitationToken;
         }
     }
 }

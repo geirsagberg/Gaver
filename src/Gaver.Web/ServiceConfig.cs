@@ -173,7 +173,7 @@ namespace Gaver.Web
 
             services.AddHealthChecks()
                 .AddNpgSql(configuration.GetConnectionString("GaverContext"));
-            services.AddHealthChecksUI();
+            // services.AddHealthChecksUI();
         }
     }
 }

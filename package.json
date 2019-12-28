@@ -15,7 +15,6 @@
     "webpack:dev": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development webpack --mode development",
     "cloc": "cloc --exclude-dir=node_modules,typings,wwwroot,bin,obj --exclude-lang=JSON ."
   },
-  "type": "module",
   "author": "Geir Sagberg",
   "devDependencies": {
     "@babel/core": "^7.7.7",

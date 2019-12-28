@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Common.Exceptions;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
 using Gaver.Web.Features.Invitations;
+using Gaver.Web.Tests.Extensions;
 using Xunit;
 
 namespace Gaver.Web.Tests.Features.Invitations
@@ -30,11 +32,65 @@ namespace Gaver.Web.Tests.Features.Invitations
         {
             var token = Guid.NewGuid();
             var user = SetupUserWithInvitation(token);
+            var otherUser = new User {
+                Name = "Bob",
+                WishList = new WishList()
+            };
+            Context.Add(otherUser);
+            Context.SaveChanges();
 
-            var response = await TestSubject.Handle(new AcceptInvitationRequest(token));
+            var response = await TestSubject.Handle(new AcceptInvitationRequest(token) {
+                UserId = otherUser.Id
+            });
 
             response.WishListId.Should().Be(user.WishList.Id);
             response.WishListUserName.Should().Be(user.Name);
+        }
+
+        [Fact]
+        public async Task When_invitation_is_accepted_then_Invitation_and_UserFriendConnection_are_created_both_ways()
+        {
+            var token = Guid.NewGuid();
+            var bob = new User {
+                Name = "Bob",
+                WishList = new WishList()
+            };
+            var alice = new User {
+                Name = "Alice",
+                WishList = new WishList {
+                    InvitationTokens = {
+                        new InvitationToken {
+                            Token = token
+                        }
+                    }
+                }
+            };
+            Context.AddRange(alice, bob);
+            Context.SaveChanges();
+
+            await TestSubject.Handle(new AcceptInvitationRequest(token) {
+                UserId = bob.Id
+            });
+
+            Context.Reset();
+            Context.Invitations.Select(i => new {i.UserId, i.WishListId}).Should().BeEquivalentTo(
+                new {
+                    UserId = alice.Id,
+                    WishListId = bob.WishList.Id
+                },
+                new {
+                    UserId = bob.Id,
+                    WishListId = alice.WishList.Id
+                }
+            );
+            Context.UserFriendConnections.Select(u => new {u.UserId, u.FriendId}).Should().BeEquivalentTo(
+                new {
+                    UserId = alice.Id,
+                    FriendId = bob.Id
+                }, new {
+                    UserId = bob.Id,
+                    FriendId = alice.Id
+                });
         }
 
         private User SetupUserWithInvitation(Guid token)
@@ -53,6 +109,5 @@ namespace Gaver.Web.Tests.Features.Invitations
             Context.SaveChanges();
             return user;
         }
-
     }
 }

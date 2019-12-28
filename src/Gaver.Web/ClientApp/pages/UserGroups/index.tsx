@@ -1,8 +1,10 @@
 import React from 'react'
 import { useNavContext } from '~/utils/hooks'
-import { makeStyles, Fab, Icon, Dialog, DialogTitle, DialogContent, TextField } from '@material-ui/core'
+import { makeStyles, Fab, Icon, Dialog, DialogTitle, DialogContent, TextField, Typography } from '@material-ui/core'
 import { pageWidth } from '~/theme'
 import { useOvermind } from '~/overmind'
+import { map } from 'lodash-es'
+import { useUsers } from '~/overmind/sharedLists'
 
 const useStyles = makeStyles({
   root: {
@@ -41,6 +43,7 @@ const AddGroupDialog = () => {
       userGroups: { cancelAddingGroup }
     }
   } = useOvermind()
+  const users = useUsers()
   return newGroup ? (
     <Dialog fullWidth open={true} onClose={cancelAddingGroup}>
       <DialogTitle>Ny gruppe</DialogTitle>
@@ -54,6 +57,10 @@ const AddGroupDialog = () => {
           margin="dense"
           disabled={isSavingOrLoading}
         />
+        <Typography variant="caption">Medlemmer</Typography>
+        {map(users, user => (
+          <div key={user.id}>{user.name}</div>
+        ))}
       </DialogContent>
     </Dialog>
   ) : null

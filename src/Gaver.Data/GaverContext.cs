@@ -19,12 +19,14 @@ namespace Gaver.Data
         public DbSet<InvitationToken> InvitationTokens { get; set; } = null!;
         public DbSet<WishOption> WishOptions { get; set; } = null!;
         public DbSet<UserGroupConnection> UserGroupConnections { get; set; } = null!;
+        public DbSet<UserFriendConnection> UserFriendConnections { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(entity => {
                 entity.HasIndex(u => u.PrimaryIdentityId).IsUnique();
                 entity.HasOne(u => u.WishList).WithOne(wl => wl!.User!);
+                entity.HasMany(e => e.Friends).WithOne(e => e.User!);
             });
             modelBuilder.Entity<ChatMessage>(entity => {
                 entity.Property(e => e.Created)
@@ -49,6 +51,8 @@ namespace Gaver.Data
                     array => JsonConvert.SerializeObject(array, jsonSerializerSettings),
                     json => JsonConvert.DeserializeObject<int[]>(json, jsonSerializerSettings)!);
             });
+
+            modelBuilder.Entity<UserFriendConnection>(entity => { entity.HasKey(e => new {e.UserId, e.FriendId}); });
         }
     }
 }

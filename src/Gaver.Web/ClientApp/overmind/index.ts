@@ -11,6 +11,7 @@ import myList from './myList'
 import routing from './routing'
 import sharedLists from './sharedLists'
 import userGroups from './userGroups'
+import users from './users'
 import { SharedList, SharedWish, User } from './sharedLists/state'
 
 export interface Config extends IConfig<typeof config> {}
@@ -53,7 +54,8 @@ export const config = merge(
     sharedLists,
     api,
     chat,
-    userGroups
+    userGroups,
+    users
   }),
   {
     state
