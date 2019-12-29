@@ -4,7 +4,7 @@ import { makeStyles, Fab, Icon, Dialog, DialogTitle, DialogContent, TextField, T
 import { pageWidth } from '~/theme'
 import { useOvermind } from '~/overmind'
 import { map } from 'lodash-es'
-import { useUsers } from '~/overmind/sharedLists'
+import { useFriends } from '~/overmind/sharedLists'
 
 const useStyles = makeStyles({
   root: {
@@ -43,7 +43,7 @@ const AddGroupDialog = () => {
       userGroups: { cancelAddingGroup }
     }
   } = useOvermind()
-  const users = useUsers()
+  const users = useFriends()
   return newGroup ? (
     <Dialog fullWidth open={true} onClose={cancelAddingGroup}>
       <DialogTitle>Ny gruppe</DialogTitle>

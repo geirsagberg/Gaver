@@ -2,10 +2,10 @@ import { UserDto } from '~/types/data'
 
 type User = UserDto
 
-export interface UsersState {
+export interface FriendsState {
   users: Dictionary<User>
 }
 
-export const state: UsersState = {
+export const state: FriendsState = {
   users: {}
 }

@@ -22,7 +22,7 @@ export const checkSession: Action = ({ state, effects, actions }) =>
         state.auth.isLoggingIn = true
         state.auth.user = await effects.api.getUserInfo()
         state.auth.isLoggedIn = true
-        await actions.app.loadSharedLists()
+        await actions.friends.loadFriends()
       } finally {
         state.auth.isLoggingIn = false
       }

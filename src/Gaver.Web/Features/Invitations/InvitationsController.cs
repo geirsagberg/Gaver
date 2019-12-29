@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Gaver.Web.Features.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,7 @@ namespace Gaver.Web.Features.Invitations
         }
 
         [HttpPost("{token:guid}/Accept")]
-        public Task<FriendDto> AcceptInvitation(Guid token)
+        public Task<UserDto> AcceptInvitation(Guid token)
         {
             return mediator.Send(new AcceptInvitationRequest(token));
         }

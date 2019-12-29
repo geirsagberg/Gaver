@@ -5,10 +5,10 @@ import { useOvermind } from '..'
 
 export default { actions, state, effects }
 
-export const useUsers = () => {
+export const useFriends = () => {
   const {
     state: {
-      sharedLists: { users }
+      friends: { users }
     }
   } = useOvermind()
   return users

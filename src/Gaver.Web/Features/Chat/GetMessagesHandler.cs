@@ -26,7 +26,7 @@ namespace Gaver.Web.Features.Chat
             var messages = await context.Set<ChatMessage>()
                 .Where(cm => cm.WishListId == message.WishListId)
                 .OrderBy(cm => cm.Id)
-                .ProjectTo<ChatMessageDto>(mapper.MapperConfiguration).ToListAsync();
+                .ProjectTo<ChatMessageDto>(mapper.MapperConfiguration).ToListAsync(token);
 
             return new ChatDto {
                 Messages = messages

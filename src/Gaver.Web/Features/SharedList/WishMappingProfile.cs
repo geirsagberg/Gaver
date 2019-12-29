@@ -2,7 +2,6 @@ using System.Linq;
 using AutoMapper;
 using Gaver.Common.Extensions;
 using Gaver.Data.Entities;
-using Gaver.Web.Features.Invitations;
 using Gaver.Web.Features.MyList;
 using Gaver.Web.Features.Shared.Models;
 using Gaver.Web.Features.UserGroups;
@@ -19,9 +18,6 @@ namespace Gaver.Web.Features.SharedList
                     wl => wl.Wishes.Select(w => w.BoughtByUser).Where(u => u != null))
                 .IgnoreMember(m => m.CanSeeMyList);
             CreateMap<WishList, MyListDto>();
-            CreateMap<User, FriendDto>()
-                .MapMember(m => m.UserId, m => m.Id)
-                .MapMember(m => m.UserName, m => m.Name);
             CreateMap<Wish, WishDto>();
             CreateMap<Wish, SharedWishDto>();
             CreateMap<WishOption, WishOptionDto>();

@@ -21,7 +21,7 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
       sharedLists: { loadSharedList, onUpdateUsers },
       chat: { clearMessages, loadMessages, onMessageAdded }
     },
-    state: { auth, invitations },
+    state: { auth, friends },
     effects: {
       routing: { redirect },
       sharedLists: { subscribeList }
@@ -32,7 +32,7 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
   const listId = +args.params['listId']
   if (listId === auth.user.wishListId) {
     redirect('/')
-  } else if (!some(invitations.sharedLists, list => list.wishListId === listId)) {
+  } else if (!some(friends.users, u => u.wishListId === listId)) {
     redirect('/notfound')
   } else {
     setCurrentPage('sharedList')

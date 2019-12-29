@@ -9,7 +9,6 @@ using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Data.Exceptions;
 using Gaver.Web.Contracts;
-using Gaver.Web.Features.Invitations;
 using Gaver.Web.Features.SharedList.Requests;
 using Gaver.Web.Features.Users;
 using MediatR;
@@ -20,7 +19,6 @@ namespace Gaver.Web.Features.SharedList
     public class SharedListHandler :
         IRequestHandler<SetBoughtRequest, SharedWishDto>,
         IRequestHandler<GetSharedListRequest, SharedListDto>,
-        IRequestHandler<GetSharedListsRequest, SharedListsDto>,
         IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
     {
         private readonly IClientNotifier clientNotifier;
@@ -75,16 +73,6 @@ namespace Gaver.Web.Features.SharedList
 
             model.Users.Add(owner);
             return model;
-        }
-
-        public async Task<SharedListsDto> Handle(GetSharedListsRequest request, CancellationToken cancellationToken)
-        {
-            var friends = await context.UserFriendConnections.Where(u => u.UserId == request.UserId)
-                .Select(u => u.Friend).ProjectTo<FriendDto>(mapper.MapperConfiguration).ToListAsync(cancellationToken);
-
-            return new SharedListsDto {
-                Invitations = friends
-            };
         }
 
         public async Task<SharedWishDto> Handle(SetBoughtRequest message, CancellationToken cancellationToken)

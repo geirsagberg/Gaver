@@ -15,12 +15,6 @@ namespace Gaver.Web.Features.SharedList
             this.mediator = mediator;
         }
 
-        [HttpGet]
-        public Task<SharedListsDto> GetSharedLists()
-        {
-            return mediator.Send(new GetSharedListsRequest());
-        }
-
         [HttpGet("{wishListId:int}")]
         public Task<SharedListDto> Get(int wishListId)
         {

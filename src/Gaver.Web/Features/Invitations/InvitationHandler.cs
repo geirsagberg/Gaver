@@ -2,26 +2,31 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
+using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
+using Gaver.Web.Features.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Invitations
 {
     public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, InvitationStatusDto>,
-        IRequestHandler<AcceptInvitationRequest, FriendDto>
+        IRequestHandler<AcceptInvitationRequest, UserDto>
     {
         private readonly GaverContext context;
+        private readonly IMapperService mapperService;
 
-        public InvitationHandler(GaverContext context)
+        public InvitationHandler(GaverContext context, IMapperService mapperService)
         {
             this.context = context;
+            this.mapperService = mapperService;
         }
 
-        public async Task<FriendDto> Handle(AcceptInvitationRequest request,
+        public async Task<UserDto> Handle(AcceptInvitationRequest request,
             CancellationToken cancellationToken = default)
         {
             var userId = request.UserId;
@@ -52,12 +57,8 @@ namespace Gaver.Web.Features.Invitations
             invitationToken.Accepted = DateTimeOffset.Now;
 
             await context.SaveChangesAsync(cancellationToken);
-            var userName = await context.Set<User>().Where(u => u.WishList!.Id == invitationToken.WishListId)
-                .Select(u => u.Name).SingleAsync(cancellationToken);
-            return new FriendDto {
-                WishListId = invitationToken.WishListId,
-                UserName = userName
-            };
+            var friend = await context.Set<User>().Where(u => u.WishList!.Id == invitationToken.WishListId).ProjectTo<UserDto>(mapperService.MapperConfiguration).SingleAsync(cancellationToken);
+            return friend;
         }
 
         public async Task<InvitationStatusDto> Handle(GetInvitationStatusRequest request,

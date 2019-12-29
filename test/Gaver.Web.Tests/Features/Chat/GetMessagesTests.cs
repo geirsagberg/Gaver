@@ -18,7 +18,9 @@ namespace Gaver.Web.Tests.Features.Chat
                 ChatMessages = {
                     new ChatMessage {
                         Text = "Hello",
-                        User = new User()
+                        User = new User {
+                            WishList = new WishList()
+                        }
                     }
                 }
             };
@@ -26,7 +28,7 @@ namespace Gaver.Web.Tests.Features.Chat
                 User = new User(),
                 ChatMessages = {
                     new ChatMessage {
-                        User = new User(),
+                        User = new User {WishList = new WishList()},
                         Text = "Whatup"
                     }
                 }

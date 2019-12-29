@@ -1,10 +1,6 @@
-import { orderBy } from 'lodash-es'
-import { SharedListsDto } from '~/types/data'
-import { tryOrNotify } from '~/utils'
-import { getJson } from '~/utils/ajax'
-import { Action } from '../'
 import { showSuccess } from '~/utils/notifications'
 import { NavContext } from '.'
+import { Action } from '../'
 
 export const incrementAjaxCounter: Action = ({ state: { app } }) => {
   app.ajaxCounter += 1
@@ -53,9 +49,3 @@ export const sendFeedback: Action<FeedbackDto> = async (
   app.feedback = false
   return true
 }
-
-export const loadSharedLists: Action = ({ state }) =>
-  tryOrNotify(async () => {
-    const model = await getJson<SharedListsDto>('/api/SharedLists')
-    state.invitations.sharedLists = orderBy(model.invitations, i => i.userName)
-  })

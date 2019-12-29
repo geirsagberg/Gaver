@@ -23,7 +23,7 @@ const SharedListsMenuItem: FC = () => {
   const {
     state: {
       routing: { currentSharedListId },
-      invitations: { sharedLists }
+      friends: { users }
     },
     actions: {
       app: { hideMenu }
@@ -33,22 +33,22 @@ const SharedListsMenuItem: FC = () => {
     }
   } = useOvermind()
   return (
-    some(sharedLists) && (
+    some(users) && (
       <>
         <ListItem>
           <ListItemText secondary="Delte lister" />
         </ListItem>
         <Divider />
-        {map(sharedLists, sharedList => (
+        {map(users, user => (
           <ListItem
-            key={sharedList.wishListId}
+            key={user.wishListId}
             button
-            selected={currentSharedListId === sharedList.wishListId}
+            selected={currentSharedListId === user.wishListId}
             onClick={() => {
-              showSharedList(sharedList.wishListId)
+              showSharedList(user.wishListId)
               hideMenu()
             }}>
-            <ListItemText primary={sharedList.userName} />
+            <ListItemText primary={user.name} />
           </ListItem>
         ))}
       </>

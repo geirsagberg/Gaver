@@ -44,7 +44,7 @@ namespace Gaver.Web.Tests.Features.Invitations
             });
 
             response.WishListId.Should().Be(user.WishList.Id);
-            response.UserName.Should().Be(user.Name);
+            response.Name.Should().Be(user.Name);
         }
 
         [Fact]
