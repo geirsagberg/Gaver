@@ -35,19 +35,19 @@ namespace Gaver.Web.Features.SharedList
         }
 
         public async Task<ListAccessStatus> Handle(CheckSharedListAccessRequest request,
-            CancellationToken token = default)
+            CancellationToken cancellationToken = default)
         {
             var wishListOwnerId = await context.WishLists.Where(wl => wl.Id == request.WishListId)
                 .Select(wl => wl.UserId)
-                .SingleOrDefaultAsync(token);
+                .SingleOrDefaultAsync(cancellationToken);
             if (wishListOwnerId == 0)
                 throw new EntityNotFoundException<WishList>(request.WishListId);
 
             if (wishListOwnerId == request.UserId)
                 return ListAccessStatus.Owner;
 
-            if (await context.Invitations.AnyAsync(
-                wl => wl.WishListId == request.WishListId && wl.UserId == request.UserId, token))
+            if (await context.WishLists.AnyAsync(
+                wl => wl.Id == request.WishListId && wl.User!.Friends.Any(f => f.FriendId == request.UserId), cancellationToken))
                 return ListAccessStatus.Invited;
 
             return ListAccessStatus.NotInvited;

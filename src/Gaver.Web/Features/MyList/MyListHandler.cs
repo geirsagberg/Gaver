@@ -17,8 +17,7 @@ namespace Gaver.Web.Features.MyList
         IRequestHandler<GetMyListRequest, MyListDto>,
         IRequestHandler<SetWishesOrderRequest>,
         IRequestHandler<AddWishRequest, WishDto>,
-        IRequestHandler<DeleteWishRequest, DeleteWishResponse>,
-        IRequestHandler<InviteUserRequest>
+        IRequestHandler<DeleteWishRequest, DeleteWishResponse>
     {
         private readonly IClientNotifier clientNotifier;
         private readonly GaverContext context;
@@ -42,7 +41,7 @@ namespace Gaver.Web.Features.MyList
             context.Add(wish);
             await context.SaveChangesAsync(cancellationToken);
             if (wishList.WishesOrder != null) {
-                wishList.WishesOrder = wishList.WishesOrder.Concat(new[] { wish.Id }).ToArray();
+                wishList.WishesOrder = wishList.WishesOrder.Concat(new[] {wish.Id}).ToArray();
             } else {
                 var wishesOrder = await context.Wishes.Where(w => w.WishList == wishList).Select(w => w.Id)
                     .ToArrayAsync(cancellationToken);
@@ -64,7 +63,7 @@ namespace Gaver.Web.Features.MyList
             context.Remove(wish);
             await context.SaveChangesAsync(cancellationToken);
             wish.WishList!.WishesOrder = wish.WishList.WishesOrder != null
-                ? wish.WishList.WishesOrder.Except(new[] { message.WishId }).ToArray()
+                ? wish.WishList.WishesOrder.Except(new[] {message.WishId}).ToArray()
                 : wish.WishList.Wishes.Select(w => w.Id).ToArray();
             await context.SaveChangesAsync(cancellationToken);
             await clientNotifier.RefreshListAsync(wishListId);
@@ -117,21 +116,6 @@ namespace Gaver.Web.Features.MyList
 
             await context.SaveChangesAsync(cancellationToken);
             await clientNotifier.RefreshListAsync(wish.WishListId);
-            return Unit.Value;
-        }
-
-        public async Task<Unit> Handle(InviteUserRequest request, CancellationToken cancellationToken)
-        {
-            var myListId = await context.Set<User>().Where(u => u.Id == request.UserId).Select(u => u.WishList!.Id)
-                .SingleAsync(cancellationToken);
-
-            var invitation = new Invitation {
-                WishListId = myListId,
-                UserId = request.InviteUserId
-            };
-            context.Add(invitation);
-            await context.SaveChangesAsync(cancellationToken);
-
             return Unit.Value;
         }
     }

@@ -26,7 +26,6 @@ namespace Gaver.Data.Entities
         public WishList? WishList { get; set; }
 
         public ICollection<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
-        public ICollection<Invitation> Invitations { get; set; } = new HashSet<Invitation>();
         public ICollection<UserGroupConnection> UserGroupConnections { get; set; } = new HashSet<UserGroupConnection>();
         public ICollection<UserFriendConnection> Friends { get; set; } = new HashSet<UserFriendConnection>();
     }

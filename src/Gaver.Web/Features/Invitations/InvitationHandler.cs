@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Gaver.Common.Exceptions;
+using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using MediatR;
@@ -23,38 +24,30 @@ namespace Gaver.Web.Features.Invitations
         public async Task<FriendDto> Handle(AcceptInvitationRequest request,
             CancellationToken cancellationToken = default)
         {
-            var invitationToken = await CheckInvitationStatus(request.Token, request.UserId);
-
-            var invitation = new Invitation {
-                UserId = request.UserId,
-                WishListId = invitationToken.WishListId
-            };
-            context.Add(invitation);
+            var userId = request.UserId;
+            var invitationToken = await CheckInvitationStatus(request.Token, userId);
 
             var wishList = await context.WishLists.Include(wl => wl.User)
                 .SingleAsync(wl => wl.Id == invitationToken.WishListId, cancellationToken);
-            var user = await context.Users.Include(u => u.WishList)
-                .SingleAsync(u => u.Id == request.UserId, cancellationToken);
-            if (!await context.Invitations.AnyAsync(
-                i => i.WishListId == user.WishList!.Id && i.UserId == wishList.UserId,
-                cancellationToken)) {
-                var otherInvitation = new Invitation {
-                    UserId = wishList.UserId,
-                    WishListId = user.WishList!.Id
-                };
-                context.Add(otherInvitation);
+
+            var friendId = wishList.UserId;
+            var existingConnections = await context.UserFriendConnections.Where(u =>
+                u.UserId == userId && u.FriendId == friendId ||
+                u.UserId == friendId && u.FriendId == userId).ToListAsync(cancellationToken);
+
+            if (existingConnections.None(c => c.UserId == userId)) {
+                context.Add(new UserFriendConnection {
+                    UserId = userId,
+                    FriendId = friendId
+                });
             }
 
-            context.AddRange(
-                new UserFriendConnection {
-                    UserId = request.UserId,
-                    FriendId = wishList.UserId
-                },
-                new UserFriendConnection {
-                    UserId = wishList.UserId,
-                    FriendId = request.UserId
-                }
-            );
+            if (existingConnections.None(c => c.UserId == friendId)) {
+                context.Add(new UserFriendConnection {
+                    UserId = friendId,
+                    FriendId = userId
+                });
+            }
 
             invitationToken.Accepted = DateTimeOffset.Now;
 
@@ -98,10 +91,6 @@ namespace Gaver.Web.Features.Invitations
                 throw new FriendlyException("Denne invitasjonen er allerede brukt.");
             if (invitationToken.WishList!.UserId == userId)
                 throw new FriendlyException("Du kan ikke godta en invitasjon til din egen liste.");
-
-            if (await context.Set<Invitation>()
-                .AnyAsync(i => i.UserId == userId && i.WishListId == invitationToken.WishListId))
-                throw new FriendlyException("Du har allerede tilgang til denne listen.");
 
             return invitationToken;
         }

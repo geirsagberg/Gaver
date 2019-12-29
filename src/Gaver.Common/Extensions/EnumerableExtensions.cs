@@ -29,5 +29,8 @@ namespace Gaver.Common.Extensions
 
         public static bool NotIn<T>(this T value, [NotNullWhen(false)] IEnumerable<T>? enumerable) =>
             enumerable?.Contains(value) != true;
+
+        public static bool None<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) =>
+            !enumerable.Any(predicate);
     }
 }

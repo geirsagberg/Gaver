@@ -48,7 +48,7 @@ namespace Gaver.Web.Tests.Features.Invitations
         }
 
         [Fact]
-        public async Task When_invitation_is_accepted_then_Invitation_and_UserFriendConnection_are_created_both_ways()
+        public async Task When_invitation_is_accepted_then_UserFriendConnections_are_created_both_ways()
         {
             var token = Guid.NewGuid();
             var bob = new User {
@@ -73,16 +73,6 @@ namespace Gaver.Web.Tests.Features.Invitations
             });
 
             Context.Reset();
-            Context.Invitations.Select(i => new { i.UserId, i.WishListId }).Should().BeEquivalentTo(
-                new {
-                    UserId = alice.Id,
-                    WishListId = bob.WishList.Id
-                },
-                new {
-                    UserId = bob.Id,
-                    WishListId = alice.WishList.Id
-                }
-            );
             Context.UserFriendConnections.Select(u => new { u.UserId, u.FriendId }).Should().BeEquivalentTo(
                 new {
                     UserId = alice.Id,

@@ -117,7 +117,7 @@ namespace Gaver.Web
             services.AddScoped(provider => provider.GetService<IOptionsSnapshot<T>>().Value);
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             if (env.IsDevelopment()) {
                 SetupForDevelopment(app, env);

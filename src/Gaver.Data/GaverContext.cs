@@ -15,7 +15,6 @@ namespace Gaver.Data
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<UserGroup> UserGroups { get; set; } = null!;
         public DbSet<ChatMessage> ChatMessages { get; set; } = null!;
-        public DbSet<Invitation> Invitations { get; set; } = null!;
         public DbSet<InvitationToken> InvitationTokens { get; set; } = null!;
         public DbSet<WishOption> WishOptions { get; set; } = null!;
         public DbSet<UserGroupConnection> UserGroupConnections { get; set; } = null!;
@@ -34,7 +33,6 @@ namespace Gaver.Data
                     .HasDefaultValueSql("NOW()")
                     ;
             });
-            modelBuilder.Entity<Invitation>(entity => { entity.HasKey(i => new {i.WishListId, i.UserId}); });
             modelBuilder.Entity<InvitationToken>(entity => {
                 entity.Property(e => e.Created)
                     .ValueGeneratedOnAdd()
