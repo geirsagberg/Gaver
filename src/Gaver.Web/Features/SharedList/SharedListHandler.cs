@@ -68,10 +68,10 @@ namespace Gaver.Web.Features.SharedList
                 .ProjectTo<UserDto>(mapper.MapperConfiguration)
                 .SingleAsync(cancellationToken);
 
-            var canSeeMyList = await context.Set<Invitation>()
-                .AnyAsync(i => i.WishList!.UserId == message.UserId && i.UserId == owner.Id, cancellationToken);
+            // var canSeeMyList = await context.Set<Invitation>()
+            //     .AnyAsync(i => i.WishList!.UserId == message.UserId && i.UserId == owner.Id, cancellationToken);
 
-            model.CanSeeMyList = canSeeMyList;
+            model.CanSeeMyList = true;
 
             model.Users.Add(owner);
             return model;
@@ -79,13 +79,11 @@ namespace Gaver.Web.Features.SharedList
 
         public async Task<SharedListsDto> Handle(GetSharedListsRequest request, CancellationToken cancellationToken)
         {
-            var invitations = await context.Set<Invitation>()
-                .Where(i => i.UserId == request.UserId)
-                .ProjectTo<InvitationDto>(mapper.MapperConfiguration)
-                .ToListAsync(cancellationToken);
+            var friends = await context.UserFriendConnections.Where(u => u.UserId == request.UserId)
+                .Select(u => u.Friend).ProjectTo<FriendDto>(mapper.MapperConfiguration).ToListAsync(cancellationToken);
 
             return new SharedListsDto {
-                Invitations = invitations
+                Invitations = friends
             };
         }
 

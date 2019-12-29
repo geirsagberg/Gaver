@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Gaver.Web.Features.Invitations
 {
-    public class AcceptInvitationRequest : IRequest<InvitationDto>, IAuthenticatedRequest
+    public class AcceptInvitationRequest : IRequest<FriendDto>, IAuthenticatedRequest
     {
         public Guid Token { get; }
 

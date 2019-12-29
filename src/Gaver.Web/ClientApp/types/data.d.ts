@@ -3,6 +3,7 @@ export interface CurrentUserDto { wishListId: number; id: number; name: string; 
 export interface GetOrCreateUserRequest { primaryIdentityId: string; }
 export interface GetUserInfoRequest { userId: number; }
 export interface UpdateUserInfoRequest { userId: number; }
+export interface GetFriendsRequest { userId: number; }
 export interface UserDto { id: number; name: string; pictureUrl: string; }
 export interface CreateUserGroupRequest { name: string; }
 export interface GetMyUserGroupsRequest { userId: number; }
@@ -12,8 +13,8 @@ export interface UserGroupsDto { userGroups: UserGroupDto[]; }
 export interface WishOptionDto { id: number; title: string; url: string; }
 export interface SharedListDto { id: number; wishes: SharedWishDto[]; users: UserDto[]; ownerUserId: number; wishesOrder: number[]; canSeeMyList: boolean; }
 export interface SharedWishDto { id: number; title: string; url: string; options: WishOptionDto[]; boughtByUserId?: number; }
-export interface SharedListsDto { invitations: InvitationDto[]; }
-export interface InvitationDto { wishListId: number; wishListUserName: string; }
+export interface SharedListsDto { invitations: FriendDto[]; }
+export interface FriendDto { userId: number; wishListId: number; userName: string; }
 export interface CheckSharedListAccessRequest { wishListId: number; }
 export interface GetSharedListsRequest { userId: number; }
 export interface SetBoughtRequest { isBought: boolean; }

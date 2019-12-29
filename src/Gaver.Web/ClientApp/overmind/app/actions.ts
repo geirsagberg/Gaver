@@ -57,5 +57,5 @@ export const sendFeedback: Action<FeedbackDto> = async (
 export const loadSharedLists: Action = ({ state }) =>
   tryOrNotify(async () => {
     const model = await getJson<SharedListsDto>('/api/SharedLists')
-    state.invitations.sharedLists = orderBy(model.invitations, i => i.wishListUserName)
+    state.invitations.sharedLists = orderBy(model.invitations, i => i.userName)
   })

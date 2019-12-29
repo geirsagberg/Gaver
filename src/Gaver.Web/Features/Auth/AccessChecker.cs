@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,8 +24,7 @@ namespace Gaver.Web.Features.Auth
         public async Task CheckWishListInvitations(int wishListId, int userId,
             CancellationToken cancellationToken = default)
         {
-            if (!await context.Invitations.AnyAsync(i => i.WishListId == wishListId && i.UserId == userId,
-                cancellationToken))
+            if (!await context.WishLists.AnyAsync(wl => wl.Id == wishListId && wl.User!.Friends.Any(f => f.FriendId == userId), cancellationToken))
                 throw new HttpException(HttpStatusCode.Forbidden, "Du har ikke blitt invitert til å se denne listen");
         }
 

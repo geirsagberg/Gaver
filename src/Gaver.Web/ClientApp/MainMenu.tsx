@@ -48,7 +48,7 @@ const SharedListsMenuItem: FC = () => {
               showSharedList(sharedList.wishListId)
               hideMenu()
             }}>
-            <ListItemText primary={sharedList.wishListUserName} />
+            <ListItemText primary={sharedList.userName} />
           </ListItem>
         ))}
       </>

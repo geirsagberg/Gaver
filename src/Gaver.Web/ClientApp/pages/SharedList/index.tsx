@@ -1,12 +1,12 @@
-import { BottomNavigation, BottomNavigationAction, Icon, makeStyles } from '@material-ui/core'
+import { BottomNavigation, BottomNavigationAction, Icon, makeStyles, Paper, Typography } from '@material-ui/core'
 import { map } from 'lodash-es'
 import React, { FC, useState } from 'react'
+import Chat from '~/components/Chat'
 import Loading from '~/components/Loading'
 import { useOvermind } from '~/overmind'
 import { pageWidth } from '~/theme'
-import SharedWishListItem from './SharedWishListItem'
-import Chat from '~/components/Chat'
 import { useNavContext } from '~/utils/hooks'
+import SharedWishListItem from './SharedWishListItem'
 
 const useStyles = makeStyles({
   root: {
@@ -27,6 +27,9 @@ const useStyles = makeStyles({
     bottom: 0,
     left: 0,
     right: 0
+  },
+  empty: {
+    padding: '1rem'
   }
 })
 
@@ -48,6 +51,11 @@ const SharedListPage: FC = () => {
         {map(currentSharedOrderedWishes, wish => (
           <SharedWishListItem key={wish.id} wishId={wish.id} />
         ))}
+        {currentSharedOrderedWishes.length === 0 && (
+          <Paper className={classes.empty}>
+            <Typography>Ingen ønsker enda.</Typography>
+          </Paper>
+        )}
       </div>
       <Chat />
       {false && (

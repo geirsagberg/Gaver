@@ -5,6 +5,6 @@ namespace Gaver.Web.Features.SharedList
 {
     public class SharedListsDto
     {
-        public IList<InvitationDto> Invitations { get; set; } = new List<InvitationDto>();
+        public IList<FriendDto> Invitations { get; set; } = new List<FriendDto>();
     }
 }

@@ -22,26 +22,22 @@ namespace Gaver.Web.Tests
         }
 
         [Fact]
-        public void Invitation_is_mapped_correctly()
+        public void Friend_is_mapped_correctly()
         {
-            var invitation = new Invitation {
-                WishListId = 3,
-                UserId = 2,
-                User = new User {
-                    Name = "Geir"
-                },
+            var user = new User {
+                Id = 1,
+                Name = "Bob",
                 WishList = new WishList {
-                    User = new User {
-                        Name = "OwnerMan"
-                    }
+                    Id = 2
                 }
             };
 
-            var model = TestSubject.Map<InvitationDto>(invitation);
+            var model = TestSubject.Map<FriendDto>(user);
 
-            model.Should().BeEquivalentTo(new InvitationDto {
-                WishListUserName = "OwnerMan",
-                WishListId = 3
+            model.Should().BeEquivalentTo(new FriendDto {
+                UserId = 1,
+                UserName = "Bob",
+                WishListId = 2
             });
         }
 

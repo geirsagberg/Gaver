@@ -1,9 +1,9 @@
-import { InvitationDto, InvitationStatusDto } from '~/types/data'
+import { FriendDto, InvitationStatusDto } from '~/types/data'
 
 export interface InvitationsState {
   token?: string
   status?: InvitationStatusDto
-  sharedLists: InvitationDto[]
+  sharedLists: FriendDto[]
 }
 
 const state: InvitationsState = {

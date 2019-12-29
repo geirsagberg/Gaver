@@ -21,7 +21,7 @@ namespace Gaver.Web.Features.Invitations
         }
 
         [HttpPost("{token:guid}/Accept")]
-        public Task<InvitationDto> AcceptInvitation(Guid token)
+        public Task<FriendDto> AcceptInvitation(Guid token)
         {
             return mediator.Send(new AcceptInvitationRequest(token));
         }

@@ -1,4 +1,4 @@
-import { map } from 'lodash-es'
+import { map, size } from 'lodash-es'
 import { IAction, IConfig, IContext, IDerive, IOnInitialize, IOperator, IState } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
@@ -39,6 +39,8 @@ const state: SharedState = {
   currentSharedOrderedWishes: state =>
     state.currentSharedList && state.currentSharedList.wishesOrder
       ? map(state.currentSharedList.wishesOrder, id => state.currentSharedList.wishes[id])
+      : state.currentSharedList && size(state.currentSharedList.wishes) === 0
+      ? []
       : null,
   currentSharedListOwner: state =>
     state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null

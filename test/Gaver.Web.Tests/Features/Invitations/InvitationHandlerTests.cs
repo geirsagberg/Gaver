@@ -28,7 +28,7 @@ namespace Gaver.Web.Tests.Features.Invitations
         }
 
         [Fact]
-        public async Task When_invitation_is_accepted_then_wishListId_and_wishListUserName_is_returned()
+        public async Task When_invitation_is_accepted_then_wishListId_and_userName_is_returned()
         {
             var token = Guid.NewGuid();
             var user = SetupUserWithInvitation(token);
@@ -44,7 +44,7 @@ namespace Gaver.Web.Tests.Features.Invitations
             });
 
             response.WishListId.Should().Be(user.WishList.Id);
-            response.WishListUserName.Should().Be(user.Name);
+            response.UserName.Should().Be(user.Name);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Gaver.Web.Tests.Features.Invitations
             });
 
             Context.Reset();
-            Context.Invitations.Select(i => new {i.UserId, i.WishListId}).Should().BeEquivalentTo(
+            Context.Invitations.Select(i => new { i.UserId, i.WishListId }).Should().BeEquivalentTo(
                 new {
                     UserId = alice.Id,
                     WishListId = bob.WishList.Id
@@ -83,7 +83,7 @@ namespace Gaver.Web.Tests.Features.Invitations
                     WishListId = alice.WishList.Id
                 }
             );
-            Context.UserFriendConnections.Select(u => new {u.UserId, u.FriendId}).Should().BeEquivalentTo(
+            Context.UserFriendConnections.Select(u => new { u.UserId, u.FriendId }).Should().BeEquivalentTo(
                 new {
                     UserId = alice.Id,
                     FriendId = bob.Id

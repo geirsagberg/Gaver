@@ -1,4 +1,4 @@
-import { InvitationDto, InvitationStatusDto } from '~/types/data'
+import { FriendDto, InvitationStatusDto } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { getJson, postJson } from '~/utils/ajax'
 import { Action } from '..'
@@ -23,7 +23,7 @@ export const acceptInvitation: Action = ({
   }
 }) =>
   tryOrNotify(async () => {
-    const invitation = await postJson<InvitationDto>(`/api/invitations/${invitations.token}/accept`)
+    const invitation = await postJson<FriendDto>(`/api/invitations/${invitations.token}/accept`)
     invitations.sharedLists.push(invitation)
     showSharedList(invitation.wishListId)
   })

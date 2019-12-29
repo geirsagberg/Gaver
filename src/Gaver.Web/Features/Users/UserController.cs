@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Gaver.Data;
 using Gaver.Web.Contracts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +21,10 @@ namespace Gaver.Web.Features.Users
             return mediator.Send(new GetUserInfoRequest());
         }
 
-        [HttpGet("/users")]
-        public Task<List<UserDto>> GetUsers()
+        [HttpGet("/api/Friends")]
+        public Task<List<UserDto>> GetFriends()
         {
-            return mediator.Send(new GetUsersRequest());
+            return mediator.Send(new GetFriendsRequest());
         }
 
         [HttpPost]
@@ -38,24 +34,8 @@ namespace Gaver.Web.Features.Users
         }
     }
 
-    public class GetUsersRequest : IRequest<List<UserDto>>, IAuthenticatedRequest
+    public class GetFriendsRequest : IRequest<List<UserDto>>, IAuthenticatedRequest
     {
         public int UserId { get; set; }
-    }
-
-    public class UsersHandler : IRequestHandler<GetUsersRequest, List<UserDto>>
-    {
-        private readonly GaverContext context;
-
-        public UsersHandler(GaverContext context)
-        {
-            this.context = context;
-        }
-
-        public async Task<List<UserDto>> Handle(GetUsersRequest request, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-            // var users = context.Users.Where(u => u.WishList.Invitations)
-        }
     }
 }

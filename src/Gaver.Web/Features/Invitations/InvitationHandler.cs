@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Gaver.Web.Features.Invitations
 {
     public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, InvitationStatusDto>,
-        IRequestHandler<AcceptInvitationRequest, InvitationDto>
+        IRequestHandler<AcceptInvitationRequest, FriendDto>
     {
         private readonly GaverContext context;
 
@@ -20,7 +20,7 @@ namespace Gaver.Web.Features.Invitations
             this.context = context;
         }
 
-        public async Task<InvitationDto> Handle(AcceptInvitationRequest request,
+        public async Task<FriendDto> Handle(AcceptInvitationRequest request,
             CancellationToken cancellationToken = default)
         {
             var invitationToken = await CheckInvitationStatus(request.Token, request.UserId);
@@ -61,9 +61,9 @@ namespace Gaver.Web.Features.Invitations
             await context.SaveChangesAsync(cancellationToken);
             var userName = await context.Set<User>().Where(u => u.WishList!.Id == invitationToken.WishListId)
                 .Select(u => u.Name).SingleAsync(cancellationToken);
-            return new InvitationDto {
+            return new FriendDto {
                 WishListId = invitationToken.WishListId,
-                WishListUserName = userName
+                UserName = userName
             };
         }
 
