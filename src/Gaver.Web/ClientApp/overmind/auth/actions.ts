@@ -13,7 +13,14 @@ export const logIn: Action = () => {
   AuthService.login()
 }
 
-export const checkSession: Action = ({ state, effects, actions }) =>
+export const checkSession: Action = ({
+  state,
+  effects,
+  actions: {
+    friends: { loadFriends },
+    userGroups: { loadUserGroups }
+  }
+}) =>
   tryOrNotify(async () => {
     if (state.auth.isLoggedIn) return
 
@@ -22,7 +29,7 @@ export const checkSession: Action = ({ state, effects, actions }) =>
         state.auth.isLoggingIn = true
         state.auth.user = await effects.api.getUserInfo()
         state.auth.isLoggedIn = true
-        await actions.friends.loadFriends()
+        await Promise.all([loadFriends(), loadUserGroups()])
       } finally {
         state.auth.isLoggingIn = false
       }

@@ -21,6 +21,7 @@ export interface Action<Input = void, ReturnValue = void | Promise<void> | Promi
 export interface Operator<Input = void, Output = Input> extends IOperator<Config, Input, Output> {}
 export interface Derive<Parent extends IState, Output> extends IDerive<Config, Parent, Output> {}
 export interface Context extends IContext<typeof config> {}
+export interface AsyncAction<Input = void> extends Action<Input, Promise<boolean>> {}
 
 export type ConfigState = Config['state']
 export type ResolvedState = Context['state']

@@ -104,5 +104,14 @@ export const commonStyles = createStyles({
     alignItems: 'center',
     alignSelf: 'center',
     textAlign: 'center'
+  },
+  dialogActions: {
+    margin: '0.5rem',
+    '& > :first-child': {
+      marginLeft: 0
+    },
+    '& > :last-child': {
+      marginRight: 0
+    }
   }
 })

@@ -39,7 +39,8 @@ namespace Gaver.Web.Tests
             model.Should().BeEquivalentTo(new UserGroupDto {
                 Id = 1,
                 Name = "Familien",
-                UserIds = {3}
+                UserIds = {3},
+                CreatedByUserId = 2
             });
         }
     }

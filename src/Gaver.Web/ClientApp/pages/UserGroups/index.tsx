@@ -1,10 +1,12 @@
-import React from 'react'
-import { useNavContext } from '~/utils/hooks'
-import { makeStyles, Fab, Icon, Dialog, DialogTitle, DialogContent, TextField, Typography } from '@material-ui/core'
-import { pageWidth } from '~/theme'
+import { Fab, Icon, IconButton, makeStyles, Paper } from '@material-ui/core'
+import { map, size } from 'lodash-es'
+import React, { FC } from 'react'
+import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
-import { map } from 'lodash-es'
-import { useFriends } from '~/overmind/sharedLists'
+import { UserGroup } from '~/overmind/userGroups/state'
+import { pageWidth } from '~/theme'
+import { useNavContext } from '~/utils/hooks'
+import { AddGroupDialog, EditGroupDialog } from './dialogs'
 
 const useStyles = makeStyles({
   root: {
@@ -33,37 +35,45 @@ const useStyles = makeStyles({
   }
 })
 
-const AddGroupDialog = () => {
+const useGroupItemStyles = makeStyles({
+  root: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: '1rem',
+    minHeight: '3rem',
+    marginBottom: '1rem'
+  },
+  content: {
+    margin: '0.5rem 0',
+    minWidth: '2rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  }
+})
+
+const GroupItem: FC<{ value: UserGroup }> = ({ value }) => {
+  const classes = useGroupItemStyles({})
   const {
-    state: {
-      userGroups: { newGroup },
-      app: { isSavingOrLoading }
-    },
     actions: {
-      userGroups: { cancelAddingGroup }
+      userGroups: { startEditingGroup }
     }
   } = useOvermind()
-  const users = useFriends()
-  return newGroup ? (
-    <Dialog fullWidth open={true} onClose={cancelAddingGroup}>
-      <DialogTitle>Ny gruppe</DialogTitle>
-      <DialogContent>
-        <TextField
-          label="Navn"
-          autoFocus
-          fullWidth
-          required
-          InputLabelProps={{ required: false }}
-          margin="dense"
-          disabled={isSavingOrLoading}
-        />
-        <Typography variant="caption">Medlemmer</Typography>
-        {map(users, user => (
-          <div key={user.id}>{user.name}</div>
-        ))}
-      </DialogContent>
-    </Dialog>
-  ) : null
+
+  return (
+    <Paper className={classes.root}>
+      <div className={classes.content}>
+        <strong>{value.name}</strong>
+        <div>{value.userIds.length} medlemmer</div>
+      </div>
+      <Expander />
+      <div>
+        <IconButton title="Rediger gruppe" onClick={() => startEditingGroup(value.id)}>
+          <Icon>edit</Icon>
+        </IconButton>
+      </div>
+    </Paper>
+  )
 }
 
 const UserGroupsPage = () => {
@@ -72,11 +82,26 @@ const UserGroupsPage = () => {
   const {
     actions: {
       userGroups: { startAddingGroup }
+    },
+    state: {
+      userGroups: { userGroups }
     }
   } = useOvermind()
 
   return (
     <div className={classes.root}>
+      <div className={classes.list}>
+        {userGroups &&
+          (size(userGroups) ? (
+            map(userGroups, g => (
+              <GroupItem key={g.id} value={g}>
+                {g.name}
+              </GroupItem>
+            ))
+          ) : (
+            <div>Ingen grupper</div>
+          ))}
+      </div>
       <div className={classes.fabOuterWrapper}>
         <div>
           <Fab title="Legg til gruppe" color="secondary" onClick={startAddingGroup} className={classes.addWishButton}>
@@ -85,6 +110,7 @@ const UserGroupsPage = () => {
         </div>
       </div>
       <AddGroupDialog />
+      <EditGroupDialog />
     </div>
   )
 }

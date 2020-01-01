@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.UserGroups
 {
-    public class UpdateUserGroupRequest : IRequest, IAuthenticatedRequest
+    public class UpdateUserGroupRequest : IRequest, IUserGroupRequest
     {
         [JsonIgnore]
         public int UserId { get; set; }

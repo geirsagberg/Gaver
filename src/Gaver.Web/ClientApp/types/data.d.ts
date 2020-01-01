@@ -1,14 +1,14 @@
 export interface FeatureFlags { wishOptions: boolean; userGroups: boolean; }
-export interface CurrentUserDto { wishListId: number; id: number; name: string; pictureUrl: string; }
+export interface CurrentUserDto { id: number; wishListId: number; name: string; pictureUrl: string; }
 export interface GetOrCreateUserRequest { primaryIdentityId: string; }
 export interface GetUserInfoRequest { userId: number; }
 export interface UpdateUserInfoRequest { userId: number; }
 export interface GetFriendsRequest { userId: number; }
 export interface UserDto { id: number; wishListId: number; name: string; pictureUrl: string; }
-export interface CreateUserGroupRequest { name: string; }
+export interface CreateUserGroupRequest { name: string; userIds: number[]; }
 export interface GetMyUserGroupsRequest { userId: number; }
 export interface UpdateUserGroupRequest { name: string; userIds: number[]; }
-export interface UserGroupDto { id: number; name: string; userIds: number[]; }
+export interface UserGroupDto { id: number; name: string; userIds: number[]; createdByUserId: number; }
 export interface UserGroupsDto { userGroups: UserGroupDto[]; }
 export interface WishOptionDto { id: number; title: string; url: string; }
 export interface SharedListDto { id: number; wishes: SharedWishDto[]; users: UserDto[]; ownerUserId: number; wishesOrder: number[]; canSeeMyList: boolean; }

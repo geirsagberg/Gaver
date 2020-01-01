@@ -6,6 +6,7 @@ import { selectIsSavingOrLoading } from '~/overmind/app/selectors'
 import { Wish } from '~/overmind/myList/state'
 import { createStylesHook } from '~/utils/materialUtils'
 import AppSettings from '~/utils/appSettings'
+import { commonStyles } from '~/theme'
 
 type Props = {
   wish: Wish
@@ -16,15 +17,7 @@ type Props = {
 }
 
 const useStyles = createStylesHook({
-  actions: {
-    margin: '1rem',
-    '& > :first-child': {
-      marginLeft: 0
-    },
-    '& > :last-child': {
-      marginRight: 0
-    }
-  },
+  actions: commonStyles.dialogActions,
   leftIcon: {
     marginRight: '0.5rem'
   }
@@ -40,8 +33,7 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
         onSubmit={e => {
           e.preventDefault()
           onSave()
-        }}
-      >
+        }}>
         <DialogTitle>Hva ønsker du deg?</DialogTitle>
         <DialogContent>
           <TextField

@@ -16,7 +16,8 @@ namespace Gaver.Web.Features.UserGroups
 {
     public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGroupsDto>,
         IRequestHandler<CreateUserGroupRequest, UserGroupDto>,
-        IRequestHandler<UpdateUserGroupRequest>
+        IRequestHandler<UpdateUserGroupRequest>,
+        IRequestHandler<DeleteUserGroupRequest>
     {
         private readonly GaverContext context;
         private readonly IMapperService mapperService;
@@ -76,6 +77,21 @@ namespace Gaver.Web.Features.UserGroups
 
             await context.SaveChangesAsync(cancellationToken);
 
+            return Unit.Value;
+        }
+
+        public async Task<Unit> Handle(DeleteUserGroupRequest request, CancellationToken cancellationToken)
+        {
+            var userGroup =
+                await context.UserGroups.SingleOrDefaultAsync(ug => ug.Id == request.UserGroupId && ug.UserGroupConnections.Any(c => c.UserId == request.UserId), cancellationToken) ?? throw new FriendlyException("Finner ikke oppgitt gruppe");
+
+
+            if (userGroup.CreatedByUserId != request.UserId) {
+                throw new FriendlyException("Du kan ikke slette grupper du ikke har opprettet");
+            }
+
+            context.Remove(userGroup);
+            await context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

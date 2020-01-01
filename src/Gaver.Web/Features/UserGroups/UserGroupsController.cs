@@ -15,21 +15,15 @@ namespace Gaver.Web.Features.UserGroups
         }
 
         [HttpGet]
-        public Task<UserGroupsDto> GetMyUserGroups()
-        {
-            return mediator.Send(new GetMyUserGroupsRequest());
-        }
+        public Task<UserGroupsDto> GetMyUserGroups() => mediator.Send(new GetMyUserGroupsRequest());
 
         [HttpPost]
-        public Task<UserGroupDto> CreateUserGroup(CreateUserGroupRequest request)
-        {
-            return mediator.Send(request);
-        }
+        public Task<UserGroupDto> CreateUserGroup(CreateUserGroupRequest request) => mediator.Send(request);
 
         [HttpPatch("{userGroupId:int}")]
-        public Task UpdateUserGroup([FromHybrid] UpdateUserGroupRequest request)
-        {
-            return mediator.Send(request);
-        }
+        public Task UpdateUserGroup([FromHybrid] UpdateUserGroupRequest request) => mediator.Send(request);
+
+        [HttpDelete("{userGroupId:int}")]
+        public Task DeleteUserGroup([FromHybrid] DeleteUserGroupRequest request) => mediator.Send(request);
     }
 }

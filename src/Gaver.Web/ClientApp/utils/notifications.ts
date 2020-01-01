@@ -16,3 +16,7 @@ export function showError(message) {
   }
   toastr.error(escape(message))
 }
+
+export function showConfirm(message): Promise<boolean> {
+  return new Promise(resolve => resolve(confirm(message)))
+}

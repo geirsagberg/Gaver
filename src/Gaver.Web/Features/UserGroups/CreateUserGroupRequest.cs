@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Gaver.Web.Contracts;
 using MediatR;
 using Newtonsoft.Json;
@@ -14,5 +15,7 @@ namespace Gaver.Web.Features.UserGroups
         [MinLength(1)]
         [Required]
         public string Name { get; set; } = "";
+
+        public List<int> UserIds { get; set; } = new List<int>();
     }
 }
