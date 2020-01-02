@@ -43,7 +43,7 @@ namespace Gaver.Web.Hubs
         {
             var principal = Context.User;
             var userId = principal.GetUserId();
-            await accessChecker.CheckWishListInvitations(listId, userId);
+            await accessChecker.CheckWishListAccess(listId, userId);
             var connectionId = Context.ConnectionId;
             UserListConnections.Add(new UserListConnection {
                 UserId = userId,

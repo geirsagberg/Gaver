@@ -7,7 +7,7 @@ namespace Gaver.Web.Contracts
     public interface IAccessChecker
     {
         [AssertionMethod]
-        Task CheckWishListInvitations(int wishListId, int userId, CancellationToken cancellationToken = default);
+        Task CheckWishListAccess(int wishListId, int userId, CancellationToken cancellationToken = default);
 
         [AssertionMethod]
         Task CheckNotOwner(int wishListId, int userId, CancellationToken cancellationToken = default);

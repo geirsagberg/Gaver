@@ -21,11 +21,13 @@ namespace Gaver.Web.Features.Auth
             this.context = context;
         }
 
-        public async Task CheckWishListInvitations(int wishListId, int userId,
+        public async Task CheckWishListAccess(int wishListId, int userId,
             CancellationToken cancellationToken = default)
         {
-            if (!await context.WishLists.AnyAsync(wl => wl.Id == wishListId && wl.User!.Friends.Any(f => f.FriendId == userId), cancellationToken))
-                throw new HttpException(HttpStatusCode.Forbidden, "Du har ikke blitt invitert til å se denne listen");
+            if (!await context.WishLists.AnyAsync(wl => wl.Id == wishListId
+                && (wl.User!.Friends.Any(f => f.FriendId == userId) || wl.User!.UserGroupConnections.Any(c =>
+                    c.UserGroup!.UserGroupConnections.Any(c2 => c2.UserId == userId))), cancellationToken))
+                throw new HttpException(HttpStatusCode.Forbidden, "Du har ikke tilgang til å se denne listen");
         }
 
         public async Task CheckNotOwner(int wishListId, int userId, CancellationToken cancellationToken = default)
