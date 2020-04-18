@@ -1,6 +1,7 @@
 {
-  "extends": ["tslint-config-standard"],
+  "extends": ["tslint-plugin-prettier", "tslint-config-prettier"],
   "rules": {
+    "prettier": true,
     "quotemark": [true, "single", "jsx-double"],
     "one-variable-per-declaration": false,
     "ter-indent": false,

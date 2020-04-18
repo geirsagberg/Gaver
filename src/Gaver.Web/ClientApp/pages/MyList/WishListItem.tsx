@@ -10,28 +10,29 @@ const useStyles = createStylesHook({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: '1rem',
-    minHeight: '3rem'
+    minHeight: '3rem',
   },
   content: {
     margin: '0.5rem 0',
     minWidth: '2rem',
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
   },
   link: {
-    whiteSpace: 'nowrap'
-  }
+    whiteSpace: 'nowrap',
+  },
 })
 
 const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   const classes = useStyles({})
   const {
     state: {
-      myList: { wishes, isDeleting }
+      myList: { wishes, isDeleting },
+      app: { isSavingOrLoading },
     },
     actions: {
-      myList: { startEditingWish, confirmDeleteWish }
-    }
+      myList: { startEditingWish, confirmDeleteWish },
+    },
   } = useOvermind()
   const wish = wishes[wishId]
   return (
@@ -47,7 +48,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
       <Expander />
       <div>
         {isDeleting ? (
-          <IconButton onClick={() => confirmDeleteWish(wishId)}>
+          <IconButton disabled={isSavingOrLoading} onClick={() => confirmDeleteWish(wishId)}>
             <Icon>delete</Icon>
           </IconButton>
         ) : (
