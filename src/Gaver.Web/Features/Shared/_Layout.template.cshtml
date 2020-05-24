@@ -49,8 +49,8 @@
   <div id="background"></div>
   @RenderBody()
 
-  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-  <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>" asp-append-version="true"></script>
+  <% for (const file of htmlWebpackPlugin.files.js) { %>
+  <script src="<%= file %>" asp-append-version="true"></script>
   <% } %>
 
   @RenderSection("scripts", false)

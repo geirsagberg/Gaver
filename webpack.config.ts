@@ -15,32 +15,32 @@ const baseDir = process.cwd()
 
 const commonPlugins = [
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': `'${mode}'`
+    'process.env.NODE_ENV': `'${mode}'`,
   }),
   new OfflinePlugin({
     excludes: ['**/*.map', '**/*.cshtml'],
     externals: ['/'],
-    appShell: '/'
+    appShell: '/',
   }),
   new HtmlWebpackPlugin({
     inject: false,
     template: 'Features/Shared/_Layout.template.cshtml',
-    filename: '../../Features/Shared/_Layout.generated.cshtml'
-  })
+    filename: '../../Features/Shared/_Layout.generated.cshtml',
+  }),
 ]
 
 const productionPlugins = [
   new ForkTsCheckerWebpackPlugin({
     checkSyntacticErrors: true,
     silent: false,
-    tsconfig: path.join(__dirname, 'tsconfig.json')
+    tsconfig: path.join(__dirname, 'tsconfig.json'),
   }),
   new MiniCssExtractPlugin({
-    filename: '[name].css'
+    filename: '[name].css',
   }),
   new LicenseWebpackPlugin({
-    perChunkOutput: false
-  })
+    perChunkOutput: false,
+  }),
 ]
 
 const developmentPlugins = [new HardSourceWebpackPlugin()]
@@ -50,10 +50,10 @@ const configuration: Configuration = {
   devtool: isDevelopment ? 'source-map' : 'nosources-source-map',
   resolve: {
     alias: {
-      '~': path.join(baseDir, 'ClientApp')
+      '~': path.join(baseDir, 'ClientApp'),
       // 'react-dom': '@hot-loader/react-dom'
     },
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
     rules: [
@@ -64,17 +64,17 @@ const configuration: Configuration = {
             loader: 'thread-loader',
             options: {
               // there should be 1 cpu for the fork-ts-checker-webpack-plugin in prod
-              workers: require('os').cpus().length - (isDevelopment ? 0 : 1)
-            }
+              workers: require('os').cpus().length - (isDevelopment ? 0 : 1),
+            },
           },
           {
             loader: 'babel-loader',
             options: {
               extends: path.join(__dirname, 'babel.config.js'),
-              cacheDirectory: true
-            }
-          }
-        ]
+              cacheDirectory: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg|gif|woff|woff2)$/,
@@ -82,31 +82,31 @@ const configuration: Configuration = {
           {
             loader: 'url-loader',
             options: {
-              limit: 4096
-            }
-          }
-        ]
+              limit: 4096,
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
-        use: [isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
-      }
-    ]
+        use: [isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+      },
+    ],
   },
   entry: {
-    main: './ClientApp/index'
+    main: './ClientApp/index',
   },
   output: {
     path: path.join(baseDir, 'wwwroot', 'dist'),
     filename: '[name].js',
-    publicPath: '/dist/'
+    publicPath: '/dist/',
   },
   optimization: {
     splitChunks: {
-      chunks: 'all'
-    }
+      chunks: 'all',
+    },
   },
-  plugins: commonPlugins.concat(isDevelopment ? developmentPlugins : productionPlugins)
+  plugins: commonPlugins.concat(isDevelopment ? developmentPlugins : productionPlugins),
 }
 
 export default configuration

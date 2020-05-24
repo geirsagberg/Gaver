@@ -26,6 +26,6 @@ export const state: MyListState = {
   isSharingList: false,
   wishesOrder: [],
   get orderedWishes() {
-    return this.wishesOrder.map((i) => state.wishes[i])
+    return this.wishesOrder.map((i) => this.wishes[i])
   },
 }
