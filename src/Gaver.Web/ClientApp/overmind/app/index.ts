@@ -1,5 +1,5 @@
 import * as actions from './actions'
-import { OnInitialize, Derive } from '..'
+import { OnInitialize } from '..'
 import { subscribe, Topic } from '~/utils/pubSub'
 
 export interface NavContext {
@@ -8,7 +8,7 @@ export interface NavContext {
 
 type AppState = {
   ajaxCounter: number
-  isSavingOrLoading: Derive<AppState, boolean>
+  isSavingOrLoading: boolean
   isMenuShowing: boolean
   feedback?: boolean
   title?: string
@@ -16,14 +16,14 @@ type AppState = {
 
 const state: AppState = {
   ajaxCounter: 0,
-  isSavingOrLoading: state => state.ajaxCounter > 0,
-  isMenuShowing: false
+  isSavingOrLoading: (((state) => state.ajaxCounter > 0) as unknown) as boolean,
+  isMenuShowing: false,
 }
 
 const onInitialize: OnInitialize = ({
   actions: {
-    app: { incrementAjaxCounter, decrementAjaxCounter }
-  }
+    app: { incrementAjaxCounter, decrementAjaxCounter },
+  },
 }) => {
   subscribe(Topic.AjaxStart, incrementAjaxCounter)
   subscribe(Topic.AjaxStop, decrementAjaxCounter)

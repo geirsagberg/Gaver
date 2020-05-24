@@ -14,7 +14,12 @@ import userGroups from './userGroups'
 import friends from './friends'
 import { SharedList, SharedWish, User } from './sharedLists/state'
 
-export interface Config extends IConfig<typeof config> {}
+export interface Config
+  extends IConfig<{
+    state: typeof config.state
+    actions: typeof config.actions
+    effects: typeof config.effects
+  }> {}
 export interface OnInitialize extends IOnInitialize<Config> {}
 export interface Action<Input = void, ReturnValue = void | Promise<void> | Promise<boolean>>
   extends IAction<Config, Input, ReturnValue> {}
@@ -27,24 +32,24 @@ export type ConfigState = Config['state']
 export type ResolvedState = Context['state']
 
 type SharedState = {
-  currentSharedList: Derive<ConfigState, SharedList>
-  currentSharedOrderedWishes: Derive<ConfigState, SharedWish[]>
-  currentSharedListOwner: Derive<ConfigState, User>
+  currentSharedList: SharedList
+  currentSharedOrderedWishes: SharedWish[]
+  currentSharedListOwner: User
 }
 
 const state: SharedState = {
-  currentSharedList: state =>
+  currentSharedList: (((state: ResolvedState) =>
     state.routing.currentSharedListId && state.sharedLists.wishLists[state.routing.currentSharedListId]
       ? state.sharedLists.wishLists[state.routing.currentSharedListId]
-      : null,
-  currentSharedOrderedWishes: state =>
+      : null) as unknown) as SharedList,
+  currentSharedOrderedWishes: (((state: ResolvedState) =>
     state.currentSharedList && state.currentSharedList.wishesOrder
-      ? map(state.currentSharedList.wishesOrder, id => state.currentSharedList.wishes[id])
+      ? map(state.currentSharedList.wishesOrder, (id) => state.currentSharedList.wishes[id])
       : state.currentSharedList && size(state.currentSharedList.wishes) === 0
       ? []
-      : null,
-  currentSharedListOwner: state =>
-    state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null
+      : null) as unknown) as SharedWish[],
+  currentSharedListOwner: (((state: ResolvedState) =>
+    state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null) as unknown) as User,
 }
 
 export const config = merge(
@@ -58,10 +63,10 @@ export const config = merge(
     api,
     chat,
     userGroups,
-    friends
+    friends,
   }),
   {
-    state
+    state,
   }
 )
 

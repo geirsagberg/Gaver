@@ -1,5 +1,4 @@
 import { WishDto } from '~/types/data'
-import { Derive } from '..'
 import { Normalized } from '~/utils/normalize'
 
 export type Wish = Partial<Normalized<WishDto>>
@@ -13,12 +12,12 @@ export type MyListState = {
   newWish?: Wish
   wishesLoaded?: boolean
   wishesOrder: number[]
-  orderedWishes: Derive<MyListState, Wish[]>
+  orderedWishes: Wish[]
   isDeleting?: boolean
 }
 
 export const getEmptyWish = (): Wish => ({
-  title: ''
+  title: '',
 })
 
 export const state: MyListState = {
@@ -26,5 +25,7 @@ export const state: MyListState = {
   wishes: {},
   isSharingList: false,
   wishesOrder: [],
-  orderedWishes: state => state.wishesOrder.map(i => state.wishes[i])
+  get orderedWishes() {
+    return this.wishesOrder.map((i) => state.wishes[i])
+  },
 }
