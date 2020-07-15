@@ -24,6 +24,7 @@ const commonPlugins = [
   }),
   new HtmlWebpackPlugin({
     inject: false,
+    minify: false,
     template: 'Features/Shared/_Layout.template.cshtml',
     filename: '../../Features/Shared/_Layout.generated.cshtml',
   }),
