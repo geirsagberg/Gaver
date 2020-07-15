@@ -21,6 +21,8 @@ steps:
 
   - script: npm ci
 
+  - script: npm run webpack
+
   - script: dotnet build --configuration $(buildConfiguration)
     displayName: 'dotnet build $(buildConfiguration)'
 
@@ -41,3 +43,6 @@ steps:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'Gaver'
+
+  - script: echo "##vso[build.addbuildtag]publish"
+    condition: and(succeeded(), contains(variables['Build.SourceVersionMessage'], '#publish'))
