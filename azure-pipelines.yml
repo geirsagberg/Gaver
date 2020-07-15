@@ -3,8 +3,6 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-name: Build and publish
-
 trigger:
   - develop
 
@@ -18,10 +16,13 @@ steps:
   - task: NodeTool@0
     inputs:
       versionSpec: '14.x'
+    displayName: Use latest Node
 
   - script: npm ci
+    displayName: npm ci
 
   - script: npm run webpack
+    displayName: npm run webpack
 
   - script: dotnet build --configuration $(buildConfiguration)
     displayName: 'dotnet build $(buildConfiguration)'
@@ -31,6 +32,7 @@ steps:
       command: test
       projects: '**/*Tests/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
+    displayName: dotnet test
 
   - task: DotNetCoreCLI@2
     inputs:
@@ -38,11 +40,14 @@ steps:
       projects: 'src/Gaver.Web/Gaver.Web.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
       zipAfterPublish: true
+    displayName: dotnet publish
 
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
       ArtifactName: 'Gaver'
+    displayName: Publish build artifact
 
   - script: echo "##vso[build.addbuildtag]publish"
     condition: and(succeeded(), contains(variables['Build.SourceVersionMessage'], '#publish'))
+    displayName: Add build tag if \#publish
