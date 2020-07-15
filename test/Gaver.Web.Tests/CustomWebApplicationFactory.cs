@@ -4,7 +4,6 @@ using AspNetCore.Testing.Authentication.ClaimInjector;
 using Gaver.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 
@@ -22,7 +21,6 @@ namespace Gaver.Web.Tests
 
             builder
                 .UseEnvironment("Test")
-                .ConfigureAppConfiguration(config => config.AddUserSecrets<Startup>())
                 .ConfigureServices(services => {
                     var descriptor =
                         services.SingleOrDefault(s => s.ServiceType == typeof(DbContextOptions<GaverContext>));

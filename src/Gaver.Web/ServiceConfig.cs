@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,7 @@ using Gaver.Common;
 using Gaver.Common.Attributes;
 using Gaver.Data;
 using Gaver.Web.Exceptions;
+using Gaver.Web.Extensions;
 using Gaver.Web.Filters;
 using Gaver.Web.MvcUtils;
 using Gaver.Web.Options;
@@ -82,8 +84,13 @@ namespace Gaver.Web
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
                 .AddNewtonsoftJson(options => options.UseCamelCasing(true));
-            if (hostEnvironment.IsDevelopment())
-                mvc.AddRazorRuntimeCompilation();
+            mvc.AddCustomMvcDebug();
+        }
+
+        [Conditional("DEBUG")]
+        private static void AddCustomMvcDebug(this IMvcBuilder mvc)
+        {
+            mvc.AddRazorRuntimeCompilation();
         }
 
         public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)
