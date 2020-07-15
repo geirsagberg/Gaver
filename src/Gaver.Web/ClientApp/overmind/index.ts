@@ -1,5 +1,5 @@
 import { map, size } from 'lodash-es'
-import { IAction, IConfig, IContext, IDerive, IOnInitialize, IOperator, IState } from 'overmind'
+import { IAction, IConfig, IContext, IOnInitialize, IOperator } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 import api from './api'
@@ -24,7 +24,6 @@ export interface OnInitialize extends IOnInitialize<Config> {}
 export interface Action<Input = void, ReturnValue = void | Promise<void> | Promise<boolean>>
   extends IAction<Config, Input, ReturnValue> {}
 export interface Operator<Input = void, Output = Input> extends IOperator<Config, Input, Output> {}
-export interface Derive<Parent extends IState, Output> extends IDerive<Config, Parent, Output> {}
 export interface Context extends IContext<typeof config> {}
 export interface AsyncAction<Input = void> extends Action<Input, Promise<boolean>> {}
 

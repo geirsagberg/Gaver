@@ -31,9 +31,9 @@ const commonPlugins = [
 
 const productionPlugins = [
   new ForkTsCheckerWebpackPlugin({
-    checkSyntacticErrors: true,
-    silent: false,
-    tsconfig: path.join(__dirname, 'tsconfig.json'),
+    typescript: {
+      configFile: path.join(__dirname, 'tsconfig.json'),
+    },
   }),
   new MiniCssExtractPlugin({
     filename: '[name].css',

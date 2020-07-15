@@ -64,9 +64,9 @@ namespace Gaver.Web
             return Task.CompletedTask;
         }
 
-        public static void AddCustomMvc(this IServiceCollection services)
+        public static void AddCustomMvc(this IServiceCollection services, IHostEnvironment hostEnvironment)
         {
-            services.AddMvc(o => {
+            var mvc = services.AddMvc(o => {
                     var policy = new AuthorizationPolicyBuilder()
                         .AddRequirements(
                             new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
@@ -79,11 +79,11 @@ namespace Gaver.Web
                     o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
                     o.ViewLocationFormats.Add("/Features/{0}.cshtml");
                 })
-                .AddRazorRuntimeCompilation()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
-                .AddNewtonsoftJson(options => options.UseCamelCasing(true))
-                ;
+                .AddNewtonsoftJson(options => options.UseCamelCasing(true));
+            if (hostEnvironment.IsDevelopment())
+                mvc.AddRazorRuntimeCompilation();
         }
 
         public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)

@@ -17,13 +17,13 @@ const styles = createStyles({
     position: 'relative',
     zIndex: 0,
     display: 'flex',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 })
 
 class ErrorBoundaryInner extends React.Component<WithStyles<typeof styles>, { hasError: boolean }> {
   state = {
-    hasError: false
+    hasError: false,
   }
   static getDerivedStateFromError() {
     return { hasError: true }
