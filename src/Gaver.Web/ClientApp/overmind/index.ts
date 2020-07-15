@@ -14,12 +14,7 @@ import userGroups from './userGroups'
 import friends from './friends'
 import { SharedList, SharedWish, User } from './sharedLists/state'
 
-export interface Config
-  extends IConfig<{
-    state: typeof config.state
-    actions: typeof config.actions
-    effects: typeof config.effects
-  }> {}
+export interface Config extends IConfig<typeof config> {}
 export interface OnInitialize extends IOnInitialize<Config> {}
 export interface Action<Input = void, ReturnValue = void | Promise<void> | Promise<boolean>>
   extends IAction<Config, Input, ReturnValue> {}
@@ -69,4 +64,4 @@ export const config = merge(
   }
 )
 
-export const useOvermind = createHook<typeof config>()
+export const useOvermind = createHook<Config>()
