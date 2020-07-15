@@ -1,5 +1,5 @@
 import { map, size } from 'lodash-es'
-import { IAction, IConfig, IContext, IOnInitialize, IOperator } from 'overmind'
+import { IAction, IConfig, IContext, IOnInitialize, IOperator, derived } from 'overmind'
 import { createHook } from 'overmind-react'
 import { merge, namespaced } from 'overmind/config'
 import api from './api'
@@ -32,18 +32,21 @@ type SharedState = {
 }
 
 const state: SharedState = {
-  currentSharedList: (((state: ResolvedState) =>
+  currentSharedList: derived((state: ResolvedState) =>
     state.routing.currentSharedListId && state.sharedLists.wishLists[state.routing.currentSharedListId]
       ? state.sharedLists.wishLists[state.routing.currentSharedListId]
-      : null) as unknown) as SharedList,
-  currentSharedOrderedWishes: (((state: ResolvedState) =>
+      : null
+  ),
+  currentSharedOrderedWishes: derived((state: ResolvedState) =>
     state.currentSharedList && state.currentSharedList.wishesOrder
       ? map(state.currentSharedList.wishesOrder, (id) => state.currentSharedList.wishes[id])
       : state.currentSharedList && size(state.currentSharedList.wishes) === 0
       ? []
-      : null) as unknown) as SharedWish[],
-  currentSharedListOwner: (((state: ResolvedState) =>
-    state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null) as unknown) as User,
+      : null
+  ),
+  currentSharedListOwner: derived((state: ResolvedState) =>
+    state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null
+  ),
 }
 
 export const config = merge(

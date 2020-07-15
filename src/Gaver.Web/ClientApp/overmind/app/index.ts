@@ -1,6 +1,7 @@
 import * as actions from './actions'
 import { OnInitialize } from '..'
 import { subscribe, Topic } from '~/utils/pubSub'
+import { derived } from 'overmind'
 
 export interface NavContext {
   title: string
@@ -16,7 +17,7 @@ type AppState = {
 
 const state: AppState = {
   ajaxCounter: 0,
-  isSavingOrLoading: (((state) => state.ajaxCounter > 0) as unknown) as boolean,
+  isSavingOrLoading: derived((state) => state.ajaxCounter > 0),
   isMenuShowing: false,
 }
 
