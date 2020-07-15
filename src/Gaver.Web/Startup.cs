@@ -61,7 +61,7 @@ namespace Gaver.Web
 
             services.AddCustomAuth(Configuration);
 
-            services.AddCustomMvc(hostEnvironment);
+            services.AddCustomMvc();
             services.AddCustomSwagger(Configuration);
             services.AddCustomDbContext(Configuration);
             services.AddCustomHealthChecks(Configuration, hostEnvironment);
