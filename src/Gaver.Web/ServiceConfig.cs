@@ -10,7 +10,6 @@ using Gaver.Common;
 using Gaver.Common.Attributes;
 using Gaver.Data;
 using Gaver.Web.Exceptions;
-using Gaver.Web.Extensions;
 using Gaver.Web.Filters;
 using Gaver.Web.MvcUtils;
 using Gaver.Web.Options;
@@ -69,18 +68,18 @@ namespace Gaver.Web
         public static void AddCustomMvc(this IServiceCollection services)
         {
             var mvc = services.AddMvc(o => {
-                var policy = new AuthorizationPolicyBuilder()
-                    .AddRequirements(
-                        new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
-                    .Build();
-                o.Filters.Add(new AuthorizeFilter(policy));
-                o.Filters.Add(new CustomExceptionFilterAttribute());
-            }).AddRazorOptions(o => {
-                o.ViewLocationFormats.Clear();
-                o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                o.ViewLocationFormats.Add("/Features/{0}.cshtml");
-            })
+                    var policy = new AuthorizationPolicyBuilder()
+                        .AddRequirements(
+                            new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
+                        .Build();
+                    o.Filters.Add(new AuthorizeFilter(policy));
+                    o.Filters.Add(new CustomExceptionFilterAttribute());
+                }).AddRazorOptions(o => {
+                    o.ViewLocationFormats.Clear();
+                    o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
+                    o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
+                    o.ViewLocationFormats.Add("/Features/{0}.cshtml");
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
                 .AddNewtonsoftJson(options => options.UseCamelCasing(true));
@@ -124,13 +123,11 @@ namespace Gaver.Web
             var connectionString = configuration.GetConnectionString("GaverContext");
             if (connectionString.IsNullOrEmpty()) throw new ConfigurationException("ConnectionStrings:GaverContext");
 
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<GaverContext>(options => {
-                    options
-                        .UseNpgsql(connectionString, b => b
-                            .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
-                            .SetPostgresVersion(11, 0));
-                });
+            services.AddDbContext<GaverContext>(options => {
+                options.UseNpgsql(connectionString, b => b
+                    .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
+                    .SetPostgresVersion(11, 0));
+            });
         }
 
         public static void ScanAssemblies(this IServiceCollection services)
@@ -168,7 +165,7 @@ namespace Gaver.Web
                         Detail = "Please refer to the errors property for additional details."
                     };
                     return new BadRequestObjectResult(problemDetails) {
-                        ContentTypes = { "application/problem+json", "application/problem+xml" }
+                        ContentTypes = {"application/problem+json", "application/problem+xml"}
                     };
                 };
             });
@@ -180,7 +177,6 @@ namespace Gaver.Web
 
             services.AddHealthChecks()
                 .AddNpgSql(configuration.GetConnectionString("GaverContext"));
-            // services.AddHealthChecksUI();
         }
     }
 }

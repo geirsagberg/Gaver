@@ -6,8 +6,6 @@
     <OutputType>Exe</OutputType>
     <PackageId>Gaver.Web</PackageId>
     <UserSecretsId>Gaver-d5fca685-5997-4e8a-9069-0750a83f161e</UserSecretsId>
-    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <ApplicationInsightsResourceId>/subscriptions/0d60de30-59ab-484b-b845-244c39b366ce/resourcegroups/Gaver/providers/microsoft.insights/components/Gaver</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/0d60de30-59ab-484b-b845-244c39b366ce/resourcegroups/Gaver/providers/microsoft.insights/components/Gaver</ApplicationInsightsAnnotationResourceId>
     <LangVersion>latest</LangVersion>
@@ -19,39 +17,31 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
-    <StartAction>Project</StartAction>
-    <ExternalConsole>true</ExternalConsole>
-    <ApplicationURL>http://0.0.0.0:5000;https://0.0.0.0:5001</ApplicationURL>
-  </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gaver.Common\Gaver.Common.csproj"/>
-    <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj"/>
+    <ProjectReference Include="..\Gaver.Common\Gaver.Common.csproj" />
+    <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="3.0.0"/>
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.7"/>
-    <PackageReference Include="Flurl.Http" Version="2.4.2"/>
-    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="3.1.0"/>
-    <PackageReference Include="HybridModelBinding" Version="0.16.0"/>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0"/>
-    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="1.0.0-preview-009000001-1251"/>
-    <PackageReference Include="Scrutor" Version="3.1.0"/>
-    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0"/>
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4"/>
-    <PackageReference Include="MediatR" Version="7.0.0"/>
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0"/>
-    <PackageReference Include="Serilog" Version="2.9.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0"/>
-    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1"/>
-    <PackageReference Include="LightInject.Microsoft.DependencyInjection" Version="3.2.0"/>
-
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="3.1.1" />
+    <PackageReference Include="Flurl.Http" Version="2.4.2" />
+    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="5.1.1" />
+    <PackageReference Include="HybridModelBinding" Version="0.17.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.14.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6" />
+    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Scrutor" Version="3.2.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+    <PackageReference Include="MediatR" Version="8.0.2" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">
@@ -59,6 +49,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Watch Include="../../webpack.config.ts"/>
+    <Watch Include="../../webpack.config.ts" />
   </ItemGroup>
 </Project>

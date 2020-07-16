@@ -5,7 +5,7 @@ using MediatR.Pipeline;
 
 namespace Gaver.Web.CrossCutting
 {
-    public class SharedListRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
+    public class SharedListRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
     {
         private readonly IAccessChecker accessChecker;
 

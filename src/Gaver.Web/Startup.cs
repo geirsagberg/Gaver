@@ -12,7 +12,6 @@ using Gaver.Web.Exceptions;
 using Gaver.Web.Extensions;
 using Gaver.Web.Hubs;
 using Gaver.Web.Options;
-using HealthChecks.UI.Client;
 using Hellang.Middleware.ProblemDetails;
 using JetBrains.Annotations;
 using MediatR;
@@ -145,10 +144,7 @@ namespace Gaver.Web
 
             app.UseEndpoints(endpoints => {
                 if (!hostEnvironment.IsTest()) {
-                    endpoints.MapHealthChecks("/health", new HealthCheckOptions {
-                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                    });
-                    // endpoints.MapHealthChecksUI();
+                    endpoints.MapHealthChecks("/health");
                 }
                 endpoints.MapHub<ListHub>("/listHub");
                 endpoints.MapDefaultControllerRoute();

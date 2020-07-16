@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Gaver.Web.CrossCutting
 {
-    public class AuthenticationPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
+    public class AuthenticationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
     {
         private readonly IHttpContextAccessor httpContextAccessor;
 

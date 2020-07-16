@@ -31,8 +31,8 @@
   <title>@(ViewData["Title"] ?? "Gaver")</title>
   <link rel="stylesheet" href="~/icomoon/style.css" asp-append-version="true">
   <environment names="Production">
-  <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.chunks[chunk].css %>" asp-append-version="true">
+    <% for (const css of htmlWebpackPlugin.files.css) { %>
+    <link rel="stylesheet" href="<%= css %>" asp-append-version="true">
     <% } %>
   </environment>
   <script>

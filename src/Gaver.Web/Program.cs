@@ -25,6 +25,9 @@ namespace Gaver.Web
                 var host = CreateHostBuilder(args)
                     .Build();
 
+                var environmentName = host.Services.GetRequiredService<IHostEnvironment>().EnvironmentName;
+                Log.Information("Environment: {Environment}", environmentName);
+
                 host.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
                 using (var scope = host.Services.CreateScope()) {
