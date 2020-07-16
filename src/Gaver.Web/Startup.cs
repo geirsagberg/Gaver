@@ -12,6 +12,7 @@ using Gaver.Web.Exceptions;
 using Gaver.Web.Extensions;
 using Gaver.Web.Hubs;
 using Gaver.Web.Options;
+using HealthChecks.UI.Client;
 using Hellang.Middleware.ProblemDetails;
 using JetBrains.Annotations;
 using MediatR;
@@ -24,11 +25,8 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
-
-//using WebEssentials.AspNetCore.Pwa;
 
 [assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
 [assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
@@ -144,8 +142,11 @@ namespace Gaver.Web
 
             app.UseEndpoints(endpoints => {
                 if (!hostEnvironment.IsTest()) {
-                    endpoints.MapHealthChecks("/health");
+                    endpoints.MapHealthChecks("/health", new HealthCheckOptions {
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
                 }
+
                 endpoints.MapHub<ListHub>("/listHub");
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllerRoute("API 404", "api/{*anything}", new {
@@ -158,9 +159,12 @@ namespace Gaver.Web
 
         private static void SetupStaticFiles(IApplicationBuilder app, IHostEnvironment env)
         {
-            var cachePeriod = (int) (env.IsDevelopment() ? TimeSpan.FromMinutes(10).TotalSeconds : TimeSpan.FromDays(365).TotalSeconds);
+            var cachePeriod = (int) (env.IsDevelopment()
+                ? TimeSpan.FromMinutes(10).TotalSeconds
+                : TimeSpan.FromDays(365).TotalSeconds);
             app.UseStaticFiles(new StaticFileOptions {
-                OnPrepareResponse = ctx => ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={cachePeriod}")
+                OnPrepareResponse = ctx =>
+                    ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={cachePeriod}")
             });
         }
 
