@@ -6,26 +6,28 @@ import { publish, Topic } from './pubSub'
 
 const acceptJsonHeader = {
   Accept: 'application/json',
-  'Accept-Charset': 'utf-8'
+  'Accept-Charset': 'utf-8',
 }
 
 const contentTypeJsonHeader = {
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
 }
 
 const jsonHeaders = {
   ...acceptJsonHeader,
-  ...contentTypeJsonHeader
+  ...contentTypeJsonHeader,
 }
 
-const handleResponse = schema => async response => {
+const handleResponse = (schema) => async (response) => {
   const contentType = response.headers.get('content-type')
   if (contentType && contentType.indexOf('json') !== -1) {
     const data = await response.json()
     if (!response.ok) {
       const message = Array.isArray(data)
-        ? data.map(d => d.message).join()
-        : data.message || (data.error ? data.error.message : undefined) || (typeof data.errors === 'object' ? first(values(data.errors)) : '')
+        ? data.map((d) => d.message).join()
+        : data.message ||
+          (data.error ? data.error.message : undefined) ||
+          (typeof data.errors === 'object' ? first(values(data.errors)) : '')
       throw new Error(message)
     }
     return schema ? normalize(data, schema) : data
@@ -47,7 +49,7 @@ async function tryAjax<T>(func: () => Promise<Response>, schema): Promise<T> {
 }
 
 const getAuthHeader = () => ({
-  Authorization: 'Bearer ' + AuthService.loadAccessToken()
+  Authorization: 'Bearer ' + AuthService.loadAccessToken(),
 })
 
 const getCredentials = (includeCredentials: boolean) => (includeCredentials ? 'include' : 'omit')
@@ -59,8 +61,8 @@ export const getJson = <T = any>(url, schema?, includeCredentials = true) =>
         credentials: getCredentials(includeCredentials),
         headers: {
           ...acceptJsonHeader,
-          ...getAuthHeader()
-        }
+          ...getAuthHeader(),
+        },
       }),
     schema
   )
@@ -73,9 +75,9 @@ const createJsonMethod = (method: string) => <T = any>(url, data?, schema?, incl
         credentials: getCredentials(includeCredentials),
         headers: {
           ...jsonHeaders,
-          ...getAuthHeader()
+          ...getAuthHeader(),
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       }),
     schema
   )

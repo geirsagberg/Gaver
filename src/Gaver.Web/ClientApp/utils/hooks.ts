@@ -5,8 +5,8 @@ import { NavContext } from '~/overmind/app'
 export function useNavContext(navContext: NavContext, deps?: readonly any[]) {
   const {
     actions: {
-      app: { setNavContext }
-    }
+      app: { setNavContext },
+    },
   } = useOvermind()
   useEffect(() => {
     setNavContext(navContext)

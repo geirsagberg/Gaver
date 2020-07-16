@@ -8,20 +8,20 @@ import { isEmailValid } from './utils/validation'
 
 export const useStyles = makeStyles({
   overflowDialog: {
-    overflow: 'visible'
-  }
+    overflow: 'visible',
+  },
 })
 
 export const ShareListDialog: FC = () => {
   const classes = useStyles({})
   const {
     actions: {
-      myList: { cancelSharingList, emailAdded, emailDeleted, shareList }
+      myList: { cancelSharingList, emailAdded, emailDeleted, shareList },
     },
     state: {
       myList: { isSharingList, shareEmails },
-      app: { isSavingOrLoading }
-    }
+      app: { isSavingOrLoading },
+    },
   } = useOvermind()
   const [emailInput, setEmailInput] = useState('')
   const addAndShareList = () => {
@@ -45,8 +45,8 @@ export const ShareListDialog: FC = () => {
           onAdd={emailAdded}
           InputProps={{ type: 'email', autoFocus: true }}
           onDelete={emailDeleted}
-          onKeyPress={e => e.key === 'Enter' && addAndShareList()}
-          onUpdateInput={e => setEmailInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && addAndShareList()}
+          onUpdateInput={(e) => setEmailInput(e.target.value)}
           blurBehavior="add"
           required
           newChipKeyCodes={[KeyCodes.Enter, KeyCodes.Tab, KeyCodes.Comma, KeyCodes.Space]}
@@ -59,8 +59,7 @@ export const ShareListDialog: FC = () => {
           }
           variant="contained"
           color="primary"
-          onClick={addAndShareList}
-        >
+          onClick={addAndShareList}>
           Del liste
         </Button>
         <Button disabled={isSavingOrLoading} onClick={cancel}>

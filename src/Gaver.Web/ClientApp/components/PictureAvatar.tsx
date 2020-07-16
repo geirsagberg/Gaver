@@ -10,7 +10,7 @@ const PictureAvatar = ({ user, ...rest }: { user: UserDto } & AvatarProps) => {
     <Avatar {...rest}>
       {user.name
         .split(' ')
-        .map(s => (s.length > 0 ? s[0] : ''))
+        .map((s) => (s.length > 0 ? s[0] : ''))
         .join('')
         .substr(0, 2)}
     </Avatar>

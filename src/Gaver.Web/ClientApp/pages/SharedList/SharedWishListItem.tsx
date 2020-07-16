@@ -11,44 +11,44 @@ const useStyles = createStylesHook({
     display: 'flex',
     alignItems: 'center',
     marginBottom: '1rem',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   content: {
     margin: '0.5rem 0',
     minWidth: '2rem',
     textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   boughtBy: {
     margin: '0.5rem 0',
     fontStyle: 'italic',
     '&:last-child': {
-      marginRight: '1rem'
+      marginRight: '1rem',
     },
     textAlign: 'right',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    marginLeft: '1rem'
+    marginLeft: '1rem',
   },
   buyButton: {
-    marginRight: 6
+    marginRight: 6,
   },
   link: {
-    whiteSpace: 'nowrap'
-  }
+    whiteSpace: 'nowrap',
+  },
 })
 
 const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   const classes = useStyles({})
   const {
     actions: {
-      sharedLists: { setBought }
+      sharedLists: { setBought },
     },
     state: {
       currentSharedList,
       sharedLists: { users },
-      auth: { user }
-    }
+      auth: { user },
+    },
   } = useOvermind()
 
   const wish = currentSharedList.wishes[wishId]
@@ -79,8 +79,7 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
         <Button
           color="primary"
           onClick={() => setBought({ wishId: wish.id, isBought: true })}
-          className={classes.buyButton}
-        >
+          className={classes.buyButton}>
           Kjøp
         </Button>
       )}

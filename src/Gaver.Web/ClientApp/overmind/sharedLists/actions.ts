@@ -10,7 +10,7 @@ import { User } from './state'
 export const onUpdateUsers: Action<Dictionary<User>> = ({ state }, users) => {
   state.sharedLists.users = {
     ...state.sharedLists.users,
-    ...users
+    ...users,
   }
 }
 
@@ -19,20 +19,20 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
     actions: {
       routing: { setCurrentPage, setCurrentSharedList },
       sharedLists: { loadSharedList, onUpdateUsers },
-      chat: { clearMessages, loadMessages, onMessageAdded }
+      chat: { clearMessages, loadMessages, onMessageAdded },
     },
     state: { auth, friends },
     effects: {
       routing: { redirect },
-      sharedLists: { subscribeList }
-    }
+      sharedLists: { subscribeList },
+    },
   },
   args
 ) => {
   const listId = +args.params['listId']
   if (listId === auth.user.wishListId) {
     redirect('/')
-  } else if (!some(friends.users, u => u.wishListId === listId)) {
+  } else if (!some(friends.users, (u) => u.wishListId === listId)) {
     redirect('/notfound')
   } else {
     setCurrentPage('sharedList')
@@ -43,7 +43,7 @@ export const handleSharedList: Action<RouteCallbackArgs> = async (
     await subscribeList(listId, {
       onRefresh: () => loadSharedList(listId),
       onUpdateUsers,
-      onMessageAdded
+      onMessageAdded,
     })
   }
 }
@@ -52,8 +52,8 @@ export const loadSharedList: Action<number> = (
   {
     state: {
       sharedLists,
-      auth: { user }
-    }
+      auth: { user },
+    },
   },
   listId
 ) =>
@@ -69,8 +69,8 @@ export const setBought: Action<{ wishId: number; isBought: boolean }> = (
   {
     state: {
       auth: { user },
-      currentSharedList
-    }
+      currentSharedList,
+    },
   },
   { wishId, isBought }
 ) =>

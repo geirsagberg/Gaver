@@ -7,8 +7,8 @@ import { NewUserGroup, UserGroup } from './state'
 export const handleUserGroups: Action<RouteCallbackArgs> = async ({
   actions: {
     routing: { setCurrentPage },
-    userGroups: { loadUserGroups }
-  }
+    userGroups: { loadUserGroups },
+  },
 }) => {
   setCurrentPage('userGroups')
   await loadUserGroups()
@@ -33,22 +33,22 @@ export const cancelEditingGroup: Action = ({ state: { userGroups } }) => {
 export const updateNewGroup: Action<Partial<NewUserGroup>> = ({ state: { userGroups } }, update) => {
   userGroups.newGroup = {
     ...userGroups.newGroup,
-    ...update
+    ...update,
   }
 }
 
 export const updateEditingGroup: Action<Partial<UserGroup>> = ({ state: { userGroups } }, update) => {
   userGroups.editingGroup = {
     ...userGroups.editingGroup,
-    ...update
+    ...update,
   }
 }
 
 export const loadUserGroups: AsyncAction = ({
   effects: {
-    userGroups: { getUserGroups }
+    userGroups: { getUserGroups },
   },
-  state: { userGroups }
+  state: { userGroups },
 }) =>
   tryOrNotify(async () => {
     const userGroupsData = await getUserGroups()
@@ -57,9 +57,9 @@ export const loadUserGroups: AsyncAction = ({
 
 export const createUserGroup: Action = ({
   effects: {
-    userGroups: { postUserGroup }
+    userGroups: { postUserGroup },
   },
-  state: { userGroups }
+  state: { userGroups },
 }) =>
   tryOrNotify(async () => {
     const userGroup = await postUserGroup(userGroups.newGroup)
@@ -70,9 +70,9 @@ export const createUserGroup: Action = ({
 
 export const updateUserGroup: Action = ({
   effects: {
-    userGroups: { patchUserGroup }
+    userGroups: { patchUserGroup },
   },
-  state: { userGroups }
+  state: { userGroups },
 }) =>
   tryOrNotify(async () => {
     const userGroup = { ...userGroups.editingGroup }
@@ -84,13 +84,13 @@ export const updateUserGroup: Action = ({
 
 export const deleteEditingGroup: Action = ({
   effects: {
-    userGroups: { deleteUserGroup }
+    userGroups: { deleteUserGroup },
   },
-  state: { userGroups }
+  state: { userGroups },
 }) =>
   tryOrNotify(async () => {
     const {
-      editingGroup: { id, name }
+      editingGroup: { id, name },
     } = userGroups
     if (await showConfirm(`Er du sikker på at du vil slette gruppen "${name}"?`)) {
       await deleteUserGroup(id)
@@ -103,11 +103,11 @@ export const deleteEditingGroup: Action = ({
 export const setUserGroupName: Action<string> = (
   {
     effects: {
-      userGroups: { patchUserGroup }
+      userGroups: { patchUserGroup },
     },
     state: {
-      routing: { currentUserGroupId }
-    }
+      routing: { currentUserGroupId },
+    },
   },
   name
 ) =>

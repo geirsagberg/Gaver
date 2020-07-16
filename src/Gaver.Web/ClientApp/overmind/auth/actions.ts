@@ -18,8 +18,8 @@ export const checkSession: Action = ({
   effects,
   actions: {
     friends: { loadFriends },
-    userGroups: { loadUserGroups }
-  }
+    userGroups: { loadUserGroups },
+  },
 }) =>
   tryOrNotify(async () => {
     if (state.auth.isLoggedIn) return
@@ -50,8 +50,8 @@ export const handleAuthentication: Action = ({ effects, actions }) => {
 export const redirectIfNotLoggedIn: Action<RouteCallbackArgs> = (
   {
     actions: {
-      auth: { logIn }
-    }
+      auth: { logIn },
+    },
   },
   { next }
 ) => {

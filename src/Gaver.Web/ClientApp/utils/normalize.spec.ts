@@ -4,14 +4,14 @@ describe('normalizeArrays', () => {
   it('turns a top-level array into a dictionary using "id" as key', () => {
     const foo = [
       { id: 1, name: 'A' },
-      { id: 2, name: 'B' }
+      { id: 2, name: 'B' },
     ]
 
     const normalizedFoo = normalizeArrays(foo)
 
     expect(normalizedFoo).toEqual({
       '1': { id: 1, name: 'A' },
-      '2': { id: 2, name: 'B' }
+      '2': { id: 2, name: 'B' },
     })
   })
   it('turns a nested array into a dictionary using "id" as key', () => {
@@ -19,8 +19,8 @@ describe('normalizeArrays', () => {
       bar: 'x',
       items: [
         { id: 1, name: 'A' },
-        { id: 2, name: 'B' }
-      ]
+        { id: 2, name: 'B' },
+      ],
     }
 
     const normalizedFoo = normalizeArrays(foo)
@@ -29,8 +29,8 @@ describe('normalizeArrays', () => {
       bar: 'x',
       items: {
         '1': { id: 1, name: 'A' },
-        '2': { id: 2, name: 'B' }
-      }
+        '2': { id: 2, name: 'B' },
+      },
     })
   })
   it('does not touch nulls', () => {
@@ -39,7 +39,7 @@ describe('normalizeArrays', () => {
     const normalizedFoo = normalizeArrays(foo)
 
     expect(normalizedFoo).toEqual({
-      '1': { id: 1, name: null }
+      '1': { id: 1, name: null },
     })
   })
   it('does not touch primitive arrays', () => {
@@ -51,7 +51,7 @@ describe('normalizeArrays', () => {
   })
   it('does not touch nested primitive arrays', () => {
     const foo = {
-      items: [1, 2, 3]
+      items: [1, 2, 3],
     }
 
     const normalizedFoo = normalizeArrays(foo)
@@ -67,7 +67,7 @@ describe('normalizeArrays', () => {
   })
   it('maps nested empty array to empty object', () => {
     const foo = {
-      items: []
+      items: [],
     }
 
     const normalizedFoo = normalizeArrays(foo)

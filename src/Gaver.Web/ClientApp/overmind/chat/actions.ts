@@ -5,8 +5,8 @@ import { ChatMessageDto } from '~/types/data'
 export const toggleChat: Action = async ({
   state: { chat },
   effects: {
-    chat: { scrollChat }
-  }
+    chat: { scrollChat },
+  },
 }) => {
   chat.visible = !chat.visible
   if (chat.visible) {
@@ -17,8 +17,8 @@ export const toggleChat: Action = async ({
 export const showChat: Action = async ({
   state: { chat },
   effects: {
-    chat: { scrollChat }
-  }
+    chat: { scrollChat },
+  },
 }) => {
   chat.visible = true
   scrollChat()
@@ -47,8 +47,8 @@ export const onMessageAdded: Action<ChatMessageDto> = (
   {
     state,
     effects: {
-      chat: { scrollChat }
-    }
+      chat: { scrollChat },
+    },
   },
   chatMessage
 ) => {

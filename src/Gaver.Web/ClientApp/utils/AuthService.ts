@@ -10,7 +10,7 @@ const auth = new auth0.WebAuth({
   redirectUri: location.origin + '/callback',
   responseType: 'token',
   scope: 'openid email profile',
-  audience: AppSettings.audience
+  audience: AppSettings.audience,
 })
 
 export default class AuthService {

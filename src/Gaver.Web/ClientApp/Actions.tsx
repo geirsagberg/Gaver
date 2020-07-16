@@ -7,12 +7,12 @@ export const Actions: FC = () => {
   const {
     state: {
       routing: { currentPage },
-      myList: { isDeleting }
+      myList: { isDeleting },
     },
     actions: {
       myList: { startSharingList, toggleDeleting },
-      chat: { toggleChat }
-    }
+      chat: { toggleChat },
+    },
   } = useOvermind()
   switch (currentPage) {
     case 'myList':

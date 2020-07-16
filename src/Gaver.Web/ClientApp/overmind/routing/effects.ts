@@ -8,7 +8,7 @@ export type RouteCallbackArgs = {
 export type RouteCallback = (args: RouteCallbackArgs) => any
 
 export function route(route: string, ...actions: RouteCallback[]) {
-  const callbacks = actions.map(action => ({ params }, next) => action({ params, next }))
+  const callbacks = actions.map((action) => ({ params }, next) => action({ params, next }))
   pageJs(route, ...callbacks)
 }
 export const start = pageJs.start

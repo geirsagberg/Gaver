@@ -10,11 +10,11 @@ const onInitialize: OnInitialize = ({
     invitations: { handleInvitation },
     sharedLists: { handleSharedList },
     myList: { handleMyList },
-    userGroups: { handleUserGroups }
+    userGroups: { handleUserGroups },
   },
   effects: {
-    routing: { route, start, exit, enter }
-  }
+    routing: { route, start, exit, enter },
+  },
 }) => {
   enter(async (_, next) => {
     await checkSession()

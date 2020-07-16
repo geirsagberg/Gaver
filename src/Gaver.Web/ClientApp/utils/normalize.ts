@@ -24,7 +24,7 @@ export function normalizeArrays<T>(
       : Array.isArray(obj) && (!obj.length || obj[0]?.hasOwnProperty(iteratee))
       ? normalizeArrays(keyBy(obj, iteratee))
       : Array.isArray(obj)
-      ? obj.map(o => normalizeArrays(o))
+      ? obj.map((o) => normalizeArrays(o))
       : (mapValues((obj as unknown) as object, (value, key) => {
           return normalizeArrays(
             !includes(ignoreProps, key) && Array.isArray(value) && obj[0]?.hasOwnProperty(iteratee)

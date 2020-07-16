@@ -8,7 +8,7 @@ export const gaverColors = {
   second: '#0AC1B1',
   third: '#0AC1B1',
   fourth: '#EC7D2B',
-  fifth: '#DD395A'
+  fifth: '#DD395A',
 }
 
 const palette: PaletteOptions = {
@@ -34,7 +34,7 @@ const colors = {
   darkGreyOverlay12: '#2c2c2c',
   darkGreyOverlay14: '#2d2d2d',
   darkGreyOverlay15: '#333333',
-  darkGreyOverlay16: '#383838'
+  darkGreyOverlay16: '#383838',
 }
 
 const commonThemeOptions: ThemeOptions = {
@@ -42,19 +42,19 @@ const commonThemeOptions: ThemeOptions = {
   overrides: {
     MuiDialog: {
       container: {
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
       },
       paper: {
-        margin: '0 1rem'
+        margin: '0 1rem',
       },
       paperFullWidth: {
-        width: `calc(100% - 2rem)`
+        width: `calc(100% - 2rem)`,
       },
       paperScrollPaper: {
-        maxHeight: '100%'
-      }
-    }
-  }
+        maxHeight: '100%',
+      },
+    },
+  },
 }
 
 const theme = createMuiTheme(commonThemeOptions)
@@ -64,31 +64,31 @@ const darkThemeOptions: ThemeOptions = {
     type: 'dark',
     background: {
       paper: colors.darkGrey,
-      default: colors.darkGrey
+      default: colors.darkGrey,
     },
     text: {
       primary: colors.white87,
       secondary: colors.white60,
       hint: colors.white60,
-      disabled: colors.white38
-    }
+      disabled: colors.white38,
+    },
   },
   overrides: {
     MuiPaper: {
       elevation1: {
-        background: colors.darkGreyOverlay05
+        background: colors.darkGreyOverlay05,
       },
       elevation2: {
-        background: colors.darkGreyOverlay07
+        background: colors.darkGreyOverlay07,
       },
       elevation3: {
-        background: colors.darkGreyOverlay08
+        background: colors.darkGreyOverlay08,
       },
       elevation4: {
-        background: colors.darkGreyOverlay09
-      }
-    }
-  }
+        background: colors.darkGreyOverlay09,
+      },
+    },
+  },
 }
 
 export const darkTheme = createMuiTheme(merge(commonThemeOptions, darkThemeOptions))
@@ -103,15 +103,15 @@ export const commonStyles = createStyles({
     flexDirection: 'column',
     alignItems: 'center',
     alignSelf: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   dialogActions: {
     margin: '0.5rem',
     '& > :first-child': {
-      marginLeft: 0
+      marginLeft: 0,
     },
     '& > :last-child': {
-      marginRight: 0
-    }
-  }
+      marginRight: 0,
+    },
+  },
 })

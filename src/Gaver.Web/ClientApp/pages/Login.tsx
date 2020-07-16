@@ -10,26 +10,26 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   icon: {
     color: colors.amber[600],
-    fontSize: 80
+    fontSize: 80,
   },
   loginButton: {
-    margin: '1rem 0 2rem'
-  }
+    margin: '1rem 0 2rem',
+  },
 })
 
 const LoginPage: FC = () => {
   const classes = useStyles({})
   const {
     actions: {
-      auth: { logIn }
+      auth: { logIn },
     },
     state: {
-      auth: { isLoggingIn }
-    }
+      auth: { isLoggingIn },
+    },
   } = useOvermind()
 
   return isLoggingIn ? (

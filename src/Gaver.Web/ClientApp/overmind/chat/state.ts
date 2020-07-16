@@ -7,5 +7,5 @@ export interface ChatState {
 
 export const state: ChatState = {
   messages: [],
-  visible: false
+  visible: false,
 }

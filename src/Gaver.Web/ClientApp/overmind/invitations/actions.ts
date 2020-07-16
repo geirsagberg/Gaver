@@ -15,8 +15,8 @@ export const handleInvitation: Action<RouteCallbackArgs> = (
   {
     actions: {
       routing: { setCurrentPage },
-      invitations: { checkInvitationStatus }
-    }
+      invitations: { checkInvitationStatus },
+    },
   },
   { params: { token } }
 ) => {
@@ -27,8 +27,8 @@ export const handleInvitation: Action<RouteCallbackArgs> = (
 export const acceptInvitation: Action = ({
   state: { invitations, friends },
   effects: {
-    routing: { showSharedList }
-  }
+    routing: { showSharedList },
+  },
 }) =>
   tryOrNotify(async () => {
     const friend = await postJson<UserDto>(`/api/invitations/${invitations.token}/accept`)

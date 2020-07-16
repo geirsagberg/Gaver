@@ -9,7 +9,7 @@ export const subscribeList = async (
   {
     onRefresh,
     onUpdateUsers,
-    onMessageAdded
+    onMessageAdded,
   }: {
     onRefresh: () => any
     onUpdateUsers: (users: Dictionary<UserDto>) => any
@@ -18,13 +18,13 @@ export const subscribeList = async (
 ) => {
   const hubConnection = new HubConnectionBuilder()
     .withUrl(`${document.location.origin}/listHub`, {
-      accessTokenFactory: () => AuthService.loadAccessToken()
+      accessTokenFactory: () => AuthService.loadAccessToken(),
     })
     .configureLogging(isDevelopment ? LogLevel.Debug : LogLevel.Warning)
     .build()
   hubConnection.on('refresh', onRefresh)
   hubConnection.on('updateUsers', (users: UserDto[]) => {
-    onUpdateUsers(keyBy(users, u => u.id))
+    onUpdateUsers(keyBy(users, (u) => u.id))
   })
   hubConnection.on('messageAdded', onMessageAdded)
   const reconnect = async () => {

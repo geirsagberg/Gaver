@@ -13,34 +13,34 @@ const useStyles = makeStyles({
     width: '100%',
     height: '100%',
     maxWidth: pageWidth,
-    position: 'relative'
+    position: 'relative',
   },
   list: {
     padding: '1rem',
     height: '100%',
     position: 'relative',
     transition: 'all 0.5s',
-    userSelect: 'none'
+    userSelect: 'none',
   },
   bottomNav: {
     position: 'fixed',
     bottom: 0,
     left: 0,
-    right: 0
+    right: 0,
   },
   empty: {
-    padding: '1rem'
-  }
+    padding: '1rem',
+  },
 })
 
 const SharedListPage: FC = () => {
   const classes = useStyles({})
   const {
-    state: { currentSharedOrderedWishes, currentSharedListOwner }
+    state: { currentSharedOrderedWishes, currentSharedListOwner },
   } = useOvermind()
   useNavContext(
     {
-      title: currentSharedListOwner ? currentSharedListOwner.name : null
+      title: currentSharedListOwner ? currentSharedListOwner.name : null,
     },
     [currentSharedListOwner]
   )
@@ -48,7 +48,7 @@ const SharedListPage: FC = () => {
   return currentSharedOrderedWishes ? (
     <div className={classes.root}>
       <div className={classes.list}>
-        {map(currentSharedOrderedWishes, wish => (
+        {map(currentSharedOrderedWishes, (wish) => (
           <SharedWishListItem key={wish.id} wishId={wish.id} />
         ))}
         {currentSharedOrderedWishes.length === 0 && (

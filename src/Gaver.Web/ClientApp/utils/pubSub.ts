@@ -18,5 +18,5 @@ export function publish(topic: string, data?): boolean {
 
 export enum Topic {
   AjaxStart = 'ajax.start',
-  AjaxStop = 'ajax.stop'
+  AjaxStop = 'ajax.stop',
 }

@@ -19,8 +19,8 @@ type Props = {
 const useStyles = createStylesHook({
   actions: commonStyles.dialogActions,
   leftIcon: {
-    marginRight: '0.5rem'
-  }
+    marginRight: '0.5rem',
+  },
 })
 
 const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDelete }) => {
@@ -30,7 +30,7 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
   return wish ? (
     <Dialog fullWidth open={true} onClose={onCancel}>
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault()
           onSave()
         }}>
@@ -38,7 +38,7 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
         <DialogContent>
           <TextField
             label="Beskrivelse"
-            onChange={event => updateWish({ title: event.target.value })}
+            onChange={(event) => updateWish({ title: event.target.value })}
             autoFocus
             fullWidth
             required
@@ -52,7 +52,7 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
             margin="dense"
             fullWidth
             type="url"
-            onChange={event => updateWish({ url: event.target.value })}
+            onChange={(event) => updateWish({ url: event.target.value })}
             value={wish.url || ''}
             disabled={isSavingOrLoading}
           />

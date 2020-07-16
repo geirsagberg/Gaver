@@ -18,5 +18,5 @@ export function showError(message) {
 }
 
 export function showConfirm(message): Promise<boolean> {
-  return new Promise(resolve => resolve(confirm(message)))
+  return new Promise((resolve) => resolve(confirm(message)))
 }

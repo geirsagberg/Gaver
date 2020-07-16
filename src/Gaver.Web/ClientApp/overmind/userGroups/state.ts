@@ -12,5 +12,5 @@ export interface UserGroupState {
 }
 
 export const state: UserGroupState = {
-  userGroups: {}
+  userGroups: {},
 }

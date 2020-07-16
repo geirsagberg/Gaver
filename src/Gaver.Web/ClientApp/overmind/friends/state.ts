@@ -7,5 +7,5 @@ export interface FriendsState {
 }
 
 export const state: FriendsState = {
-  users: {}
+  users: {},
 }

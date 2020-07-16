@@ -7,13 +7,13 @@ import { commonStyles } from '~/theme'
 
 const useStyles = makeStyles({
   root: {
-    ...commonStyles.centerContent
+    ...commonStyles.centerContent,
   },
   avatar: {
     margin: '1rem',
     width: '6rem',
-    height: '6rem'
-  }
+    height: '6rem',
+  },
 })
 
 const AcceptInvitationPage: FC = () => {
@@ -21,8 +21,8 @@ const AcceptInvitationPage: FC = () => {
   const {
     state: { invitations },
     actions: {
-      invitations: { acceptInvitation }
-    }
+      invitations: { acceptInvitation },
+    },
   } = useOvermind()
   return (
     <div className={classes.root}>

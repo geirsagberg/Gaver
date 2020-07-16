@@ -1,12 +1,12 @@
-$gray-base:              #000;
-$gray-darker:            #222;
-$gray-dark:              #333;
-$gray:                   #464545;
-$gray-light:             #999;
-$gray-lighter:           #EBEBEB;
+$gray-base: #000;
+$gray-darker: #222;
+$gray-dark: #333;
+$gray: #464545;
+$gray-light: #999;
+$gray-lighter: #ebebeb;
 
-$brand-primary:         #375a7f;
-$brand-success:         #00bc8c;
-$brand-info:            #3498DB;
-$brand-warning:         #F39C12;
-$brand-danger:          #E74C3C;
+$brand-primary: #375a7f;
+$brand-success: #00bc8c;
+$brand-info: #3498db;
+$brand-warning: #f39c12;
+$brand-danger: #e74c3c;

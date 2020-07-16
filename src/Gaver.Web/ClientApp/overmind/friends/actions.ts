@@ -5,8 +5,8 @@ import { AsyncAction } from '..'
 export const loadFriends: AsyncAction = ({
   state: { friends },
   effects: {
-    friends: { getFriends }
-  }
+    friends: { getFriends },
+  },
 }) =>
   tryOrNotify(async () => {
     const dtos = await getFriends()

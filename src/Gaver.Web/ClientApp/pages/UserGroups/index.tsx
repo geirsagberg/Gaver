@@ -13,14 +13,14 @@ const useStyles = makeStyles({
     height: '100%',
     width: '100%',
     maxWidth: pageWidth,
-    position: 'relative'
+    position: 'relative',
   },
   list: {
     padding: '1rem',
     height: '100%',
     position: 'relative',
     transition: 'all 0.5s',
-    userSelect: 'none'
+    userSelect: 'none',
   },
   fabOuterWrapper: {
     width: '100%',
@@ -28,11 +28,11 @@ const useStyles = makeStyles({
     position: 'fixed',
     bottom: 0,
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   addWishButton: {
-    margin: '1rem'
-  }
+    margin: '1rem',
+  },
 })
 
 const useGroupItemStyles = makeStyles({
@@ -42,22 +42,22 @@ const useGroupItemStyles = makeStyles({
     alignItems: 'center',
     paddingLeft: '1rem',
     minHeight: '3rem',
-    marginBottom: '1rem'
+    marginBottom: '1rem',
   },
   content: {
     margin: '0.5rem 0',
     minWidth: '2rem',
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
-  }
+    textOverflow: 'ellipsis',
+  },
 })
 
 const GroupItem: FC<{ value: UserGroup }> = ({ value }) => {
   const classes = useGroupItemStyles({})
   const {
     actions: {
-      userGroups: { startEditingGroup }
-    }
+      userGroups: { startEditingGroup },
+    },
   } = useOvermind()
 
   return (
@@ -81,11 +81,11 @@ const UserGroupsPage = () => {
   useNavContext({ title: 'Mine grupper' }, [])
   const {
     actions: {
-      userGroups: { startAddingGroup }
+      userGroups: { startAddingGroup },
     },
     state: {
-      userGroups: { userGroups }
-    }
+      userGroups: { userGroups },
+    },
   } = useOvermind()
 
   return (
@@ -93,7 +93,7 @@ const UserGroupsPage = () => {
       <div className={classes.list}>
         {userGroups &&
           (size(userGroups) ? (
-            map(userGroups, g => (
+            map(userGroups, (g) => (
               <GroupItem key={g.id} value={g}>
                 {g.name}
               </GroupItem>

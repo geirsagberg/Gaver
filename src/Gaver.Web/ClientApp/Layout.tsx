@@ -10,11 +10,11 @@ import { useOvermind } from './overmind'
 import { ShareListDialog } from './ShareListDialog'
 import { MainMenu } from './MainMenu'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     position: 'relative',
-    zIndex: 0
+    zIndex: 0,
   },
   content: {
     display: 'flex',
@@ -23,15 +23,15 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     paddingTop: '4rem',
     [theme.breakpoints.down('xs')]: {
-      paddingTop: '3.5rem'
-    }
+      paddingTop: '3.5rem',
+    },
   },
   menuIcon: {
-    marginRight: '0.5rem'
+    marginRight: '0.5rem',
   },
   toolbar: {
-    padding: '0 0.5rem'
-  }
+    padding: '0 0.5rem',
+  },
 }))
 
 const Layout: FC = () => {
@@ -39,11 +39,11 @@ const Layout: FC = () => {
   const {
     state: {
       auth: { isLoggedIn },
-      app: { title }
+      app: { title },
     },
     actions: {
-      app: { showMenu }
-    }
+      app: { showMenu },
+    },
   } = useOvermind()
 
   return (

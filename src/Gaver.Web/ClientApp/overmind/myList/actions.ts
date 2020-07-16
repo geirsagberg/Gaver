@@ -11,8 +11,8 @@ import { getEmptyWish, Wish } from './state'
 export const handleMyList: Action = async ({
   actions: {
     routing: { setCurrentPage },
-    myList: { loadWishes }
-  }
+    myList: { loadWishes },
+  },
 }) => {
   setCurrentPage('myList')
   await loadWishes()
@@ -23,7 +23,7 @@ export const addWish: Action = ({ state: { myList } }) =>
     const { title, url } = myList.newWish
     const addWishRequest: AddWishRequest = {
       title,
-      url
+      url,
     }
     const wish = await postJson('/api/MyList', addWishRequest)
     myList.wishes[wish.id] = wish
@@ -48,8 +48,8 @@ export const deleteEditingWish: Action<number> = async (
   {
     state: { myList },
     actions: {
-      myList: { confirmDeleteWish }
-    }
+      myList: { confirmDeleteWish },
+    },
   },
   wishId
 ) => {
@@ -71,7 +71,7 @@ export const cancelEditingWish: Action = ({ state: { myList } }) => {
 export const updateEditingWish: Action<Partial<Wish>> = ({ state: { myList } }, update) => {
   myList.editingWish = {
     ...myList.editingWish,
-    ...update
+    ...update,
   }
 }
 
@@ -86,7 +86,7 @@ export const saveEditingWish: Action = ({ state: { myList } }) =>
 export const updateNewWish: Action<Partial<Wish>> = ({ state }, update) => {
   state.myList.newWish = {
     ...state.myList.newWish,
-    ...update
+    ...update,
   }
 }
 

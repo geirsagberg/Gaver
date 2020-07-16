@@ -12,11 +12,11 @@ export const setCurrentSharedList: Action<number> = ({ state }, listId) => {
 export const handleStart: Action = async ({
   state: { auth },
   actions: {
-    routing: { setCurrentPage }
+    routing: { setCurrentPage },
   },
   effects: {
-    routing: { redirect }
-  }
+    routing: { redirect },
+  },
 }) => {
   if (auth.isLoggedIn) {
     redirect('/mylist')

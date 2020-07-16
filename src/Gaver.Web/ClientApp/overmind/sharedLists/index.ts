@@ -8,8 +8,8 @@ export default { actions, state, effects }
 export const useFriends = () => {
   const {
     state: {
-      friends: { users }
-    }
+      friends: { users },
+    },
   } = useOvermind()
   return users
 }

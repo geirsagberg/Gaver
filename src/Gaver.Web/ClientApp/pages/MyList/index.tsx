@@ -12,19 +12,19 @@ import AddWishDialog from './WishDetails/AddWishDialog'
 import EditWishDialog from './WishDetails/EditWishDialog'
 import WishListItem from './WishListItem'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     width: '100%',
     maxWidth: pageWidth,
-    position: 'relative'
+    position: 'relative',
   },
   list: {
     padding: '1rem',
     height: '100%',
     position: 'relative',
     transition: 'all 0.5s',
-    userSelect: 'none'
+    userSelect: 'none',
   },
   background: {
     height: '100%',
@@ -34,12 +34,10 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     left: 0,
     borderRadius: theme.shape.borderRadius,
-    background: Color(theme.palette.background.paper)
-      .fade(0.5)
-      .toString()
+    background: Color(theme.palette.background.paper).fade(0.5).toString(),
   },
   emptyBackground: {
-    opacity: 0
+    opacity: 0,
   },
   fabOuterWrapper: {
     width: '100%',
@@ -47,34 +45,34 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     bottom: 0,
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   fabWrapper: {},
   addWishButton: {
-    margin: '1rem'
+    margin: '1rem',
   },
   addWishHint: {
     position: 'absolute',
     bottom: '2rem',
-    right: '5rem'
+    right: '5rem',
   },
   droppable: {
-    marginBottom: '5.5rem'
+    marginBottom: '5.5rem',
   },
   listItem: {
-    marginBottom: '1rem'
-  }
+    marginBottom: '1rem',
+  },
 }))
 
 const MyListPage: FC = () => {
   const classes = useStyles({})
   const {
     state: {
-      myList: { orderedWishes, wishesLoaded }
+      myList: { orderedWishes, wishesLoaded },
     },
     actions: {
-      myList: { startAddingWish, wishOrderChanged }
-    }
+      myList: { startAddingWish, wishOrderChanged },
+    },
   } = useOvermind()
   useNavContext({ title: 'Mine ønsker' }, [])
 
@@ -85,22 +83,22 @@ const MyListPage: FC = () => {
       </div>
       <div className={classNames(classes.list)}>
         <DragDropContext
-          onDragEnd={result => {
+          onDragEnd={(result) => {
             if (!result.destination) {
               return
             }
             wishOrderChanged({
               oldIndex: result.source.index,
               newIndex: result.destination.index,
-              wishId: +result.draggableId
+              wishId: +result.draggableId,
             })
           }}>
           <Droppable droppableId="myList">
-            {provided => (
+            {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className={classes.droppable}>
                 {map(orderedWishes, (wish, i) => (
                   <Draggable key={wish.id} draggableId={wish.id.toString()} index={i}>
-                    {provided => (
+                    {(provided) => (
                       <div
                         ref={provided.innerRef}
                         className={classes.listItem}

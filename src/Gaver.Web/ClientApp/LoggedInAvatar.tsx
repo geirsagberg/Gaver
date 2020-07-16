@@ -6,8 +6,8 @@ export const LoggedInAvatar: FC = () => {
   const {
     state: { auth },
     actions: {
-      auth: { logOut }
-    }
+      auth: { logOut },
+    },
   } = useOvermind()
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement>(null)
   const showProfileMenu = (event: React.MouseEvent<HTMLElement>) => setMenuAnchorEl(event.currentTarget)

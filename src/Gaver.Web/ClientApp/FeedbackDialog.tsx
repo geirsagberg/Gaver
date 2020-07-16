@@ -7,7 +7,7 @@ import {
   DialogTitle,
   FormControlLabel,
   Switch,
-  TextField
+  TextField,
 } from '@material-ui/core'
 import React, { FC, useState } from 'react'
 import { useOvermind } from './overmind'
@@ -17,11 +17,11 @@ const FeedbackDialog: FC = () => {
   const [anonymous, setAnonymous] = useState(false)
   const {
     actions: {
-      app: { cancelFeedback, sendFeedback }
+      app: { cancelFeedback, sendFeedback },
     },
     state: {
-      app: { feedback, isSavingOrLoading }
-    }
+      app: { feedback, isSavingOrLoading },
+    },
   } = useOvermind()
   const cancel = () => {
     cancelFeedback()
@@ -40,12 +40,12 @@ const FeedbackDialog: FC = () => {
           fullWidth
           multiline
           value={message}
-          onChange={e => setMessage(e.target.value)}
+          onChange={(e) => setMessage(e.target.value)}
         />
         <FormControlLabel
           disabled={isSavingOrLoading}
           style={{ margin: '1rem 0' }}
-          control={<Switch checked={anonymous} onChange={e => setAnonymous(e.target.checked)} />}
+          control={<Switch checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} />}
           label="Send inn anonymt"
         />
         <DialogActions>

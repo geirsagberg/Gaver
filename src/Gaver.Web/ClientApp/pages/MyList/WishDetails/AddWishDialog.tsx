@@ -5,11 +5,11 @@ import WishDetailsDialog from './WishDetailsDialog'
 const AddWishDialog: FC = () => {
   const {
     state: {
-      myList: { newWish }
+      myList: { newWish },
     },
     actions: {
-      myList: { addWish, cancelAddingWish, updateNewWish }
-    }
+      myList: { addWish, cancelAddingWish, updateNewWish },
+    },
   } = useOvermind()
   return <WishDetailsDialog wish={newWish} onCancel={cancelAddingWish} onSave={addWish} updateWish={updateNewWish} />
 }

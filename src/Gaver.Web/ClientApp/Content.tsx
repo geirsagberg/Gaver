@@ -11,8 +11,8 @@ import UserGroupsPage from './pages/UserGroups'
 export const Content: FC = () => {
   const {
     state: {
-      routing: { currentPage }
-    }
+      routing: { currentPage },
+    },
   } = useOvermind()
   switch (currentPage) {
     case 'myList':

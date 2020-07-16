@@ -9,5 +9,5 @@ export enum KeyCodes {
   Down = 40,
   Delete = 46,
   SemiColon = 187,
-  Comma = 188
+  Comma = 188,
 }

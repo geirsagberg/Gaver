@@ -7,30 +7,30 @@ import { useOvermind } from './overmind'
 import { darkTheme } from './theme'
 import AppSettings from './utils/appSettings'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   menuPaper: {
-    background: theme.palette.primary.dark
+    background: theme.palette.primary.dark,
   },
   menu: {
     width: 256,
     display: 'flex',
     flexDirection: 'column',
-    height: '100%'
-  }
+    height: '100%',
+  },
 }))
 
 const SharedListsMenuItem: FC = () => {
   const {
     state: {
       routing: { currentSharedListId },
-      friends: { users }
+      friends: { users },
     },
     actions: {
-      app: { hideMenu }
+      app: { hideMenu },
     },
     effects: {
-      routing: { showSharedList }
-    }
+      routing: { showSharedList },
+    },
   } = useOvermind()
   return (
     some(users) && (
@@ -39,7 +39,7 @@ const SharedListsMenuItem: FC = () => {
           <ListItemText secondary="Delte lister" />
         </ListItem>
         <Divider />
-        {map(users, user => (
+        {map(users, (user) => (
           <ListItem
             key={user.wishListId}
             button
@@ -68,8 +68,8 @@ const LicensesMenuItem = () => (
 const LogOutMenuItem = () => {
   const {
     actions: {
-      auth: { logOut }
-    }
+      auth: { logOut },
+    },
   } = useOvermind()
   return (
     <ListItem button onClick={logOut}>
@@ -85,9 +85,9 @@ const FeedbackMenuItem = () => {
   const {
     state: {},
     actions: {
-      app: { hideMenu, showFeedback }
+      app: { hideMenu, showFeedback },
     },
-    effects: {}
+    effects: {},
   } = useOvermind()
 
   return (
@@ -109,14 +109,14 @@ const FeedbackMenuItem = () => {
 const MyListMenuItem = () => {
   const {
     state: {
-      routing: { currentPage }
+      routing: { currentPage },
     },
     actions: {
-      app: { hideMenu }
+      app: { hideMenu },
     },
     effects: {
-      routing: { showMyList }
-    }
+      routing: { showMyList },
+    },
   } = useOvermind()
   return (
     <ListItem
@@ -137,14 +137,14 @@ const MyListMenuItem = () => {
 export const MyGroupsMenuItem = () => {
   const {
     state: {
-      routing: { currentPage }
+      routing: { currentPage },
     },
     actions: {
-      app: { hideMenu }
+      app: { hideMenu },
     },
     effects: {
-      routing: { showUserGroups }
-    }
+      routing: { showUserGroups },
+    },
   } = useOvermind()
   return (
     <ListItem
@@ -166,12 +166,12 @@ export const MainMenu: FC = () => {
   const classes = useStyles({})
   const {
     state: {
-      app: { isMenuShowing }
+      app: { isMenuShowing },
     },
     actions: {
-      app: { showMenu, hideMenu }
+      app: { showMenu, hideMenu },
     },
-    effects: {}
+    effects: {},
   } = useOvermind()
   return (
     <ThemeProvider theme={darkTheme}>

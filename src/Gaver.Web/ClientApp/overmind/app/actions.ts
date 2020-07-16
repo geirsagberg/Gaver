@@ -39,8 +39,8 @@ export const sendFeedback: Action<FeedbackDto> = async (
   {
     state: { app },
     effects: {
-      api: { sendFeedback }
-    }
+      api: { sendFeedback },
+    },
   },
   feedback
 ) => {

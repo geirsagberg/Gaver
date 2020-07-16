@@ -6,7 +6,7 @@ export const useMyList = () => {
   const { state, actions } = useOvermind()
   return {
     state: state.myList,
-    actions: actions.myList
+    actions: actions.myList,
   }
 }
 

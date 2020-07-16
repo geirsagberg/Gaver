@@ -6,15 +6,15 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   icon: {
     color: colors.amber[600],
-    fontSize: 80
+    fontSize: 80,
   },
   content: {
-    margin: '1rem'
-  }
+    margin: '1rem',
+  },
 })
 
 interface Props {

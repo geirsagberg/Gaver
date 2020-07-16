@@ -6,7 +6,7 @@ import { darkTheme } from '~/theme'
 import ChatMessage from './ChatMessage'
 import SimpleBar from 'simplebar-react'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   menuPaper: {
     // background: theme.palette.primary.dark
   },
@@ -16,37 +16,37 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: '100vh'
+    height: '100vh',
   },
   chatHeader: {
     textAlign: 'center',
     padding: '1rem',
     [theme.breakpoints.down('xs')]: {
-      padding: '0.75rem 1rem'
-    }
+      padding: '0.75rem 1rem',
+    },
   },
   messages: {
     flex: 1,
     background: theme.palette.background.default,
-    height: `calc(100vh - 8rem)`
+    height: `calc(100vh - 8rem)`,
   },
   inputForm: {},
   input: {
-    padding: '0.5rem'
-  }
+    padding: '0.5rem',
+  },
 }))
 
 const ChatView = () => {
   const {
     state: {
-      chat: { visible, messages }
+      chat: { visible, messages },
     },
     actions: {
-      chat: { showChat, hideChat, addMessage }
+      chat: { showChat, hideChat, addMessage },
     },
     effects: {
-      chat: { scrollChat }
-    }
+      chat: { scrollChat },
+    },
   } = useOvermind()
   const classes = useStyles({})
   const [message, setMessage] = useState('')
@@ -63,13 +63,13 @@ const ChatView = () => {
           Chat
         </Typography>
         <SimpleBar className={classes.messages} id="chatMessages">
-          {messages.map(m => (
+          {messages.map((m) => (
             <ChatMessage message={m} key={m.id} />
           ))}
         </SimpleBar>
         <form
           className={classes.inputForm}
-          onSubmit={async e => {
+          onSubmit={async (e) => {
             e.preventDefault()
             setMessage('')
             await addMessage(message)
@@ -81,7 +81,7 @@ const ChatView = () => {
             fullWidth
             className={classes.input}
             value={message}
-            onChange={e => setMessage(e.target.value)}
+            onChange={(e) => setMessage(e.target.value)}
           />
         </form>
       </div>

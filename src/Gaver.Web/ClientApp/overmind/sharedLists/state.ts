@@ -14,5 +14,5 @@ export interface SharedListState {
 
 export const state: SharedListState = {
   wishLists: {},
-  users: {}
+  users: {},
 }

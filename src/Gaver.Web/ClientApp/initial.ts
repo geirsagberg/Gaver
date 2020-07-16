@@ -9,7 +9,7 @@ window.addEventListener('resize', generateBackground)
 function generateBackground() {
   const pattern = Trianglify({
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
   })
   const canvas = pattern.canvas() as HTMLCanvasElement
   if (background.childNodes[0]) {

@@ -11,7 +11,7 @@ import {
   ListItemText,
   makeStyles,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core'
 import { map, without } from 'lodash-es'
 import React, { FC } from 'react'
@@ -22,7 +22,7 @@ import { UserGroup } from '~/overmind/userGroups/state'
 import { commonStyles } from '~/theme'
 
 const useDialogStyles = makeStyles({
-  actions: commonStyles.dialogActions
+  actions: commonStyles.dialogActions,
 })
 
 interface GroupDetailsDialogProps {
@@ -37,8 +37,8 @@ const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({ group, updateGroup, o
   const {
     state: {
       app: { isSavingOrLoading },
-      auth: { user: currentUser }
-    }
+      auth: { user: currentUser },
+    },
   } = useOvermind()
   const classes = useDialogStyles({})
   const users = useFriends()
@@ -62,7 +62,7 @@ const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({ group, updateGroup, o
           margin="dense"
           disabled={isSavingOrLoading}
           value={name}
-          onChange={e => updateGroup({ name: e.target.value })}
+          onChange={(e) => updateGroup({ name: e.target.value })}
           inputProps={{ maxLength: 40 }}
         />
         <Typography variant="subtitle1" style={{ marginTop: '1rem' }}>
@@ -75,7 +75,7 @@ const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({ group, updateGroup, o
             </ListItemIcon>
             <ListItemText primary={currentUser.name + ' (meg)'} />
           </ListItem>
-          {map(users, user => (
+          {map(users, (user) => (
             <ListItem
               key={user.id}
               button
@@ -114,11 +114,11 @@ const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({ group, updateGroup, o
 export const AddGroupDialog = () => {
   const {
     state: {
-      userGroups: { newGroup }
+      userGroups: { newGroup },
     },
     actions: {
-      userGroups: { createUserGroup, cancelAddingGroup, updateNewGroup }
-    }
+      userGroups: { createUserGroup, cancelAddingGroup, updateNewGroup },
+    },
   } = useOvermind()
   return (
     <GroupDetailsDialog
@@ -133,11 +133,11 @@ export const AddGroupDialog = () => {
 export const EditGroupDialog = () => {
   const {
     state: {
-      userGroups: { editingGroup }
+      userGroups: { editingGroup },
     },
     actions: {
-      userGroups: { updateUserGroup, cancelEditingGroup, updateEditingGroup, deleteEditingGroup }
-    }
+      userGroups: { updateUserGroup, cancelEditingGroup, updateEditingGroup, deleteEditingGroup },
+    },
   } = useOvermind()
   return (
     <GroupDetailsDialog
