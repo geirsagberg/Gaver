@@ -10,7 +10,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: Release
+  ASPNETCORE_ENVIRONMENT: Production
 
 steps:
   - task: NodeTool@0

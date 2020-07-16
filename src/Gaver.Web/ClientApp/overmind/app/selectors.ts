@@ -1,3 +1,3 @@
-import { ResolvedState } from '..'
+import { RootState } from '..'
 
-export const selectIsSavingOrLoading = (state: ResolvedState) => state.app.isSavingOrLoading
+export const selectIsSavingOrLoading = (state: RootState) => state.app.isSavingOrLoading
