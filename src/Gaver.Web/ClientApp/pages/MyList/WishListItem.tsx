@@ -35,7 +35,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
     },
   } = useOvermind()
   const wish = wishes[wishId]
-  return (
+  return wish ? (
     <Paper className={classes.root}>
       <div className={classes.content}>
         <Typography variant="body1">{wish.title}</Typography>
@@ -58,7 +58,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
         )}
       </div>
     </Paper>
-  )
+  ) : null
 }
 
 export default WishListItem
