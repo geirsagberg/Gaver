@@ -6,6 +6,7 @@ import Expander from './components/Expander'
 import { useOvermind } from './overmind'
 import { darkTheme } from './theme'
 import AppSettings from './utils/appSettings'
+import { css } from './css'
 
 const useStyles = makeStyles((theme) => ({
   menuPaper: {
@@ -176,7 +177,7 @@ export const MainMenu: FC = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <SwipeableDrawer
-        disableDiscovery
+        SwipeAreaProps={{ className: css({ marginTop: '56px' }) }}
         open={isMenuShowing}
         onOpen={showMenu}
         onClose={hideMenu}

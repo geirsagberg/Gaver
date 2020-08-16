@@ -1,5 +1,7 @@
 html,
 body {
+  min-height: 100vh;
+  min-height: --webkit-fill-available;
   height: 100%;
   width: 100%;
   margin: 0;
