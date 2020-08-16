@@ -2,7 +2,11 @@ import { createCss, TCss, IConfig } from '@stitches/css'
 
 const createCssConfig = <T extends IConfig>(config: T) => config
 
-const cssConfig = createCssConfig({})
+const cssConfig = createCssConfig({
+  utils: {
+    mb: () => (value: 0 | string) => ({ marginBottom: value }),
+  },
+})
 
 const stitchesCss = createCss(cssConfig)
 

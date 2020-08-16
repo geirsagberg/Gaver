@@ -1,30 +1,13 @@
-import { Icon, IconButton, Link, Paper, Typography } from '@material-ui/core'
+import { Icon, IconButton, Link, makeStyles, Paper, Typography } from '@material-ui/core'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
-import { createStylesHook } from '~/utils/materialUtils'
+import { listItemStyles } from '~/theme'
 
-const useStyles = createStylesHook({
-  root: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: '1rem',
-    minHeight: '3rem',
-  },
-  content: {
-    margin: '0.5rem 0',
-    minWidth: '2rem',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  link: {
-    whiteSpace: 'nowrap',
-  },
-})
+const useStyles = makeStyles(listItemStyles)
 
 const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
-  const classes = useStyles({})
+  const classes = useStyles()
   const {
     state: {
       myList: { wishes, isDeleting },

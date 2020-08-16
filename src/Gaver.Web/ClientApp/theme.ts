@@ -115,3 +115,23 @@ export const commonStyles = createStyles({
     },
   },
 })
+
+export const listItemStyles = createStyles({
+  root: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: '1rem',
+    minHeight: '3rem',
+  },
+  content: {
+    margin: '0.5rem 0',
+    minWidth: '2rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  link: {
+    whiteSpace: 'nowrap',
+  },
+})

@@ -1,10 +1,11 @@
-import { Fab, Icon, makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import Color from 'color'
 import { map, size } from 'lodash-es'
 import React, { FC } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import Loading from '~/components/Loading'
+import { css } from '~/css'
 import { useOvermind } from '~/overmind'
 import { pageWidth } from '~/theme'
 import { useNavContext } from '~/utils/hooks'
@@ -25,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     transition: 'all 0.5s',
     userSelect: 'none',
+    display: 'flex',
+    flexDirection: 'column',
   },
   background: {
     height: '100%',
@@ -56,22 +59,34 @@ const useStyles = makeStyles((theme) => ({
     bottom: '2rem',
     right: '5rem',
   },
-  droppable: {
-    marginBottom: '5.5rem',
-  },
   listItem: {
     marginBottom: '1rem',
   },
 }))
 
+const AddWishButton: FC = () => {
+  const {
+    actions: {
+      myList: { startAddingWish },
+    },
+  } = useOvermind()
+  return (
+    <div className={css({ alignSelf: 'center', mb: '1rem', position: 'sticky', bottom: '1rem' })}>
+      <Button variant="contained" color="primary" onClick={startAddingWish}>
+        Legg til ønske
+      </Button>
+    </div>
+  )
+}
+
 const MyListPage: FC = () => {
-  const classes = useStyles({})
+  const classes = useStyles()
   const {
     state: {
       myList: { orderedWishes, wishesLoaded },
     },
     actions: {
-      myList: { startAddingWish, wishOrderChanged },
+      myList: { wishOrderChanged },
     },
   } = useOvermind()
   useNavContext({ title: 'Mine ønsker' }, [])
@@ -95,7 +110,7 @@ const MyListPage: FC = () => {
           }}>
           <Droppable droppableId="myList">
             {(provided) => (
-              <div {...provided.droppableProps} ref={provided.innerRef} className={classes.droppable}>
+              <div {...provided.droppableProps} ref={provided.innerRef}>
                 {map(orderedWishes, (wish, i) => (
                   <Draggable key={wish.id} draggableId={wish.id.toString()} index={i}>
                     {(provided) => (
@@ -114,16 +129,8 @@ const MyListPage: FC = () => {
             )}
           </Droppable>
         </DragDropContext>
+        <AddWishButton />
       </div>
-
-      <div className={classes.fabOuterWrapper}>
-        <div className={classes.fabWrapper}>
-          <Fab color="secondary" onClick={startAddingWish} className={classes.addWishButton}>
-            <Icon>add_icon</Icon>
-          </Fab>
-        </div>
-      </div>
-
       <AddWishDialog />
       <EditWishDialog />
     </div>
