@@ -36,7 +36,7 @@ namespace Gaver.Web
     public class Startup
     {
         private readonly IHostEnvironment hostEnvironment;
-        private readonly List<string> missingOptions = new List<string>();
+        private readonly List<string> missingOptions = new();
 
         public Startup(IConfiguration configuration, IHostEnvironment hostEnvironment)
         {
@@ -111,7 +111,7 @@ namespace Gaver.Web
             services.Configure<T>(configurationSection);
 
             // Enable injection of updated strongly typed options
-            services.AddScoped(provider => provider.GetService<IOptionsSnapshot<T>>().Value);
+            services.AddScoped(provider => provider.GetRequiredService<IOptionsSnapshot<T>>().Value);
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)

@@ -1,7 +1,9 @@
+using System;
+
 namespace Gaver.Web.Features.MyList
 {
     public class DeleteWishResponse
     {
-        public int[] WishesOrder { get; set; } = new int[0];
+        public int[] WishesOrder { get; set; } = Array.Empty<int>();
     }
 }

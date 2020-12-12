@@ -32,7 +32,7 @@ namespace Gaver.Web.Features.MyList
             ValidateEmails(message.Emails);
             var userName = gaverContext.Users.Where(u => u.Id == message.UserId).Select(u => u.Name).Single();
             var wishListId = gaverContext.WishLists.Where(wl => wl.UserId == message.UserId).Select(wl => wl.Id).Single();
-            var request = httpContextAccessor.HttpContext.Request;
+            var request = httpContextAccessor.HttpContext?.Request ?? throw new DeveloperException("No HttpContext!");
 
             var mailTasks = new List<Task>();
             foreach (var email in message.Emails) {
@@ -49,7 +49,7 @@ namespace Gaver.Web.Features.MyList
                     Content = $@"<h1>{userName} har delt en ønskeliste med deg!</h1>
                 <p><a href='{url}'>Klikk her for å se listen.</a></p>"
                 };
-                mailTasks.Add(mailSender.SendAsync(mail));
+                mailTasks.Add(mailSender.SendAsync(mail, cancellationToken));
             }
 
             await gaverContext.SaveChangesAsync(cancellationToken);

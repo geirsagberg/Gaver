@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -85,12 +86,12 @@ namespace Gaver.Web.Features.Users
 
         private async Task<UserInfo> GetUserInfo(CancellationToken token)
         {
-            var httpContextItems = httpContextAccessor.HttpContext.Items;
+            var httpContextItems = httpContextAccessor.HttpContext?.Items ?? throw new DeveloperException("No HttpContext!");
             if (!httpContextItems.ContainsKey("access_token")) {
                 throw new HttpException(HttpStatusCode.InternalServerError, "Access token missing");
             }
 
-            var accessToken = httpContextItems["access_token"].ToString();
+            var accessToken = httpContextItems["access_token"]?.ToString() ?? throw new FriendlyException("access_token not found");
             var userInfo = await $"https://{auth0Settings.Domain}/userinfo"
                 .WithOAuthBearerToken(accessToken)
                 .GetJsonAsync<UserInfo>(token);

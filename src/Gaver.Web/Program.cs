@@ -21,7 +21,7 @@ namespace Gaver.Web
                 .CreateLogger();
 
             try {
-                Log.Information("Process {ProcessId} started", Process.GetCurrentProcess().Id);
+                Log.Information("Process {ProcessId} started", Environment.ProcessId);
                 var host = CreateHostBuilder(args)
                     .Build();
 

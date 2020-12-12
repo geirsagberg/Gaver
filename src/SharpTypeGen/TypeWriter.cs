@@ -32,29 +32,29 @@ namespace SharpTypeGen
 {
     public sealed class TypeWriter
     {
-        private static readonly Dictionary<Type, string> Types = new Dictionary<Type, string> {
-            {typeof(Guid), "string"},
-            {typeof(string), "string"},
-            {typeof(char), "string"},
-            {typeof(bool), "boolean"},
-            {typeof(int), "number"},
-            {typeof(uint), "number"},
-            {typeof(long), "number"},
-            {typeof(ulong), "number"},
-            {typeof(float), "number"},
-            {typeof(double), "number"},
-            {typeof(short), "number"},
-            {typeof(ushort), "number"},
-            {typeof(byte), "number"},
-            {typeof(sbyte), "number"},
-            {typeof(decimal), "number"},
-            {typeof(DateTime), "string"},
-            {typeof(DateTimeOffset), "string"}
+        private static readonly Dictionary<Type, string> Types = new() {
+            { typeof(Guid), "string" },
+            { typeof(string), "string" },
+            { typeof(char), "string" },
+            { typeof(bool), "boolean" },
+            { typeof(int), "number" },
+            { typeof(uint), "number" },
+            { typeof(long), "number" },
+            { typeof(ulong), "number" },
+            { typeof(float), "number" },
+            { typeof(double), "number" },
+            { typeof(short), "number" },
+            { typeof(ushort), "number" },
+            { typeof(byte), "number" },
+            { typeof(sbyte), "number" },
+            { typeof(decimal), "number" },
+            { typeof(DateTime), "string" },
+            { typeof(DateTimeOffset), "string" }
         };
 
         private readonly List<string> duplicatesGuard;
 
-        private readonly List<Func<PropertyInfo, bool>> filters = new List<Func<PropertyInfo, bool>>();
+        private readonly List<Func<PropertyInfo, bool>> filters = new();
 
         public TypeWriter()
         {
@@ -92,7 +92,7 @@ namespace SharpTypeGen
             textWriter.Write($"export interface {classType.Name} {{ ");
 
             foreach (var property in properties) {
-                var propName = char.ToLowerInvariant(property.Name[0]) + property.Name.Substring(1);
+                var propName = char.ToLowerInvariant(property.Name[0]) + property.Name[1..];
 
                 var (symbol, nullable) = GetTypeSymbol(property.PropertyType);
                 textWriter.Write($"{propName}{(nullable ? "?" : "")}: {symbol}; ");

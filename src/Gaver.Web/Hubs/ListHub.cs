@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Gaver.Common.Contracts;
+using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Web.Contracts;
 using Gaver.Web.Extensions;
@@ -16,12 +17,9 @@ namespace Gaver.Web.Hubs
     [Authorize]
     public class ListHub : Hub<IListHubClient>
     {
-        private static readonly HashSet<UserListConnection> UserListConnections
-            = new HashSet<UserListConnection>();
-
+        private static readonly HashSet<UserListConnection> UserListConnections = new();
         private readonly IAccessChecker accessChecker;
         private readonly GaverContext gaverContext;
-
         private readonly ILogger<ListHub> logger;
         private readonly IMapperService mapper;
 
@@ -41,7 +39,7 @@ namespace Gaver.Web.Hubs
 
         public async Task<SubscriptionStatus> Subscribe(int listId)
         {
-            var principal = Context.User;
+            var principal = Context.User ?? throw new FriendlyException("No user logged in");
             var userId = principal.GetUserId();
             await accessChecker.CheckWishListAccess(listId, userId);
             var connectionId = Context.ConnectionId;
@@ -92,7 +90,7 @@ namespace Gaver.Web.Hubs
             };
         }
 
-        public override async Task OnDisconnectedAsync(Exception ex)
+        public override async Task OnDisconnectedAsync(Exception? ex)
         {
             logger.LogDebug("Connection {ConnectionId} disconnected", Context.ConnectionId);
             await UnsubscribeAll();

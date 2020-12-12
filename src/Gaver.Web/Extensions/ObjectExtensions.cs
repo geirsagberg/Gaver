@@ -11,6 +11,6 @@ namespace Gaver.Web.Extensions
         };
 
         public static HtmlString ToJsonHtml(this object obj) =>
-            new HtmlString(JsonConvert.SerializeObject(obj, JsonSerializerSettings));
+            new(JsonConvert.SerializeObject(obj, JsonSerializerSettings));
     }
 }

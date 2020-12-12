@@ -2,6 +2,7 @@ using Gaver.Common.Exceptions;
 using Gaver.Web.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Filters
@@ -12,7 +13,7 @@ namespace Gaver.Web.Filters
         {
             if (context.Exception is HttpException)
                 return;
-            var loggerFactory = (ILoggerFactory) context.HttpContext.RequestServices.GetService(typeof(ILoggerFactory));
+            var loggerFactory = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger("API Error");
             logger.LogError(context.Exception, "Error in " + context.HttpContext.Request.Path);
 
