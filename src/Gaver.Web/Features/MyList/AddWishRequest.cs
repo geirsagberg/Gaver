@@ -9,9 +9,10 @@ namespace Gaver.Web.Features.MyList
     {
         [Required]
         [MinLength(1)]
-        [MaxLength(64)]
+        [MaxLength(255)]
         public string Title { get; set; } = "";
 
+        [MaxLength(255)]
         public string? Url { get; set; }
 
         [JsonIgnore]

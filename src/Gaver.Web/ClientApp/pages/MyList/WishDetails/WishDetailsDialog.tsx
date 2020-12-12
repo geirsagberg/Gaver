@@ -4,9 +4,9 @@ import Expander from '~/components/Expander'
 import { useOvermind } from '~/overmind'
 import { selectIsSavingOrLoading } from '~/overmind/app/selectors'
 import { Wish } from '~/overmind/myList/state'
-import { createStylesHook } from '~/utils/materialUtils'
-import AppSettings from '~/utils/appSettings'
 import { commonStyles } from '~/theme'
+import AppSettings from '~/utils/appSettings'
+import { createStylesHook } from '~/utils/materialUtils'
 
 type Props = {
   wish: Wish
@@ -46,6 +46,7 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
             value={wish.title}
             margin="dense"
             disabled={isSavingOrLoading}
+            inputProps={{ maxLength: 255 }}
           />
           <TextField
             label="Link (valgfritt)"
@@ -55,6 +56,7 @@ const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDe
             onChange={(event) => updateWish({ url: event.target.value })}
             value={wish.url || ''}
             disabled={isSavingOrLoading}
+            inputProps={{ maxLength: 255 }}
           />
           {AppSettings.features.wishOptions && (
             <Button disabled={isSavingOrLoading} variant="contained" color="inherit">

@@ -1,4 +1,4 @@
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles } from '@material-ui/core'
 import classNames from 'classnames'
 import Color from 'color'
 import { map, size } from 'lodash-es'
@@ -93,9 +93,7 @@ const MyListPage: FC = () => {
 
   return wishesLoaded ? (
     <div className={classes.root}>
-      <div className={classNames(classes.background, { [classes.emptyBackground]: !!size(orderedWishes) })}>
-        <Typography className={classes.addWishHint}>Legg til et ønske ➔</Typography>
-      </div>
+      <div className={classNames(classes.background, { [classes.emptyBackground]: !!size(orderedWishes) })}></div>
       <div className={classNames(classes.list)}>
         <DragDropContext
           onDragEnd={(result) => {
