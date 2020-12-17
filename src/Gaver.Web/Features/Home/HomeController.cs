@@ -25,16 +25,5 @@ namespace Gaver.Web.Features.Home
             mediator.Send(new WakeDatabaseRequest()).Forget();
             return View();
         }
-
-        [AllowAnonymous]
-        [HttpGet("/features")]
-        public async Task<Dictionary<Feature, bool>> Features([FromServices] IFeatureManager featureManager)
-        {
-            var features = Enum.GetValues(typeof(Feature)).Cast<Feature>().ToList();
-
-            var isEnabled = await Task.WhenAll(features.Select(f => featureManager.IsEnabledAsync(f.ToString())));
-
-            return features.Zip(isEnabled).ToDictionary(i => i.First, i => i.Second);
-        }
     }
 }

@@ -1,15 +1,14 @@
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { LicenseWebpackPlugin } from 'license-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import OfflinePlugin from 'offline-plugin'
 import path from 'path'
 import webpack, { Configuration } from 'webpack'
 
 const isDevelopment = process.env.ASPNETCORE_ENVIRONMENT === 'Development'
 
 const mode = isDevelopment ? 'development' : 'production'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import HardSourceWebpackPlugin from 'hard-source-webpack-plugin'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { LicenseWebpackPlugin } from 'license-webpack-plugin'
-import OfflinePlugin from 'offline-plugin'
 
 const baseDir = process.cwd()
 
@@ -44,7 +43,7 @@ const productionPlugins = [
   }),
 ]
 
-const developmentPlugins = [new HardSourceWebpackPlugin()]
+const developmentPlugins = []
 
 const configuration: Configuration = {
   mode,
