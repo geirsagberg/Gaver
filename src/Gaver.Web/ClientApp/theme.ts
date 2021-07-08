@@ -1,5 +1,4 @@
-import { createMuiTheme, createStyles } from '@material-ui/core'
-import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
+import { createMuiTheme, createStyles, ThemeOptions } from '@material-ui/core'
 import { PaletteOptions } from '@material-ui/core/styles/createPalette'
 import { merge } from 'lodash-es'
 

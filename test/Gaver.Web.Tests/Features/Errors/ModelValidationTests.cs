@@ -27,7 +27,7 @@ namespace Gaver.Web.Tests.Features.Errors
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             var body = await response.Content.ReadAsStringAsync();
             var obj = JsonConvert.DeserializeObject<JObject>(body);
-            var errors = (JObject) obj.Property("errors").Value;
+            var errors = (JObject) obj.Property("errors")?.Value;
             errors.Should().ContainKey("title");
         }
     }

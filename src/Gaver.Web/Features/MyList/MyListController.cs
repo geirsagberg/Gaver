@@ -16,40 +16,22 @@ namespace Gaver.Web.Features.MyList
         }
 
         [HttpGet]
-        public Task<MyListDto> GetMyList()
-        {
-            return mediator.Send(new GetMyListRequest());
-        }
+        public Task<MyListDto> GetMyList() => mediator.Send(new GetMyListRequest());
 
         [HttpPost]
-        public Task<WishDto> Post(AddWishRequest request)
-        {
-            return mediator.Send(request);
-        }
+        public Task<WishDto> Post(AddWishRequest request) => mediator.Send(request);
 
         [HttpPost("Order")]
-        public Task SetWishesOrder(SetWishesOrderRequest request)
-        {
-            return mediator.Send(request);
-        }
+        public Task SetWishesOrder(SetWishesOrderRequest request) => mediator.Send(request);
 
         [HttpPost("Share")]
-        public Task ShareList(ShareListRequest request)
-        {
-            return mediator.Send(request);
-        }
+        public Task ShareList(ShareListRequest request) => mediator.Send(request);
 
         [HttpPatch("{wishId:int}")]
-        public Task UpdateWish([FromHybrid] UpdateWishRequest request)
-        {
-            return mediator.Send(request);
-        }
+        public Task UpdateWish([FromHybrid] UpdateWishRequest request) => mediator.Send(request);
 
         [HttpDelete("{wishId:int}")]
-        public Task<DeleteWishResponse> Delete(int wishId)
-        {
-            return mediator.Send(new DeleteWishRequest {WishId = wishId});
-        }
+        public Task<DeleteWishResponse> Delete([FromHybrid] DeleteWishRequest request) => mediator.Send(request);
 
         [HttpPost("{wishId:int}/Option")]
         public Task<WishOptionDto> AddWishOption([FromHybrid] AddWishOptionRequest request) => mediator.Send(request);
