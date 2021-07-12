@@ -51,7 +51,7 @@ namespace Gaver.Web
         private static Task OnMessageReceived(MessageReceivedContext context)
         {
             var accessToken = context.Request.Query["access_token"].FirstOrDefault();
-            if (context.HttpContext.Request.Path.StartsWithSegments("/listHub") && accessToken.IsNotEmpty())
+            if (context.HttpContext.Request.Path.StartsWithSegments("/hub") && accessToken.IsNotEmpty())
                 context.Token = accessToken;
 
             return Task.CompletedTask;
