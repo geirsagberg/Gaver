@@ -1,7 +1,7 @@
 using Gaver.Web.Contracts;
 using HybridModelBinding;
 using MediatR;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Gaver.Web.Features.UserGroups
 {

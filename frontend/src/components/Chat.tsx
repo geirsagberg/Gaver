@@ -1,9 +1,4 @@
-import {
-  makeStyles,
-  SwipeableDrawer,
-  TextField,
-  Typography,
-} from '@material-ui/core'
+import { makeStyles, SwipeableDrawer, TextField, Typography } from '@material-ui/core'
 import { ThemeProvider } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import SimpleBar from 'simplebar-react'

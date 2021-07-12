@@ -3,7 +3,7 @@ using System.Linq;
 using Gaver.Common.Extensions;
 using Gaver.Web;
 using Gaver.Web.Attributes;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SharpTypeGen
 {

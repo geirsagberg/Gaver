@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Gaver.Common;
@@ -75,8 +76,7 @@ namespace Gaver.Web
                     o.Filters.Add(new CustomExceptionFilterAttribute());
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
-                .AddHybridModelBinder()
-                .AddNewtonsoftJson(options => options.UseCamelCasing(true));
+                .AddHybridModelBinder();
         }
 
         public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)
@@ -144,17 +144,17 @@ namespace Gaver.Web
 
         public static IServiceCollection AddValidationProblemDetails(this IServiceCollection services) =>
             services.Configure<ApiBehaviorOptions>(options => {
-                options.InvalidModelStateResponseFactory = context => {
-                    var problemDetails = new ValidationProblemDetails(context.ModelState) {
-                        Instance = context.HttpContext.Request.Path,
-                        Status = StatusCodes.Status400BadRequest,
-                        Type = "https://httpstatuses.com/400",
-                        Detail = "Please refer to the errors property for additional details."
-                    };
-                    return new BadRequestObjectResult(problemDetails) {
-                        ContentTypes = {"application/problem+json", "application/problem+xml"}
-                    };
-                };
+                // options.InvalidModelStateResponseFactory = context => {
+                //     var problemDetails = new ValidationProblemDetails(context.ModelState) {
+                //         Instance = context.HttpContext.Request.Path,
+                //         Status = StatusCodes.Status400BadRequest,
+                //         Type = "https://httpstatuses.com/400",
+                //         Detail = "Please refer to the errors property for additional details."
+                //     };
+                //     return new BadRequestObjectResult(problemDetails) {
+                //         ContentTypes = {"application/problem+json", "application/problem+xml"}
+                //     };
+                // };
             });
 
         public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration,

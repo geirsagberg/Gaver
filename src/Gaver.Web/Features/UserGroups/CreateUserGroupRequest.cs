@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Gaver.Web.Contracts;
 using MediatR;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Gaver.Web.Features.UserGroups
 {
@@ -16,6 +16,6 @@ namespace Gaver.Web.Features.UserGroups
         [Required]
         public string Name { get; set; } = "";
 
-        public List<int> UserIds { get; set; } = new List<int>();
+        public List<int> UserIds { get; set; } = new();
     }
 }

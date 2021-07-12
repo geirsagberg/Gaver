@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
 using Gaver.Web.Exceptions;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace Gaver.Web.Middleware
 {
@@ -9,10 +9,7 @@ namespace Gaver.Web.Middleware
     {
         private readonly RequestDelegate next;
 
-        public HttpExceptionMiddleware(RequestDelegate next)
-        {
-            this.next = next;
-        }
+        public HttpExceptionMiddleware(RequestDelegate next) => this.next = next;
 
         public async Task Invoke(HttpContext context)
         {
@@ -22,11 +19,12 @@ namespace Gaver.Web.Middleware
                 context.Response.StatusCode = httpException.StatusCode;
                 if (!context.Response.HasStarted) {
                     context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync(JsonConvert.SerializeObject(new {
-                        error = new {
-                            message = httpException.Message
-                        }
-                    }));
+                    await context.Response.WriteAsync(
+                        JsonSerializer.Serialize(new {
+                            error = new {
+                                message = httpException.Message
+                            }
+                        }));
                 }
             }
         }

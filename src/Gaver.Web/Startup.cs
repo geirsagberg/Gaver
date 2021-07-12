@@ -10,6 +10,7 @@ using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Extensions;
 using Gaver.Web.Hubs;
+using Gaver.Web.MvcUtils;
 using Gaver.Web.Options;
 using HealthChecks.UI.Client;
 using Hellang.Middleware.ProblemDetails;
@@ -24,6 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using ProblemDetailsFactory = Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDetailsFactory;
 
 namespace Gaver.Web
 {
@@ -58,6 +60,7 @@ namespace Gaver.Web
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddProblemDetails();
             services.AddValidationProblemDetails();
+            services.AddSingleton<ProblemDetailsFactory, CustomProblemDetailsFactory>();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
             services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));

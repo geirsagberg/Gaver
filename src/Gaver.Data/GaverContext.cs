@@ -1,6 +1,6 @@
+using System.Text.Json;
 using Gaver.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace Gaver.Data
 {
@@ -43,11 +43,13 @@ namespace Gaver.Data
                 entity.HasOne(typeof(User)).WithMany().HasForeignKey(nameof(UserGroup.CreatedByUserId));
             });
 
-            var jsonSerializerSettings = new JsonSerializerSettings {NullValueHandling = NullValueHandling.Ignore};
+            var options = new JsonSerializerOptions {
+                IgnoreNullValues = true
+            };
             modelBuilder.Entity<WishList>(entity => {
                 entity.Property(e => e.WishesOrder).HasConversion(
-                    array => JsonConvert.SerializeObject(array, jsonSerializerSettings),
-                    json => JsonConvert.DeserializeObject<int[]>(json, jsonSerializerSettings)!);
+                    array => JsonSerializer.Serialize(array, options),
+                    json => JsonSerializer.Deserialize<int[]>(json, options));
             });
 
             modelBuilder.Entity<UserFriendConnection>(entity => { entity.HasKey(e => new {e.UserId, e.FriendId}); });

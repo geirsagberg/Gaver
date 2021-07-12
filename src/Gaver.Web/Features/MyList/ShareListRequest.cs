@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Gaver.Web.Contracts;
 using MediatR;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Gaver.Web.Features.MyList
 {

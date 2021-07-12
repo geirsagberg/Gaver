@@ -3,7 +3,7 @@ using Gaver.Web.Contracts;
 using Gaver.Web.Features.Users;
 using HybridModelBinding;
 using MediatR;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Gaver.Web.Features.Invitations
 {

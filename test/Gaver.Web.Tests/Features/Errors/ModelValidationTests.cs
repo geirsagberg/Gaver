@@ -1,10 +1,9 @@
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Web.Features.MyList;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,9 +25,10 @@ namespace Gaver.Web.Tests.Features.Errors
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             var body = await response.Content.ReadAsStringAsync();
-            var obj = JsonConvert.DeserializeObject<JObject>(body);
-            var errors = (JObject) obj.Property("errors")?.Value;
-            errors.Should().ContainKey("title");
+            var obj = JsonSerializer.Deserialize<JsonElement>(body);
+            var errors = obj.GetProperty("errors");
+            errors.ValueKind.Should().Be(JsonValueKind.Object);
+            errors.EnumerateObject().Should().Contain(p => p.Name == "title");
         }
     }
 }
