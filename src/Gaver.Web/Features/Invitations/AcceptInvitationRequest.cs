@@ -1,19 +1,19 @@
 using System;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Users;
+using HybridModelBinding;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Invitations
 {
     public class AcceptInvitationRequest : IRequest<UserDto>, IAuthenticatedRequest
     {
-        public Guid Token { get; }
+        [JsonIgnore]
+        [HybridBindProperty(Source.Route)]
+        public Guid Token { get; init; }
 
-        public AcceptInvitationRequest(Guid token)
-        {
-            Token = token;
-        }
-
+        [JsonIgnore]
         public int UserId { get; set; }
     }
 }

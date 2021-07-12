@@ -9,10 +9,7 @@ namespace Gaver.Web.Features.MyList
     {
         private readonly IMediator mediator;
 
-        public MyListController(IMediator mediator)
-        {
-            this.mediator = mediator;
-        }
+        public MyListController(IMediator mediator) => this.mediator = mediator;
 
         [HttpGet]
         public Task<MyListDto> GetMyList() => mediator.Send(new GetMyListRequest());

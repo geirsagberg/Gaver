@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Gaver.Web.Contracts;
+using HybridModelBinding;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -10,9 +11,10 @@ namespace Gaver.Web.Features.Chat
         [Required]
         [MinLength(1)]
         [MaxLength(500)]
-        public string Text { get; set; } = "";
+        public string Text { get; init; } = "";
 
         [JsonIgnore]
+        [HybridBindProperty(Source.Route)]
         public int WishListId { get; set; }
 
         [JsonIgnore]

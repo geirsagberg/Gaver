@@ -19,7 +19,8 @@ namespace Gaver.Web.Tests.Features.Invitations
             var token = Guid.NewGuid();
             var user = SetupUserWithInvitation(token);
 
-            Func<Task> action = () => TestSubject.Handle(new AcceptInvitationRequest(token) {
+            Func<Task> action = () => TestSubject.Handle(new AcceptInvitationRequest {
+                Token = token,
                 UserId = user.Id
             });
 
@@ -39,11 +40,12 @@ namespace Gaver.Web.Tests.Features.Invitations
             Context.Add(otherUser);
             Context.SaveChanges();
 
-            var response = await TestSubject.Handle(new AcceptInvitationRequest(token) {
+            var response = await TestSubject.Handle(new AcceptInvitationRequest {
+                Token = token,
                 UserId = otherUser.Id
             });
 
-            response.WishListId.Should().Be(user.WishList.Id);
+            response.WishListId.Should().Be(user.WishList!.Id);
             response.Name.Should().Be(user.Name);
         }
 
@@ -68,12 +70,13 @@ namespace Gaver.Web.Tests.Features.Invitations
             Context.AddRange(alice, bob);
             Context.SaveChanges();
 
-            await TestSubject.Handle(new AcceptInvitationRequest(token) {
+            await TestSubject.Handle(new AcceptInvitationRequest {
+                Token = token,
                 UserId = bob.Id
             });
 
             Context.Reset();
-            Context.UserFriendConnections.Select(u => new { u.UserId, u.FriendId }).Should().BeEquivalentTo(
+            Context.UserFriendConnections.Select(u => new {u.UserId, u.FriendId}).Should().BeEquivalentTo(
                 new {
                     UserId = alice.Id,
                     FriendId = bob.Id

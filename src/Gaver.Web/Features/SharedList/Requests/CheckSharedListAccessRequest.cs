@@ -1,4 +1,5 @@
 using Gaver.Web.Contracts;
+using HybridModelBinding;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -8,6 +9,9 @@ namespace Gaver.Web.Features.SharedList.Requests
     {
         [JsonIgnore]
         public int UserId { get; set; }
-        public int WishListId { get; set; }
+
+        [JsonIgnore]
+        [HybridBindProperty(Source.Route)]
+        public int WishListId { get; init; }
     }
 }

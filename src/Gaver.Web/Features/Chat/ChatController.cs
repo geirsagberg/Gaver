@@ -9,23 +9,12 @@ namespace Gaver.Web.Features.Chat
     {
         private readonly IMediator mediator;
 
-        public ChatController(IMediator mediator)
-        {
-            this.mediator = mediator;
-        }
+        public ChatController(IMediator mediator) => this.mediator = mediator;
 
         [HttpPost("{wishListId:int}")]
-        public Task<ChatMessageDto> AddMessage([FromHybrid] AddMessageRequest request)
-        {
-            return mediator.Send(request);
-        }
+        public Task<ChatMessageDto> AddMessage(AddMessageRequest request) => mediator.Send(request);
 
         [HttpGet("{wishListId:int}")]
-        public Task<ChatDto> GetMessages(int wishListId)
-        {
-            return mediator.Send(new GetMessagesRequest {
-                WishListId = wishListId
-            });
-        }
+        public Task<ChatDto> GetMessages(GetMessagesRequest request) => mediator.Send(request);
     }
 }

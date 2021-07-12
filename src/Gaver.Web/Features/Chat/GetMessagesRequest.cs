@@ -1,4 +1,5 @@
 using Gaver.Web.Contracts;
+using HybridModelBinding;
 using MediatR;
 using Newtonsoft.Json;
 
@@ -7,7 +8,8 @@ namespace Gaver.Web.Features.Chat
     public class GetMessagesRequest : IRequest<ChatDto>, ISharedListRequest
     {
         [JsonIgnore]
-        public int WishListId { get; set; }
+        [HybridBindProperty(Source.Route)]
+        public int WishListId { get; init; }
 
         [JsonIgnore]
         public int UserId { get; set; }

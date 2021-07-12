@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Gaver.Web.Features.SharedList.Requests;
-using HybridModelBinding;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,31 +9,16 @@ namespace Gaver.Web.Features.SharedList
     {
         private readonly IMediator mediator;
 
-        public SharedListsController(IMediator mediator)
-        {
-            this.mediator = mediator;
-        }
+        public SharedListsController(IMediator mediator) => this.mediator = mediator;
 
         [HttpGet("{wishListId:int}")]
-        public Task<SharedListDto> Get(int wishListId)
-        {
-            return mediator.Send(new GetSharedListRequest {
-                WishListId = wishListId
-            });
-        }
+        public Task<SharedListDto> Get(GetSharedListRequest request) => mediator.Send(request);
 
         [HttpPut("{wishListId:int}/{wishId:int}/Bought")]
-        public Task<SharedWishDto> SetBought([FromHybrid] SetBoughtRequest request)
-        {
-            return mediator.Send(request);
-        }
+        public Task<SharedWishDto> SetBought(SetBoughtRequest request) => mediator.Send(request);
 
         [HttpGet("{wishListId:int}/Access")]
-        public Task<ListAccessStatus> CheckSharedListAccess(int wishListId)
-        {
-            return mediator.Send(new CheckSharedListAccessRequest {
-                WishListId = wishListId
-            });
-        }
+        public Task<ListAccessStatus> CheckSharedListAccess(CheckSharedListAccessRequest request) => mediator.Send(
+            request);
     }
 }

@@ -1,17 +1,18 @@
 using System;
 using Gaver.Web.Contracts;
+using HybridModelBinding;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace Gaver.Web.Features.Invitations
 {
     public class GetInvitationStatusRequest : IRequest<InvitationStatusDto>, IAuthenticatedRequest
     {
-        public GetInvitationStatusRequest(Guid token)
-        {
-            Token = token;
-        }
+        [JsonIgnore]
+        [HybridBindProperty(Source.Route)]
+        public Guid Token { get; init; }
 
-        public Guid Token { get; }
+        [JsonIgnore]
         public int UserId { get; set; }
     }
 }

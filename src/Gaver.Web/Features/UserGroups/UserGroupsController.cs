@@ -8,10 +8,7 @@ namespace Gaver.Web.Features.UserGroups
     {
         private readonly IMediator mediator;
 
-        public UserGroupsController(IMediator mediator)
-        {
-            this.mediator = mediator;
-        }
+        public UserGroupsController(IMediator mediator) => this.mediator = mediator;
 
         [HttpGet]
         public Task<UserGroupsDto> GetMyUserGroups() => mediator.Send(new GetMyUserGroupsRequest());
