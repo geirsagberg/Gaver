@@ -2,6 +2,7 @@
 {
     public enum Feature
     {
-        WishOptions
+        WishOptions,
+        UserGroups
     }
 }

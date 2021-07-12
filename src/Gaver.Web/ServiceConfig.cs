@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
@@ -67,29 +66,17 @@ namespace Gaver.Web
 
         public static void AddCustomMvc(this IServiceCollection services)
         {
-            var mvc = services.AddMvc(o => {
+            services.AddControllers(o => {
                     var policy = new AuthorizationPolicyBuilder()
                         .AddRequirements(
                             new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
                         .Build();
                     o.Filters.Add(new AuthorizeFilter(policy));
                     o.Filters.Add(new CustomExceptionFilterAttribute());
-                }).AddRazorOptions(o => {
-                    o.ViewLocationFormats.Clear();
-                    o.ViewLocationFormats.Add("/Features/{1}/{0}.cshtml");
-                    o.ViewLocationFormats.Add("/Features/Shared/{0}.cshtml");
-                    o.ViewLocationFormats.Add("/Features/{0}.cshtml");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder()
                 .AddNewtonsoftJson(options => options.UseCamelCasing(true));
-            mvc.AddCustomMvcDebug();
-        }
-
-        [Conditional("DEBUG")]
-        private static void AddCustomMvcDebug(this IMvcBuilder mvc)
-        {
-            mvc.AddRazorRuntimeCompilation();
         }
 
         public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)

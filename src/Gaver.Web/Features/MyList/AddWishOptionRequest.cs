@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Shared.Models;
+using HybridModelBinding;
 using MediatR;
 
 namespace Gaver.Web.Features.MyList
@@ -10,6 +11,8 @@ namespace Gaver.Web.Features.MyList
     {
         [JsonIgnore]
         public int UserId { get; set; }
+
+        [HybridBindProperty(Source.Route)]
         [JsonIgnore]
         public int WishId { get; set; }
 

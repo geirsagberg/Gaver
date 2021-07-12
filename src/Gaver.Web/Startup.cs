@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Gaver.Common.Contracts;
@@ -14,22 +13,17 @@ using Gaver.Web.Hubs;
 using Gaver.Web.Options;
 using HealthChecks.UI.Client;
 using Hellang.Middleware.ProblemDetails;
-using JetBrains.Annotations;
 using MediatR;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
-
-[assembly: AspMvcViewLocationFormat(@"~\Features\{1}\{0}.cshtml")]
-[assembly: AspMvcViewLocationFormat(@"~\Features\Shared\{0}.cshtml")]
 
 namespace Gaver.Web
 {
@@ -45,12 +39,6 @@ namespace Gaver.Web
         }
 
         private IConfiguration Configuration { get; }
-
-        private static void UseRootNodeModules(IHostEnvironment hostingEnvironment)
-        {
-            var nodeDir = Path.Combine(hostingEnvironment.ContentRootPath, "../../node_modules");
-            Environment.SetEnvironmentVariable("NODE_PATH", nodeDir);
-        }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -89,7 +77,6 @@ namespace Gaver.Web
 
             ConfigureOptions<MailOptions>(services, "mail");
             ConfigureOptions<Auth0Settings>(services, "auth0");
-            ConfigureOptions<FeatureFlags>(services, "Features");
 
             if (missingOptions.Any()) {
                 throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
@@ -125,7 +112,7 @@ namespace Gaver.Web
             SetupStaticFiles(app, env);
             app.UseRouting();
 
-            app.UseWhen(IsApiRequest, app2 => app2.UseProblemDetails());
+            app.UseWhen(IsJsonRequest, app2 => app2.UseProblemDetails());
 
             app.UseHttpException();
             app.UseAuthentication();
@@ -147,14 +134,15 @@ namespace Gaver.Web
                     });
                 }
 
-                endpoints.MapHub<ListHub>("/listHub");
+                endpoints.MapHub<ListHub>("/hub");
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllerRoute("API 404", "api/{*anything}", new {
                     controller = "Error",
                     action = "NotFound"
                 });
-                endpoints.MapFallbackToController("Index", "Home");
             });
+
+            app.UseSpa(_ => {});
         }
 
         private static void SetupStaticFiles(IApplicationBuilder app, IHostEnvironment env)
@@ -162,13 +150,15 @@ namespace Gaver.Web
             var cachePeriod = (int) (env.IsDevelopment()
                 ? TimeSpan.FromMinutes(10).TotalSeconds
                 : TimeSpan.FromDays(365).TotalSeconds);
-            app.UseStaticFiles(new StaticFileOptions {
+            var staticFileOptions = new StaticFileOptions {
                 OnPrepareResponse = ctx =>
                     ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={cachePeriod}")
-            });
+            };
+            app.UseDefaultFiles();
+            app.UseStaticFiles(staticFileOptions);
         }
 
-        private static bool IsApiRequest(HttpContext context)
+        private static bool IsJsonRequest(HttpContext context)
         {
             var requestHeaders = context.Request.GetTypedHeaders();
             return requestHeaders.Accept.EmptyIfNull().Any(h => h.MediaType == "application/json") ||
@@ -186,17 +176,6 @@ namespace Gaver.Web
         private static void SetupForDevelopment(IApplicationBuilder app, IHostEnvironment env)
         {
             app.UseDeveloperExceptionPage();
-            UseRootNodeModules(env);
-
-#pragma warning disable 618
-            app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions {
-#pragma warning restore 618
-                HotModuleReplacement = true,
-                ReactHotModuleReplacement = true,
-                HotModuleReplacementClientOptions = new Dictionary<string, string> {
-                    {"reload", "true"}
-                }
-            });
         }
     }
 }

@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Gaver.Web.Features.Shared.Models;
-using HybridModelBinding;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,12 +27,12 @@ namespace Gaver.Web.Features.MyList
         public Task ShareList(ShareListRequest request) => mediator.Send(request);
 
         [HttpPatch("{wishId:int}")]
-        public Task UpdateWish([FromHybrid] UpdateWishRequest request) => mediator.Send(request);
+        public Task UpdateWish(UpdateWishRequest request) => mediator.Send(request);
 
         [HttpDelete("{wishId:int}")]
-        public Task<DeleteWishResponse> Delete([FromHybrid] DeleteWishRequest request) => mediator.Send(request);
+        public Task<DeleteWishResponse> Delete(DeleteWishRequest request) => mediator.Send(request);
 
         [HttpPost("{wishId:int}/Option")]
-        public Task<WishOptionDto> AddWishOption([FromHybrid] AddWishOptionRequest request) => mediator.Send(request);
+        public Task<WishOptionDto> AddWishOption(AddWishOptionRequest request) => mediator.Send(request);
     }
 }

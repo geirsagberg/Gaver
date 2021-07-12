@@ -27,8 +27,7 @@ namespace Gaver.Web.Tests
                     if (descriptor != null) services.Remove(descriptor);
 
                     services.AddDbContext<GaverContext>(options => { options.UseInMemoryDatabase(databaseName); });
-                })
-                ;
+                });
         }
 
         public void ResetDatabase()

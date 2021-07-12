@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using HybridModelBinding;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,9 +20,9 @@ namespace Gaver.Web.Features.UserGroups
         public Task<UserGroupDto> CreateUserGroup(CreateUserGroupRequest request) => mediator.Send(request);
 
         [HttpPatch("{userGroupId:int}")]
-        public Task UpdateUserGroup([FromHybrid] UpdateUserGroupRequest request) => mediator.Send(request);
+        public Task UpdateUserGroup(UpdateUserGroupRequest request) => mediator.Send(request);
 
         [HttpDelete("{userGroupId:int}")]
-        public Task DeleteUserGroup([FromHybrid] DeleteUserGroupRequest request) => mediator.Send(request);
+        public Task DeleteUserGroup(DeleteUserGroupRequest request) => mediator.Send(request);
     }
 }

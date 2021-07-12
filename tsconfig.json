@@ -1,28 +1,22 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "target": "es5",
-    "module": "es2015",
-    "allowSyntheticDefaultImports": true,
-    "allowJs": true,
-    "pretty": true,
-    "sourceMap": true,
-    "moduleResolution": "node",
-    "baseUrl": ".",
     "paths": {
-      "~/*": ["src/Gaver.Web/ClientApp/*"]
-    },
-    "lib": ["dom", "es2015", "es2016"],
-    "strict": true,
-    "noUnusedLocals": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true
+      "~/*": ["./frontend/src/*"]
+    }
   },
-  "compileOnSave": false,
-  "exclude": ["node_modules", "**/wwwroot"],
-  "include": ["**/ClientApp"]
+  "include": ["./frontend/src"]
 }

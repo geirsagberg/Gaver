@@ -244,3 +244,5 @@ dist/
 .awcache/
 
 healthchecksdb
+
+wwwroot/

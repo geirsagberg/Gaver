@@ -6,6 +6,5 @@ namespace Gaver.Web
     [ApiController]
     public abstract class GaverControllerBase : Controller
     {
-        //protected int UserId => User.GetUserId();
     }
 }
