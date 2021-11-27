@@ -10,10 +10,7 @@ namespace Gaver.Data
         [return: NotNullIfNotNull("str")]
         public static string? ToCamelCase(this string? str)
         {
-            if (str == null || str.Length < 2)
-                return str;
-
-            return str.Substring(0, 1).ToLower() + str[1..];
+            return str == null || str.Length < 2 ? str : str[..1].ToLower() + str[1..];
         }
 
         public static bool IsNullOrEmpty(this string? str)

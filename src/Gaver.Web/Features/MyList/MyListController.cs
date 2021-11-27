@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Gaver.Web.Contracts;
 using Gaver.Web.Features.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -31,5 +34,16 @@ namespace Gaver.Web.Features.MyList
 
         [HttpPost("{wishId:int}/Option")]
         public Task<WishOptionDto> AddWishOption(AddWishOptionRequest request) => mediator.Send(request);
+
+        [HttpPost("Reset")]
+        public Task ResetList(ResetListRequest request) => mediator.Send(request);
+    }
+
+    public class ResetListRequest : IRequest, IAuthenticatedRequest
+    {
+        [JsonIgnore]
+        public int UserId { get; set; }
+
+        public HashSet<int> KeepWishes { get; set; } = new();
     }
 }

@@ -13,8 +13,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': 'http://localhost:5000',
-      '/hub': 'http://localhost:5000',
+      '/api': 'http://0.0.0.0:5000',
+      '/hub': 'http://0.0.0.0:5000',
     },
     port: 8080,
   },

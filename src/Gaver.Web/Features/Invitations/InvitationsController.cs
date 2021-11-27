@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Gaver.Web.Features.Users;
 using MediatR;

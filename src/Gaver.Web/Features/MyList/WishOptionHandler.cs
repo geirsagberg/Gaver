@@ -26,7 +26,7 @@ namespace Gaver.Web.Features.MyList
                 Url = request.Url,
                 WishId = request.WishId
             };
-            context.WishOptions!.Add(wishOption);
+            context.WishOptions.Add(wishOption);
             await context.SaveChangesAsync(cancellationToken);
             return mapperService.Map<WishOptionDto>(wishOption);
         }
