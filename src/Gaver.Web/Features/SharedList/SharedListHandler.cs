@@ -45,7 +45,7 @@ namespace Gaver.Web.Features.SharedList
                 return ListAccessStatus.Owner;
 
             if (await context.WishLists.AnyAsync(
-                wl => wl.Id == request.WishListId && wl.User!.Friends.Any(f => f.FriendId == request.UserId), cancellationToken))
+                wl => wl.Id == request.WishListId && wl.User!.Friends.Any(f => f.Id == request.UserId), cancellationToken))
                 return ListAccessStatus.Invited;
 
             return ListAccessStatus.NotInvited;

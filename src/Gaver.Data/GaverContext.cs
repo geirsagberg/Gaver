@@ -1,4 +1,6 @@
+using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Gaver.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,9 +26,19 @@ namespace Gaver.Data
         {
             modelBuilder.Entity<User>(entity => {
                 entity.HasIndex(u => u.PrimaryIdentityId).IsUnique();
-                entity.HasOne(u => u.WishList).WithOne(wl => wl!.User!);
-                entity.HasMany(e => e.Friends).WithOne(e => e.User!);
+                entity.HasOne(u => u.WishList).WithOne(wl => wl.User!);
+                entity.HasMany(e => e.Friends)
+                    .WithMany(e => e.FriendsWithMe)
+                    .UsingEntity<UserFriendConnection>(
+                        j => j.HasOne(c => c.User).WithMany().HasForeignKey(c => c.UserId),
+                        j => j.HasOne(c => c.Friend).WithMany().HasForeignKey(c => c.FriendId),
+                        j => j.HasKey(e => new { e.UserId, e.FriendId })
+                    );
+                entity.HasMany(e => e.Groups)
+                    .WithMany(e => e.Users)
+                    .UsingEntity<UserGroupConnection>(j => j.HasKey(e => new { e.UserGroupId, e.UserId }));
             });
+
             modelBuilder.Entity<ChatMessage>(entity => {
                 entity.Property(e => e.Created)
                     .ValueGeneratedOnAdd()
@@ -38,21 +50,19 @@ namespace Gaver.Data
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("NOW()");
             });
-            modelBuilder.Entity<UserGroupConnection>(entity => { entity.HasKey(i => new {i.UserGroupId, i.UserId}); });
-            modelBuilder.Entity<UserGroup>(entity => {
-                entity.HasOne(typeof(User)).WithMany().HasForeignKey(nameof(UserGroup.CreatedByUserId));
-            });
+
+            modelBuilder.Entity<UserGroup>(entity => { entity.HasOne(typeof(User)).WithMany().HasForeignKey(nameof(UserGroup.CreatedByUserId)); });
 
             var options = new JsonSerializerOptions {
-                IgnoreNullValues = true
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
             modelBuilder.Entity<WishList>(entity => {
                 entity.Property(e => e.WishesOrder).HasConversion(
                     array => JsonSerializer.Serialize(array, options),
-                    json => JsonSerializer.Deserialize<int[]>(json, options));
+                    json => JsonSerializer.Deserialize<int[]>(json, options) ?? Array.Empty<int>());
             });
 
-            modelBuilder.Entity<UserFriendConnection>(entity => { entity.HasKey(e => new {e.UserId, e.FriendId}); });
+            modelBuilder.Entity<UserFriendConnection>(entity => { entity.HasKey(e => new { e.UserId, e.FriendId }); });
         }
     }
 }

@@ -75,7 +75,6 @@ namespace Gaver.Web
                     o.Filters.Add(new AuthorizeFilter(policy));
                     o.Filters.Add(new CustomExceptionFilterAttribute());
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddHybridModelBinder();
         }
 

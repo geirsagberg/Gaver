@@ -24,9 +24,10 @@ namespace Gaver.Web.Features.Auth
         public async Task CheckWishListAccess(int wishListId, int userId,
             CancellationToken cancellationToken = default)
         {
+            // Can see wishlist if friend of owner, or member of any of the same groups as the owner
             if (!await context.WishLists.AnyAsync(wl => wl.Id == wishListId
-                && (wl.User!.Friends.Any(f => f.FriendId == userId) || wl.User!.UserGroupConnections.Any(c =>
-                    c.UserGroup!.UserGroupConnections.Any(c2 => c2.UserId == userId))), cancellationToken))
+                && (wl.User!.Friends.Any(f => f.Id == userId) || wl.User!.Groups.Any(c =>
+                    c.Users.Any(c2 => c2.Id == userId))), cancellationToken))
                 throw new HttpException(HttpStatusCode.Forbidden, "Du har ikke tilgang til å se denne listen");
         }
 

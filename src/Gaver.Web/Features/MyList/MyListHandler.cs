@@ -141,7 +141,7 @@ namespace Gaver.Web.Features.MyList
             await clientNotifier.RefreshListAsync(wishList.Id);
 
             var mail = new MailModel {
-                To = user.Friends.Select(f => f.Friend!.Email).ToList(),
+                To = user.Friends.Select(f => f.Email).ToList(),
                 Content = $@"<h1>{user.Name} har oppdatert ønskelisten sin!</h1>
 <p>Hvis du har tidligere krysset av for at du har kjøpt noe, må du krysse av på nytt :)</p>
 <p><a href='{Url.Combine(hostUrlAccessor.GetHostUrl(), "sharedlists", wishList.Id.ToString())}'>Klikk her for å åpne listen.</a></p>
@@ -155,7 +155,7 @@ namespace Gaver.Web.Features.MyList
 
         private async Task<User> GetUserWithFriends(ResetListRequest request, CancellationToken cancellationToken)
         {
-            return await context.Users.Include(u => u.Friends).ThenInclude(f => f.Friend).SingleAsync(u => u.Id == request.UserId, cancellationToken);
+            return await context.Users.Include(u => u.Friends).SingleAsync(u => u.Id == request.UserId, cancellationToken);
         }
     }
 }
