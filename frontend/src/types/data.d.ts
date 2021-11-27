@@ -8,6 +8,9 @@ export interface CurrentUserDto {
   name: string
   pictureUrl: string
 }
+export interface GetFriendsRequest {
+  userId: number
+}
 export interface GetOrCreateUserRequest {
   primaryIdentityId: string
 }
@@ -15,9 +18,6 @@ export interface GetUserInfoRequest {
   userId: number
 }
 export interface UpdateUserInfoRequest {
-  userId: number
-}
-export interface GetFriendsRequest {
   userId: number
 }
 export interface UserDto {
@@ -46,11 +46,6 @@ export interface UserGroupDto {
 export interface UserGroupsDto {
   userGroups: UserGroupDto[]
 }
-export interface WishOptionDto {
-  id: number
-  title: string
-  url: string
-}
 export interface SharedListDto {
   id: number
   wishes: SharedWishDto[]
@@ -66,15 +61,15 @@ export interface SharedWishDto {
   options: WishOptionDto[]
   boughtByUserId?: number
 }
-export interface CheckSharedListAccessRequest {
-  wishListId: number
+export interface WishOptionDto {
+  id: number
+  title: string
+  url: string
 }
 export interface SetBoughtRequest {
   isBought: boolean
 }
 export interface AddWishOptionRequest {
-  userId: number
-  wishId: number
   title: string
   url: string
 }
@@ -82,12 +77,11 @@ export interface AddWishRequest {
   title: string
   url: string
 }
-export interface DeleteWishRequest {
-  wishId: number
-  userId: number
-}
 export interface DeleteWishResponse {
   wishesOrder: number[]
+}
+export interface ResetListRequest {
+  keepWishes: number[]
 }
 export interface MyListDto {
   id: number
@@ -96,7 +90,7 @@ export interface MyListDto {
   wishesOrder: number[]
 }
 export interface WishDto {
-  id?: number
+  id: number
   title: string
   url: string
   options: WishOptionDto[]
@@ -110,14 +104,6 @@ export interface ShareListRequest {
 export interface UpdateWishRequest {
   title: string
   url: string
-}
-export interface AcceptInvitationRequest {
-  token: string
-  userId: number
-}
-export interface GetInvitationStatusRequest {
-  token: string
-  userId: number
 }
 export interface InvitationStatusDto {
   ok: boolean
@@ -141,4 +127,9 @@ export interface ChatMessageDto {
   text: string
   created: string
   user: UserDto
+}
+export interface AuthSettingsDto {
+  clientId: string
+  domain: string
+  audience: string
 }

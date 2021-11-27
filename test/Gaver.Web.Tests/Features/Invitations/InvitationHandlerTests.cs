@@ -24,7 +24,7 @@ namespace Gaver.Web.Tests.Features.Invitations
                 UserId = user.Id
             });
 
-            action.Should().Throw<FriendlyException>()
+            action.Should().ThrowAsync<FriendlyException>()
                 .WithMessage("Du kan ikke godta en invitasjon til din egen liste.");
         }
 
@@ -76,14 +76,18 @@ namespace Gaver.Web.Tests.Features.Invitations
             });
 
             Context.Reset();
-            Context.UserFriendConnections.Select(u => new {u.UserId, u.FriendId}).Should().BeEquivalentTo(
-                new {
-                    UserId = alice.Id,
-                    FriendId = bob.Id
-                }, new {
-                    UserId = bob.Id,
-                    FriendId = alice.Id
-                });
+            Context.UserFriendConnections.Select(u => new { u.UserId, u.FriendId }).Should().BeEquivalentTo(
+                new[] {
+                    new {
+                        UserId = alice.Id,
+                        FriendId = bob.Id
+                    },
+                    new {
+                        UserId = bob.Id,
+                        FriendId = alice.Id
+                    }
+                }
+            );
         }
 
         private User SetupUserWithInvitation(Guid token)
