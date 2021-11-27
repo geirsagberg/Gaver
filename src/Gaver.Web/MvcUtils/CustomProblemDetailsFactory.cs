@@ -60,7 +60,7 @@ namespace Gaver.Web.MvcUtils
 
             var errors = modelStateDictionary.ToDictionary(
                 kvp => jsonOptions.JsonSerializerOptions?.PropertyNamingPolicy?.ConvertName(kvp.Key) ?? kvp.Key,
-                kvp => kvp.Value.Errors.Select(x => x.ErrorMessage).ToArray()
+                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage).ToArray() ?? Array.Empty<string>()
             );
 
             var problemDetails = new ValidationProblemDetails(errors) {

@@ -14,7 +14,7 @@ namespace SharpTypeGen
             var types = typeof(Startup).Assembly.ExportedTypes.Where(t => !t.IsAbstract && !t.IsInterface &&
                 (t.Name.EndsWith("Dto") || t.Name.EndsWith("Response") || t.Name.EndsWith("Request") ||
                     t.HasAttribute<GenerateTypeScriptAttribute>()));
-            const string destinationPath = "../../../../Gaver.Web/ClientApp/types";
+            const string destinationPath = "../../../../../frontend/src/types";
             Directory.CreateDirectory(destinationPath);
             using var textWriter = File.CreateText(destinationPath + "/data.d.ts");
             new TypeWriter()
