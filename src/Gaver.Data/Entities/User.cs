@@ -10,7 +10,7 @@ namespace Gaver.Data.Entities
 
         [MaxLength(255)]
         [Required]
-        public string PrimaryIdentityId { get; set; } = "";
+        public string PrimaryIdentityId { get; init; } = "";
 
         [MaxLength(40)]
         [Required]
@@ -23,10 +23,16 @@ namespace Gaver.Data.Entities
         [MaxLength(255)]
         public string? PictureUrl { get; set; }
 
-        public WishList? WishList { get; set; }
+        public WishList? WishList { get; init; }
 
         public ICollection<Wish> BoughtWishes { get; set; } = new HashSet<Wish>();
-        public ICollection<UserGroupConnection> UserGroupConnections { get; set; } = new HashSet<UserGroupConnection>();
-        public ICollection<UserFriendConnection> Friends { get; set; } = new HashSet<UserFriendConnection>();
+        public ICollection<UserGroup> Groups { get; set; } = new HashSet<UserGroup>();
+
+        // Joining entity; used to simplify editing
+        public IEnumerable<UserGroupConnection> UserGroupConnections { get; set; } = new HashSet<UserGroupConnection>();
+        public ICollection<User> Friends { get; set; } = new HashSet<User>();
+
+        // Reverse mapping of many-to-many relationship
+        public ICollection<User> FriendsWithMe { get; set; } = new HashSet<User>();
     }
 }
