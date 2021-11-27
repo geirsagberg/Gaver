@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Gaver.Data.Contracts;
 
@@ -9,7 +10,7 @@ namespace Gaver.Data.Entities
         public string? Title { get; set; }
         public int UserId { get; set; }
 
-        public int[] WishesOrder { get; set; } = new int[0];
+        public int[] WishesOrder { get; set; } = Array.Empty<int>();
 
         public User? User { get; set; }
         public ICollection<Wish> Wishes { get; set; } = new HashSet<Wish>();
