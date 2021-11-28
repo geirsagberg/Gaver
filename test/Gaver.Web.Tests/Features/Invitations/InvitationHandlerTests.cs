@@ -9,102 +9,101 @@ using Gaver.Web.Features.Invitations;
 using Gaver.Web.Tests.Extensions;
 using Xunit;
 
-namespace Gaver.Web.Tests.Features.Invitations
+namespace Gaver.Web.Tests.Features.Invitations;
+
+public class InvitationHandlerTests : DbTestBase<InvitationHandler>
 {
-    public class InvitationHandlerTests : DbTestBase<InvitationHandler>
+    [Fact]
+    public void Cannot_accept_invitation_to_own_list()
     {
-        [Fact]
-        public void Cannot_accept_invitation_to_own_list()
-        {
-            var token = Guid.NewGuid();
-            var user = SetupUserWithInvitation(token);
+        var token = Guid.NewGuid();
+        var user = SetupUserWithInvitation(token);
 
-            Func<Task> action = () => TestSubject.Handle(new AcceptInvitationRequest {
-                Token = token,
-                UserId = user.Id
-            });
+        Func<Task> action = () => TestSubject.Handle(new AcceptInvitationRequest {
+            Token = token,
+            UserId = user.Id
+        });
 
-            action.Should().ThrowAsync<FriendlyException>()
-                .WithMessage("Du kan ikke godta en invitasjon til din egen liste.");
-        }
+        action.Should().ThrowAsync<FriendlyException>()
+            .WithMessage("Du kan ikke godta en invitasjon til din egen liste.");
+    }
 
-        [Fact]
-        public async Task When_invitation_is_accepted_then_wishListId_and_userName_is_returned()
-        {
-            var token = Guid.NewGuid();
-            var user = SetupUserWithInvitation(token);
-            var otherUser = new User {
-                Name = "Bob",
-                WishList = new WishList()
-            };
-            Context.Add(otherUser);
-            Context.SaveChanges();
+    [Fact]
+    public async Task When_invitation_is_accepted_then_wishListId_and_userName_is_returned()
+    {
+        var token = Guid.NewGuid();
+        var user = SetupUserWithInvitation(token);
+        var otherUser = new User {
+            Name = "Bob",
+            WishList = new WishList()
+        };
+        Context.Add(otherUser);
+        Context.SaveChanges();
 
-            var response = await TestSubject.Handle(new AcceptInvitationRequest {
-                Token = token,
-                UserId = otherUser.Id
-            });
+        var response = await TestSubject.Handle(new AcceptInvitationRequest {
+            Token = token,
+            UserId = otherUser.Id
+        });
 
-            response.WishListId.Should().Be(user.WishList!.Id);
-            response.Name.Should().Be(user.Name);
-        }
+        response.WishListId.Should().Be(user.WishList!.Id);
+        response.Name.Should().Be(user.Name);
+    }
 
-        [Fact]
-        public async Task When_invitation_is_accepted_then_UserFriendConnections_are_created_both_ways()
-        {
-            var token = Guid.NewGuid();
-            var bob = new User {
-                Name = "Bob",
-                WishList = new WishList()
-            };
-            var alice = new User {
-                Name = "Alice",
-                WishList = new WishList {
-                    InvitationTokens = {
-                        new InvitationToken {
-                            Token = token
-                        }
+    [Fact]
+    public async Task When_invitation_is_accepted_then_UserFriendConnections_are_created_both_ways()
+    {
+        var token = Guid.NewGuid();
+        var bob = new User {
+            Name = "Bob",
+            WishList = new WishList()
+        };
+        var alice = new User {
+            Name = "Alice",
+            WishList = new WishList {
+                InvitationTokens = {
+                    new InvitationToken {
+                        Token = token
                     }
                 }
-            };
-            Context.AddRange(alice, bob);
-            Context.SaveChanges();
+            }
+        };
+        Context.AddRange(alice, bob);
+        Context.SaveChanges();
 
-            await TestSubject.Handle(new AcceptInvitationRequest {
-                Token = token,
-                UserId = bob.Id
-            });
+        await TestSubject.Handle(new AcceptInvitationRequest {
+            Token = token,
+            UserId = bob.Id
+        });
 
-            Context.Reset();
-            Context.UserFriendConnections.Select(u => new { u.UserId, u.FriendId }).Should().BeEquivalentTo(
-                new[] {
-                    new {
-                        UserId = alice.Id,
-                        FriendId = bob.Id
-                    },
-                    new {
-                        UserId = bob.Id,
-                        FriendId = alice.Id
+        Context.Reset();
+        Context.UserFriendConnections.Select(u => new { u.UserId, u.FriendId }).Should().BeEquivalentTo(
+            new[] {
+                new {
+                    UserId = alice.Id,
+                    FriendId = bob.Id
+                },
+                new {
+                    UserId = bob.Id,
+                    FriendId = alice.Id
+                }
+            }
+        );
+    }
+
+    private User SetupUserWithInvitation(Guid token)
+    {
+        var user = new User {
+            Name = "Geir",
+            WishList = new WishList {
+                InvitationTokens = {
+                    new InvitationToken {
+                        Token = token
                     }
                 }
-            );
-        }
-
-        private User SetupUserWithInvitation(Guid token)
-        {
-            var user = new User {
-                Name = "Geir",
-                WishList = new WishList {
-                    InvitationTokens = {
-                        new InvitationToken {
-                            Token = token
-                        }
-                    }
-                }
-            };
-            Context.Add(user);
-            Context.SaveChanges();
-            return user;
-        }
+            }
+        };
+        Context.Add(user);
+        Context.SaveChanges();
+        return user;
     }
 }
