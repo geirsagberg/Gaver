@@ -1,15 +1,14 @@
 using System.Security.Claims;
 using Gaver.Data.Entities;
 
-namespace Gaver.Web.Tests
+namespace Gaver.Web.Tests;
+
+public static class UserExtensions
 {
-    public static class UserExtensions
+    public static ClaimsPrincipal GetClaimsPrincipal(this User user)
     {
-        public static ClaimsPrincipal GetClaimsPrincipal(this User user)
-        {
-            return new ClaimsPrincipal(new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.NameIdentifier, user.PrimaryIdentityId),
-            }));
-        }
+        return new ClaimsPrincipal(new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.NameIdentifier, user.PrimaryIdentityId),
+        }));
     }
 }

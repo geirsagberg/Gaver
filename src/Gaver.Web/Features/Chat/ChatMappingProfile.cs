@@ -1,13 +1,13 @@
 using AutoMapper;
 using Gaver.Data.Entities;
 
-namespace Gaver.Web.Features.Chat
+namespace Gaver.Web.Features.Chat;
+
+public class ChatMappingProfile : Profile
 {
-    public class ChatMappingProfile : Profile
+    public ChatMappingProfile()
     {
-        public ChatMappingProfile()
-        {
-            CreateMap<ChatMessage, ChatMessageDto>();
-        }
+        CreateMap<ChatMessage, ChatMessageDto>();
+        CreateMap<User, ChatUserDto>();
     }
 }

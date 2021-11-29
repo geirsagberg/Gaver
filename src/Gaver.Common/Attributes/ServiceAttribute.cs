@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace Gaver.Common.Attributes
+namespace Gaver.Common.Attributes;
+
+public class ServiceAttribute : Attribute
 {
-    public class ServiceAttribute : Attribute
-    {
-    }
 }

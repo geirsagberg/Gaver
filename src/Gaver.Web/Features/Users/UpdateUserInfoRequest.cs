@@ -1,10 +1,9 @@
 using Gaver.Web.Contracts;
 using MediatR;
 
-namespace Gaver.Web.Features.Users
+namespace Gaver.Web.Features.Users;
+
+public class UpdateUserInfoRequest : IRequest, IAuthenticatedRequest
 {
-    public class UpdateUserInfoRequest : IRequest, IAuthenticatedRequest
-    {
-        public int UserId { get; set; }
-    }
+    public int UserId { get; set; }
 }

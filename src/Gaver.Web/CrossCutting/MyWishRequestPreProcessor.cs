@@ -3,23 +3,22 @@ using System.Threading.Tasks;
 using Gaver.Web.Contracts;
 using MediatR.Pipeline;
 
-namespace Gaver.Web.CrossCutting
+namespace Gaver.Web.CrossCutting;
+
+public class MyWishRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
-    public class MyWishRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
+    private readonly IAccessChecker accessChecker;
+
+    public MyWishRequestPreProcessor(IAccessChecker accessChecker)
     {
-        private readonly IAccessChecker accessChecker;
+        this.accessChecker = accessChecker;
+    }
 
-        public MyWishRequestPreProcessor(IAccessChecker accessChecker)
-        {
-            this.accessChecker = accessChecker;
-        }
-
-        public async Task Process(TRequest request, CancellationToken cancellationToken)
-        {
-            if (request is IMyWishRequest myWishRequest) {
-                await accessChecker.CheckWishOwner(myWishRequest.WishId, myWishRequest.UserId,
-                    cancellationToken);
-            }
+    public async Task Process(TRequest request, CancellationToken cancellationToken)
+    {
+        if (request is IMyWishRequest myWishRequest) {
+            await accessChecker.CheckWishOwner(myWishRequest.WishId, myWishRequest.UserId,
+                cancellationToken);
         }
     }
 }

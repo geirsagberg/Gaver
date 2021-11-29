@@ -5,39 +5,38 @@ using Gaver.Common.Utils;
 using LightInject;
 using NSubstitute;
 
-namespace Gaver.TestUtils
+namespace Gaver.TestUtils;
+
+public abstract class TestBase
 {
-    public abstract class TestBase
+    protected readonly IServiceContainer Container;
+
+    protected TestBase()
     {
-        protected readonly IServiceContainer Container;
-
-        protected TestBase()
-        {
-            Container = new ServiceContainer(new ContainerOptions {
-                EnableVariance = false,
-                EnablePropertyInjection = false
-            });
-            Container.Register<IMapperService, MapperService>(new PerContainerLifetime());
-            Container.RegisterFallback((type, name) => true, request =>
-                Substitute.For(new[] {request.ServiceType}, null), new PerContainerLifetime());
-        }
-
-        protected T Get<T>()
-        {
-            return Container.GetInstance<T>();
-        }
+        Container = new ServiceContainer(new ContainerOptions {
+            EnableVariance = false,
+            EnablePropertyInjection = false
+        });
+        Container.Register<IMapperService, MapperService>(new PerContainerLifetime());
+        Container.RegisterFallback((type, name) => true, request =>
+            Substitute.For(new[] {request.ServiceType}, null), new PerContainerLifetime());
     }
 
-    public abstract class TestBase<TSut> : TestBase where TSut : class
+    protected T Get<T>()
     {
-        private readonly Lazy<TSut> testSubjectLazy;
-
-        protected TestBase()
-        {
-            testSubjectLazy = new Lazy<TSut>(() => Container.Create<TSut>());
-            Container.RegisterAssembly(typeof(TSut).Assembly, (service, implementation) => service == typeof(Profile));
-        }
-
-        protected TSut TestSubject => testSubjectLazy.Value;
+        return Container.GetInstance<T>();
     }
+}
+
+public abstract class TestBase<TSut> : TestBase where TSut : class
+{
+    private readonly Lazy<TSut> testSubjectLazy;
+
+    protected TestBase()
+    {
+        testSubjectLazy = new Lazy<TSut>(() => Container.Create<TSut>());
+        Container.RegisterAssembly(typeof(TSut).Assembly, (service, implementation) => service == typeof(Profile));
+    }
+
+    protected TSut TestSubject => testSubjectLazy.Value;
 }

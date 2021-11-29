@@ -1,7 +1,6 @@
-namespace Gaver.Data.Contracts
+namespace Gaver.Data.Contracts;
+
+public interface IEntityWithId
 {
-    public interface IEntityWithId
-    {
-        int Id { get; set; }
-    }
+    int Id { get; set; }
 }

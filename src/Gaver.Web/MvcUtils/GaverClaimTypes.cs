@@ -1,7 +1,6 @@
-namespace Gaver.Web.MvcUtils
+namespace Gaver.Web.MvcUtils;
+
+public static class GaverClaimTypes
 {
-    public static class GaverClaimTypes
-    {
-        public const string GaverUserId = "GaverUserId";
-    }
+    public const string GaverUserId = "GaverUserId";
 }

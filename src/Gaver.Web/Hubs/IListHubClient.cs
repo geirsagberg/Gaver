@@ -1,12 +1,11 @@
 using System.Threading.Tasks;
 using Gaver.Web.Features.Chat;
 
-namespace Gaver.Web.Hubs
+namespace Gaver.Web.Hubs;
+
+public interface IListHubClient
 {
-    public interface IListHubClient
-    {
-        Task UpdateUsers(SubscriptionStatus status);
-        Task Refresh();
-        Task MessageAdded(ChatMessageDto message);
-    }
+    Task UpdateUsers(SubscriptionStatus status);
+    Task Refresh();
+    Task MessageAdded(ChatMessageDto message);
 }

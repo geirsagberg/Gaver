@@ -1,8 +1,7 @@
-﻿namespace Gaver.Web.Features.Mail
+﻿namespace Gaver.Web.Features.Mail;
+
+public class SendGridAddress
 {
-    public class SendGridAddress
-    {
-        public string? Name { get; set; }
-        public string? Email { get; set; }
-    }
+    public string? Name { get; set; }
+    public string? Email { get; set; }
 }

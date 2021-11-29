@@ -1,7 +1,6 @@
-namespace Gaver.Web.Contracts
+namespace Gaver.Web.Contracts;
+
+public interface IUserGroupRequest : IAuthenticatedRequest
 {
-    public interface IUserGroupRequest : IAuthenticatedRequest
-    {
-        int UserGroupId { get; }
-    }
+    int UserGroupId { get; }
 }

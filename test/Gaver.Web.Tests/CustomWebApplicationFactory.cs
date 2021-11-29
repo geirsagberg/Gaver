@@ -1,38 +1,46 @@
-using System;
+using System.Data.Common;
 using System.Linq;
 using AspNetCore.Testing.Authentication.ClaimInjector;
 using Gaver.Data;
+using Gaver.TestUtils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 
-namespace Gaver.Web.Tests
+namespace Gaver.Web.Tests;
+
+public class CustomWebApplicationFactory : ClaimInjectorWebApplicationFactory<Startup>
 {
-    public class CustomWebApplicationFactory : ClaimInjectorWebApplicationFactory<Startup>
+    private DbConnection dbConnection;
+    public ITestOutputHelper TestOutputHelper { get; set; }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        private string databaseName = "default";
+        base.ConfigureWebHost(builder);
 
-        public ITestOutputHelper TestOutputHelper { get; set; }
+        dbConnection = DbUtils.CreateInMemoryDbConnection();
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            base.ConfigureWebHost(builder);
+        builder
+            .UseEnvironment("Test")
+            .ConfigureServices(services => {
+                var descriptor = services.Single(s => s.ServiceType == typeof(DbContextOptions<GaverContext>));
+                services.Remove(descriptor);
+                services.AddDbContext<GaverContext>(options => options.UseSqlite(dbConnection));
+            });
+    }
 
-            builder
-                .UseEnvironment("Test")
-                .ConfigureServices(services => {
-                    var descriptor =
-                        services.SingleOrDefault(s => s.ServiceType == typeof(DbContextOptions<GaverContext>));
-                    if (descriptor != null) services.Remove(descriptor);
+    protected override void Dispose(bool disposing)
+    {
+        dbConnection.Close();
+    }
 
-                    services.AddDbContext<GaverContext>(options => { options.UseInMemoryDatabase(databaseName); });
-                });
-        }
-
-        public void ResetDatabase()
-        {
-            databaseName = Guid.NewGuid().ToString();
-        }
+    public void ResetDatabase()
+    {
+        dbConnection.Close();
+        dbConnection.Open();
+        var context = Services.GetRequiredService<GaverContext>();
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
     }
 }

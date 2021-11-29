@@ -1,11 +1,10 @@
 using System;
 
-namespace Gaver.Common.Exceptions
+namespace Gaver.Common.Exceptions;
+
+public class DeveloperException : Exception
 {
-    public class DeveloperException : Exception
+    public DeveloperException(string message) : base(message)
     {
-        public DeveloperException(string message) : base(message)
-        {
-        }
     }
 }

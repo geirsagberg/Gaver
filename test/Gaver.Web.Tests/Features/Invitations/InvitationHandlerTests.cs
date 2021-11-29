@@ -35,7 +35,7 @@ public class InvitationHandlerTests : DbTestBase<InvitationHandler>
         var user = SetupUserWithInvitation(token);
         var otherUser = new User {
             Name = "Bob",
-            WishList = new WishList()
+            PrimaryIdentityId = "Bob"
         };
         Context.Add(otherUser);
         Context.SaveChanges();
@@ -55,10 +55,12 @@ public class InvitationHandlerTests : DbTestBase<InvitationHandler>
         var token = Guid.NewGuid();
         var bob = new User {
             Name = "Bob",
+            PrimaryIdentityId = "Bob",
             WishList = new WishList()
         };
         var alice = new User {
             Name = "Alice",
+            PrimaryIdentityId = "Alice",
             WishList = new WishList {
                 InvitationTokens = {
                     new InvitationToken {
