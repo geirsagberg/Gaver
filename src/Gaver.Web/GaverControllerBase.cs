@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Gaver.Web
+namespace Gaver.Web;
+
+[Route("api/[controller]")]
+[ApiController]
+public abstract class GaverControllerBase : Controller
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public abstract class GaverControllerBase : Controller
-    {
-    }
 }

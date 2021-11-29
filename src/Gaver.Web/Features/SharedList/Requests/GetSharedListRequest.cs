@@ -3,15 +3,14 @@ using HybridModelBinding;
 using MediatR;
 using System.Text.Json.Serialization;
 
-namespace Gaver.Web.Features.SharedList.Requests
-{
-    public class GetSharedListRequest : IRequest<SharedListDto>, ISharedListRequest
-    {
-        [JsonIgnore]
-        public int UserId { get; set; }
+namespace Gaver.Web.Features.SharedList.Requests;
 
-        [JsonIgnore]
-        [HybridBindProperty(Source.Route)]
-        public int WishListId { get; init; }
-    }
+public class GetSharedListRequest : IRequest<SharedListDto>, ISharedListRequest
+{
+    [JsonIgnore]
+    public int UserId { get; set; }
+
+    [JsonIgnore]
+    [HybridBindProperty(Source.Route)]
+    public int WishListId { get; init; }
 }

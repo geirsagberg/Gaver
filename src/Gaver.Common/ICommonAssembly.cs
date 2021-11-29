@@ -1,3 +1,3 @@
-namespace Gaver.Common {
-    public interface ICommonAssembly {}
-}
+namespace Gaver.Common;
+
+public interface ICommonAssembly {}

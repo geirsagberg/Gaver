@@ -12,87 +12,85 @@ using Gaver.Web.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gaver.Web.Features.UserGroups
+namespace Gaver.Web.Features.UserGroups;
+
+public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGroupsDto>,
+    IRequestHandler<CreateUserGroupRequest, UserGroupDto>,
+    IRequestHandler<UpdateUserGroupRequest>,
+    IRequestHandler<DeleteUserGroupRequest>
 {
-    public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGroupsDto>,
-        IRequestHandler<CreateUserGroupRequest, UserGroupDto>,
-        IRequestHandler<UpdateUserGroupRequest>,
-        IRequestHandler<DeleteUserGroupRequest>
+    private readonly GaverContext context;
+    private readonly IMapperService mapperService;
+
+    public UserGroupHandler(GaverContext context, IMapperService mapperService)
     {
-        private readonly GaverContext context;
-        private readonly IMapperService mapperService;
+        this.context = context;
+        this.mapperService = mapperService;
+    }
 
-        public UserGroupHandler(GaverContext context, IMapperService mapperService)
-        {
-            this.context = context;
-            this.mapperService = mapperService;
-        }
-
-        public async Task<UserGroupDto> Handle(CreateUserGroupRequest request, CancellationToken cancellationToken)
-        {
-            var userGroup = new UserGroup {
-                Name = request.Name,
-                CreatedByUserId = request.UserId,
-                UserGroupConnections = {
-                    new UserGroupConnection {
-                        UserId = request.UserId
-                    }
-                }
-            };
-            context.Add(userGroup);
-            await context.SaveChangesAsync(cancellationToken);
-            return mapperService.Map<UserGroupDto>(userGroup);
-        }
-
-        public async Task<UserGroupsDto> Handle(GetMyUserGroupsRequest request, CancellationToken cancellationToken)
-        {
-            var groups = await context.UserGroupConnections.Where(c => c.UserId == request.UserId)
-                .Select(u => u.UserGroup)
-                .ProjectTo<UserGroupDto>(mapperService.MapperConfiguration).ToListAsync(cancellationToken);
-            return new UserGroupsDto {
-                UserGroups = groups
-            };
-        }
-
-        public async Task<Unit> Handle(UpdateUserGroupRequest request, CancellationToken cancellationToken)
-        {
-            var userGroup = await context.UserGroups.Include(ug => ug.UserGroupConnections)
-                    .SingleOrDefaultAsync(c =>
-                            c.Id == request.UserGroupId &&
-                            c.UserGroupConnections.Any(c2 => c2.UserId == request.UserId),
-                        cancellationToken) ??
-                throw new HttpException(HttpStatusCode.NotFound,
-                    "Finner ingen av dine grupper med ID " + request.UserGroupId);
-
-            if (request.Name != null) userGroup.Name = request.Name;
-
-            if (request.UserIds != null) {
-                if (request.UserId.NotIn(request.UserIds))
-                    throw new FriendlyException("Du kan ikke fjerne deg selv fra en gruppe!");
-                userGroup.UserGroupConnections = request.UserIds.Select(userId => new UserGroupConnection {
-                    UserGroupId = request.UserGroupId,
-                    UserId = userId
-                }).ToList();
+    public async Task<UserGroupDto> Handle(CreateUserGroupRequest request, CancellationToken cancellationToken)
+    {
+        var user = await context.GetOrDieAsync<User>(request.UserId);
+        var userGroup = new UserGroup {
+            Name = request.Name,
+            CreatedByUser = user,
+            Users = {
+                user
             }
+        };
+        context.Add(userGroup);
+        await context.SaveChangesAsync(cancellationToken);
+        return mapperService.Map<UserGroupDto>(userGroup);
+    }
 
-            await context.SaveChangesAsync(cancellationToken);
+    public async Task<UserGroupsDto> Handle(GetMyUserGroupsRequest request, CancellationToken cancellationToken)
+    {
+        var groups = await context.UserGroupConnections.Where(c => c.UserId == request.UserId)
+            .Select(u => u.UserGroup)
+            .ProjectTo<UserGroupDto>(mapperService.MapperConfiguration).ToListAsync(cancellationToken);
+        return new UserGroupsDto {
+            UserGroups = groups
+        };
+    }
 
-            return Unit.Value;
+    public async Task<Unit> Handle(UpdateUserGroupRequest request, CancellationToken cancellationToken)
+    {
+        var userGroup = await context.UserGroups.Include(ug => ug.UserGroupConnections)
+                .SingleOrDefaultAsync(c =>
+                        c.Id == request.UserGroupId &&
+                        c.UserGroupConnections.Any(c2 => c2.UserId == request.UserId),
+                    cancellationToken) ??
+            throw new HttpException(HttpStatusCode.NotFound,
+                "Finner ingen av dine grupper med ID " + request.UserGroupId);
+
+        if (request.Name != null) userGroup.Name = request.Name;
+
+        if (request.UserIds != null) {
+            if (request.UserId.NotIn(request.UserIds))
+                throw new FriendlyException("Du kan ikke fjerne deg selv fra en gruppe!");
+            userGroup.UserGroupConnections = request.UserIds.Select(userId => new UserGroupConnection {
+                UserGroupId = request.UserGroupId,
+                UserId = userId
+            }).ToList();
         }
 
-        public async Task<Unit> Handle(DeleteUserGroupRequest request, CancellationToken cancellationToken)
-        {
-            var userGroup =
-                await context.UserGroups.SingleOrDefaultAsync(ug => ug.Id == request.UserGroupId && ug.UserGroupConnections.Any(c => c.UserId == request.UserId), cancellationToken) ?? throw new FriendlyException("Finner ikke oppgitt gruppe");
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
+    }
+
+    public async Task<Unit> Handle(DeleteUserGroupRequest request, CancellationToken cancellationToken)
+    {
+        var userGroup =
+            await context.UserGroups.SingleOrDefaultAsync(ug => ug.Id == request.UserGroupId && ug.UserGroupConnections.Any(c => c.UserId == request.UserId), cancellationToken) ?? throw new FriendlyException("Finner ikke oppgitt gruppe");
 
 
-            if (userGroup.CreatedByUserId != request.UserId) {
-                throw new FriendlyException("Du kan ikke slette grupper du ikke har opprettet");
-            }
-
-            context.Remove(userGroup);
-            await context.SaveChangesAsync(cancellationToken);
-            return Unit.Value;
+        if (userGroup.CreatedByUserId != request.UserId) {
+            throw new FriendlyException("Du kan ikke slette grupper du ikke har opprettet");
         }
+
+        context.Remove(userGroup);
+        await context.SaveChangesAsync(cancellationToken);
+        return Unit.Value;
     }
 }

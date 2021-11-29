@@ -7,28 +7,27 @@ using Gaver.Web.Features.MyList;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Gaver.Web.Tests.Features.Errors
+namespace Gaver.Web.Tests.Features.Errors;
+
+public class ModelValidationTests : WebTestBase
 {
-    public class ModelValidationTests : WebTestBase
+    public ModelValidationTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) :
+        base(webAppFactory, testOutputHelper)
     {
-        public ModelValidationTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) :
-            base(webAppFactory, testOutputHelper)
-        {
-        }
+    }
 
-        [Fact]
-        public async Task Validation_problems_are_camel_cased()
-        {
-            RoleConfig.AnonymousRequest = false;
+    [Fact]
+    public async Task Validation_problems_are_camel_cased()
+    {
+        RoleConfig.AnonymousRequest = false;
 
-            var response = await Client.PostAsJsonAsync("/api/MyList", new AddWishRequest());
+        var response = await Client.PostAsJsonAsync("/api/MyList", new AddWishRequest());
 
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            var body = await response.Content.ReadAsStringAsync();
-            var obj = JsonSerializer.Deserialize<JsonElement>(body);
-            var errors = obj.GetProperty("errors");
-            errors.ValueKind.Should().Be(JsonValueKind.Object);
-            errors.EnumerateObject().Should().Contain(p => p.Name == "title");
-        }
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        var body = await response.Content.ReadAsStringAsync();
+        var obj = JsonSerializer.Deserialize<JsonElement>(body);
+        var errors = obj.GetProperty("errors");
+        errors.ValueKind.Should().Be(JsonValueKind.Object);
+        errors.EnumerateObject().Should().Contain(p => p.Name == "title");
     }
 }

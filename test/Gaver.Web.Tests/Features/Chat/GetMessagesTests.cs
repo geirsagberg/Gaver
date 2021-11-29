@@ -6,41 +6,47 @@ using Gaver.TestUtils;
 using Gaver.Web.Features.Chat;
 using Xunit;
 
-namespace Gaver.Web.Tests.Features.Chat
+namespace Gaver.Web.Tests.Features.Chat;
+
+public class GetMessagesTests : DbTestBase<GetMessagesHandler>
 {
-    public class GetMessagesTests : DbTestBase<GetMessagesHandler>
+    [Fact]
+    public async Task Can_get_chatMessages()
     {
-        [Fact]
-        public async Task Can_get_chatMessages()
-        {
-            var firstWishList = new WishList {
-                User = new User(),
-                ChatMessages = {
-                    new ChatMessage {
-                        Text = "Hello",
-                        User = new User {
-                            WishList = new WishList()
-                        }
+        var firstWishList = new WishList {
+            User = new User {
+                PrimaryIdentityId = "alice"
+            },
+            ChatMessages = {
+                new ChatMessage {
+                    Text = "Hello",
+                    User = new User {
+                        PrimaryIdentityId = "2"
                     }
                 }
-            };
-            var secondWishList = new WishList {
-                User = new User(),
-                ChatMessages = {
-                    new ChatMessage {
-                        User = new User {WishList = new WishList()},
-                        Text = "Whatup"
-                    }
+            }
+        };
+        var secondWishList = new WishList {
+            User = new User {
+                Name = "bob",
+                PrimaryIdentityId = "bob"
+            },
+            ChatMessages = {
+                new ChatMessage {
+                    User = new User {
+                        PrimaryIdentityId = "3"
+                    },
+                    Text = "Whatup"
                 }
-            };
-            Context.AddRange(firstWishList, secondWishList);
-            Context.SaveChanges();
+            }
+        };
+        Context.AddRange(firstWishList, secondWishList);
+        Context.SaveChanges();
 
-            var result = await TestSubject.Handle(new GetMessagesRequest {
-                WishListId = firstWishList.Id
-            });
+        var result = await TestSubject.Handle(new GetMessagesRequest {
+            WishListId = firstWishList.Id
+        });
 
-            result.Messages.Select(m => m.Text).Should().BeEquivalentTo("Hello");
-        }
+        result.Messages.Select(m => m.Text).Should().BeEquivalentTo("Hello");
     }
 }

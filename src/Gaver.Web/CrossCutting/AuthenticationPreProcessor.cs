@@ -9,29 +9,28 @@ using Gaver.Web.MvcUtils;
 using MediatR.Pipeline;
 using Microsoft.AspNetCore.Http;
 
-namespace Gaver.Web.CrossCutting
+namespace Gaver.Web.CrossCutting;
+
+public class AuthenticationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
-    public class AuthenticationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
+    private readonly IHttpContextAccessor httpContextAccessor;
+
+    public AuthenticationPreProcessor(IHttpContextAccessor httpContextAccessor)
     {
-        private readonly IHttpContextAccessor httpContextAccessor;
+        this.httpContextAccessor = httpContextAccessor;
+    }
 
-        public AuthenticationPreProcessor(IHttpContextAccessor httpContextAccessor)
-        {
-            this.httpContextAccessor = httpContextAccessor;
-        }
+    public async Task Process(TRequest request, CancellationToken cancellationToken)
+    {
+        if (request is IAuthenticatedRequest authenticatedRequest) {
+            var user = httpContextAccessor.HttpContext?.User;
+            if (user?.Identity?.IsAuthenticated != true)
+                throw new HttpException(HttpStatusCode.Unauthorized);
+            var userId = user.Claims.SingleOrDefault(c => c.Type == GaverClaimTypes.GaverUserId)?.Value;
+            if (userId == null)
+                throw new FriendlyException("Ugyldig bruker");
 
-        public async Task Process(TRequest request, CancellationToken cancellationToken)
-        {
-            if (request is IAuthenticatedRequest authenticatedRequest) {
-                var user = httpContextAccessor.HttpContext?.User;
-                if (user?.Identity?.IsAuthenticated != true)
-                    throw new HttpException(HttpStatusCode.Unauthorized);
-                var userId = user.Claims.SingleOrDefault(c => c.Type == GaverClaimTypes.GaverUserId)?.Value;
-                if (userId == null)
-                    throw new FriendlyException("Ugyldig bruker");
-
-                authenticatedRequest.UserId = int.Parse(userId);
-            }
+            authenticatedRequest.UserId = int.Parse(userId);
         }
     }
 }

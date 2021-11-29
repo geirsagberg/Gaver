@@ -7,90 +7,89 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 
-namespace Gaver.Web.MvcUtils
+namespace Gaver.Web.MvcUtils;
+
+public class CustomProblemDetailsFactory : ProblemDetailsFactory
 {
-    public class CustomProblemDetailsFactory : ProblemDetailsFactory
+    private readonly ApiBehaviorOptions options;
+    private readonly JsonOptions jsonOptions;
+
+    public CustomProblemDetailsFactory(IOptions<ApiBehaviorOptions> options, IOptions<JsonOptions> jsonOptions)
     {
-        private readonly ApiBehaviorOptions options;
-        private readonly JsonOptions jsonOptions;
+        this.options = options.Value;
+        this.jsonOptions = jsonOptions.Value;
+    }
 
-        public CustomProblemDetailsFactory(IOptions<ApiBehaviorOptions> options, IOptions<JsonOptions> jsonOptions)
-        {
-            this.options = options.Value;
-            this.jsonOptions = jsonOptions.Value;
+    public override ProblemDetails CreateProblemDetails(
+        HttpContext httpContext,
+        int? statusCode = null,
+        string? title = null,
+        string? type = null,
+        string? detail = null,
+        string? instance = null)
+    {
+        statusCode ??= 500;
+
+        var problemDetails = new ProblemDetails {
+            Status = statusCode,
+            Title = title,
+            Type = type,
+            Detail = detail,
+            Instance = instance,
+        };
+
+        ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
+
+        return problemDetails;
+    }
+
+    public override ValidationProblemDetails CreateValidationProblemDetails(
+        HttpContext httpContext,
+        ModelStateDictionary modelStateDictionary,
+        int? statusCode = null,
+        string? title = null,
+        string? type = null,
+        string? detail = null,
+        string? instance = null)
+    {
+        if (modelStateDictionary == null) {
+            throw new ArgumentNullException(nameof(modelStateDictionary));
         }
 
-        public override ProblemDetails CreateProblemDetails(
-            HttpContext httpContext,
-            int? statusCode = null,
-            string? title = null,
-            string? type = null,
-            string? detail = null,
-            string? instance = null)
-        {
-            statusCode ??= 500;
+        statusCode ??= 400;
 
-            var problemDetails = new ProblemDetails {
-                Status = statusCode,
-                Title = title,
-                Type = type,
-                Detail = detail,
-                Instance = instance,
-            };
+        var errors = modelStateDictionary.ToDictionary(
+            kvp => jsonOptions.JsonSerializerOptions?.PropertyNamingPolicy?.ConvertName(kvp.Key) ?? kvp.Key,
+            kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage).ToArray() ?? Array.Empty<string>()
+        );
 
-            ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
+        var problemDetails = new ValidationProblemDetails(errors) {
+            Status = statusCode,
+            Type = type,
+            Detail = detail,
+            Instance = instance,
+        };
 
-            return problemDetails;
+        if (title != null) {
+            // For validation problem details, don't overwrite the default title with null.
+            problemDetails.Title = title;
         }
 
-        public override ValidationProblemDetails CreateValidationProblemDetails(
-            HttpContext httpContext,
-            ModelStateDictionary modelStateDictionary,
-            int? statusCode = null,
-            string? title = null,
-            string? type = null,
-            string? detail = null,
-            string? instance = null)
-        {
-            if (modelStateDictionary == null) {
-                throw new ArgumentNullException(nameof(modelStateDictionary));
-            }
+        ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
 
-            statusCode ??= 400;
+        return problemDetails;
+    }
 
-            var errors = modelStateDictionary.ToDictionary(
-                kvp => jsonOptions.JsonSerializerOptions?.PropertyNamingPolicy?.ConvertName(kvp.Key) ?? kvp.Key,
-                kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage).ToArray() ?? Array.Empty<string>()
-            );
+    private void ApplyProblemDetailsDefaults(HttpContext httpContext, ProblemDetails problemDetails, int statusCode)
+    {
+        problemDetails.Status ??= statusCode;
 
-            var problemDetails = new ValidationProblemDetails(errors) {
-                Status = statusCode,
-                Type = type,
-                Detail = detail,
-                Instance = instance,
-            };
-
-            if (title != null) {
-                // For validation problem details, don't overwrite the default title with null.
-                problemDetails.Title = title;
-            }
-
-            ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
-
-            return problemDetails;
+        if (options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData)) {
+            problemDetails.Title ??= clientErrorData.Title;
+            problemDetails.Type ??= clientErrorData.Link;
         }
 
-        private void ApplyProblemDetailsDefaults(HttpContext httpContext, ProblemDetails problemDetails, int statusCode)
-        {
-            problemDetails.Status ??= statusCode;
-
-            if (options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData)) {
-                problemDetails.Title ??= clientErrorData.Title;
-                problemDetails.Type ??= clientErrorData.Link;
-            }
-
-            var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
-            problemDetails.Extensions["traceId"] = traceId;
-        }
+        var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
+        problemDetails.Extensions["traceId"] = traceId;
     }
 }

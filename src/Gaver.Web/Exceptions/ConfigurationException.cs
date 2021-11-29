@@ -1,9 +1,8 @@
 using System;
 
-namespace Gaver.Web.Exceptions
+namespace Gaver.Web.Exceptions;
+
+internal class ConfigurationException : Exception
 {
-    internal class ConfigurationException : Exception
-    {
-        public ConfigurationException(string configurationKey) : base("Configuration missing: " + configurationKey) {}
-    }
+    public ConfigurationException(string configurationKey) : base("Configuration missing: " + configurationKey) {}
 }

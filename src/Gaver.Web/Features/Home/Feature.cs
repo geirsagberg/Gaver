@@ -1,8 +1,7 @@
-﻿namespace Gaver.Web.Features.Home
+﻿namespace Gaver.Web.Features.Home;
+
+public enum Feature
 {
-    public enum Feature
-    {
-        WishOptions,
-        UserGroups
-    }
+    WishOptions,
+    UserGroups
 }

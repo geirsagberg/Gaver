@@ -5,21 +5,20 @@ using Gaver.Web;
 using Gaver.Web.Attributes;
 using System.Text.Json.Serialization;
 
-namespace SharpTypeGen
+namespace SharpTypeGen;
+
+internal class Program
 {
-    internal class Program
+    private static void Main()
     {
-        private static void Main()
-        {
-            var types = typeof(Startup).Assembly.ExportedTypes.Where(t => !t.IsAbstract && !t.IsInterface &&
-                (t.Name.EndsWith("Dto") || t.Name.EndsWith("Response") || t.Name.EndsWith("Request") ||
-                    t.HasAttribute<GenerateTypeScriptAttribute>()));
-            const string destinationPath = "../../../../../frontend/src/types";
-            Directory.CreateDirectory(destinationPath);
-            using var textWriter = File.CreateText(destinationPath + "/data.d.ts");
-            new TypeWriter()
-                .FilterProperties(p => !p.GetCustomAttributes(true).Any(a => a is JsonIgnoreAttribute))
-                .Write(types, textWriter);
-        }
+        var types = typeof(Startup).Assembly.ExportedTypes.Where(t => !t.IsAbstract && !t.IsInterface &&
+            (t.Name.EndsWith("Dto") || t.Name.EndsWith("Response") || t.Name.EndsWith("Request") ||
+                t.HasAttribute<GenerateTypeScriptAttribute>()));
+        const string destinationPath = "../../../../../frontend/src/types";
+        Directory.CreateDirectory(destinationPath);
+        using var textWriter = File.CreateText(destinationPath + "/data.d.ts");
+        new TypeWriter()
+            .FilterProperties(p => !p.GetCustomAttributes(true).Any(a => a is JsonIgnoreAttribute))
+            .Write(types, textWriter);
     }
 }

@@ -4,24 +4,23 @@ using Gaver.Web.Features.Mail;
 using LightInject;
 using Xunit;
 
-namespace Gaver.Web.Tests
+namespace Gaver.Web.Tests;
+
+public class MapperServiceTests
 {
-    public class MapperServiceTests
+    [Fact]
+    public void Mapping_is_valid()
     {
-        [Fact]
-        public void Mapping_is_valid()
-        {
-            var container = new ServiceContainer(new ContainerOptions {
-                EnableVariance = false,
-                EnablePropertyInjection = false
-            });
-            container.RegisterAssembly(typeof(Startup).GetTypeInfo().Assembly);
-            container.RegisterAssembly(typeof(MailMappingProfile).GetTypeInfo().Assembly);
-            container.RegisterInstance(Mocks.GetMockHttpContextAccessor());
+        var container = new ServiceContainer(new ContainerOptions {
+            EnableVariance = false,
+            EnablePropertyInjection = false
+        });
+        container.RegisterAssembly(typeof(Startup).GetTypeInfo().Assembly);
+        container.RegisterAssembly(typeof(MailMappingProfile).GetTypeInfo().Assembly);
+        container.RegisterInstance(Mocks.GetMockHttpContextAccessor());
 
-            var service = container.Create<MapperService>();
+        var service = container.Create<MapperService>();
 
-            service.ValidateMappings();
-        }
+        service.ValidateMappings();
     }
 }
