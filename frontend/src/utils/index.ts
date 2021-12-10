@@ -7,7 +7,7 @@ export async function tryOrNotify(func: Function, finallyCallback?: Function) {
     await func()
     return true
   } catch (error) {
-    showError(error)
+    showError(error as Error)
     return false
   } finally {
     if (finallyCallback) {

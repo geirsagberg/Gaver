@@ -1,9 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
-
-namespace Gaver.Data;
-
-public static class ObjectExtensions
+namespace Gaver.Data
 {
-    [return: NotNullIfNotNull("obj")]
-    public static string ToStringOrEmpty(this object? obj) => obj == null ? "" : obj.ToString();
+    public static class ObjectExtensions
+    {
+        public static string ToStringOrEmpty(this object? obj) => obj?.ToString() ?? "";
+    }
 }

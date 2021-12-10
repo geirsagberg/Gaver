@@ -1,10 +1,5 @@
 import { clone, without } from 'lodash-es'
-import {
-  AddWishRequest,
-  DeleteWishResponse,
-  MyListDto,
-  UpdateWishRequest,
-} from '~/types/data'
+import { AddWishRequest, DeleteWishResponse, MyListDto, UpdateWishRequest } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
 import { normalizeArrays } from '~/utils/normalize'
@@ -41,30 +36,19 @@ export const cancelAddingWish = ({ state: { myList } }: Context) => {
   delete myList.newWish
 }
 
-export const startEditingWish = (
-  { state: { myList } }: Context,
-  wishId: number
-) => {
+export const startEditingWish = ({ state: { myList } }: Context, wishId: number) => {
   const wish = myList.wishes[wishId]
   myList.editingWish = { ...wish }
 }
 
-export const deleteEditingWish = async (
-  { state: { myList }, actions }: Context,
-  wishId: number
-) => {
+export const deleteEditingWish = async ({ state: { myList }, actions }: Context, wishId: number) => {
   await actions.myList.confirmDeleteWish(wishId)
   delete myList.editingWish
 }
 
-export const confirmDeleteWish = (
-  { state: { myList } }: Context,
-  wishId: number
-) =>
+export const confirmDeleteWish = ({ state: { myList } }: Context, wishId: number) =>
   tryOrNotify(async () => {
-    const response = await deleteJson<DeleteWishResponse>(
-      `/api/MyList/${wishId}`
-    )
+    const response = await deleteJson<DeleteWishResponse>(`/api/MyList/${wishId}`)
     myList.wishesOrder = response.wishesOrder
     delete myList.wishes[wishId]
   })
@@ -73,10 +57,7 @@ export const cancelEditingWish = ({ state: { myList } }: Context) => {
   delete myList.editingWish
 }
 
-export const updateEditingWish = (
-  { state: { myList } }: Context,
-  update: Partial<Wish>
-) => {
+export const updateEditingWish = ({ state: { myList } }: Context, update: Partial<Wish>) => {
   myList.editingWish = {
     ...myList.editingWish,
     ...(update as Wish),
@@ -150,10 +131,7 @@ interface WishOrderChangedParams {
   newIndex: number
   wishId: number
 }
-export const wishOrderChanged = async (
-  { state: { myList } }: Context,
-  payload: WishOrderChangedParams
-) => {
+export const wishOrderChanged = async ({ state: { myList } }: Context, payload: WishOrderChangedParams) => {
   if (payload.newIndex === payload.oldIndex) {
     return
   }
@@ -165,6 +143,6 @@ export const wishOrderChanged = async (
     await postJson('/api/MyList/Order', { wishesOrder: myList.wishesOrder })
   } catch (error) {
     myList.wishesOrder = originalOrder
-    showError(error)
+    showError(error as Error)
   }
 }

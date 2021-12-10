@@ -8,5 +8,5 @@ public class WishDto
     public int Id { get; set; }
     public string? Title { get; set; }
     public string? Url { get; set; }
-    public List<WishOptionDto> Options { get; set; } = new List<WishOptionDto>();
+    public List<WishOptionDto> Options { get; set; } = new();
 }

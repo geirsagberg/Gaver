@@ -1,10 +1,9 @@
 // For documentation, see https://github.com/mroderick/PubSubJS
 import PubSub from 'pubsub-js'
 import { isDevelopment } from './'
-
 ;(PubSub as any)['immediateExceptions'] = isDevelopment
 
-export function subscribe(topic: string, func: Function): any {
+export function subscribe<T>(topic: string, func: PubSubJS.SubscriptionListener<T>): any {
   return PubSub.subscribe(topic, func)
 }
 

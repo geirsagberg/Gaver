@@ -17,6 +17,7 @@ export type MyListState = {
 }
 
 export const getEmptyWish = (): Wish => ({
+  id: 0,
   title: '',
   options: {},
   url: '',
