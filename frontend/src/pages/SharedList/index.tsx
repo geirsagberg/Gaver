@@ -1,11 +1,5 @@
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Icon,
-  makeStyles,
-  Paper,
-  Typography,
-} from '@material-ui/core'
+import { BottomNavigation, BottomNavigationAction, Icon, Paper, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { map } from 'lodash-es'
 import React, { FC, useState } from 'react'
 import Chat from '~/components/Chat'

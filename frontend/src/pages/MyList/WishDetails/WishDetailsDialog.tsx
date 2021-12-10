@@ -6,7 +6,7 @@ import {
   DialogTitle,
   Icon,
   TextField,
-} from '@material-ui/core'
+} from '@mui/material'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useAppState } from '~/overmind'

@@ -4,8 +4,8 @@ import {
   IconButton,
   Toolbar,
   Typography,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+} from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
 import React, { Suspense } from 'react'
 import { Actions } from './Actions'
 import Expander from './components/Expander'
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     height: '100%',
     paddingTop: '4rem',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingTop: '3.5rem',
     },
   },
@@ -59,7 +59,8 @@ const Layout = () => {
             <IconButton
               color="inherit"
               className={classes.menuIcon}
-              onClick={showMenu}>
+              onClick={showMenu}
+              size="large">
               <Icon>menu</Icon>
             </IconButton>
             <Typography
@@ -83,7 +84,7 @@ const Layout = () => {
       <FeedbackDialog />
       <div id="portal-overlay" style={{ position: 'relative', zIndex: 1100 }} />
     </div>
-  )
+  );
 }
 
 export default Layout

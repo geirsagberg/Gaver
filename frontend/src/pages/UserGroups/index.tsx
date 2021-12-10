@@ -1,4 +1,5 @@
-import { Fab, Icon, IconButton, makeStyles, Paper } from '@material-ui/core'
+import { Fab, Icon, IconButton, Paper } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { map, size } from 'lodash-es'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
@@ -68,12 +69,13 @@ const GroupItem: FC<{ value: UserGroup }> = ({ value }) => {
       <div>
         <IconButton
           title="Rediger gruppe"
-          onClick={() => startEditingGroup(value.id)}>
+          onClick={() => startEditingGroup(value.id)}
+          size="large">
           <Icon>edit</Icon>
         </IconButton>
       </div>
     </Paper>
-  )
+  );
 }
 
 const UserGroupsPage = () => {

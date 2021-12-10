@@ -1,4 +1,4 @@
-import { Icon, IconButton, Menu, MenuItem, Tooltip } from '@material-ui/core'
+import { Icon, IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
 import React, { FC, useState } from 'react'
 import { useActions, useAppState } from './overmind'
 
@@ -14,7 +14,7 @@ export const LoggedInAvatar: FC = () => {
   return auth.isLoggedIn && auth.user ? (
     <>
       <Tooltip title={auth.user.name}>
-        <IconButton color="inherit" onClick={showProfileMenu}>
+        <IconButton color="inherit" onClick={showProfileMenu} size="large">
           <Icon>account_circle</Icon>
         </IconButton>
       </Tooltip>
@@ -26,5 +26,5 @@ export const LoggedInAvatar: FC = () => {
         <MenuItem onClick={logOut}>Logg ut</MenuItem>
       </Menu>
     </>
-  ) : null
+  ) : null;
 }

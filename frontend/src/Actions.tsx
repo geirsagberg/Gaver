@@ -1,4 +1,4 @@
-import { Icon, IconButton } from '@material-ui/core'
+import { Icon, IconButton } from '@mui/material'
 import React, { FC } from 'react'
 import { useOvermind } from './overmind'
 
@@ -16,24 +16,20 @@ export const Actions: FC = () => {
   } = useOvermind()
   switch (currentPage) {
     case 'myList':
-      return (
-        <>
-          <IconButton color="inherit" onClick={toggleDeleting}>
-            <Icon>{isDeleting ? 'close' : 'delete'}</Icon>
-          </IconButton>
-          <IconButton color="inherit" onClick={startSharingList}>
-            <Icon>share</Icon>
-          </IconButton>
-        </>
-      )
+      return <>
+        <IconButton color="inherit" onClick={toggleDeleting} size="large">
+          <Icon>{isDeleting ? 'close' : 'delete'}</Icon>
+        </IconButton>
+        <IconButton color="inherit" onClick={startSharingList} size="large">
+          <Icon>share</Icon>
+        </IconButton>
+      </>;
     case 'sharedList':
-      return (
-        <>
-          <IconButton color="inherit" onClick={toggleChat}>
-            <Icon>chat</Icon>
-          </IconButton>
-        </>
-      )
+      return <>
+        <IconButton color="inherit" onClick={toggleChat} size="large">
+          <Icon>chat</Icon>
+        </IconButton>
+      </>;
   }
   return null
 }

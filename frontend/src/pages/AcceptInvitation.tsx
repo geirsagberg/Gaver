@@ -1,4 +1,5 @@
-import { Avatar, Button, makeStyles, Typography } from '@material-ui/core'
+import { Avatar, Button, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React, { FC } from 'react'
 import ErrorView from '~/components/ErrorView'
 import Loading from '~/components/Loading'

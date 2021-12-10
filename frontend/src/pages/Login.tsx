@@ -1,5 +1,5 @@
-import { Button, colors, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Button, colors, Typography } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classNames from 'classnames'
 import React, { FC } from 'react'
 import Loading from '~/components/Loading'

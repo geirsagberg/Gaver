@@ -1,4 +1,5 @@
-import { makeStyles, Paper, Typography } from '@material-ui/core'
+import { Paper, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames'
 import Color from 'color'
 import { DateTime } from 'luxon'

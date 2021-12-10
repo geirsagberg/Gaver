@@ -8,7 +8,7 @@ import {
   FormControlLabel,
   Switch,
   TextField,
-} from '@material-ui/core'
+} from '@mui/material'
 import React, { FC, useState } from 'react'
 import { useActions, useAppState } from './overmind'
 

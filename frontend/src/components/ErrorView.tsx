@@ -1,5 +1,7 @@
 import React, { FC } from 'react'
-import { colors, Typography, Icon, Button, makeStyles } from '@material-ui/core'
+import { colors, Typography, Icon, Button } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles({
   root: {

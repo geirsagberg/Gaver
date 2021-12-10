@@ -7,14 +7,22 @@ import {
   ListItemIcon,
   ListItemText,
   SwipeableDrawer,
-} from '@material-ui/core'
-import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
+} from '@mui/material'
+import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { map, some } from 'lodash-es'
 import React, { FC } from 'react'
 import Expander from './components/Expander'
 import { useActions, useAppState, useEffects } from './overmind'
 import { darkTheme } from './theme'
 import { useFeatures } from './utils/appSettings'
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 const useStyles = makeStyles((theme) => ({
   menuPaper: {
@@ -177,24 +185,26 @@ export const MainMenu: FC = () => {
   const features = useFeatures()
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <SwipeableDrawer
-        SwipeAreaProps={{ className: classes.drawer }}
-        open={isMenuShowing}
-        onOpen={showMenu}
-        onClose={hideMenu}
-        classes={{ paper: classes.menuPaper }}>
-        <List className={classes.menu}>
-          <MyListMenuItem />
-          {features?.userGroups ? <MyGroupsMenuItem /> : null}
-          <SharedListsMenuItem />
-          <Divider />
-          <Expander />
-          <FeedbackMenuItem />
-          <LogOutMenuItem />
-          <LicensesMenuItem />
-        </List>
-      </SwipeableDrawer>
-    </ThemeProvider>
-  )
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={darkTheme}>
+        <SwipeableDrawer
+          SwipeAreaProps={{ className: classes.drawer }}
+          open={isMenuShowing}
+          onOpen={showMenu}
+          onClose={hideMenu}
+          classes={{ paper: classes.menuPaper }}>
+          <List className={classes.menu}>
+            <MyListMenuItem />
+            {features?.userGroups ? <MyGroupsMenuItem /> : null}
+            <SharedListsMenuItem />
+            <Divider />
+            <Expander />
+            <FeedbackMenuItem />
+            <LogOutMenuItem />
+            <LicensesMenuItem />
+          </List>
+        </SwipeableDrawer>
+      </ThemeProvider>
+    </StyledEngineProvider>
+  );
 }

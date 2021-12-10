@@ -1,11 +1,5 @@
-import {
-  Icon,
-  IconButton,
-  Link,
-  makeStyles,
-  Paper,
-  Typography,
-} from '@material-ui/core'
+import { Icon, IconButton, Link, Paper, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useActions, useAppState } from '~/overmind'
@@ -42,17 +36,18 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
         {isDeleting ? (
           <IconButton
             disabled={isSavingOrLoading}
-            onClick={() => confirmDeleteWish(wishId)}>
+            onClick={() => confirmDeleteWish(wishId)}
+            size="large">
             <Icon>delete</Icon>
           </IconButton>
         ) : (
-          <IconButton onClick={() => startEditingWish(wishId)}>
+          <IconButton onClick={() => startEditingWish(wishId)} size="large">
             <Icon>edit</Icon>
           </IconButton>
         )}
       </div>
     </Paper>
-  ) : null
+  ) : null;
 }
 
 export default WishListItem

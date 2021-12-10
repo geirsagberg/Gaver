@@ -9,10 +9,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles,
   TextField,
   Typography,
-} from '@material-ui/core'
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { map, without } from 'lodash-es'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'

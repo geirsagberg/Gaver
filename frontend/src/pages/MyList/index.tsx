@@ -1,4 +1,5 @@
-import { Button, makeStyles } from '@material-ui/core'
+import { Button } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import classNames from 'classnames'
 import Color from 'color'
 import { map, size } from 'lodash-es'

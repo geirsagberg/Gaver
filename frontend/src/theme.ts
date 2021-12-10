@@ -1,5 +1,6 @@
-import { createStyles, createTheme, ThemeOptions } from '@material-ui/core'
-import { PaletteOptions } from '@material-ui/core/styles/createPalette'
+import { adaptV4Theme, createTheme, DeprecatedThemeOptions } from '@mui/material'
+import { PaletteOptions } from '@mui/material/styles'
+import createStyles from '@mui/styles/createStyles'
 import { merge } from 'lodash-es'
 
 export const gaverColors = {
@@ -36,7 +37,7 @@ const colors = {
   darkGreyOverlay16: '#383838',
 }
 
-const commonThemeOptions: ThemeOptions = {
+const commonThemeOptions: DeprecatedThemeOptions = {
   palette,
   overrides: {
     MuiDialog: {
@@ -56,11 +57,11 @@ const commonThemeOptions: ThemeOptions = {
   },
 }
 
-const theme = createTheme(commonThemeOptions)
+const theme = createTheme(adaptV4Theme(commonThemeOptions))
 
-const darkThemeOptions: ThemeOptions = {
+const darkThemeOptions: DeprecatedThemeOptions = {
   palette: {
-    type: 'dark',
+    mode: 'dark',
     background: {
       paper: colors.darkGrey,
       default: colors.darkGrey,
@@ -68,7 +69,6 @@ const darkThemeOptions: ThemeOptions = {
     text: {
       primary: colors.white87,
       secondary: colors.white60,
-      hint: colors.white60,
       disabled: colors.white38,
     },
   },
@@ -90,9 +90,7 @@ const darkThemeOptions: ThemeOptions = {
   },
 }
 
-export const darkTheme = createTheme(
-  merge(commonThemeOptions, darkThemeOptions)
-)
+export const darkTheme = createTheme(adaptV4Theme(merge(commonThemeOptions, darkThemeOptions)))
 
 export default theme
 

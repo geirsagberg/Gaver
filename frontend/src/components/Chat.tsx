@@ -1,10 +1,18 @@
-import { makeStyles, SwipeableDrawer, TextField, Typography } from '@material-ui/core'
-import { ThemeProvider } from '@material-ui/core/styles'
+import { SwipeableDrawer, TextField, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
 import React, { useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import { useNamespace } from '~/overmind'
 import { darkTheme } from '~/theme'
 import ChatMessage from './ChatMessage'
+
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 const useStyles = makeStyles((theme) => ({
   menuPaper: {
@@ -21,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   chatHeader: {
     textAlign: 'center',
     padding: '1rem',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       padding: '0.75rem 1rem',
     },
   },
@@ -84,7 +92,9 @@ const ChatView = () => {
 }
 
 export default () => (
-  <ThemeProvider theme={darkTheme}>
-    <ChatView />
-  </ThemeProvider>
+  <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={darkTheme}>
+      <ChatView />
+    </ThemeProvider>
+  </StyledEngineProvider>
 )

@@ -1,4 +1,4 @@
-import { clone, without } from 'lodash-es'
+import { clone } from 'lodash-es'
 import { AddWishRequest, DeleteWishResponse, MyListDto, UpdateWishRequest } from '~/types/data'
 import { tryOrNotify } from '~/utils'
 import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
@@ -105,18 +105,14 @@ export const cancelSharingList = ({ state: { myList } }: Context) => {
   myList.shareEmails = []
 }
 
-export const emailAdded = ({ state: { myList } }: Context, email: string) => {
-  if (isEmailValid(email)) {
-    myList.shareEmails.push(email)
+export const emailsChanged = ({ state: { myList } }: Context, emails: string[]) => {
+  if (emails.every(isEmailValid)) {
+    myList.shareEmails = emails
     return true
   } else {
     showError('Ugyldig e-postadresse')
     return false
   }
-}
-
-export const emailDeleted = ({ state: { myList } }: Context, email: string) => {
-  myList.shareEmails = without(myList.shareEmails, email)
 }
 
 export const shareList = ({ state: { myList } }: Context) =>

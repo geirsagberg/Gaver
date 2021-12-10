@@ -1,4 +1,4 @@
-import { Button, Checkbox, Link, Paper, Typography } from '@material-ui/core'
+import { Button, Checkbox, Link, Paper, Typography } from '@mui/material'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useActions, useAppState } from '~/overmind'
