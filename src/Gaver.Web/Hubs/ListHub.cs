@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
@@ -10,7 +6,6 @@ using Gaver.Web.Extensions;
 using Gaver.Web.Features.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Hubs;
 

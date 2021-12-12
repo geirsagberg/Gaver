@@ -1,7 +1,5 @@
 ﻿using System.Text.Json;
-using System.Threading.Tasks;
 using Gaver.Web.Exceptions;
-using Microsoft.AspNetCore.Http;
 
 namespace Gaver.Web.Middleware;
 

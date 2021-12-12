@@ -12,6 +12,7 @@ using Xunit.Abstractions;
 namespace Gaver.Web.Tests;
 
 [Trait("Category", "WebTest")]
+[Collection("WebTests")]
 public abstract class WebTestBase : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly Lazy<HttpClient> clientLazy;
@@ -49,5 +50,4 @@ public abstract class WebTestBase : IClassFixture<CustomWebApplicationFactory>
     {
         SetAuthenticatedUser(user.Id);
     }
-
 }

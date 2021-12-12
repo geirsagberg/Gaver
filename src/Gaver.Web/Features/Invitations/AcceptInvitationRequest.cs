@@ -1,4 +1,3 @@
-using System;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Users;
 using HybridModelBinding;

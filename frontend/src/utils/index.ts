@@ -16,6 +16,19 @@ export async function tryOrNotify(func: Function, finallyCallback?: Function) {
   }
 }
 
+export async function tryGetOrNotify<T>(func: () => T | Promise<T>, finallyCallback?: Function): Promise<T | null> {
+  try {
+    return await func()
+  } catch (error) {
+    showError(error as Error)
+    return null
+  } finally {
+    if (finallyCallback) {
+      finallyCallback()
+    }
+  }
+}
+
 export function getQueryVariable(variable: string) {
   const query = window.location.search.substring(1)
   const vars = query.split('&')

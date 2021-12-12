@@ -1,13 +1,9 @@
-using System.Linq;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Gaver.Common.Exceptions;
 using Gaver.Web.Contracts;
 using Gaver.Web.Exceptions;
 using Gaver.Web.MvcUtils;
 using MediatR.Pipeline;
-using Microsoft.AspNetCore.Http;
 
 namespace Gaver.Web.CrossCutting;
 

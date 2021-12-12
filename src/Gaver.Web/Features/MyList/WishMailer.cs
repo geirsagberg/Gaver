@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Flurl;
 using Gaver.Common.Exceptions;
 using Gaver.Common.Extensions;
@@ -10,7 +6,6 @@ using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Mail;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 
 namespace Gaver.Web.Features.MyList;
 

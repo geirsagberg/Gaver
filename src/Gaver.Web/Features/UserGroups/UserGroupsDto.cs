@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Gaver.Web.Features.UserGroups;
+﻿namespace Gaver.Web.Features.UserGroups;
 
 public class UserGroupsDto
 {

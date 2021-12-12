@@ -1,7 +1,4 @@
-﻿using System;
-using Gaver.Web.Features.Users;
-
-namespace Gaver.Web.Features.Chat;
+﻿namespace Gaver.Web.Features.Chat;
 
 public class ChatMessageDto
 {

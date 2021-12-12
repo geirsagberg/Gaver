@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-
-namespace Gaver.Web.Extensions;
+﻿namespace Gaver.Web.Extensions;
 
 public static class HostEnvironmentExtensions
 {

@@ -13,6 +13,7 @@
     <NoWarn>CS1998;CS8618</NoWarn>
     <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
@@ -25,7 +26,7 @@
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="5.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="5.0.1" />
     <PackageReference Include="Flurl.Http" Version="3.2.0" />
-    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.2.0" />
+    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.3.0" />
     <PackageReference Include="HybridModelBinding" Version="0.18.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.19.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />

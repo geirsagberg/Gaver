@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
@@ -54,8 +50,6 @@ public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, Inv
             });
         }
 
-        invitationToken.Accepted = DateTimeOffset.Now;
-
         await context.SaveChangesAsync(cancellationToken);
         var friend = await context.Set<User>().Where(u => u.WishList!.Id == invitationToken.WishListId).ProjectTo<UserDto>(mapperService.MapperConfiguration).SingleAsync(cancellationToken);
         return friend;
@@ -75,9 +69,9 @@ public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, Inv
             u => u.WishList!.InvitationTokens.Any(t => t.Token == request.Token), cancellationToken);
 
         return new InvitationStatusDto {
-            Ok = true,
             Owner = owner.Name,
-            PictureUrl = owner.PictureUrl
+            PictureUrl = owner.PictureUrl,
+            OwnerId = owner.Id,
         };
     }
 
@@ -88,8 +82,6 @@ public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, Inv
             .SingleOrDefaultAsync(t => t.Token == token);
         if (invitationToken == null)
             throw new FriendlyException("Denne invitasjonen finnes ikke.");
-        if (invitationToken.Accepted.HasValue)
-            throw new FriendlyException("Denne invitasjonen er allerede brukt.");
         if (invitationToken.WishList!.UserId == userId)
             throw new FriendlyException("Du kan ikke godta en invitasjon til din egen liste.");
 

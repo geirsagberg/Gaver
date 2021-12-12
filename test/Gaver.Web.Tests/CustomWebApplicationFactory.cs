@@ -3,24 +3,21 @@ using System.Linq;
 using AspNetCore.Testing.Authentication.ClaimInjector;
 using Gaver.Data;
 using Gaver.TestUtils;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Xunit.Abstractions;
 
 namespace Gaver.Web.Tests;
 
-public class CustomWebApplicationFactory : ClaimInjectorWebApplicationFactory<Startup>
+public class CustomWebApplicationFactory : ClaimInjectorWebApplicationFactory<IStartupAssembly>
 {
     private DbConnection dbConnection;
     public ITestOutputHelper TestOutputHelper { get; set; }
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    protected override IHost CreateHost(IHostBuilder builder)
     {
-        base.ConfigureWebHost(builder);
-
         dbConnection = DbUtils.CreateInMemoryDbConnection();
-
         builder
             .UseEnvironment("Test")
             .ConfigureServices(services => {
@@ -28,6 +25,8 @@ public class CustomWebApplicationFactory : ClaimInjectorWebApplicationFactory<St
                 services.Remove(descriptor);
                 services.AddDbContext<GaverContext>(options => options.UseSqlite(dbConnection));
             });
+
+        return base.CreateHost(builder);
     }
 
     protected override void Dispose(bool disposing)

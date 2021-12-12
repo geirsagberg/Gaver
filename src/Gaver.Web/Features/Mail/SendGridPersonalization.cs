@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Gaver.Web.Features.Mail;
+﻿namespace Gaver.Web.Features.Mail;
 
 public class SendGridPersonalization
 {

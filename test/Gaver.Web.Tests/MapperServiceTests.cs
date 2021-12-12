@@ -1,6 +1,5 @@
 using System.Reflection;
 using Gaver.Common.Utils;
-using Gaver.Web.Features.Mail;
 using LightInject;
 using Xunit;
 
@@ -15,8 +14,7 @@ public class MapperServiceTests
             EnableVariance = false,
             EnablePropertyInjection = false
         });
-        container.RegisterAssembly(typeof(Startup).GetTypeInfo().Assembly);
-        container.RegisterAssembly(typeof(MailMappingProfile).GetTypeInfo().Assembly);
+        container.RegisterAssembly(typeof(IStartupAssembly).GetTypeInfo().Assembly);
         container.RegisterInstance(Mocks.GetMockHttpContextAccessor());
 
         var service = container.Create<MapperService>();

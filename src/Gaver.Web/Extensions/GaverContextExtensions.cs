@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Threading.Tasks;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Microsoft.EntityFrameworkCore;

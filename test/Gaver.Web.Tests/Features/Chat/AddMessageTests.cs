@@ -3,7 +3,6 @@ using FluentAssertions;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
 using Gaver.Web.Features.Chat;
-using Gaver.Web.Features.Users;
 using Xunit;
 
 namespace Gaver.Web.Tests.Features.Chat;

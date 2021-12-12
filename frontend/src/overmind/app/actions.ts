@@ -27,10 +27,7 @@ export const cancelFeedback = ({ state: { app } }: Context) => {
   app.feedback = false
 }
 
-export const setNavContext = (
-  { state: { app } }: Context,
-  navContext: NavContext
-) => {
+export const setNavContext = ({ state: { app } }: Context, navContext: NavContext) => {
   app.title = navContext.title
 }
 
@@ -54,11 +51,7 @@ export const sendFeedback = async (
   return true
 }
 
-const onInitializeOvermind = ({
-  actions: {
-    app: { incrementAjaxCounter, decrementAjaxCounter },
-  },
-}: Context) => {
-  subscribe(Topic.AjaxStart, incrementAjaxCounter)
-  subscribe(Topic.AjaxStop, decrementAjaxCounter)
+export const onInitializeOvermind = ({ actions }: Context) => {
+  subscribe(Topic.AjaxStart, actions.app.incrementAjaxCounter)
+  subscribe(Topic.AjaxStop, actions.app.decrementAjaxCounter)
 }

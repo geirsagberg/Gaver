@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Gaver.Web.Attributes;
+﻿namespace Gaver.Web.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class GenerateTypeScriptAttribute : Attribute

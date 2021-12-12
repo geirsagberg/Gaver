@@ -1,6 +1,5 @@
 using Gaver.Common.Attributes;
 using Gaver.Common.Exceptions;
-using Microsoft.AspNetCore.Http;
 
 namespace Gaver.Web.Features.Utils;
 

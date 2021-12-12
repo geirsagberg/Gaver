@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Gaver.Common.Attributes;
 using Gaver.Web.Contracts;
 using Gaver.Web.Features.Chat;

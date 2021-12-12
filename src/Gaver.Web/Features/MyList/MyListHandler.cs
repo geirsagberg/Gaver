@@ -1,6 +1,3 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Flurl;
 using Gaver.Common.Contracts;
@@ -41,6 +38,7 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
 
     public async Task<WishDto> Handle(AddWishRequest message, CancellationToken cancellationToken)
     {
+        await Task.Delay(5000, cancellationToken);
         var wishList = context.WishLists.Single(wl => wl.UserId == message.UserId);
         var wish = new Wish {
             Title = message.Title,

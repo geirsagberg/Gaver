@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Gaver.Web.Options;
+﻿using Gaver.Web.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

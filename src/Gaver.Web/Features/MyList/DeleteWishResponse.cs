@@ -1,5 +1,3 @@
-using System;
-
 namespace Gaver.Web.Features.MyList;
 
 public class DeleteWishResponse

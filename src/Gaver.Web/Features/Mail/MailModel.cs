@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Gaver.Web.Features.Mail;
 
 public class MailModel

@@ -1,27 +1,28 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Reflection;
-using System.Text.Json;
-using System.Threading.Tasks;
 using AutoMapper;
 using Gaver.Common;
 using Gaver.Common.Attributes;
+using Gaver.Common.Contracts;
+using Gaver.Common.Extensions;
+using Gaver.Common.Utils;
 using Gaver.Data;
+using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Filters;
 using Gaver.Web.MvcUtils;
 using Gaver.Web.Options;
+using Hellang.Middleware.ProblemDetails;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scrutor;
@@ -30,6 +31,77 @@ namespace Gaver.Web;
 
 public static class ServiceConfig
 {
+    public static void ConfigureServices(this WebApplicationBuilder builder)
+    {
+        var services = builder.Services;
+        var config = builder.Configuration;
+        var environment = builder.Environment;
+        services.ScanAssemblies();
+
+        services.AddCustomAuth(config);
+
+        services.AddCustomMvc();
+        services.AddCustomSwagger(config);
+        services.AddCustomDbContext(config);
+        services.AddCustomHealthChecks(config, environment);
+        services.AddFeatureManagement(config.GetSection("Features"));
+
+        services.AddSingleton<IMapperService, MapperService>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddSignalR();
+        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddProblemDetails();
+        services.AddValidationProblemDetails();
+        services.AddSingleton<Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDetailsFactory, CustomProblemDetailsFactory>();
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+        services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
+        services.AddScoped(typeof(IRequestPreProcessor<>), typeof(SharedListRequestPreProcessor<>));
+        services.AddScoped(typeof(IRequestPreProcessor<>), typeof(MyWishRequestPreProcessor<>));
+
+        ConfigureOptions(services, config);
+
+        if (environment.IsProduction()) {
+            services.Configure<HttpsRedirectionOptions>(options => options.HttpsPort = 443);
+        }
+    }
+
+    private static void ConfigureOptions(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOptions();
+
+        var missingOptions = new List<string>();
+
+        missingOptions.AddRange(ConfigureOptions<MailOptions>(services, configuration, "mail"));
+        missingOptions.AddRange(ConfigureOptions<Auth0Settings>(services, configuration, "auth0"));
+
+        if (missingOptions.Any()) {
+            throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
+        }
+    }
+
+    private static IEnumerable<string> ConfigureOptions<T>(IServiceCollection services, IConfiguration configuration, string key, bool snapshot = false) where T : class, new()
+    {
+        var configurationSection = configuration.GetSection(key);
+        var options = configurationSection.Get<T>();
+
+        services.Configure<T>(configurationSection);
+
+        if (snapshot) {
+            // Enable injection of updated strongly typed options
+            services.AddScoped(provider => provider.GetRequiredService<IOptionsSnapshot<T>>().Value);
+        } else {
+            services.AddSingleton(provider => provider.GetRequiredService<IOptions<T>>().Value);
+        }
+
+        var missing = typeof(T)
+            .GetProperties()
+            .Where(propertyInfo => propertyInfo.GetValue(options).ToStringOrEmpty().IsNullOrEmpty())
+            .Select(propertyInfo => $"{key}:{propertyInfo.Name}");
+
+        return missing;
+    }
+
     public static void AddCustomAuth(this IServiceCollection services, IConfiguration configuration)
     {
         var authSettings = configuration.GetSection("auth0").Get<Auth0Settings>();
@@ -93,9 +165,9 @@ public static class ServiceConfig
                         TokenUrl = new Uri($"https://{authSettings.Domain}/token"),
                         AuthorizationUrl = new Uri($"https://{authSettings.Domain}/authorize"),
                         Scopes = new Dictionary<string, string> {
-                            {"openid", "Standard openid scope"},
-                            {"profile", "Standard openid scope"},
-                            {"email", "Standard openid scope"}
+                            { "openid", "Standard openid scope" },
+                            { "profile", "Standard openid scope" },
+                            { "email", "Standard openid scope" }
                         }
                     }
                 }
@@ -121,7 +193,7 @@ public static class ServiceConfig
         services.Scan(scan => {
             scan.FromAssemblyOf<ICommonAssembly>()
                 .AddServices();
-            scan.FromAssemblyOf<Startup>()
+            scan.FromAssemblyOf<IStartupAssembly>()
                 .AddServices()
                 .AddMappingProfiles();
         });

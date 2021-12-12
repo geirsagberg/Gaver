@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -59,7 +56,7 @@ public class CustomProblemDetailsFactory : ProblemDetailsFactory
         statusCode ??= 400;
 
         var errors = modelStateDictionary.ToDictionary(
-            kvp => jsonOptions.JsonSerializerOptions?.PropertyNamingPolicy?.ConvertName(kvp.Key) ?? kvp.Key,
+            kvp => jsonOptions.JsonSerializerOptions.PropertyNamingPolicy?.ConvertName(kvp.Key) ?? kvp.Key,
             kvp => kvp.Value?.Errors.Select(x => x.ErrorMessage).ToArray() ?? Array.Empty<string>()
         );
 

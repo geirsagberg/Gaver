@@ -1,4 +1,3 @@
-using System;
 using Gaver.Web.Contracts;
 using HybridModelBinding;
 using MediatR;

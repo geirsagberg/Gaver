@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Flurl.Http;
 using Gaver.Common.Attributes;
 using Gaver.Common.Contracts;
@@ -8,7 +6,6 @@ using Gaver.Data;
 using Gaver.Web.Contracts;
 using Gaver.Web.Extensions;
 using Gaver.Web.Options;
-using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Features.Mail;
 

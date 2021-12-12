@@ -1,7 +1,6 @@
-import { Avatar, Button, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Avatar, Button, Typography } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { FC } from 'react'
-import ErrorView from '~/components/ErrorView'
 import Loading from '~/components/Loading'
 import { useActions, useAppState } from '~/overmind'
 import { commonStyles } from '~/theme'
@@ -26,26 +25,13 @@ const AcceptInvitationPage: FC = () => {
   return (
     <div className={classes.root}>
       {invitations.status ? (
-        invitations.status.ok ? (
-          <>
-            <Typography variant="h3">
-              {invitations.status.owner}s ønskeliste
-            </Typography>
-            <Avatar
-              alt={invitations.status.owner}
-              src={invitations.status.pictureUrl}
-              className={classes.avatar}
-            />
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={acceptInvitation}>
-              Godta invitasjon
-            </Button>
-          </>
-        ) : (
-          <ErrorView>{invitations.status.error}</ErrorView>
-        )
+        <>
+          <Typography variant="h3">{invitations.status.owner}s ønskeliste</Typography>
+          <Avatar alt={invitations.status.owner} src={invitations.status.pictureUrl} className={classes.avatar} />
+          <Button color="primary" variant="contained" onClick={acceptInvitation}>
+            Godta invitasjon
+          </Button>
+        </>
       ) : (
         <Loading />
       )}

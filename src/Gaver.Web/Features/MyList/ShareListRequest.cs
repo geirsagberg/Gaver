@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using Gaver.Web.Contracts;
 using MediatR;

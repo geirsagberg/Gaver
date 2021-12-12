@@ -18,7 +18,7 @@ public class RequestHandlerTests : WebTestBase
     [Fact]
     public void All_requests_have_handlers()
     {
-        var requestTypes = typeof(Startup).Assembly.ExportedTypes.Where(t => t.Implements<IBaseRequest>());
+        var requestTypes = typeof(IStartupAssembly).Assembly.ExportedTypes.Where(t => t.Implements<IBaseRequest>());
         var genericType = typeof(IRequestHandler<,>);
 
         var handlerTypes = requestTypes.Select(t => {

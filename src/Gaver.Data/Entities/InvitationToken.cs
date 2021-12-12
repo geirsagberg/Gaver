@@ -9,7 +9,6 @@ public class InvitationToken : IEntityWithId
     public Guid Token { get; set; } = Guid.NewGuid();
     public DateTimeOffset Created { get; set; }
     public int WishListId { get; set; }
-    public DateTimeOffset? Accepted { get; set; }
 
     public WishList? WishList { get; set; }
 }

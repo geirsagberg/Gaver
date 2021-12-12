@@ -1,5 +1,4 @@
 using Gaver.Web.Middleware;
-using Microsoft.AspNetCore.Builder;
 
 namespace Gaver.Web.Exceptions;
 

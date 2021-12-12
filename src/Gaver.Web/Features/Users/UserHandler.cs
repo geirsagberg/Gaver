@@ -1,8 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using Flurl.Http;
 using Gaver.Common.Contracts;
@@ -12,7 +8,6 @@ using Gaver.Data.Entities;
 using Gaver.Web.Exceptions;
 using Gaver.Web.Options;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using EntityFrameworkQueryableExtensions = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions;
 

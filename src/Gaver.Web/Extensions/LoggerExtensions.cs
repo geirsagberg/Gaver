@@ -1,6 +1,4 @@
-using System;
 using Gaver.Common.Exceptions;
-using Microsoft.Extensions.Logging;
 
 namespace Gaver.Web.Extensions;
 

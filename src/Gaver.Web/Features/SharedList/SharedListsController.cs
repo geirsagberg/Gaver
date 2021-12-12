@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Gaver.Web.Features.SharedList.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

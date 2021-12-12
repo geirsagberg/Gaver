@@ -106,10 +106,9 @@ export interface UpdateWishRequest {
   url: string
 }
 export interface InvitationStatusDto {
-  ok: boolean
-  error: string
   owner: string
   pictureUrl: string
+  ownerId: number
 }
 export interface SubmitFeedbackRequest {
   userId: number
@@ -126,7 +125,12 @@ export interface ChatMessageDto {
   id: number
   text: string
   created: string
-  user: UserDto
+  user: ChatUserDto
+}
+export interface ChatUserDto {
+  id: number
+  name: string
+  pictureUrl: string
 }
 export interface AuthSettingsDto {
   clientId: string

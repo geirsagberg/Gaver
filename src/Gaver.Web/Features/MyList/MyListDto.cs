@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Gaver.Web.Features.MyList;
+﻿namespace Gaver.Web.Features.MyList;
 
 public class MyListDto
 {
