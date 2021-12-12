@@ -1,9 +1,9 @@
-import React from 'react'
 import { Avatar } from '@mui/material'
-import { UserDto } from '~/types/data'
 import { AvatarProps } from '@mui/material/Avatar'
+import React from 'react'
+import { ChatUserDto } from '~/types/data'
 
-const PictureAvatar = ({ user, ...rest }: { user: UserDto } & AvatarProps) => {
+const PictureAvatar = ({ user, ...rest }: { user: ChatUserDto } & AvatarProps) => {
   return user.pictureUrl ? (
     <Avatar src={user.pictureUrl} {...rest} />
   ) : (
@@ -12,7 +12,7 @@ const PictureAvatar = ({ user, ...rest }: { user: UserDto } & AvatarProps) => {
         .split(' ')
         .map((s) => (s.length > 0 ? s[0] : ''))
         .join('')
-        .substr(0, 2)}
+        .substring(0, 2)}
     </Avatar>
   )
 }
