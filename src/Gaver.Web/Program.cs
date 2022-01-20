@@ -33,6 +33,9 @@ try {
         context.Database.Migrate();
     }
 
+    if (app.Configuration.GetConnectionString("AppConfig") is { })
+        app.UseAzureAppConfiguration();
+
     app.SetupPipeline();
 
     app.Run();
