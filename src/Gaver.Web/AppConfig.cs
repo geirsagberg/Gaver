@@ -42,6 +42,8 @@ public static class AppConfig
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseAzureAppConfiguration();
+
         app.UseSwagger();
         app.UseSwaggerUI(c => {
             var auth0Settings = app.Services.GetRequiredService<Auth0Settings>();

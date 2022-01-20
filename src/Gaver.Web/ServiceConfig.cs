@@ -26,6 +26,7 @@ using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scrutor;
+using ProblemDetailsFactory = Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDetailsFactory;
 
 namespace Gaver.Web;
 
@@ -45,6 +46,7 @@ public static class ServiceConfig
         services.AddCustomDbContext(config);
         services.AddCustomHealthChecks(config, environment);
         services.AddFeatureManagement();
+        services.AddAzureAppConfiguration();
 
         services.AddSingleton<IMapperService, MapperService>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -52,7 +54,7 @@ public static class ServiceConfig
         services.AddMediatR(Assembly.GetExecutingAssembly());
         services.AddProblemDetails();
         services.AddValidationProblemDetails();
-        services.AddSingleton<Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDetailsFactory, CustomProblemDetailsFactory>();
+        services.AddSingleton<ProblemDetailsFactory, CustomProblemDetailsFactory>();
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
         services.AddTransient(typeof(IRequestPreProcessor<>), typeof(AuthenticationPreProcessor<>));
@@ -61,9 +63,7 @@ public static class ServiceConfig
 
         ConfigureOptions(services, config);
 
-        if (environment.IsProduction()) {
-            services.Configure<HttpsRedirectionOptions>(options => options.HttpsPort = 443);
-        }
+        if (environment.IsProduction()) services.Configure<HttpsRedirectionOptions>(options => options.HttpsPort = 443);
     }
 
     private static void ConfigureOptions(IServiceCollection services, IConfiguration configuration)
@@ -75,9 +75,7 @@ public static class ServiceConfig
         missingOptions.AddRange(ConfigureOptions<MailOptions>(services, configuration, "mail"));
         missingOptions.AddRange(ConfigureOptions<Auth0Settings>(services, configuration, "auth0"));
 
-        if (missingOptions.Any()) {
-            throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
-        }
+        if (missingOptions.Any()) throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
     }
 
     private static IEnumerable<string> ConfigureOptions<T>(IServiceCollection services, IConfiguration configuration, string key, bool snapshot = false) where T : class, new()
@@ -87,12 +85,10 @@ public static class ServiceConfig
 
         services.Configure<T>(configurationSection);
 
-        if (snapshot) {
-            // Enable injection of updated strongly typed options
+        if (snapshot) // Enable injection of updated strongly typed options
             services.AddScoped(provider => provider.GetRequiredService<IOptionsSnapshot<T>>().Value);
-        } else {
+        else
             services.AddSingleton(provider => provider.GetRequiredService<IOptions<T>>().Value);
-        }
 
         var missing = typeof(T)
             .GetProperties()
@@ -200,21 +196,27 @@ public static class ServiceConfig
     }
 
     private static IImplementationTypeSelector AddMappingProfiles(this IImplementationTypeSelector selector)
-        => selector.AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
+    {
+        return selector.AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
+    }
 
     private static IImplementationTypeSelector AddServices(
-        this IImplementationTypeSelector implementationTypeSelector) => implementationTypeSelector
-        .AddClasses(classes =>
-            classes.WithoutAttribute<SingletonServiceAttribute>().Where(c => c.Name.EndsWith("Service")))
-        .AsImplementedInterfaces()
-        .WithScopedLifetime()
-        .AddClasses(classes => classes.WithAttribute<ServiceAttribute>()).AsImplementedInterfaces()
-        .WithScopedLifetime()
-        .AddClasses(classes => classes.WithAttribute<SingletonServiceAttribute>()).AsImplementedInterfaces()
-        .WithSingletonLifetime();
+        this IImplementationTypeSelector implementationTypeSelector)
+    {
+        return implementationTypeSelector
+            .AddClasses(classes =>
+                classes.WithoutAttribute<SingletonServiceAttribute>().Where(c => c.Name.EndsWith("Service")))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+            .AddClasses(classes => classes.WithAttribute<ServiceAttribute>()).AsImplementedInterfaces()
+            .WithScopedLifetime()
+            .AddClasses(classes => classes.WithAttribute<SingletonServiceAttribute>()).AsImplementedInterfaces()
+            .WithSingletonLifetime();
+    }
 
-    public static IServiceCollection AddValidationProblemDetails(this IServiceCollection services) =>
-        services.Configure<ApiBehaviorOptions>(options => {
+    public static IServiceCollection AddValidationProblemDetails(this IServiceCollection services)
+    {
+        return services.Configure<ApiBehaviorOptions>(options => {
             // options.InvalidModelStateResponseFactory = context => {
             //     var problemDetails = new ValidationProblemDetails(context.ModelState) {
             //         Instance = context.HttpContext.Request.Path,
@@ -227,6 +229,7 @@ public static class ServiceConfig
             //     };
             // };
         });
+    }
 
     public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration,
         IHostEnvironment hostEnvironment)
