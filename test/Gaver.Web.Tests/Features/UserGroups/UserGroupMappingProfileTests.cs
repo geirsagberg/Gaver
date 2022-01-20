@@ -4,19 +4,18 @@ using FluentAssertions;
 using Gaver.Common.Utils;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
-using Gaver.Web.Features.SharedList;
 using Gaver.Web.Features.UserGroups;
 using LightInject;
 using Xunit;
 
-namespace Gaver.Web.Tests;
+namespace Gaver.Web.Tests.Features.UserGroups;
 
-public class WishMappingProfileTests : TestBase<MapperService>
+public class UserGroupMappingProfileTests : TestBase<MapperService>
 {
-    public WishMappingProfileTests()
+    public UserGroupMappingProfileTests()
     {
         Container.Register<IEnumerable<Profile>>(factory => new Profile[] {
-            factory.Create<WishMappingProfile>()
+            factory.Create<UserGroupMappingProfile>()
         });
     }
 
@@ -27,9 +26,9 @@ public class WishMappingProfileTests : TestBase<MapperService>
             Id = 1,
             Name = "Familien",
             CreatedByUserId = 2,
-            Users = {
-                new User {
-                    Id = 3
+            UserGroupConnections = {
+                new UserGroupConnection {
+                    UserId = 3
                 }
             }
         };
@@ -39,7 +38,7 @@ public class WishMappingProfileTests : TestBase<MapperService>
         model.Should().BeEquivalentTo(new UserGroupDto {
             Id = 1,
             Name = "Familien",
-            UserIds = {3},
+            UserIds = { 3 },
             CreatedByUserId = 2
         });
     }

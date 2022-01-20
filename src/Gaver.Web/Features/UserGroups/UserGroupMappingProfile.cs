@@ -4,9 +4,9 @@ using Gaver.Data.Entities;
 
 namespace Gaver.Web.Features.UserGroups;
 
-public class UserGroupMppingProfile : Profile
+public class UserGroupMappingProfile : Profile
 {
-    public UserGroupMppingProfile()
+    public UserGroupMappingProfile()
     {
         CreateMap<UserGroup, UserGroupDto>()
             .MapMember(m => m.UserIds, m => m.UserGroupConnections.Select(c => c.UserId));
