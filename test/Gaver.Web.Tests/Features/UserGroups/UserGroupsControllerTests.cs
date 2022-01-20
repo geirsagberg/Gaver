@@ -49,8 +49,9 @@ public class UserGroupsControllerTests : WebTestBase
     [Fact]
     public async Task Can_create_and_read_userGroups()
     {
-        var request = new {
-            Name = "Familien"
+        var request = new CreateUserGroupRequest {
+            Name = "Familien",
+            UserIds = { someoneElse.Id }
         };
 
         var result = await Client.PostAsJsonAsync("/api/userGroups", request);
@@ -59,6 +60,7 @@ public class UserGroupsControllerTests : WebTestBase
         var userGroup = await result.Content.ReadAsAsync<UserGroupDto>();
         userGroup.Name.Should().Be("Familien");
         userGroup.Id.Should().BeGreaterThan(0);
+        userGroup.UserIds.Should().Equal(1, 2);
 
         result = await Client.GetAsync("/api/userGroups");
 

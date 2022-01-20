@@ -1,5 +1,5 @@
-import { Button } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Button } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import classNames from 'classnames'
 import Color from 'color'
 import { map, size } from 'lodash-es'
@@ -115,10 +115,7 @@ const MyListPage: FC = () => {
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {map(orderedWishes, (wish, i) => (
-                  <Draggable
-                    key={wish.id}
-                    draggableId={wish.id!.toString()}
-                    index={i}>
+                  <Draggable key={wish.id} draggableId={wish.id!.toString()} index={i}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}

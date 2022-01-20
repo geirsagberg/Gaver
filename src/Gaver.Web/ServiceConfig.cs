@@ -44,7 +44,7 @@ public static class ServiceConfig
         services.AddCustomSwagger(config);
         services.AddCustomDbContext(config);
         services.AddCustomHealthChecks(config, environment);
-        services.AddFeatureManagement(config.GetSection("Features"));
+        services.AddFeatureManagement();
 
         services.AddSingleton<IMapperService, MapperService>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -31,13 +31,28 @@ public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGrou
         var userGroup = new UserGroup {
             Name = request.Name,
             CreatedByUser = user,
-            Users = {
-                user
-            }
+            UserGroupConnections = new List<UserGroupConnection> {
+                new() { UserId = request.UserId }
+            }.Concat(request.UserIds.Select(userId => new UserGroupConnection {
+                UserId = userId
+            })).ToList()
         };
         context.Add(userGroup);
         await context.SaveChangesAsync(cancellationToken);
         return mapperService.Map<UserGroupDto>(userGroup);
+    }
+
+    public async Task<Unit> Handle(DeleteUserGroupRequest request, CancellationToken cancellationToken)
+    {
+        var userGroup =
+            await context.UserGroups.SingleOrDefaultAsync(ug => ug.Id == request.UserGroupId && ug.UserGroupConnections.Any(c => c.UserId == request.UserId), cancellationToken) ?? throw new FriendlyException("Finner ikke oppgitt gruppe");
+
+
+        if (userGroup.CreatedByUserId != request.UserId) throw new FriendlyException("Du kan ikke slette grupper du ikke har opprettet");
+
+        context.Remove(userGroup);
+        await context.SaveChangesAsync(cancellationToken);
+        return Unit.Value;
     }
 
     public async Task<UserGroupsDto> Handle(GetMyUserGroupsRequest request, CancellationToken cancellationToken)
@@ -73,21 +88,6 @@ public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGrou
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
-    }
-
-    public async Task<Unit> Handle(DeleteUserGroupRequest request, CancellationToken cancellationToken)
-    {
-        var userGroup =
-            await context.UserGroups.SingleOrDefaultAsync(ug => ug.Id == request.UserGroupId && ug.UserGroupConnections.Any(c => c.UserId == request.UserId), cancellationToken) ?? throw new FriendlyException("Finner ikke oppgitt gruppe");
-
-
-        if (userGroup.CreatedByUserId != request.UserId) {
-            throw new FriendlyException("Du kan ikke slette grupper du ikke har opprettet");
-        }
-
-        context.Remove(userGroup);
-        await context.SaveChangesAsync(cancellationToken);
         return Unit.Value;
     }
 }

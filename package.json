@@ -15,7 +15,7 @@
     "clean": "del-cli src/**/obj/ src/**/bin/ test/**/obj/ test/**/bin/ node_modules/.cache/ src/**/wwwroot",
     "clean:www": "del-cli src/Gaver.Web/wwwroot/",
     "start:frontend": "vite",
-    "start:backend": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet run",
+    "start:backend": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
     "start": "run-p start:frontend start:backend",
     "start:prod": "npm run webpack && dotnet run --project src/Gaver.Web --launch-profile Production",
     "watch": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",

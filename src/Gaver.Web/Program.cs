@@ -17,6 +17,11 @@ try {
         .WriteTo.Console()
         .ReadFrom.Configuration(context.Configuration));
 
+    builder.Host.ConfigureAppConfiguration((context, config) => {
+        if (context.Configuration.GetConnectionString("AppConfig") is { } connectionString)
+            config.AddAzureAppConfiguration(connectionString);
+    });
+
     builder.ConfigureServices();
 
     var app = builder.Build();

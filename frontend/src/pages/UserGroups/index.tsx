@@ -1,5 +1,7 @@
-import { Fab, Icon, IconButton, Paper } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Button, Icon, IconButton, Paper } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
+import classNames from 'classnames'
+import Color from 'color'
 import { map, size } from 'lodash-es'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
@@ -9,7 +11,7 @@ import { pageWidth } from '~/theme'
 import { useNavContext } from '~/utils/hooks'
 import { AddGroupDialog, EditGroupDialog } from './dialogs'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     width: '100%',
@@ -22,6 +24,8 @@ const useStyles = makeStyles({
     position: 'relative',
     transition: 'all 0.5s',
     userSelect: 'none',
+    display: 'flex',
+    flexDirection: 'column',
   },
   fabOuterWrapper: {
     width: '100%',
@@ -34,7 +38,20 @@ const useStyles = makeStyles({
   addWishButton: {
     margin: '1rem',
   },
-})
+  background: {
+    height: '100%',
+    width: '100%',
+    transition: 'all 0.5s',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    borderRadius: theme.shape.borderRadius,
+    background: Color(theme.palette.background.paper).fade(0.5).toString(),
+  },
+  emptyBackground: {
+    opacity: 0,
+  },
+}))
 
 const useGroupItemStyles = makeStyles({
   root: {
@@ -54,7 +71,7 @@ const useGroupItemStyles = makeStyles({
 })
 
 const GroupItem: FC<{ value: UserGroup }> = ({ value }) => {
-  const classes = useGroupItemStyles({})
+  const classes = useGroupItemStyles()
   const {
     userGroups: { startEditingGroup },
   } = useActions()
@@ -67,15 +84,31 @@ const GroupItem: FC<{ value: UserGroup }> = ({ value }) => {
       </div>
       <Expander />
       <div>
-        <IconButton
-          title="Rediger gruppe"
-          onClick={() => startEditingGroup(value.id)}
-          size="large">
+        <IconButton title="Rediger gruppe" onClick={() => startEditingGroup(value.id)} size="large">
           <Icon>edit</Icon>
         </IconButton>
       </div>
     </Paper>
-  );
+  )
+}
+
+const AddGroupButton: FC = () => {
+  const {
+    userGroups: { startAddingGroup },
+  } = useActions()
+  return (
+    <div
+      style={{
+        alignSelf: 'center',
+        marginBottom: '1rem',
+        position: 'sticky',
+        bottom: '1rem',
+      }}>
+      <Button variant="contained" color="primary" onClick={startAddingGroup}>
+        Legg til gruppe
+      </Button>
+    </div>
+  )
 }
 
 const UserGroupsPage = () => {
@@ -84,34 +117,20 @@ const UserGroupsPage = () => {
   const {
     userGroups: { userGroups },
   } = useAppState()
-  const {
-    userGroups: { startAddingGroup },
-  } = useActions()
 
   return (
     <div className={classes.root}>
+      <div
+        className={classNames(classes.background, {
+          [classes.emptyBackground]: !!size(userGroups),
+        })}></div>
       <div className={classes.list}>
-        {userGroups &&
-          (size(userGroups) ? (
-            map(userGroups, (g) => (
-              <GroupItem key={g.id} value={g}>
-                {g.name}
-              </GroupItem>
-            ))
-          ) : (
-            <div>Ingen grupper</div>
-          ))}
-      </div>
-      <div className={classes.fabOuterWrapper}>
-        <div>
-          <Fab
-            title="Legg til gruppe"
-            color="secondary"
-            onClick={startAddingGroup}
-            className={classes.addWishButton}>
-            <Icon>add_icon</Icon>
-          </Fab>
-        </div>
+        {map(userGroups, (g) => (
+          <GroupItem key={g.id} value={g}>
+            {g.name}
+          </GroupItem>
+        ))}
+        <AddGroupButton />
       </div>
       <AddGroupDialog />
       <EditGroupDialog />

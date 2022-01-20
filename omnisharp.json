@@ -1,5 +1,9 @@
 {
+  "RoslynExtensionsOptions": {
+    "EnableAnalyzersSupport": true
+  },
   "FormattingOptions": {
+    "EnableEditorConfigSupport": true,
     "NewLinesForBracesInAnonymousMethods": false,
     "NewLinesForBracesInControlBlocks": false,
     "NewLinesForBracesInAnonymousTypes": false,
@@ -15,6 +19,6 @@
   },
   "script": {
     "enableScriptNuGetReferences": true,
-    "defaultTargetFramework": "netcoreapp3.0"
+    "defaultTargetFramework": "net6.0"
   }
 }

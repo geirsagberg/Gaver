@@ -1,5 +1,5 @@
-import { Icon, IconButton, Link, Paper, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Icon, IconButton, Link, Paper, Typography } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles'
 import React, { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useActions, useAppState } from '~/overmind'
@@ -22,11 +22,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
       <div className={classes.content}>
         <Typography variant="body1">{wish.title}</Typography>
         {wish.url && (
-          <Link
-            target="_blank"
-            href={wish.url}
-            variant="body2"
-            className={classes.link}>
+          <Link target="_blank" href={wish.url} variant="body2" className={classes.link}>
             {wish.url}
           </Link>
         )}
@@ -34,10 +30,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
       <Expander />
       <div>
         {isDeleting ? (
-          <IconButton
-            disabled={isSavingOrLoading}
-            onClick={() => confirmDeleteWish(wishId)}
-            size="large">
+          <IconButton disabled={isSavingOrLoading} onClick={() => confirmDeleteWish(wishId)} size="large">
             <Icon>delete</Icon>
           </IconButton>
         ) : (
@@ -47,7 +40,7 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
         )}
       </div>
     </Paper>
-  ) : null;
+  ) : null
 }
 
 export default WishListItem
