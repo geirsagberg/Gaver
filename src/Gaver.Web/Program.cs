@@ -18,7 +18,7 @@ try {
         .ReadFrom.Configuration(context.Configuration));
 
     builder.Host.ConfigureAppConfiguration((context, config) => {
-        if (context.Configuration.GetConnectionString("AppConfig") is { } connectionString)
+        if (context.Configuration.GetConnectionString("AppConfig") is { } connectionString && connectionString.IsNotEmpty())
             config.AddAzureAppConfiguration(connectionString);
     });
 
@@ -33,7 +33,7 @@ try {
         context.Database.Migrate();
     }
 
-    if (app.Configuration.GetConnectionString("AppConfig") is { })
+    if (app.Configuration.GetConnectionString("AppConfig").IsNotEmpty())
         app.UseAzureAppConfiguration();
 
     app.SetupPipeline();
