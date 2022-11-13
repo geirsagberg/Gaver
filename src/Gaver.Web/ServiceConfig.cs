@@ -28,6 +28,7 @@ using Microsoft.OpenApi.Models;
 using Scrutor;
 using ProblemDetailsFactory = Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDetailsFactory;
 
+
 namespace Gaver.Web;
 
 public static class ServiceConfig
@@ -52,7 +53,7 @@ public static class ServiceConfig
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSignalR();
         services.AddMediatR(Assembly.GetExecutingAssembly());
-        services.AddProblemDetails();
+        ProblemDetailsExtensions.AddProblemDetails(services);
         services.AddValidationProblemDetails();
         services.AddSingleton<ProblemDetailsFactory, CustomProblemDetailsFactory>();
 
@@ -100,7 +101,7 @@ public static class ServiceConfig
 
     public static void AddCustomAuth(this IServiceCollection services, IConfiguration configuration)
     {
-        var authSettings = configuration.GetSection("auth0").Get<Auth0Settings>();
+        var authSettings = configuration.GetOrDie<Auth0Settings>("auth0");
         services.AddAuthentication(options => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => {
                 options.Audience = authSettings.Audience;
@@ -114,6 +115,13 @@ public static class ServiceConfig
                 };
             });
         services.AddAuthorization();
+    }
+
+    private static T GetOrDie<T>(this IConfiguration configuration, string key)
+    {
+        var settings = configuration.GetSection(key).Get<T>() ??
+            throw new ConfigurationException(key);
+        return settings;
     }
 
     private static Task OnMessageReceived(MessageReceivedContext context)
@@ -148,7 +156,7 @@ public static class ServiceConfig
 
     public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)
     {
-        var authSettings = configuration.GetSection("auth0").Get<Auth0Settings>();
+        var authSettings = configuration.GetOrDie<Auth0Settings>("auth0");
         services.AddSwaggerGen(config => {
             config.SwaggerDoc("v1", new OpenApiInfo {
                 Title = "My API",
@@ -237,6 +245,6 @@ public static class ServiceConfig
         if (hostEnvironment.IsEnvironment("Test")) return;
 
         services.AddHealthChecks()
-            .AddNpgSql(configuration.GetConnectionString("GaverContext"));
+            .AddNpgSql(configuration.GetConnectionString("GaverContext") ?? throw new ConfigurationException("ConnectionStrings:GaverContext"));
     }
 }

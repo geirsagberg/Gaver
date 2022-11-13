@@ -1,9 +1,7 @@
-import { Button } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
-import classNames from 'classnames'
+import { Box, Button } from '@mui/material'
 import Color from 'color'
 import { map, size } from 'lodash-es'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import Loading from '~/components/Loading'
 import { useActions, useAppState } from '~/overmind'
@@ -12,57 +10,6 @@ import { useNavContext } from '~/utils/hooks'
 import AddWishDialog from './WishDetails/AddWishDialog'
 import EditWishDialog from './WishDetails/EditWishDialog'
 import WishListItem from './WishListItem'
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100%',
-    width: '100%',
-    maxWidth: pageWidth,
-    position: 'relative',
-  },
-  list: {
-    padding: '1rem',
-    height: '100%',
-    position: 'relative',
-    transition: 'all 0.5s',
-    userSelect: 'none',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  background: {
-    height: '100%',
-    width: '100%',
-    transition: 'all 0.5s',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    borderRadius: theme.shape.borderRadius,
-    background: Color(theme.palette.background.paper).fade(0.5).toString(),
-  },
-  emptyBackground: {
-    opacity: 0,
-  },
-  fabOuterWrapper: {
-    width: '100%',
-    maxWidth: pageWidth,
-    position: 'fixed',
-    bottom: 0,
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  fabWrapper: {},
-  addWishButton: {
-    margin: '1rem',
-  },
-  addWishHint: {
-    position: 'absolute',
-    bottom: '2rem',
-    right: '5rem',
-  },
-  listItem: {
-    marginBottom: '1rem',
-  },
-}))
 
 const AddWishButton: FC = () => {
   const {
@@ -84,7 +31,6 @@ const AddWishButton: FC = () => {
 }
 
 const MyListPage: FC = () => {
-  const classes = useStyles()
   const {
     myList: { orderedWishes, wishesLoaded },
   } = useAppState()
@@ -94,12 +40,35 @@ const MyListPage: FC = () => {
   useNavContext({ title: 'Mine ønsker' }, [])
 
   return wishesLoaded ? (
-    <div className={classes.root}>
-      <div
-        className={classNames(classes.background, {
-          [classes.emptyBackground]: !!size(orderedWishes),
-        })}></div>
-      <div className={classNames(classes.list)}>
+    <Box
+      sx={{
+        height: '100%',
+        width: '100%',
+        maxWidth: pageWidth,
+        position: 'relative',
+      }}>
+      <Box
+        sx={(theme) => ({
+          height: '100%',
+          width: '100%',
+          transition: 'all 0.5s',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          borderRadius: theme.shape.borderRadius,
+          background: Color(theme.palette.background.paper).fade(0.5).toString(),
+          opacity: !!size(orderedWishes) ? 0 : 1,
+        })}></Box>
+      <Box
+        sx={{
+          padding: '1rem',
+          height: '100%',
+          position: 'relative',
+          transition: 'all 0.5s',
+          userSelect: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
         <DragDropContext
           onDragEnd={(result) => {
             if (!result.destination) {
@@ -117,13 +86,15 @@ const MyListPage: FC = () => {
                 {map(orderedWishes, (wish, i) => (
                   <Draggable key={wish.id} draggableId={wish.id!.toString()} index={i}>
                     {(provided) => (
-                      <div
+                      <Box
                         ref={provided.innerRef}
-                        className={classes.listItem}
+                        sx={{
+                          marginBottom: '1rem',
+                        }}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
                         <WishListItem wishId={wish.id!} />
-                      </div>
+                      </Box>
                     )}
                   </Draggable>
                 ))}
@@ -133,10 +104,10 @@ const MyListPage: FC = () => {
           </Droppable>
         </DragDropContext>
         <AddWishButton />
-      </div>
+      </Box>
       <AddWishDialog />
       <EditWishDialog />
-    </div>
+    </Box>
   ) : (
     <Loading />
   )

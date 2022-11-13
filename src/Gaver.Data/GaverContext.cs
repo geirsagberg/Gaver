@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Gaver.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Gaver.Data;
 
@@ -65,9 +66,11 @@ public class GaverContext : DbContext
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
         modelBuilder.Entity<WishList>(entity => {
-            entity.Property(e => e.WishesOrder).HasConversion(
+            entity.Property(e => e.WishesOrder)
+                .HasConversion(
                 array => JsonSerializer.Serialize(array, options),
-                json => JsonSerializer.Deserialize<int[]>(json, options) ?? Array.Empty<int>());
+                json => JsonSerializer.Deserialize<int[]>(json, options) ?? Array.Empty<int>())
+                .Metadata.SetValueComparer(typeof(ArrayStructuralComparer<int>));
         });
 
         modelBuilder.Entity<UserFriendConnection>(entity => { entity.HasKey(e => new { e.UserId, e.FriendId }); });

@@ -1,45 +1,9 @@
-import { Button, Checkbox, Link, Paper, Typography } from '@mui/material'
-import React, { FC } from 'react'
+import { Box, Button, Checkbox, Link, Paper, Typography } from '@mui/material'
+import { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useActions, useAppState } from '~/overmind'
-import { createStylesHook } from '~/utils/materialUtils'
-
-const useStyles = createStylesHook({
-  root: {
-    minHeight: '3rem',
-    paddingLeft: '1rem',
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '1rem',
-    justifyContent: 'space-between',
-  },
-  content: {
-    margin: '0.5rem 0',
-    minWidth: '2rem',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-  boughtBy: {
-    margin: '0.5rem 0',
-    fontStyle: 'italic',
-    '&:last-child': {
-      marginRight: '1rem',
-    },
-    textAlign: 'right',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    marginLeft: '1rem',
-  },
-  buyButton: {
-    marginRight: 6,
-  },
-  link: {
-    whiteSpace: 'nowrap',
-  },
-})
 
 const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
-  const classes = useStyles({})
   const {
     currentSharedList,
     sharedLists: { users },
@@ -58,37 +22,63 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   const boughtByUser = wish.boughtByUserId ? users[wish.boughtByUserId] : null
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.content}>
+    <Paper
+      sx={{
+        minHeight: '3rem',
+        paddingLeft: '1rem',
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '1rem',
+        justifyContent: 'space-between',
+      }}>
+      <Box
+        sx={{
+          margin: '0.5rem 0',
+          minWidth: '2rem',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+        }}>
         <Typography variant="body1">{wish.title}</Typography>
         {wish.url && (
           <Link
             target="_blank"
             href={wish.url}
             variant="body2"
-            className={classes.link}>
+            sx={{
+              whiteSpace: 'nowrap',
+            }}>
             {wish.url}
           </Link>
         )}
-      </div>
+      </Box>
       <Expander />
       {boughtByUser ? (
         <>
-          <Typography className={classes.boughtBy}>
+          <Typography
+            sx={{
+              margin: '0.5rem 0',
+              fontStyle: 'italic',
+              '&:last-child': {
+                marginRight: '1rem',
+              },
+              textAlign: 'right',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              marginLeft: '1rem',
+            }}>
             Kjøpt av {boughtByUser.name}
           </Typography>
           {wish.boughtByUserId === user.id && (
-            <Checkbox
-              checked
-              onClick={() => setBought({ wishId: wish.id, isBought: false })}
-            />
+            <Checkbox checked onClick={() => setBought({ wishId: wish.id, isBought: false })} />
           )}
         </>
       ) : (
         <Button
           color="primary"
           onClick={() => setBought({ wishId: wish.id, isBought: true })}
-          className={classes.buyButton}>
+          sx={{
+            marginRight: 6,
+          }}>
           Kjøp
         </Button>
       )}

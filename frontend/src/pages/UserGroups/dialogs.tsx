@@ -11,19 +11,14 @@ import {
   ListItemText,
   TextField,
   Typography,
-} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+} from '@mui/material'
 import { map, without } from 'lodash-es'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useActions, useAppState } from '~/overmind'
 import { useFriends } from '~/overmind/sharedLists'
 import { NewUserGroup, UserGroup } from '~/overmind/userGroups/state'
-import { commonStyles } from '~/theme'
-
-const useDialogStyles = makeStyles({
-  actions: commonStyles.dialogActions,
-})
+import { dialogActions } from '~/theme'
 
 interface GroupDetailsDialogProps {
   group: UserGroup | NewUserGroup | undefined
@@ -33,18 +28,11 @@ interface GroupDetailsDialogProps {
   onDelete?: () => void
 }
 
-const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({
-  group,
-  updateGroup,
-  onSave,
-  onCancel,
-  onDelete,
-}) => {
+const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({ group, updateGroup, onSave, onCancel, onDelete }) => {
   const {
     app: { isSavingOrLoading },
     auth: { user: currentUser },
   } = useAppState()
-  const classes = useDialogStyles({})
   const users = useFriends()
 
   if (!group || !currentUser) return null
@@ -90,28 +78,21 @@ const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({
                 updateGroup({ userIds })
               }}>
               <ListItemIcon>
-                <Checkbox
-                  tabIndex={-1}
-                  checked={group.userIds.includes(user.id)}
-                />
+                <Checkbox tabIndex={-1} checked={group.userIds.includes(user.id)} />
               </ListItemIcon>
               <ListItemText primary={user.name} />
             </ListItem>
           ))}
         </List>
       </DialogContent>
-      <DialogActions className={classes.actions}>
+      <DialogActions sx={dialogActions}>
         {'id' in group && group.createdByUserId === currentUser.id && (
           <Button disabled={isSavingOrLoading} onClick={onDelete}>
             Slett
           </Button>
         )}
         <Expander />
-        <Button
-          variant="contained"
-          color="primary"
-          disabled={!canSave}
-          onClick={onSave}>
+        <Button variant="contained" color="primary" disabled={!canSave} onClick={onSave}>
           Lagre
         </Button>
         <Button onClick={onCancel} disabled={isSavingOrLoading}>
@@ -144,12 +125,7 @@ export const EditGroupDialog = () => {
     userGroups: { editingGroup },
   } = useAppState()
   const {
-    userGroups: {
-      updateUserGroup,
-      cancelEditingGroup,
-      updateEditingGroup,
-      deleteEditingGroup,
-    },
+    userGroups: { updateUserGroup, cancelEditingGroup, updateEditingGroup, deleteEditingGroup },
   } = useActions()
   return (
     <GroupDetailsDialog

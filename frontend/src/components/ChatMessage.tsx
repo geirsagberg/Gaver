@@ -1,72 +1,54 @@
-import { Paper, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import classNames from 'classnames'
+import { Box, Paper, Typography } from '@mui/material'
 import Color from 'color'
 import { DateTime } from 'luxon'
-import React from 'react'
 import { useAppState } from '~/overmind'
 import { ChatMessageDto } from '~/types/data'
 import PictureAvatar from './PictureAvatar'
-
-const useStyles = makeStyles((theme) => ({
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '0.75rem 1rem',
-  },
-  messageUser: {},
-  messageText: {},
-  messageContent: {
-    marginLeft: '1rem',
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    padding: '0.5rem',
-  },
-  ownMessage: {
-    flexDirection: 'row-reverse',
-    '& $messageContent': {
-      background: new Color(theme.palette.primary.dark).darken(0.5).hex(),
-      marginLeft: 0,
-      marginRight: '1rem',
-    },
-  },
-  timestamp: {
-    alignSelf: 'flex-end',
-  },
-  avatar: {},
-}))
 
 const ChatMessage = ({ message }: { message: ChatMessageDto }) => {
   const {
     auth: { user },
   } = useAppState()
   const currentUserId = user?.id
-  const classes = useStyles({ currentUserId })
 
   return (
-    <div
+    <Box
       key={message.id}
-      className={classNames(classes.message, {
-        [classes.ownMessage]: currentUserId === message.user.id,
+      sx={(theme) => ({
+        display: 'flex',
+        alignItems: 'center',
+        margin: '0.75rem 1rem',
+        ...(currentUserId === message.user.id
+          ? {
+              flexDirection: 'row-reverse',
+              '& $messageContent': {
+                background: new Color(theme.palette.primary.dark).darken(0.5).hex(),
+                marginLeft: 0,
+                marginRight: '1rem',
+              },
+            }
+          : {}),
       })}>
-      <PictureAvatar
-        className={classes.avatar}
-        user={message.user}
-        title={message.user.name}
-      />
-      <Paper className={classNames(classes.messageContent)}>
+      <PictureAvatar user={message.user} title={message.user.name} />
+      <Paper
+        sx={{
+          marginLeft: '1rem',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          padding: '0.5rem',
+        }}>
         <Typography
           variant="caption"
-          className={classes.timestamp}
+          sx={{
+            alignSelf: 'flex-end',
+          }}
           color="textSecondary">
-          {DateTime.fromISO(message.created)
-            .setLocale(navigator.language)
-            .toLocaleString(DateTime.DATETIME_SHORT)}
+          {DateTime.fromISO(message.created).setLocale(navigator.language).toLocaleString(DateTime.DATETIME_SHORT)}
         </Typography>
-        <Typography className={classes.messageText}>{message.text}</Typography>
+        <Typography>{message.text}</Typography>
       </Paper>
-    </div>
+    </Box>
   )
 }
 

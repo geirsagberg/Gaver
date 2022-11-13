@@ -1,43 +1,11 @@
-import {
-  Divider,
-  Icon,
-  Link,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  SwipeableDrawer,
-} from '@mui/material'
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
+import { Divider, Icon, Link, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer } from '@mui/material'
+import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
 import { map, some } from 'lodash-es'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import Expander from './components/Expander'
 import { useActions, useAppState, useEffects } from './overmind'
 import { darkTheme } from './theme'
 import { useFeatures } from './utils/appSettings'
-
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
-
-
-const useStyles = makeStyles((theme) => ({
-  menuPaper: {
-    background: theme.palette.primary.dark,
-  },
-  menu: {
-    width: 256,
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-  },
-  drawer: {
-    marginTop: 56,
-  },
-}))
 
 const SharedListsMenuItem: FC = () => {
   const {
@@ -73,12 +41,7 @@ const SharedListsMenuItem: FC = () => {
 }
 
 const LicensesMenuItem = () => (
-  <ListItem
-    button
-    href="/dist/licenses.txt"
-    component={Link}
-    target="_blank"
-    color="inherit">
+  <ListItem button href="/dist/licenses.txt" component={Link} target="_blank" color="inherit">
     <ListItemIcon>
       <Icon>copyright</Icon>
     </ListItemIcon>
@@ -174,7 +137,6 @@ export const MyGroupsMenuItem = () => {
 }
 
 export const MainMenu: FC = () => {
-  const classes = useStyles({})
   const {
     app: { isMenuShowing },
   } = useAppState()
@@ -188,12 +150,26 @@ export const MainMenu: FC = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={darkTheme}>
         <SwipeableDrawer
-          SwipeAreaProps={{ className: classes.drawer }}
+          SwipeAreaProps={{
+            sx: {
+              marginTop: 56,
+            },
+          }}
           open={isMenuShowing}
           onOpen={showMenu}
           onClose={hideMenu}
-          classes={{ paper: classes.menuPaper }}>
-          <List className={classes.menu}>
+          PaperProps={{
+            sx: (theme) => ({
+              background: theme.palette.primary.dark,
+            }),
+          }}>
+          <List
+            sx={{
+              width: 256,
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+            }}>
             <MyListMenuItem />
             {features?.userGroups ? <MyGroupsMenuItem /> : null}
             <SharedListsMenuItem />
@@ -206,5 +182,5 @@ export const MainMenu: FC = () => {
         </SwipeableDrawer>
       </ThemeProvider>
     </StyledEngineProvider>
-  );
+  )
 }

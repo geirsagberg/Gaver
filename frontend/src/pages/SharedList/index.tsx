@@ -1,7 +1,6 @@
-import { BottomNavigation, BottomNavigationAction, Icon, Paper, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { BottomNavigation, BottomNavigationAction, Box, Icon, Paper, Typography } from '@mui/material'
 import { map } from 'lodash-es'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import Chat from '~/components/Chat'
 import Loading from '~/components/Loading'
 import { useAppState } from '~/overmind'
@@ -9,33 +8,7 @@ import { pageWidth } from '~/theme'
 import { useNavContext } from '~/utils/hooks'
 import SharedWishListItem from './SharedWishListItem'
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    height: '100%',
-    maxWidth: pageWidth,
-    position: 'relative',
-  },
-  list: {
-    padding: '1rem',
-    height: '100%',
-    position: 'relative',
-    transition: 'all 0.5s',
-    userSelect: 'none',
-  },
-  bottomNav: {
-    position: 'fixed',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  empty: {
-    padding: '1rem',
-  },
-})
-
 const SharedListPage: FC = () => {
-  const classes = useStyles({})
   const { currentSharedOrderedWishes, currentSharedListOwner } = useAppState()
   useNavContext(
     {
@@ -45,30 +18,51 @@ const SharedListPage: FC = () => {
   )
   const [tab, setTab] = useState(0)
   return currentSharedOrderedWishes ? (
-    <div className={classes.root}>
-      <div className={classes.list}>
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        maxWidth: pageWidth,
+        position: 'relative',
+      }}>
+      <Box
+        sx={{
+          padding: '1rem',
+          height: '100%',
+          position: 'relative',
+          transition: 'all 0.5s',
+          userSelect: 'none',
+        }}>
         {map(currentSharedOrderedWishes, (wish) => (
           <SharedWishListItem key={wish.id} wishId={wish.id} />
         ))}
         {currentSharedOrderedWishes.length === 0 && (
-          <Paper className={classes.empty}>
+          <Paper
+            sx={{
+              padding: '1rem',
+            }}>
             <Typography>Ingen ønsker enda.</Typography>
           </Paper>
         )}
-      </div>
+      </Box>
       <Chat />
       {false && (
         <BottomNavigation
           showLabels
           color="primary"
-          className={classes.bottomNav}
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }}
           value={tab}
           onChange={(_, value) => setTab(value)}>
           <BottomNavigationAction label="Liste" icon={<Icon>list</Icon>} />
           <BottomNavigationAction label="Chat" icon={<Icon>chat</Icon>} />
         </BottomNavigation>
       )}
-    </div>
+    </Box>
   ) : (
     <Loading />
   )

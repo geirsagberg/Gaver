@@ -1,39 +1,44 @@
-import React, { FC } from 'react'
-import { colors, Typography, Icon, Button } from '@mui/material';
+import { Button, colors, Icon, Typography } from '@mui/material'
+import { ReactNode } from 'react'
 
-import makeStyles from '@mui/styles/makeStyles';
-
-const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  icon: {
-    color: colors.amber[600],
-    fontSize: 80,
-  },
-  content: {
-    margin: '1rem',
-  },
-})
+import { Box } from '@mui/material'
 
 interface Props {
   onBackClicked?: () => any
+  children: ReactNode
 }
 
-const ErrorView: FC<Props> = ({ children, onBackClicked }) => {
-  const classes = useStyles({})
+const ErrorView = ({ children, onBackClicked }: Props) => {
   return (
-    <div className={classes.root}>
-      <Typography variant="h1">Oisann!</Typography>
-      <Icon className={classes.icon}>sentiment_very_dissatisfied</Icon>
-      <Typography className={classes.content}>{children}</Typography>
-      <Button href="/" color="primary" variant="contained" onClick={onBackClicked}>
-        Tilbake
-      </Button>
-    </div>
+    <Box
+      sx={{
+        height: '100%',
+        position: 'relative',
+        zIndex: 0,
+        display: 'flex',
+        justifyContent: 'center',
+      }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          alignSelf: 'center',
+        }}>
+        <Typography variant="h1">Oisann!</Typography>
+        <Icon
+          sx={{
+            color: colors.amber[600],
+            fontSize: 80,
+          }}>
+          sentiment_very_dissatisfied
+        </Icon>
+        <Typography m="1rem">{children}</Typography>
+        <Button href="/" color="primary" variant="contained" onClick={onBackClicked}>
+          Tilbake
+        </Button>
+      </Box>
+    </Box>
   )
 }
 

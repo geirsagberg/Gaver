@@ -17,10 +17,8 @@ try {
         .WriteTo.Console()
         .ReadFrom.Configuration(context.Configuration));
 
-    builder.Host.ConfigureAppConfiguration((context, config) => {
-        if (context.Configuration.GetConnectionString("AppConfig") is { } connectionString && connectionString.IsNotEmpty())
-            config.AddAzureAppConfiguration(connectionString);
-    });
+    if (builder.Configuration.GetConnectionString("AppConfig") is { } connectionString && connectionString.IsNotEmpty())
+        builder.Configuration.AddAzureAppConfiguration(connectionString);
 
     builder.ConfigureServices();
 

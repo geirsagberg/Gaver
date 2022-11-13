@@ -8,19 +8,11 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material'
-import { makeStyles } from '@mui/styles'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { useActions, useAppState } from './overmind'
 import { isEmailValid } from './utils/validation'
 
-export const useStyles = makeStyles({
-  overflowDialog: {
-    overflow: 'visible',
-  },
-})
-
 export const ShareListDialog: FC = () => {
-  const classes = useStyles({})
   const {
     myList: { isSharingList, shareEmails },
     app: { isSavingOrLoading },
@@ -38,9 +30,17 @@ export const ShareListDialog: FC = () => {
     setEmailInput('')
   }
   return (
-    <Dialog fullWidth classes={{ paper: classes.overflowDialog }} open={isSharingList} onClose={cancel}>
+    <Dialog
+      fullWidth
+      PaperProps={{
+        sx: {
+          overflow: 'visible',
+        },
+      }}
+      open={isSharingList}
+      onClose={cancel}>
       <DialogTitle>Del din ønskeliste</DialogTitle>
-      <DialogContent className={classes.overflowDialog}>
+      <DialogContent sx={{ overflow: 'visible' }}>
         <DialogContentText>Legg inn e-postadressene til de du vil dele listen med</DialogContentText>
         <Autocomplete
           value={shareEmails}

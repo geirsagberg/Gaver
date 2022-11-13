@@ -14,15 +14,12 @@ public static class EnumerableExtensions
         return result;
     }
 
-    public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? enumerable)
-        => enumerable == null || !enumerable.Any();
-
     public static string ToJoinedString<T>(this IEnumerable<T> enumerable, string separator = ", ")
     {
         return string.Join(separator, enumerable);
     }
 
-    public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? enumerable) => enumerable ?? new T[0];
+    public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? enumerable) => enumerable ?? Array.Empty<T>();
 
     public static bool In<T>(this T value, [NotNullWhen(true)] IEnumerable<T>? enumerable) =>
         enumerable?.Contains(value) == true;

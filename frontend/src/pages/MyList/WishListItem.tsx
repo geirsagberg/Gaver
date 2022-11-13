@@ -1,14 +1,10 @@
-import { Icon, IconButton, Link, Paper, Typography } from '@mui/material'
-import makeStyles from '@mui/styles/makeStyles'
-import React, { FC } from 'react'
+import { Box, Icon, IconButton, Link, Paper, Typography } from '@mui/material'
+import { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useActions, useAppState } from '~/overmind'
 import { listItemStyles } from '~/theme'
 
-const useStyles = makeStyles(listItemStyles)
-
 const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
-  const classes = useStyles()
   const {
     myList: { wishes, isDeleting },
     app: { isSavingOrLoading },
@@ -18,15 +14,15 @@ const WishListItem: FC<{ wishId: number }> = ({ wishId }) => {
   } = useActions()
   const wish = wishes[wishId]
   return wish ? (
-    <Paper className={classes.root}>
-      <div className={classes.content}>
+    <Paper sx={listItemStyles.root}>
+      <Box sx={listItemStyles.content}>
         <Typography variant="body1">{wish.title}</Typography>
         {wish.url && (
-          <Link target="_blank" href={wish.url} variant="body2" className={classes.link}>
+          <Link target="_blank" href={wish.url} variant="body2" sx={listItemStyles.link}>
             {wish.url}
           </Link>
         )}
-      </div>
+      </Box>
       <Expander />
       <div>
         {isDeleting ? (

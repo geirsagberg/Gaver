@@ -1,20 +1,11 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Icon,
-  TextField,
-} from '@mui/material'
-import React, { FC } from 'react'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Icon, TextField } from '@mui/material'
+import { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useAppState } from '~/overmind'
 import { selectIsSavingOrLoading } from '~/overmind/app/selectors'
 import { Wish } from '~/overmind/myList/state'
-import { commonStyles } from '~/theme'
+import { dialogActions } from '~/theme'
 import { useFeatures } from '~/utils/appSettings'
-import { createStylesHook } from '~/utils/materialUtils'
 
 type Props = {
   wish: Wish
@@ -24,22 +15,8 @@ type Props = {
   updateWish: (update: Partial<Wish>) => void
 }
 
-const useStyles = createStylesHook({
-  actions: commonStyles.dialogActions,
-  leftIcon: {
-    marginRight: '0.5rem',
-  },
-})
-
-const WishDetailsDialog: FC<Props> = ({
-  wish,
-  onCancel,
-  onSave,
-  updateWish,
-  onDelete,
-}) => {
+const WishDetailsDialog: FC<Props> = ({ wish, onCancel, onSave, updateWish, onDelete }) => {
   const state = useAppState()
-  const classes = useStyles({})
   const features = useFeatures()
   const isSavingOrLoading = selectIsSavingOrLoading(state)
   return wish ? (
@@ -74,29 +51,20 @@ const WishDetailsDialog: FC<Props> = ({
             inputProps={{ maxLength: 255 }}
           />
           {features?.wishOptions && (
-            <Button
-              disabled={isSavingOrLoading}
-              variant="contained"
-              color="inherit">
+            <Button disabled={isSavingOrLoading} variant="contained" color="inherit">
               Legg til alternativ
             </Button>
           )}
         </DialogContent>
-        <DialogActions className={classes.actions}>
+        <DialogActions sx={dialogActions}>
           {onDelete && (
-            <Button
-              onClick={() => wish.id && onDelete(wish.id)}
-              disabled={isSavingOrLoading}>
-              <Icon className={classes.leftIcon}>delete</Icon>
+            <Button onClick={() => wish.id && onDelete(wish.id)} disabled={isSavingOrLoading}>
+              <Icon sx={{ marginRight: '0.5rem' }}>delete</Icon>
               Slett
             </Button>
           )}
           <Expander />
-          <Button
-            type="submit"
-            disabled={isSavingOrLoading}
-            variant="contained"
-            color="primary">
+          <Button type="submit" disabled={isSavingOrLoading} variant="contained" color="primary">
             Lagre
           </Button>
           <Button onClick={onCancel} disabled={isSavingOrLoading}>

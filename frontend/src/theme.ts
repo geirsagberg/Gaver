@@ -1,6 +1,5 @@
 import { adaptV4Theme, createTheme, DeprecatedThemeOptions } from '@mui/material'
-import { PaletteOptions } from '@mui/material/styles'
-import createStyles from '@mui/styles/createStyles'
+import { PaletteOptions, SxProps, Theme } from '@mui/material/styles'
 import { merge } from 'lodash-es'
 
 export const gaverColors = {
@@ -96,26 +95,21 @@ export default theme
 
 export const pageWidth = 600
 
-export const commonStyles = createStyles({
-  centerContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    alignSelf: 'center',
-    textAlign: 'center',
+export const dialogActions: SxProps<Theme> = {
+  margin: '0.5rem',
+  '& > :first-child': {
+    marginLeft: 0,
   },
-  dialogActions: {
-    margin: '0.5rem',
-    '& > :first-child': {
-      marginLeft: 0,
-    },
-    '& > :last-child': {
-      marginRight: 0,
-    },
+  '& > :last-child': {
+    marginRight: 0,
   },
-})
+}
 
-export const listItemStyles = createStyles({
+function makeSxProps<T extends Record<string, SxProps<Theme>>>(sx: Record<string, SxProps<Theme>>): T {
+  return sx as T
+}
+
+export const listItemStyles = makeSxProps({
   root: {
     width: '100%',
     display: 'flex',

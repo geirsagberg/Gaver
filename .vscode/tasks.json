@@ -7,22 +7,31 @@
       "label": "typescript",
       "type": "shell",
       "command": "node_modules/typescript/bin/tsc --noEmit",
-      "problemMatcher": [
-        "$tsc"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "problemMatcher": ["$tsc"],
+      "group": "build"
     },
     {
       "label": "dotnet build",
       "type": "shell",
       "command": "dotnet build",
-      "problemMatcher": [
-        "$msCompile"
-      ],
+      "problemMatcher": ["$msCompile"],
       "group": "build"
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "problemMatcher": ["$tsc"],
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": ["-ExecutionPolicy", "Bypass"]
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "label": "tsc: build - tsconfig.json"
     }
   ]
 }
