@@ -25,7 +25,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          mui: ['@mui/material', '@mui/styles', '@emotion/react', '@emotion/styled'],
+          mui: ['@mui/material', '@emotion/react', '@emotion/styled'],
         },
       },
     },

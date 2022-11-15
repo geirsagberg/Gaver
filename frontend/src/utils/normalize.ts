@@ -1,13 +1,9 @@
 import { includes, keyBy, mapValues } from 'lodash-es'
 
-export type Normalized<T> = T extends Array<
-  infer A extends object ? infer A : never
->
+export type Normalized<T> = T extends Array<(infer A) extends object ? infer A : never>
   ? Dictionary<Normalized<A>>
   : {
-      [P in keyof T]: T[P] extends Array<
-        infer A extends object ? infer A : never
-      >
+      [P in keyof T]: T[P] extends Array<(infer A) extends object ? infer A : never>
         ? Dictionary<Normalized<A>>
         : Normalized<T[P]>
     }
@@ -31,9 +27,7 @@ export function normalizeArrays<T>(
       ? obj.map((o) => normalizeArrays(o))
       : (mapValues(obj as unknown as object, (value: any, key: any) => {
           return normalizeArrays(
-            !includes(ignoreProps, key) &&
-              Array.isArray(value) &&
-              (obj as any)[0]?.hasOwnProperty(iteratee)
+            !includes(ignoreProps, key) && Array.isArray(value) && (obj as any)[0]?.hasOwnProperty(iteratee)
               ? keyBy(value, iteratee)
               : value
           )

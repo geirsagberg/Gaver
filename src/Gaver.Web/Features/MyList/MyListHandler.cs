@@ -2,7 +2,6 @@ using AutoMapper.QueryableExtensions;
 using Flurl;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
-using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
@@ -20,16 +19,14 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
     IRequestHandler<SetWishesOrderRequest>,
     IRequestHandler<AddWishRequest, WishDto>,
     IRequestHandler<DeleteWishRequest, DeleteWishResponse>,
-    IRequestHandler<ResetListRequest>
-{
+    IRequestHandler<ResetListRequest> {
     private readonly IClientNotifier clientNotifier;
     private readonly GaverContext context;
     private readonly IMapperService mapper;
     private readonly IMailSender mailSender;
     private readonly IHostUrlAccessor hostUrlAccessor;
 
-    public MyListHandler(GaverContext context, IClientNotifier clientNotifier, IMapperService mapper, IMailSender mailSender, IHostUrlAccessor hostUrlAccessor)
-    {
+    public MyListHandler(GaverContext context, IClientNotifier clientNotifier, IMapperService mapper, IMailSender mailSender, IHostUrlAccessor hostUrlAccessor) {
         this.context = context;
         this.clientNotifier = clientNotifier;
         this.mapper = mapper;
@@ -37,50 +34,46 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
         this.hostUrlAccessor = hostUrlAccessor;
     }
 
-    public async Task<WishDto> Handle(AddWishRequest message, CancellationToken cancellationToken)
-    {
-        await Task.Delay(5000, cancellationToken);
-        var wishList = context.WishLists.Single(wl => wl.UserId == message.UserId);
+    public async Task<WishDto> Handle(AddWishRequest request, CancellationToken cancellationToken) {
+        var wishList = context.WishLists.Single(wl => wl.UserId == request.UserId);
         var wish = new Wish {
-            Title = message.Title,
-            Url = message.Url,
+            Title = request.Title,
+            Url = request.Url,
             WishList = wishList
         };
-        context.Add(wish);
-        await context.SaveChangesAsync(cancellationToken);
+        _ = context.Add(wish);
+        _ = await context.SaveChangesAsync(cancellationToken);
         wishList.WishesOrder = wishList.WishesOrder.IsNullOrEmpty()
             ? await context.Wishes.Where(w => w.WishList == wishList).Select(w => w.Id)
                 .ToArrayAsync(cancellationToken)
             : wishList.WishesOrder.Concat(new[] { wish.Id }).ToArray();
 
-        await context.SaveChangesAsync(cancellationToken);
+        _ = await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishList.Id);
         return mapper.Map<WishDto>(wish);
     }
 
-    public async Task<DeleteWishResponse> Handle(DeleteWishRequest message, CancellationToken cancellationToken)
-    {
+    public async Task<DeleteWishResponse> Handle(DeleteWishRequest request, CancellationToken cancellationToken) {
         var wish = await context.Set<Wish>().Include(w => w.WishList)
-            .SingleAsync(w => w.Id == message.WishId, cancellationToken);
+            .SingleAsync(w => w.Id == request.WishId, cancellationToken);
 
-        var wishListId = await context.GetUserWishListId(message.UserId);
+        var wishListId = await context.GetUserWishListId(request.UserId);
 
-        context.Remove(wish);
-        await context.SaveChangesAsync(cancellationToken);
+        _ = context.Remove(wish);
+        _ = await context.SaveChangesAsync(cancellationToken);
         wish.WishList!.WishesOrder = wish.WishList.WishesOrder.IsNullOrEmpty()
             ? wish.WishList.Wishes.Select(w => w.Id).ToArray()
-            : wish.WishList.WishesOrder.Except(new[] { message.WishId }).ToArray();
-        await context.SaveChangesAsync(cancellationToken);
+            : wish.WishList.WishesOrder.Except(new[] { request.WishId }).ToArray();
+        _ = await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishListId);
         return new DeleteWishResponse {
             WishesOrder = wish.WishList.WishesOrder
         };
     }
 
-    public async Task<MyListDto> Handle(GetMyListRequest message, CancellationToken cancellationToken = default)
-    {
+    public async Task<MyListDto> Handle(GetMyListRequest request, CancellationToken cancellationToken = default) {
         var model = await context.Set<WishList>()
-            .Where(wl => wl.UserId == message.UserId)
+            .Where(wl => wl.UserId == request.UserId)
             .ProjectTo<MyListDto>(mapper.MapperConfiguration)
             .SingleAsync(cancellationToken);
 
@@ -91,8 +84,7 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
         return model;
     }
 
-    public async Task<Unit> Handle(SetWishesOrderRequest request, CancellationToken cancellationToken)
-    {
+    public async Task<Unit> Handle(SetWishesOrderRequest request, CancellationToken cancellationToken) {
         var wishList = await GetUserWishListWithWishes(request, cancellationToken);
         var wishIds = await context.Set<Wish>().Where(w => w.WishListId == wishList.Id).Select(w => w.Id)
             .ToListAsync(cancellationToken);
@@ -101,7 +93,7 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
         }
 
         wishList.WishesOrder = request.WishesOrder;
-        await context.SaveChangesAsync(cancellationToken);
+        _ = await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishList.Id);
         return Unit.Value;
     }
@@ -111,8 +103,7 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
             .Include(w => w.Wishes)
             .SingleAsync(wl => wl.UserId == request.UserId, cancellationToken);
 
-    public async Task<Unit> Handle(UpdateWishRequest request, CancellationToken cancellationToken)
-    {
+    public async Task<Unit> Handle(UpdateWishRequest request, CancellationToken cancellationToken) {
         var wish = await context.GetOrDieAsync<Wish>(request.WishId);
 
         if (request.Title != null) {
@@ -123,20 +114,19 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
             wish.Url = request.Url;
         }
 
-        await context.SaveChangesAsync(cancellationToken);
+        _ = await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wish.WishListId);
         return Unit.Value;
     }
 
-    public async Task<Unit> Handle(ResetListRequest request, CancellationToken cancellationToken)
-    {
+    public async Task<Unit> Handle(ResetListRequest request, CancellationToken cancellationToken) {
         var wishList = await GetUserWishListWithWishes(request, cancellationToken);
         var user = await GetUserWithFriends(request, cancellationToken);
         wishList.Wishes = wishList.Wishes.Where(w => request.KeepWishes.Contains(w.Id)).ToHashSet();
         wishList.WishesOrder = wishList.WishesOrder.IsNullOrEmpty()
             ? wishList.Wishes.Select(w => w.Id).ToArray()
             : wishList.WishesOrder.Intersect(request.KeepWishes).ToArray();
-        await context.SaveChangesAsync(cancellationToken);
+        _ = await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishList.Id);
 
         var mail = new MailModel {
@@ -152,8 +142,5 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
         return Unit.Value;
     }
 
-    private async Task<User> GetUserWithFriends(ResetListRequest request, CancellationToken cancellationToken)
-    {
-        return await context.Users.Include(u => u.Friends).SingleAsync(u => u.Id == request.UserId, cancellationToken);
-    }
+    private async Task<User> GetUserWithFriends(ResetListRequest request, CancellationToken cancellationToken) => await context.Users.Include(u => u.Friends).SingleAsync(u => u.Id == request.UserId, cancellationToken);
 }

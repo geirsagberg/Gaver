@@ -17,7 +17,6 @@
     "start:frontend": "vite",
     "start:backend": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
     "start": "run-p start:frontend start:backend",
-    "start:prod": "npm run webpack && dotnet run --project src/Gaver.Web --launch-profile Production",
     "watch": "cd src/Gaver.Web && cross-env ASPNETCORE_ENVIRONMENT=Development dotnet watch run",
     "cloc": "cloc --exclude-dir=node_modules,typings,wwwroot,bin,obj --exclude-lang=JSON ."
   },

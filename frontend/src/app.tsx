@@ -1,9 +1,9 @@
 import { CssBaseline } from '@mui/material'
-import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { createOvermind } from 'overmind'
 import { Provider } from 'overmind-react'
 import React, { ReactNode } from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import ErrorView from './components/ErrorView'
 import Layout from './Layout'
 import { config } from './overmind'
@@ -27,17 +27,16 @@ class ErrorBoundary extends React.Component<{ children: ReactNode }, { hasError:
   }
 }
 
-render(
+const container = document.getElementById('app')!
+const root = createRoot(container)
+root.render(
   <Provider value={overmind}>
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <CssBaseline>
-          <ErrorBoundary>
-            <Layout />
-          </ErrorBoundary>
-        </CssBaseline>
-      </ThemeProvider>
-    </StyledEngineProvider>
-  </Provider>,
-  document.getElementById('react-app')
+    <ThemeProvider theme={theme}>
+      <CssBaseline>
+        <ErrorBoundary>
+          <Layout />
+        </ErrorBoundary>
+      </CssBaseline>
+    </ThemeProvider>
+  </Provider>
 )

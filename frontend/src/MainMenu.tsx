@@ -1,5 +1,5 @@
 import { Divider, Icon, Link, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer } from '@mui/material'
-import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { map, some } from 'lodash-es'
 import { FC } from 'react'
 import Expander from './components/Expander'
@@ -147,40 +147,38 @@ export const MainMenu: FC = () => {
   const features = useFeatures()
 
   return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={darkTheme}>
-        <SwipeableDrawer
-          SwipeAreaProps={{
-            sx: {
-              marginTop: 56,
-            },
-          }}
-          open={isMenuShowing}
-          onOpen={showMenu}
-          onClose={hideMenu}
-          PaperProps={{
-            sx: (theme) => ({
-              background: theme.palette.primary.dark,
-            }),
+    <ThemeProvider theme={darkTheme}>
+      <SwipeableDrawer
+        SwipeAreaProps={{
+          sx: {
+            marginTop: 56,
+          },
+        }}
+        open={isMenuShowing}
+        onOpen={showMenu}
+        onClose={hideMenu}
+        PaperProps={{
+          sx: (theme) => ({
+            background: theme.palette.primary.dark,
+          }),
+        }}>
+        <List
+          sx={{
+            width: 256,
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
           }}>
-          <List
-            sx={{
-              width: 256,
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-            }}>
-            <MyListMenuItem />
-            {features?.userGroups ? <MyGroupsMenuItem /> : null}
-            <SharedListsMenuItem />
-            <Divider />
-            <Expander />
-            <FeedbackMenuItem />
-            <LogOutMenuItem />
-            <LicensesMenuItem />
-          </List>
-        </SwipeableDrawer>
-      </ThemeProvider>
-    </StyledEngineProvider>
+          <MyListMenuItem />
+          {features?.userGroups ? <MyGroupsMenuItem /> : null}
+          <SharedListsMenuItem />
+          <Divider />
+          <Expander />
+          <FeedbackMenuItem />
+          <LogOutMenuItem />
+          <LicensesMenuItem />
+        </List>
+      </SwipeableDrawer>
+    </ThemeProvider>
   )
 }

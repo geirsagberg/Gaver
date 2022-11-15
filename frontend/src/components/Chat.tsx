@@ -1,6 +1,6 @@
 import { Box, SwipeableDrawer, TextField, Typography } from '@mui/material'
-import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
-import React, { useState } from 'react'
+import { ThemeProvider } from '@mui/material/styles'
+import { useState } from 'react'
 import SimpleBar from 'simplebar-react'
 import { useNamespace } from '~/overmind'
 import theme, { darkTheme } from '~/theme'
@@ -69,9 +69,7 @@ const ChatView = () => {
 }
 
 export default () => (
-  <StyledEngineProvider injectFirst>
-    <ThemeProvider theme={darkTheme}>
-      <ChatView />
-    </ThemeProvider>
-  </StyledEngineProvider>
+  <ThemeProvider theme={darkTheme}>
+    <ChatView />
+  </ThemeProvider>
 )

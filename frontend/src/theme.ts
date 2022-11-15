@@ -1,5 +1,5 @@
-import { adaptV4Theme, createTheme, DeprecatedThemeOptions } from '@mui/material'
-import { PaletteOptions, SxProps, Theme } from '@mui/material/styles'
+import { createTheme } from '@mui/material'
+import { PaletteOptions, SxProps, Theme, ThemeOptions } from '@mui/material/styles'
 import { merge } from 'lodash-es'
 
 export const gaverColors = {
@@ -11,12 +11,8 @@ export const gaverColors = {
 }
 
 const palette: PaletteOptions = {
-  // primary: { main: '#3F51B5' },
-  // secondary: { main: '#AB47BC' },
-  // type: 'dark',
-  // background: {
-  //   paper: '#222'
-  // }
+  primary: { main: '#3F51B5' },
+  secondary: { main: '#AB47BC' },
 }
 
 const colors = {
@@ -36,29 +32,31 @@ const colors = {
   darkGreyOverlay16: '#383838',
 }
 
-const commonThemeOptions: DeprecatedThemeOptions = {
+const commonThemeOptions: ThemeOptions = {
   palette,
-  overrides: {
+  components: {
     MuiDialog: {
-      container: {
-        alignItems: 'flex-start',
-      },
-      paper: {
-        margin: '0 1rem',
-      },
-      paperFullWidth: {
-        width: `calc(100% - 2rem)`,
-      },
-      paperScrollPaper: {
-        maxHeight: '100%',
+      styleOverrides: {
+        container: {
+          alignItems: 'flex-start',
+        },
+        paper: {
+          margin: '0 1rem',
+        },
+        paperFullWidth: {
+          width: `calc(100% - 2rem)`,
+        },
+        paperScrollPaper: {
+          maxHeight: '100%',
+        },
       },
     },
   },
 }
 
-const theme = createTheme(adaptV4Theme(commonThemeOptions))
+const theme = createTheme(commonThemeOptions)
 
-const darkThemeOptions: DeprecatedThemeOptions = {
+const darkThemeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
     background: {
@@ -71,25 +69,9 @@ const darkThemeOptions: DeprecatedThemeOptions = {
       disabled: colors.white38,
     },
   },
-  overrides: {
-    MuiPaper: {
-      elevation1: {
-        background: colors.darkGreyOverlay05,
-      },
-      elevation2: {
-        background: colors.darkGreyOverlay07,
-      },
-      elevation3: {
-        background: colors.darkGreyOverlay08,
-      },
-      elevation4: {
-        background: colors.darkGreyOverlay09,
-      },
-    },
-  },
 }
 
-export const darkTheme = createTheme(adaptV4Theme(merge(commonThemeOptions, darkThemeOptions)))
+export const darkTheme = createTheme(merge(commonThemeOptions, darkThemeOptions))
 
 export default theme
 
@@ -97,10 +79,10 @@ export const pageWidth = 600
 
 export const dialogActions: SxProps<Theme> = {
   margin: '0.5rem',
-  '& > :first-child': {
+  '& > :first-of-type': {
     marginLeft: 0,
   },
-  '& > :last-child': {
+  '& > :last-of-type': {
     marginRight: 0,
   },
 }

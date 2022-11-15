@@ -59,12 +59,12 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
               margin: '0.5rem 0',
               fontStyle: 'italic',
               '&:last-child': {
-                marginRight: '1rem',
+                marginRight: 2,
               },
               textAlign: 'right',
               textOverflow: 'ellipsis',
               overflow: 'hidden',
-              marginLeft: '1rem',
+              marginLeft: 2,
             }}>
             Kjøpt av {boughtByUser.name}
           </Typography>
@@ -77,7 +77,7 @@ const SharedWishListItem: FC<{ wishId: number }> = ({ wishId }) => {
           color="primary"
           onClick={() => setBought({ wishId: wish.id, isBought: true })}
           sx={{
-            marginRight: 6,
+            marginRight: 1,
           }}>
           Kjøp
         </Button>
