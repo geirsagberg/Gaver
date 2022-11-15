@@ -7,5 +7,4 @@ Wish list app using ASP.NET Core, React/Overmind and SignalR
 Requires `yarn` (or use `npm install`), and [.NET Core SDK](https://dot.net).
 
     yarn
-    dotnet restore
-    npm run start:prod
+    npm start
