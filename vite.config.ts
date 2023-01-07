@@ -19,6 +19,8 @@ export default defineConfig({
     port: 8080,
   },
   build: {
+    minify: false,
+    sourcemap: true,
     outDir: '../src/Gaver.Web/wwwroot',
     emptyOutDir: true,
     assetsInlineLimit: 0,

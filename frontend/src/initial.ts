@@ -1,4 +1,4 @@
-import trianglify from 'trianglify'
+import trianglify from '~/trianglify/trianglify'
 
 const background = document.getElementById('background') as HTMLDivElement
 
