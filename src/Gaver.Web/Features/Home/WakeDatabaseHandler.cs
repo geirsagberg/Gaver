@@ -4,17 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Home;
 
-public class WakeDatabaseHandler : AsyncRequestHandler<WakeDatabaseRequest>
-{
-    private readonly GaverContext gaverContext;
+public class WakeDatabaseHandler(GaverContext gaverContext) : IRequestHandler<WakeDatabaseRequest> {
+    private readonly GaverContext gaverContext = gaverContext;
 
-    public WakeDatabaseHandler(GaverContext gaverContext)
-    {
-        this.gaverContext = gaverContext;
-    }
-
-    protected override async Task Handle(WakeDatabaseRequest request, CancellationToken cancellationToken)
-    {
+    public async Task Handle(WakeDatabaseRequest request, CancellationToken cancellationToken) {
         await gaverContext.Database.ExecuteSqlRawAsync("SELECT 1", cancellationToken);
     }
 }

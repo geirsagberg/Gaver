@@ -3,11 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Users;
 
-public class UserController : GaverControllerBase
-{
-    private readonly IMediator mediator;
-
-    public UserController(IMediator mediator) => this.mediator = mediator;
+public class UserController(IMediator mediator) : GaverControllerBase {
+    private readonly IMediator mediator = mediator;
 
     [HttpGet]
     public Task<CurrentUserDto> GetUserInfo() => mediator.Send(new GetUserInfoRequest());

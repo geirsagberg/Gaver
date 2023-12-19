@@ -6,16 +6,9 @@ using Microsoft.Extensions.Options;
 
 namespace Gaver.Web.MvcUtils;
 
-public class CustomProblemDetailsFactory : ProblemDetailsFactory
-{
-    private readonly ApiBehaviorOptions options;
-    private readonly JsonOptions jsonOptions;
-
-    public CustomProblemDetailsFactory(IOptions<ApiBehaviorOptions> options, IOptions<JsonOptions> jsonOptions)
-    {
-        this.options = options.Value;
-        this.jsonOptions = jsonOptions.Value;
-    }
+public class CustomProblemDetailsFactory(IOptions<ApiBehaviorOptions> options, IOptions<JsonOptions> jsonOptions) : ProblemDetailsFactory {
+    private readonly ApiBehaviorOptions options = options.Value;
+    private readonly JsonOptions jsonOptions = jsonOptions.Value;
 
     public override ProblemDetails CreateProblemDetails(
         HttpContext httpContext,
@@ -23,8 +16,7 @@ public class CustomProblemDetailsFactory : ProblemDetailsFactory
         string? title = null,
         string? type = null,
         string? detail = null,
-        string? instance = null)
-    {
+        string? instance = null) {
         statusCode ??= 500;
 
         var problemDetails = new ProblemDetails {
@@ -47,8 +39,7 @@ public class CustomProblemDetailsFactory : ProblemDetailsFactory
         string? title = null,
         string? type = null,
         string? detail = null,
-        string? instance = null)
-    {
+        string? instance = null) {
         if (modelStateDictionary == null) {
             throw new ArgumentNullException(nameof(modelStateDictionary));
         }
@@ -77,8 +68,7 @@ public class CustomProblemDetailsFactory : ProblemDetailsFactory
         return problemDetails;
     }
 
-    private void ApplyProblemDetailsDefaults(HttpContext httpContext, ProblemDetails problemDetails, int statusCode)
-    {
+    private void ApplyProblemDetailsDefaults(HttpContext httpContext, ProblemDetails problemDetails, int statusCode) {
         problemDetails.Status ??= statusCode;
 
         if (options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData)) {

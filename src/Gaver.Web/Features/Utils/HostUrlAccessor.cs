@@ -4,17 +4,10 @@ using Gaver.Common.Exceptions;
 namespace Gaver.Web.Features.Utils;
 
 [SingletonService]
-public class HostUrlAccessor : IHostUrlAccessor
-{
-    private readonly IHttpContextAccessor httpContextAccessor;
+public class HostUrlAccessor(IHttpContextAccessor httpContextAccessor) : IHostUrlAccessor {
+    private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
 
-    public HostUrlAccessor(IHttpContextAccessor httpContextAccessor)
-    {
-        this.httpContextAccessor = httpContextAccessor;
-    }
-
-    public string GetHostUrl()
-    {
+    public string GetHostUrl() {
         var request = httpContextAccessor.HttpContext?.Request ?? throw new DeveloperException("No HttpContext!");
 
         return request.Scheme + "://" + request.Host;

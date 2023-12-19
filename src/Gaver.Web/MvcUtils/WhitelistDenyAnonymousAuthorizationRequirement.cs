@@ -4,18 +4,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Gaver.Web.MvcUtils;
 
-internal class WhitelistDenyAnonymousAuthorizationRequirement : DenyAnonymousAuthorizationRequirement
-{
-    private readonly string[] whitelistedPaths;
-
-    public WhitelistDenyAnonymousAuthorizationRequirement(params string[] whitelistedPaths)
-    {
-        this.whitelistedPaths = whitelistedPaths;
-    }
+internal class WhitelistDenyAnonymousAuthorizationRequirement(params string[] whitelistedPaths) : DenyAnonymousAuthorizationRequirement {
+    private readonly string[] whitelistedPaths = whitelistedPaths;
 
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
-        DenyAnonymousAuthorizationRequirement requirement)
-    {
+        DenyAnonymousAuthorizationRequirement requirement) {
         if (context.Resource is AuthorizationFilterContext authorizationFilterContext) {
             var path = authorizationFilterContext.HttpContext.Request.Path;
             var isPathWhitelisted = whitelistedPaths

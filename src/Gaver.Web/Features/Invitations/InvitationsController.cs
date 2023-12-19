@@ -4,11 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Invitations;
 
-public class InvitationsController : GaverControllerBase
-{
-    private readonly IMediator mediator;
-
-    public InvitationsController(IMediator mediator) => this.mediator = mediator;
+public class InvitationsController(IMediator mediator) : GaverControllerBase {
+    private readonly IMediator mediator = mediator;
 
     [HttpGet("{token:guid}/Status")]
     public Task<InvitationStatusDto> GetInvitationStatus(GetInvitationStatusRequest request) => mediator.Send(request);

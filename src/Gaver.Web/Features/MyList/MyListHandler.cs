@@ -14,25 +14,17 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Gaver.Web.Features.MyList;
 
-public class MyListHandler : IRequestHandler<UpdateWishRequest>,
+public class MyListHandler(GaverContext context, IClientNotifier clientNotifier, IMapperService mapper, IMailSender mailSender, IHostUrlAccessor hostUrlAccessor) : IRequestHandler<UpdateWishRequest>,
     IRequestHandler<GetMyListRequest, MyListDto>,
     IRequestHandler<SetWishesOrderRequest>,
     IRequestHandler<AddWishRequest, WishDto>,
     IRequestHandler<DeleteWishRequest, DeleteWishResponse>,
     IRequestHandler<ResetListRequest> {
-    private readonly IClientNotifier clientNotifier;
-    private readonly GaverContext context;
-    private readonly IMapperService mapper;
-    private readonly IMailSender mailSender;
-    private readonly IHostUrlAccessor hostUrlAccessor;
-
-    public MyListHandler(GaverContext context, IClientNotifier clientNotifier, IMapperService mapper, IMailSender mailSender, IHostUrlAccessor hostUrlAccessor) {
-        this.context = context;
-        this.clientNotifier = clientNotifier;
-        this.mapper = mapper;
-        this.mailSender = mailSender;
-        this.hostUrlAccessor = hostUrlAccessor;
-    }
+    private readonly IClientNotifier clientNotifier = clientNotifier;
+    private readonly GaverContext context = context;
+    private readonly IMapperService mapper = mapper;
+    private readonly IMailSender mailSender = mailSender;
+    private readonly IHostUrlAccessor hostUrlAccessor = hostUrlAccessor;
 
     public async Task<WishDto> Handle(AddWishRequest request, CancellationToken cancellationToken) {
         var wishList = context.WishLists.Single(wl => wl.UserId == request.UserId);
@@ -84,7 +76,7 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
         return model;
     }
 
-    public async Task<Unit> Handle(SetWishesOrderRequest request, CancellationToken cancellationToken) {
+    public async Task Handle(SetWishesOrderRequest request, CancellationToken cancellationToken) {
         var wishList = await GetUserWishListWithWishes(request, cancellationToken);
         var wishIds = await context.Set<Wish>().Where(w => w.WishListId == wishList.Id).Select(w => w.Id)
             .ToListAsync(cancellationToken);
@@ -95,7 +87,7 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
         wishList.WishesOrder = request.WishesOrder;
         _ = await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishList.Id);
-        return Unit.Value;
+
     }
 
     private async Task<WishList> GetUserWishListWithWishes(IAuthenticatedRequest request, CancellationToken cancellationToken) =>
@@ -103,7 +95,7 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
             .Include(w => w.Wishes)
             .SingleAsync(wl => wl.UserId == request.UserId, cancellationToken);
 
-    public async Task<Unit> Handle(UpdateWishRequest request, CancellationToken cancellationToken) {
+    public async Task Handle(UpdateWishRequest request, CancellationToken cancellationToken) {
         var wish = await context.GetOrDieAsync<Wish>(request.WishId);
 
         if (request.Title != null) {
@@ -116,10 +108,10 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
 
         _ = await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wish.WishListId);
-        return Unit.Value;
+
     }
 
-    public async Task<Unit> Handle(ResetListRequest request, CancellationToken cancellationToken) {
+    public async Task Handle(ResetListRequest request, CancellationToken cancellationToken) {
         var wishList = await GetUserWishListWithWishes(request, cancellationToken);
         var user = await GetUserWithFriends(request, cancellationToken);
         wishList.Wishes = wishList.Wishes.Where(w => request.KeepWishes.Contains(w.Id)).ToHashSet();
@@ -139,7 +131,7 @@ public class MyListHandler : IRequestHandler<UpdateWishRequest>,
         };
         await mailSender.SendAsync(mail, cancellationToken);
 
-        return Unit.Value;
+
     }
 
     private async Task<User> GetUserWithFriends(ResetListRequest request, CancellationToken cancellationToken) => await context.Users.Include(u => u.Friends).SingleAsync(u => u.Id == request.UserId, cancellationToken);

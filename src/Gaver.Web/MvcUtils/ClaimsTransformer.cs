@@ -7,17 +7,10 @@ using Microsoft.AspNetCore.Authentication;
 namespace Gaver.Web.MvcUtils;
 
 [Service]
-public class ClaimsTransformer : IClaimsTransformation
-{
-    private readonly IMediator mediator;
+public class ClaimsTransformer(IMediator mediator) : IClaimsTransformation {
+    private readonly IMediator mediator = mediator;
 
-    public ClaimsTransformer(IMediator mediator)
-    {
-        this.mediator = mediator;
-    }
-
-    public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
-    {
+    public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal) {
         var providerId = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (providerId == null) {
             return principal;

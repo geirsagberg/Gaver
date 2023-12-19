@@ -3,11 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Chat;
 
-public class ChatController : GaverControllerBase
-{
-    private readonly IMediator mediator;
-
-    public ChatController(IMediator mediator) => this.mediator = mediator;
+public class ChatController(IMediator mediator) : GaverControllerBase {
+    private readonly IMediator mediator = mediator;
 
     [HttpPost("{wishListId:int}")]
     public Task<ChatMessageDto> AddMessage(AddMessageRequest request) => mediator.Send(request);

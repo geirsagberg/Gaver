@@ -7,16 +7,9 @@ using Xunit.Abstractions;
 
 namespace Gaver.Web.Tests.Features.SharedList;
 
-public class SharedListsControllerTests : WebTestBase
-{
-    public SharedListsControllerTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper)
-        : base(webAppFactory, testOutputHelper)
-    {
-    }
-
+public class SharedListsControllerTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) : WebTestBase(webAppFactory, testOutputHelper) {
     [Fact]
-    public async Task Cannot_read_own_sharedList()
-    {
+    public async Task Cannot_read_own_sharedList() {
         var user = new User {
             Name = "Alice",
             PrimaryIdentityId = "1"

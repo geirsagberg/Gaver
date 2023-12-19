@@ -10,21 +10,12 @@ using Gaver.Web.Options;
 namespace Gaver.Web.Features.Mail;
 
 [Service]
-public class MailSender : IMailSender
-{
-    private readonly ILogger<MailSender> logger;
-    private readonly IMapperService mapper;
-    private readonly MailOptions options;
+public class MailSender(MailOptions options, IMapperService mapper, ILogger<MailSender> logger) : IMailSender {
+    private readonly ILogger<MailSender> logger = logger;
+    private readonly IMapperService mapper = mapper;
+    private readonly MailOptions options = options;
 
-    public MailSender(MailOptions options, IMapperService mapper, ILogger<MailSender> logger)
-    {
-        this.options = options;
-        this.mapper = mapper;
-        this.logger = logger;
-    }
-
-    public async Task SendAsync(MailModel mail, System.Threading.CancellationToken cancellationToken = default)
-    {
+    public async Task SendAsync(MailModel mail, System.Threading.CancellationToken cancellationToken = default) {
         if (options.SendGridApiKey.IsNullOrEmpty()) {
             throw new FriendlyException("Mangler API-nøkkel for SendGrid");
         }
@@ -33,7 +24,7 @@ public class MailSender : IMailSender
         try {
             await options.SendGridUrl
                 .WithOAuthBearerToken(options.SendGridApiKey)
-                .PostJsonAsync(sendGridMail, cancellationToken);
+                .PostJsonAsync(sendGridMail);
             logger.LogInformation("Mail sent to {To}", mail.To);
         } catch (Exception e) {
             logger.LogErrorAndThrow(e, "Failed to share list");

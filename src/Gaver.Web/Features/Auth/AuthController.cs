@@ -4,11 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.Auth;
 
-public class AuthController : GaverControllerBase
-{
-    private readonly Auth0Settings auth0Settings;
-
-    public AuthController(Auth0Settings auth0Settings) => this.auth0Settings = auth0Settings;
+public class AuthController(Auth0Settings auth0Settings) : GaverControllerBase {
+    private readonly Auth0Settings auth0Settings = auth0Settings;
 
     [HttpGet]
     [AllowAnonymous]

@@ -246,3 +246,5 @@ dist/
 healthchecksdb
 
 wwwroot/
+
+*.local.json

@@ -11,22 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.UserGroups;
 
-public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGroupsDto>,
+public class UserGroupHandler(GaverContext context, IMapperService mapperService) : IRequestHandler<GetMyUserGroupsRequest, UserGroupsDto>,
     IRequestHandler<CreateUserGroupRequest, UserGroupDto>,
     IRequestHandler<UpdateUserGroupRequest>,
-    IRequestHandler<DeleteUserGroupRequest>
-{
-    private readonly GaverContext context;
-    private readonly IMapperService mapperService;
+    IRequestHandler<DeleteUserGroupRequest> {
+    private readonly GaverContext context = context;
+    private readonly IMapperService mapperService = mapperService;
 
-    public UserGroupHandler(GaverContext context, IMapperService mapperService)
-    {
-        this.context = context;
-        this.mapperService = mapperService;
-    }
-
-    public async Task<UserGroupDto> Handle(CreateUserGroupRequest request, CancellationToken cancellationToken)
-    {
+    public async Task<UserGroupDto> Handle(CreateUserGroupRequest request, CancellationToken cancellationToken) {
         var user = await context.GetOrDieAsync<User>(request.UserId);
         var userGroup = new UserGroup {
             Name = request.Name,
@@ -42,8 +34,7 @@ public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGrou
         return mapperService.Map<UserGroupDto>(userGroup);
     }
 
-    public async Task<Unit> Handle(DeleteUserGroupRequest request, CancellationToken cancellationToken)
-    {
+    public async Task Handle(DeleteUserGroupRequest request, CancellationToken cancellationToken) {
         var userGroup =
             await context.UserGroups.SingleOrDefaultAsync(ug => ug.Id == request.UserGroupId && ug.UserGroupConnections.Any(c => c.UserId == request.UserId), cancellationToken) ?? throw new FriendlyException("Finner ikke oppgitt gruppe");
 
@@ -52,11 +43,10 @@ public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGrou
 
         context.Remove(userGroup);
         await context.SaveChangesAsync(cancellationToken);
-        return Unit.Value;
+
     }
 
-    public async Task<UserGroupsDto> Handle(GetMyUserGroupsRequest request, CancellationToken cancellationToken)
-    {
+    public async Task<UserGroupsDto> Handle(GetMyUserGroupsRequest request, CancellationToken cancellationToken) {
         var groups = await context.UserGroupConnections.Where(c => c.UserId == request.UserId)
             .Select(u => u.UserGroup)
             .ProjectTo<UserGroupDto>(mapperService.MapperConfiguration).ToListAsync(cancellationToken);
@@ -65,8 +55,7 @@ public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGrou
         };
     }
 
-    public async Task<Unit> Handle(UpdateUserGroupRequest request, CancellationToken cancellationToken)
-    {
+    public async Task Handle(UpdateUserGroupRequest request, CancellationToken cancellationToken) {
         var userGroup = await context.UserGroups.Include(ug => ug.UserGroupConnections)
                 .SingleOrDefaultAsync(c =>
                         c.Id == request.UserGroupId &&
@@ -88,6 +77,6 @@ public class UserGroupHandler : IRequestHandler<GetMyUserGroupsRequest, UserGrou
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+
     }
 }

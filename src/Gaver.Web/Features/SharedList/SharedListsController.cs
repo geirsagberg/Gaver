@@ -4,11 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.SharedList;
 
-public class SharedListsController : GaverControllerBase
-{
-    private readonly IMediator mediator;
-
-    public SharedListsController(IMediator mediator) => this.mediator = mediator;
+public class SharedListsController(IMediator mediator) : GaverControllerBase {
+    private readonly IMediator mediator = mediator;
 
     [HttpGet("{wishListId:int}")]
     public Task<SharedListDto> Get(GetSharedListRequest request) => mediator.Send(request);

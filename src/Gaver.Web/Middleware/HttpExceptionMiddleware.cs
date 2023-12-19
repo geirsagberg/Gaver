@@ -3,14 +3,10 @@ using Gaver.Web.Exceptions;
 
 namespace Gaver.Web.Middleware;
 
-internal class HttpExceptionMiddleware
-{
-    private readonly RequestDelegate next;
+internal class HttpExceptionMiddleware(RequestDelegate next) {
+    private readonly RequestDelegate next = next;
 
-    public HttpExceptionMiddleware(RequestDelegate next) => this.next = next;
-
-    public async Task Invoke(HttpContext context)
-    {
+    public async Task Invoke(HttpContext context) {
         try {
             await next(context);
         } catch (HttpException httpException) {

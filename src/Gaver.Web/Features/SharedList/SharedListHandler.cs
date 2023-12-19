@@ -13,25 +13,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.SharedList;
 
-public class SharedListHandler :
+public class SharedListHandler(GaverContext context, IMapperService mapper, IClientNotifier clientNotifier) :
     IRequestHandler<SetBoughtRequest, SharedWishDto>,
     IRequestHandler<GetSharedListRequest, SharedListDto>,
-    IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus>
-{
-    private readonly IClientNotifier clientNotifier;
-    private readonly GaverContext context;
-    private readonly IMapperService mapper;
-
-    public SharedListHandler(GaverContext context, IMapperService mapper, IClientNotifier clientNotifier)
-    {
-        this.context = context;
-        this.mapper = mapper;
-        this.clientNotifier = clientNotifier;
-    }
+    IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus> {
+    private readonly IClientNotifier clientNotifier = clientNotifier;
+    private readonly GaverContext context = context;
+    private readonly IMapperService mapper = mapper;
 
     public async Task<ListAccessStatus> Handle(CheckSharedListAccessRequest request,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var wishListOwnerId = await context.WishLists.Where(wl => wl.Id == request.WishListId)
             .Select(wl => wl.UserId)
             .SingleOrDefaultAsync(cancellationToken);
@@ -49,8 +40,7 @@ public class SharedListHandler :
     }
 
     public async Task<SharedListDto> Handle(GetSharedListRequest message,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var results = await context.Set<WishList>()
             .Where(wl => wl.Id == message.WishListId)
             .ProjectTo<SharedListDto>(mapper.MapperConfiguration)
@@ -72,8 +62,7 @@ public class SharedListHandler :
         return model;
     }
 
-    public async Task<SharedWishDto> Handle(SetBoughtRequest message, CancellationToken cancellationToken)
-    {
+    public async Task<SharedWishDto> Handle(SetBoughtRequest message, CancellationToken cancellationToken) {
         var wish = GetWish(message.WishId, message.WishListId);
         var userId = message.UserId;
         if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId)
@@ -87,8 +76,7 @@ public class SharedListHandler :
         return mapper.Map<SharedWishDto>(wish);
     }
 
-    private Wish GetWish(int wishId, int wishListId)
-    {
+    private Wish GetWish(int wishId, int wishListId) {
         var wish = context.GetOrDie<Wish>(wishId);
         if (wish.WishListId != wishListId)
             throw new FriendlyException($"Wish {wishId} does not belong to list {wishListId}");

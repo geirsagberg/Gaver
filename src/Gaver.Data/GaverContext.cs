@@ -7,12 +7,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Gaver.Data;
 
-public class GaverContext : DbContext
-{
-    public GaverContext(DbContextOptions<GaverContext> options) : base(options)
-    {
-    }
-
+public class GaverContext(DbContextOptions<GaverContext> options) : DbContext(options) {
     public DbSet<Wish> Wishes { get; set; } = null!;
     public DbSet<WishList> WishLists { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
@@ -23,8 +18,7 @@ public class GaverContext : DbContext
     public DbSet<UserGroupConnection> UserGroupConnections { get; set; } = null!;
     public DbSet<UserFriendConnection> UserFriendConnections { get; set; } = null!;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<User>(entity => {
             entity.HasIndex(u => u.PrimaryIdentityId).IsUnique();
             entity.HasOne(u => u.WishList).WithOne(wl => wl.User!);

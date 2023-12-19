@@ -7,17 +7,10 @@ using MediatR.Pipeline;
 
 namespace Gaver.Web.CrossCutting;
 
-public class AuthenticationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
-{
-    private readonly IHttpContextAccessor httpContextAccessor;
+public class AuthenticationPreProcessor<TRequest>(IHttpContextAccessor httpContextAccessor) : IRequestPreProcessor<TRequest> where TRequest : notnull {
+    private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
 
-    public AuthenticationPreProcessor(IHttpContextAccessor httpContextAccessor)
-    {
-        this.httpContextAccessor = httpContextAccessor;
-    }
-
-    public async Task Process(TRequest request, CancellationToken cancellationToken)
-    {
+    public async Task Process(TRequest request, CancellationToken cancellationToken) {
         if (request is IAuthenticatedRequest authenticatedRequest) {
             var user = httpContextAccessor.HttpContext?.User;
             if (user?.Identity?.IsAuthenticated != true)

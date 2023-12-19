@@ -2,9 +2,5 @@ using System;
 
 namespace Gaver.Common.Exceptions;
 
-public class FriendlyException : Exception
-{
-    public FriendlyException(string message) : base(message)
-    {
-    }
+public class FriendlyException(string message) : Exception(message) {
 }

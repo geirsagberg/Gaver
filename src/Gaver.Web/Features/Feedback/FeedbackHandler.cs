@@ -7,21 +7,12 @@ using MediatR;
 
 namespace Gaver.Web.Features.Feedback;
 
-public class FeedbackHandler : IRequestHandler<SubmitFeedbackRequest>
-{
-    private readonly IMailSender mailSender;
-    private readonly MailOptions mailOptions;
-    private readonly GaverContext context;
+public class FeedbackHandler(IMailSender mailSender, MailOptions mailOptions, GaverContext context) : IRequestHandler<SubmitFeedbackRequest> {
+    private readonly IMailSender mailSender = mailSender;
+    private readonly MailOptions mailOptions = mailOptions;
+    private readonly GaverContext context = context;
 
-    public FeedbackHandler(IMailSender mailSender, MailOptions mailOptions, GaverContext context)
-    {
-        this.mailOptions = mailOptions;
-        this.context = context;
-        this.mailSender = mailSender;
-    }
-
-    public async Task<Unit> Handle(SubmitFeedbackRequest request, CancellationToken cancellationToken)
-    {
+    public async Task Handle(SubmitFeedbackRequest request, CancellationToken cancellationToken) {
         var content = request.Message;
 
         if (!request.Anonymous) {
@@ -37,6 +28,6 @@ public class FeedbackHandler : IRequestHandler<SubmitFeedbackRequest>
         };
         await mailSender.SendAsync(mail, cancellationToken);
 
-        return Unit.Value;
+
     }
 }

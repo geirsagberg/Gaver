@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scrutor;
@@ -31,10 +32,8 @@ using ProblemDetailsFactory = Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDet
 
 namespace Gaver.Web;
 
-public static class ServiceConfig
-{
-    public static void ConfigureServices(this WebApplicationBuilder builder)
-    {
+public static class ServiceConfig {
+    public static void ConfigureServices(this WebApplicationBuilder builder) {
         var services = builder.Services;
         var config = builder.Configuration;
         var environment = builder.Environment;
@@ -52,7 +51,9 @@ public static class ServiceConfig
         services.AddSingleton<IMapperService, MapperService>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSignalR();
-        services.AddMediatR(Assembly.GetExecutingAssembly());
+        services.AddMediatR(cfg => {
+            cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+        });
         ProblemDetailsExtensions.AddProblemDetails(services);
         services.AddValidationProblemDetails();
         services.AddSingleton<ProblemDetailsFactory, CustomProblemDetailsFactory>();
@@ -67,8 +68,7 @@ public static class ServiceConfig
         if (environment.IsProduction()) services.Configure<HttpsRedirectionOptions>(options => options.HttpsPort = 443);
     }
 
-    private static void ConfigureOptions(IServiceCollection services, IConfiguration configuration)
-    {
+    private static void ConfigureOptions(IServiceCollection services, IConfiguration configuration) {
         services.AddOptions();
 
         var missingOptions = new List<string>();
@@ -79,8 +79,7 @@ public static class ServiceConfig
         if (missingOptions.Any()) throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
     }
 
-    private static IEnumerable<string> ConfigureOptions<T>(IServiceCollection services, IConfiguration configuration, string key, bool snapshot = false) where T : class, new()
-    {
+    private static IEnumerable<string> ConfigureOptions<T>(IServiceCollection services, IConfiguration configuration, string key, bool snapshot = false) where T : class, new() {
         var configurationSection = configuration.GetSection(key);
         var options = configurationSection.Get<T>();
 
@@ -99,8 +98,7 @@ public static class ServiceConfig
         return missing;
     }
 
-    public static void AddCustomAuth(this IServiceCollection services, IConfiguration configuration)
-    {
+    public static void AddCustomAuth(this IServiceCollection services, IConfiguration configuration) {
         var authSettings = configuration.GetOrDie<Auth0Settings>("auth0");
         services.AddAuthentication(options => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => {
@@ -117,15 +115,13 @@ public static class ServiceConfig
         services.AddAuthorization();
     }
 
-    private static T GetOrDie<T>(this IConfiguration configuration, string key)
-    {
+    private static T GetOrDie<T>(this IConfiguration configuration, string key) {
         var settings = configuration.GetSection(key).Get<T>() ??
             throw new ConfigurationException(key);
         return settings;
     }
 
-    private static Task OnMessageReceived(MessageReceivedContext context)
-    {
+    private static Task OnMessageReceived(MessageReceivedContext context) {
         var accessToken = context.Request.Query["access_token"].FirstOrDefault();
         if (context.HttpContext.Request.Path.StartsWithSegments("/hub") && accessToken.IsNotEmpty())
             context.Token = accessToken;
@@ -133,29 +129,26 @@ public static class ServiceConfig
         return Task.CompletedTask;
     }
 
-    private static Task OnTokenValidated(TokenValidatedContext context)
-    {
-        if (context.SecurityToken is JwtSecurityToken jwtSecurityToken)
-            context.HttpContext.Items["access_token"] = jwtSecurityToken.RawData;
+    private static Task OnTokenValidated(TokenValidatedContext context) {
+        if (context.SecurityToken is JsonWebToken jwtSecurityToken)
+            context.HttpContext.Items["access_token"] = jwtSecurityToken.EncodedToken;
 
         return Task.CompletedTask;
     }
 
-    public static void AddCustomMvc(this IServiceCollection services)
-    {
+    public static void AddCustomMvc(this IServiceCollection services) {
         services.AddControllers(o => {
-                var policy = new AuthorizationPolicyBuilder()
-                    .AddRequirements(
-                        new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
-                    .Build();
-                o.Filters.Add(new AuthorizeFilter(policy));
-                o.Filters.Add(new CustomExceptionFilterAttribute());
-            })
+            var policy = new AuthorizationPolicyBuilder()
+                .AddRequirements(
+                    new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
+                .Build();
+            o.Filters.Add(new AuthorizeFilter(policy));
+            o.Filters.Add(new CustomExceptionFilterAttribute());
+        })
             .AddHybridModelBinder();
     }
 
-    public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration)
-    {
+    public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration) {
         var authSettings = configuration.GetOrDie<Auth0Settings>("auth0");
         services.AddSwaggerGen(config => {
             config.SwaggerDoc("v1", new OpenApiInfo {
@@ -180,8 +173,7 @@ public static class ServiceConfig
         });
     }
 
-    public static void AddCustomDbContext(this IServiceCollection services, IConfiguration configuration)
-    {
+    public static void AddCustomDbContext(this IServiceCollection services, IConfiguration configuration) {
         var connectionString = configuration.GetConnectionString("GaverContext");
         if (connectionString.IsNullOrEmpty()) throw new ConfigurationException("ConnectionStrings:GaverContext");
 
@@ -192,8 +184,7 @@ public static class ServiceConfig
         });
     }
 
-    public static void ScanAssemblies(this IServiceCollection services)
-    {
+    public static void ScanAssemblies(this IServiceCollection services) {
         services.Scan(scan => {
             scan.FromAssemblyOf<ICommonAssembly>()
                 .AddServices();
@@ -203,14 +194,12 @@ public static class ServiceConfig
         });
     }
 
-    private static IImplementationTypeSelector AddMappingProfiles(this IImplementationTypeSelector selector)
-    {
+    private static IImplementationTypeSelector AddMappingProfiles(this IImplementationTypeSelector selector) {
         return selector.AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
     }
 
     private static IImplementationTypeSelector AddServices(
-        this IImplementationTypeSelector implementationTypeSelector)
-    {
+        this IImplementationTypeSelector implementationTypeSelector) {
         return implementationTypeSelector
             .AddClasses(classes =>
                 classes.WithoutAttribute<SingletonServiceAttribute>().Where(c => c.Name.EndsWith("Service")))
@@ -222,8 +211,7 @@ public static class ServiceConfig
             .WithSingletonLifetime();
     }
 
-    public static IServiceCollection AddValidationProblemDetails(this IServiceCollection services)
-    {
+    public static IServiceCollection AddValidationProblemDetails(this IServiceCollection services) {
         return services.Configure<ApiBehaviorOptions>(options => {
             // options.InvalidModelStateResponseFactory = context => {
             //     var problemDetails = new ValidationProblemDetails(context.ModelState) {
@@ -240,8 +228,7 @@ public static class ServiceConfig
     }
 
     public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration,
-        IHostEnvironment hostEnvironment)
-    {
+        IHostEnvironment hostEnvironment) {
         if (hostEnvironment.IsEnvironment("Test")) return;
 
         services.AddHealthChecks()

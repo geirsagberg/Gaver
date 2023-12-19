@@ -9,16 +9,9 @@ using Xunit.Abstractions;
 
 namespace Gaver.Web.Tests.Features.Errors;
 
-public class ModelValidationTests : WebTestBase
-{
-    public ModelValidationTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) :
-        base(webAppFactory, testOutputHelper)
-    {
-    }
-
+public class ModelValidationTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) : WebTestBase(webAppFactory, testOutputHelper) {
     [Fact]
-    public async Task Validation_problems_are_camel_cased()
-    {
+    public async Task Validation_problems_are_camel_cased() {
         RoleConfig.AnonymousRequest = false;
 
         var response = await Client.PostAsJsonAsync("/api/MyList", new AddWishRequest());

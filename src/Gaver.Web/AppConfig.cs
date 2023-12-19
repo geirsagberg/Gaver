@@ -9,10 +9,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Gaver.Web;
 
-public static class AppConfig
-{
-    public static void SetupStaticFiles(this WebApplication app)
-    {
+public static class AppConfig {
+    public static void SetupStaticFiles(this WebApplication app) {
         var cachePeriod = (int) (app.Environment.IsDevelopment()
             ? TimeSpan.FromMinutes(10).TotalSeconds
             : TimeSpan.FromDays(365).TotalSeconds);
@@ -24,8 +22,7 @@ public static class AppConfig
         app.UseStaticFiles(staticFileOptions);
     }
 
-    public static void SetupPipeline(this WebApplication app)
-    {
+    public static void SetupPipeline(this WebApplication app) {
         if (app.Environment.IsProduction()) {
             app.UseHttpsRedirection();
 #if !DEBUG
@@ -52,25 +49,24 @@ public static class AppConfig
             });
         });
 
-        app.UseEndpoints(endpoints => {
-            if (!app.Environment.IsTest())
-                endpoints.MapHealthChecks("/health", new HealthCheckOptions {
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
 
-            endpoints.MapHub<ListHub>("/hub");
-            endpoints.MapDefaultControllerRoute();
-            endpoints.MapControllerRoute("API 404", "api/{*anything}", new {
-                controller = "Error",
-                action = "NotFound"
+        if (!app.Environment.IsTest()) {
+            app.MapHealthChecks("/health", new HealthCheckOptions {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
+        }
+
+        app.MapHub<ListHub>("/hub");
+        app.MapControllers();
+        app.MapControllerRoute("API 404", "api/{*anything}", new {
+            controller = "Error",
+            action = "NotFound"
         });
 
         app.UseSpa(_ => { });
     }
 
-    private static bool IsJsonRequest(HttpContext context)
-    {
+    private static bool IsJsonRequest(HttpContext context) {
         var requestHeaders = context.Request.GetTypedHeaders();
         return requestHeaders.Accept.EmptyIfNull().Any(h => h.MediaType == "application/json") ||
             requestHeaders.ContentType?.MediaType == "application/json";

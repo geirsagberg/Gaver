@@ -6,21 +6,12 @@ using MediatR;
 
 namespace Gaver.Web.Features.Chat;
 
-public class AddMessageHandler : IRequestHandler<AddMessageRequest, ChatMessageDto>
-{
-    private readonly IClientNotifier clientNotifier;
-    private readonly GaverContext context;
-    private readonly IMapperService mapper;
+public class AddMessageHandler(IMapperService mapper, GaverContext context, IClientNotifier clientNotifier) : IRequestHandler<AddMessageRequest, ChatMessageDto> {
+    private readonly IClientNotifier clientNotifier = clientNotifier;
+    private readonly GaverContext context = context;
+    private readonly IMapperService mapper = mapper;
 
-    public AddMessageHandler(IMapperService mapper, GaverContext context, IClientNotifier clientNotifier)
-    {
-        this.mapper = mapper;
-        this.context = context;
-        this.clientNotifier = clientNotifier;
-    }
-
-    public async Task<ChatMessageDto> Handle(AddMessageRequest request, CancellationToken token = default)
-    {
+    public async Task<ChatMessageDto> Handle(AddMessageRequest request, CancellationToken token = default) {
         var userId = request.UserId;
         var chatMessage = new ChatMessage {
             Text = request.Text,

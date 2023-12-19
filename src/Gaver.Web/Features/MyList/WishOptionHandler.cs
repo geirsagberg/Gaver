@@ -6,19 +6,11 @@ using MediatR;
 
 namespace Gaver.Web.Features.MyList;
 
-public class WishOptionHandler : IRequestHandler<AddWishOptionRequest, WishOptionDto>
-{
-    private readonly GaverContext context;
-    private readonly IMapperService mapperService;
+public class WishOptionHandler(GaverContext context, IMapperService mapperService) : IRequestHandler<AddWishOptionRequest, WishOptionDto> {
+    private readonly GaverContext context = context;
+    private readonly IMapperService mapperService = mapperService;
 
-    public WishOptionHandler(GaverContext context, IMapperService mapperService)
-    {
-        this.context = context;
-        this.mapperService = mapperService;
-    }
-
-    public async Task<WishOptionDto> Handle(AddWishOptionRequest request, CancellationToken cancellationToken)
-    {
+    public async Task<WishOptionDto> Handle(AddWishOptionRequest request, CancellationToken cancellationToken) {
         var wishOption = new WishOption {
             Title = request.Title,
             Url = request.Url,

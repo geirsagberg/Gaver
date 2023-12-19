@@ -6,11 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gaver.Web.Features.MyList;
 
-public class MyListController : GaverControllerBase
-{
-    private readonly IMediator mediator;
-
-    public MyListController(IMediator mediator) => this.mediator = mediator;
+public class MyListController(IMediator mediator) : GaverControllerBase {
+    private readonly IMediator mediator = mediator;
 
     [HttpGet]
     public Task<MyListDto> GetMyList() => mediator.Send(new GetMyListRequest());
@@ -37,8 +34,7 @@ public class MyListController : GaverControllerBase
     public Task ResetList(ResetListRequest request) => mediator.Send(request);
 }
 
-public class ResetListRequest : IRequest, IAuthenticatedRequest
-{
+public class ResetListRequest : IRequest, IAuthenticatedRequest {
     [JsonIgnore]
     public int UserId { get; set; }
 

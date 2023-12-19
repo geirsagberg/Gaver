@@ -13,26 +13,16 @@ using EntityFrameworkQueryableExtensions = Microsoft.EntityFrameworkCore.EntityF
 
 namespace Gaver.Web.Features.Users;
 
-public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
+public class UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings,
+    IHttpContextAccessor httpContextAccessor) : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
     IRequestHandler<UpdateUserInfoRequest>,
-    IRequestHandler<GetOrCreateUserRequest, User>
-{
-    private readonly Auth0Settings auth0Settings;
-    private readonly GaverContext context;
-    private readonly IHttpContextAccessor httpContextAccessor;
-    private readonly IMapperService mapper;
+    IRequestHandler<GetOrCreateUserRequest, User> {
+    private readonly Auth0Settings auth0Settings = auth0Settings;
+    private readonly GaverContext context = context;
+    private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
+    private readonly IMapperService mapper = mapper;
 
-    public UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings,
-        IHttpContextAccessor httpContextAccessor)
-    {
-        this.context = context;
-        this.mapper = mapper;
-        this.auth0Settings = auth0Settings;
-        this.httpContextAccessor = httpContextAccessor;
-    }
-
-    public async Task<User> Handle(GetOrCreateUserRequest request, CancellationToken cancellationToken)
-    {
+    public async Task<User> Handle(GetOrCreateUserRequest request, CancellationToken cancellationToken) {
         var user = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(context.Set<User>(),
             u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);
 
@@ -52,8 +42,7 @@ public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
         return user;
     }
 
-    public async Task<CurrentUserDto> Handle(GetUserInfoRequest request, CancellationToken token)
-    {
+    public async Task<CurrentUserDto> Handle(GetUserInfoRequest request, CancellationToken token) {
         var userModel = await context.Users.Where(u => u.Id == request.UserId)
             .ProjectTo<CurrentUserDto>(mapper.MapperConfiguration).SingleOrDefaultAsync(token);
 
@@ -64,8 +53,7 @@ public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
         return userModel;
     }
 
-    public async Task<Unit> Handle(UpdateUserInfoRequest request, CancellationToken cancellationToken)
-    {
+    public async Task Handle(UpdateUserInfoRequest request, CancellationToken cancellationToken) {
         var userInfo = await GetUserInfo(cancellationToken);
 
         var user = await context.GetOrDieAsync<User>(request.UserId);
@@ -76,11 +64,10 @@ public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+
     }
 
-    private async Task<UserInfo> GetUserInfo(CancellationToken token)
-    {
+    private async Task<UserInfo> GetUserInfo(CancellationToken token) {
         var httpContextItems = httpContextAccessor.HttpContext?.Items ?? throw new DeveloperException("No HttpContext!");
         if (!httpContextItems.ContainsKey("access_token")) {
             throw new HttpException(HttpStatusCode.InternalServerError, "Access token missing");
@@ -89,19 +76,17 @@ public class UserHandler : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
         var accessToken = httpContextItems["access_token"]?.ToString() ?? throw new FriendlyException("access_token not found");
         var userInfo = await $"https://{auth0Settings.Domain}/userinfo"
             .WithOAuthBearerToken(accessToken)
-            .GetJsonAsync<UserInfo>(token);
+            .GetJsonAsync<UserInfo>();
         return userInfo;
     }
 
-    public async Task<int?> GetUserIdOrNullAsync(string providerId)
-    {
+    public async Task<int?> GetUserIdOrNullAsync(string providerId) {
         var userId = await context.Users.Where(u => u.PrimaryIdentityId == providerId).Select(u => u.Id)
             .SingleOrDefaultAsync();
         return userId == 0 ? (int?) null : userId;
     }
 
-    public class UserInfo
-    {
+    public class UserInfo {
         public string? Email { get; set; }
         public string? Picture { get; set; }
         public string? Nickname { get; set; }

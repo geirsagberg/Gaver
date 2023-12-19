@@ -10,21 +10,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Invitations;
 
-public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, InvitationStatusDto>,
-    IRequestHandler<AcceptInvitationRequest, UserDto>
-{
-    private readonly GaverContext context;
-    private readonly IMapperService mapperService;
-
-    public InvitationHandler(GaverContext context, IMapperService mapperService)
-    {
-        this.context = context;
-        this.mapperService = mapperService;
-    }
+public class InvitationHandler(GaverContext context, IMapperService mapperService) : IRequestHandler<GetInvitationStatusRequest, InvitationStatusDto>,
+    IRequestHandler<AcceptInvitationRequest, UserDto> {
+    private readonly GaverContext context = context;
+    private readonly IMapperService mapperService = mapperService;
 
     public async Task<UserDto> Handle(AcceptInvitationRequest request,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         var userId = request.UserId;
         var invitationToken = await CheckInvitationStatus(request.Token, userId);
 
@@ -56,8 +48,7 @@ public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, Inv
     }
 
     public async Task<InvitationStatusDto> Handle(GetInvitationStatusRequest request,
-        CancellationToken cancellationToken = default)
-    {
+        CancellationToken cancellationToken = default) {
         try {
             await CheckInvitationStatus(request.Token, request.UserId);
         } catch (FriendlyException e) {
@@ -75,8 +66,7 @@ public class InvitationHandler : IRequestHandler<GetInvitationStatusRequest, Inv
         };
     }
 
-    private async Task<InvitationToken> CheckInvitationStatus(Guid token, int userId)
-    {
+    private async Task<InvitationToken> CheckInvitationStatus(Guid token, int userId) {
         var invitationToken = await context.Set<InvitationToken>()
             .Include(t => t.WishList)
             .SingleOrDefaultAsync(t => t.Token == token);

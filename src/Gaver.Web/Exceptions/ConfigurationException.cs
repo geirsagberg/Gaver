@@ -1,6 +1,4 @@
 namespace Gaver.Web.Exceptions;
 
-internal class ConfigurationException : Exception
-{
-    public ConfigurationException(string configurationKey) : base("Configuration missing: " + configurationKey) {}
+internal class ConfigurationException(string configurationKey) : Exception("Configuration missing: " + configurationKey) {
 }
