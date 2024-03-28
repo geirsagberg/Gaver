@@ -1,8 +1,7 @@
-import React, { FC } from 'react'
 import { useActions, useAppState } from '~/overmind'
 import WishDetailsDialog from './WishDetailsDialog'
 
-const AddWishDialog: FC = () => {
+const AddWishDialog = () => {
   const {
     myList: { newWish },
   } = useAppState()
@@ -10,12 +9,7 @@ const AddWishDialog: FC = () => {
     myList: { addWish, cancelAddingWish, updateNewWish },
   } = useActions()
   return newWish ? (
-    <WishDetailsDialog
-      wish={newWish}
-      onCancel={cancelAddingWish}
-      onSave={addWish}
-      updateWish={updateNewWish}
-    />
+    <WishDetailsDialog wish={newWish} onCancel={cancelAddingWish} onSave={addWish} updateWish={updateNewWish} />
   ) : null
 }
 

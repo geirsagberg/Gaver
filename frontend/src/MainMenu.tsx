@@ -1,13 +1,12 @@
 import { Divider, Icon, Link, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { map, some } from 'lodash-es'
-import { FC } from 'react'
 import Expander from './components/Expander'
 import { useActions, useAppState, useEffects } from './overmind'
 import { darkTheme } from './theme'
 import { useFeatures } from './utils/appSettings'
 
-const SharedListsMenuItem: FC = () => {
+const SharedListsMenuItem = () => {
   const {
     routing: { currentSharedListId },
     friends: { users },
@@ -136,7 +135,7 @@ export const MyGroupsMenuItem = () => {
   )
 }
 
-export const MainMenu: FC = () => {
+export const MainMenu = () => {
   const {
     app: { isMenuShowing },
   } = useAppState()

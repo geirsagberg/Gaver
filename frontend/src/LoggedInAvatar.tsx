@@ -1,15 +1,14 @@
 import { Icon, IconButton, Menu, MenuItem, Tooltip } from '@mui/material'
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
 import { useActions, useAppState } from './overmind'
 
-export const LoggedInAvatar: FC = () => {
+export const LoggedInAvatar = () => {
   const { auth } = useAppState()
   const {
     auth: { logOut },
   } = useActions()
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement>()
-  const showProfileMenu = (event: React.MouseEvent<HTMLElement>) =>
-    setMenuAnchorEl(event.currentTarget)
+  const showProfileMenu = (event: React.MouseEvent<HTMLElement>) => setMenuAnchorEl(event.currentTarget)
   const hideProfileMenu = () => setMenuAnchorEl(undefined)
   return auth.isLoggedIn && auth.user ? (
     <>
@@ -19,12 +18,9 @@ export const LoggedInAvatar: FC = () => {
         </IconButton>
       </Tooltip>
 
-      <Menu
-        anchorEl={menuAnchorEl}
-        open={!!menuAnchorEl}
-        onClose={hideProfileMenu}>
+      <Menu anchorEl={menuAnchorEl} open={!!menuAnchorEl} onClose={hideProfileMenu}>
         <MenuItem onClick={logOut}>Logg ut</MenuItem>
       </Menu>
     </>
-  ) : null;
+  ) : null
 }

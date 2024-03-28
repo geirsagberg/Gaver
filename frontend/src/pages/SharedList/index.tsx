@@ -1,6 +1,6 @@
 import { BottomNavigation, BottomNavigationAction, Box, Icon, Paper, Typography } from '@mui/material'
 import { map } from 'lodash-es'
-import { FC, useState } from 'react'
+import { useState } from 'react'
 import Chat from '~/components/Chat'
 import Loading from '~/components/Loading'
 import { useAppState } from '~/overmind'
@@ -8,7 +8,7 @@ import { pageWidth } from '~/theme'
 import { useNavContext } from '~/utils/hooks'
 import SharedWishListItem from './SharedWishListItem'
 
-const SharedListPage: FC = () => {
+const SharedListPage = () => {
   const { currentSharedOrderedWishes, currentSharedListOwner } = useAppState()
   useNavContext(
     {

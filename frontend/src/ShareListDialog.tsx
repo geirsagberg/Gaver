@@ -8,11 +8,11 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material'
-import { FC, useState } from 'react'
+import { useState } from 'react'
 import { useActions, useAppState } from './overmind'
 import { isEmailValid } from './utils/validation'
 
-export const ShareListDialog: FC = () => {
+export const ShareListDialog = () => {
   const {
     myList: { isSharingList, shareEmails },
     app: { isSavingOrLoading },

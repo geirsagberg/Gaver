@@ -1,11 +1,10 @@
 import { Button, colors, Typography } from '@mui/material'
 import classNames from 'classnames'
-import { FC } from 'react'
 import { Center } from '~/components'
 import Loading from '~/components/Loading'
 import { useActions, useAppState } from '~/overmind'
 
-const LoginPage: FC = () => {
+const LoginPage = () => {
   const {
     auth: { isLoggingIn },
   } = useAppState()

@@ -1,7 +1,6 @@
 import { Box, Button, Icon, IconButton, Paper } from '@mui/material'
 import Color from 'color'
 import { map, size } from 'lodash-es'
-import { FC } from 'react'
 import Expander from '~/components/Expander'
 import { useActions, useAppState } from '~/overmind'
 import { UserGroup } from '~/overmind/userGroups/state'
@@ -44,7 +43,7 @@ const GroupItem = ({ value }: { value: UserGroup }) => {
   )
 }
 
-const AddGroupButton: FC = () => {
+const AddGroupButton = () => {
   const {
     userGroups: { startAddingGroup },
   } = useActions()

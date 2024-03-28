@@ -1,10 +1,9 @@
 import { Avatar, Button, Typography } from '@mui/material'
-import React, { FC } from 'react'
 import { Center } from '~/components'
 import Loading from '~/components/Loading'
 import { useActions, useAppState } from '~/overmind'
 
-const AcceptInvitationPage: FC = () => {
+const AcceptInvitationPage = () => {
   const { invitations } = useAppState()
   const {
     invitations: { acceptInvitation },

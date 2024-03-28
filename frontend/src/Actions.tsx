@@ -1,9 +1,8 @@
 import { Icon, IconButton } from '@mui/material'
-import React, { FC } from 'react'
 import { useOvermind } from './overmind'
 
 // TODO: Move to NavContext
-export const Actions: FC = () => {
+export const Actions = () => {
   const {
     state: {
       routing: { currentPage },
@@ -16,20 +15,24 @@ export const Actions: FC = () => {
   } = useOvermind()
   switch (currentPage) {
     case 'myList':
-      return <>
-        <IconButton color="inherit" onClick={toggleDeleting} size="large">
-          <Icon>{isDeleting ? 'close' : 'delete'}</Icon>
-        </IconButton>
-        <IconButton color="inherit" onClick={startSharingList} size="large">
-          <Icon>share</Icon>
-        </IconButton>
-      </>;
+      return (
+        <>
+          <IconButton color="inherit" onClick={toggleDeleting} size="large">
+            <Icon>{isDeleting ? 'close' : 'delete'}</Icon>
+          </IconButton>
+          <IconButton color="inherit" onClick={startSharingList} size="large">
+            <Icon>share</Icon>
+          </IconButton>
+        </>
+      )
     case 'sharedList':
-      return <>
-        <IconButton color="inherit" onClick={toggleChat} size="large">
-          <Icon>chat</Icon>
-        </IconButton>
-      </>;
+      return (
+        <>
+          <IconButton color="inherit" onClick={toggleChat} size="large">
+            <Icon>chat</Icon>
+          </IconButton>
+        </>
+      )
   }
   return null
 }

@@ -1,7 +1,6 @@
 import { Box, Button } from '@mui/material'
 import Color from 'color'
 import { map, size } from 'lodash-es'
-import { FC } from 'react'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import Loading from '~/components/Loading'
 import { useActions, useAppState } from '~/overmind'
@@ -11,7 +10,7 @@ import AddWishDialog from './WishDetails/AddWishDialog'
 import EditWishDialog from './WishDetails/EditWishDialog'
 import WishListItem from './WishListItem'
 
-const AddWishButton: FC = () => {
+const AddWishButton = () => {
   const {
     myList: { startAddingWish },
   } = useActions()
@@ -30,7 +29,7 @@ const AddWishButton: FC = () => {
   )
 }
 
-const MyListPage: FC = () => {
+const MyListPage = () => {
   const {
     myList: { orderedWishes, wishesLoaded },
   } = useAppState()

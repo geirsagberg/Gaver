@@ -9,10 +9,10 @@ import {
   Switch,
   TextField,
 } from '@mui/material'
-import React, { FC, useState } from 'react'
+import { useState } from 'react'
 import { useActions, useAppState } from './overmind'
 
-const FeedbackDialog: FC = () => {
+const FeedbackDialog = () => {
   const [message, setMessage] = useState('')
   const [anonymous, setAnonymous] = useState(false)
   const {
@@ -30,8 +30,7 @@ const FeedbackDialog: FC = () => {
       <DialogTitle>Gi tilbakemelding</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Hva liker du med appen? Hva kan bli bedre? Skjedde det en feil eller
-          noe du ikke forventet?
+          Hva liker du med appen? Hva kan bli bedre? Skjedde det en feil eller noe du ikke forventet?
         </DialogContentText>
         <TextField
           autoFocus
@@ -44,12 +43,7 @@ const FeedbackDialog: FC = () => {
         <FormControlLabel
           disabled={isSavingOrLoading}
           style={{ margin: '1rem 0' }}
-          control={
-            <Switch
-              checked={anonymous}
-              onChange={(e) => setAnonymous(e.target.checked)}
-            />
-          }
+          control={<Switch checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} />}
           label="Send inn anonymt"
         />
         <DialogActions>
