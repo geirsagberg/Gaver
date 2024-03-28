@@ -37,9 +37,8 @@ try {
     app.SetupPipeline();
 
     app.Run();
-} catch (Exception exception) {
-    if (!exception.GetType().Name.EndsWith("StopTheHostException"))
-        Log.Fatal(exception, "Unhandled exception");
+} catch (Exception exception) when (exception is not HostAbortedException) {
+    Log.Fatal(exception, "Unhandled exception");
 } finally {
     Log.Information("Shut down {ProcessId} complete", Environment.ProcessId);
     Log.CloseAndFlush();

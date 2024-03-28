@@ -29,7 +29,7 @@ public class WishMailer(IMailSender mailSender, IHttpContextAccessor httpContext
 
             var url = Url.Combine(request.Scheme + "://" + request.Host, "invitations", token.Token.ToString());
             var mail = new MailModel {
-                To = new[] { email },
+                To = [email],
                 From = "noreply@sagberg.net",
                 Subject = $"{userName} har delt en ønskeliste med deg",
                 Content = $@"<h1>{userName} har delt en ønskeliste med deg!</h1>

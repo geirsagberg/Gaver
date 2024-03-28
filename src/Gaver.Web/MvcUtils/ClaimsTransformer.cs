@@ -8,7 +8,6 @@ namespace Gaver.Web.MvcUtils;
 
 [Service]
 public class ClaimsTransformer(IMediator mediator) : IClaimsTransformation {
-    private readonly IMediator mediator = mediator;
 
     public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal) {
         var providerId = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -24,9 +23,9 @@ public class ClaimsTransformer(IMediator mediator) : IClaimsTransformation {
         transformed.AddIdentities(principal.Identities);
 
         var user = await mediator.Send(new GetOrCreateUserRequest(providerId));
-        var gaverIdentity = new ClaimsIdentity(new[] {
+        var gaverIdentity = new ClaimsIdentity([
             new Claim(GaverClaimTypes.GaverUserId, user.Id.ToString(), ClaimValueTypes.Integer32)
-        });
+        ]);
         transformed.AddIdentity(gaverIdentity);
         return transformed;
     }

@@ -4,10 +4,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Gaver.Web.Filters;
 
-public class SecurityRequirementsOperationFilter : IOperationFilter
-{
-    public void Apply(OpenApiOperation operation, OperationFilterContext context)
-    {
+public class SecurityRequirementsOperationFilter : IOperationFilter {
+    private static readonly string[] scopes = ["openid profile email"];
+
+    public void Apply(OpenApiOperation operation, OperationFilterContext context) {
         var filterPipeline = context.ApiDescription.ActionDescriptor.FilterDescriptors;
         var requireAuthorization = filterPipeline.Select(filterInfo => filterInfo.Filter)
             .Any(filter => filter is AuthorizeFilter);
@@ -16,13 +16,11 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
 
         if (!requireAuthorization || allowAnonymous) return;
 
-        if (operation.Parameters == null)
-            operation.Parameters = new List<OpenApiParameter>();
+        operation.Parameters ??= [];
+        operation.Security ??= [];
 
-        if (operation.Security == null) operation.Security = new List<OpenApiSecurityRequirement>();
-
-        operation.Responses.Add("401", new OpenApiResponse {Description = "Unauthorized"});
-        operation.Responses.Add("403", new OpenApiResponse {Description = "Forbidden"});
+        operation.Responses.Add("401", new OpenApiResponse { Description = "Unauthorized" });
+        operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
 
         operation.Security.Add(new OpenApiSecurityRequirement {
             {
@@ -32,7 +30,7 @@ public class SecurityRequirementsOperationFilter : IOperationFilter
                         Type = ReferenceType.SecurityScheme
                     }
                 },
-                new[] {"openid profile email"}
+                scopes
             }
         });
     }

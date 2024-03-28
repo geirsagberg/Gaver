@@ -10,18 +10,15 @@ using Xunit;
 
 namespace Gaver.Web.Tests.Features.UserGroups;
 
-public class UserGroupMappingProfileTests : TestBase<MapperService>
-{
-    public UserGroupMappingProfileTests()
-    {
-        Container.Register<IEnumerable<Profile>>(factory => new Profile[] {
+public class UserGroupMappingProfileTests : TestBase<MapperService> {
+    public UserGroupMappingProfileTests() {
+        Container.Register<IEnumerable<Profile>>(factory => [
             factory.Create<UserGroupMappingProfile>()
-        });
+        ]);
     }
 
     [Fact]
-    public void UserGroup_is_mapped_correctly()
-    {
+    public void UserGroup_is_mapped_correctly() {
         var userGroup = new UserGroup {
             Id = 1,
             Name = "Familien",

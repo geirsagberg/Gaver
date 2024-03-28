@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-using Gaver.Web.Contracts;
 using Gaver.Web.Features.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,11 +30,4 @@ public class MyListController(IMediator mediator) : GaverControllerBase {
 
     [HttpPost("Reset")]
     public Task ResetList(ResetListRequest request) => mediator.Send(request);
-}
-
-public class ResetListRequest : IRequest, IAuthenticatedRequest {
-    [JsonIgnore]
-    public int UserId { get; set; }
-
-    public HashSet<int> KeepWishes { get; set; } = new();
 }

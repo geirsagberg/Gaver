@@ -33,14 +33,14 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
             Url = request.Url,
             WishList = wishList
         };
-        _ = context.Add(wish);
-        _ = await context.SaveChangesAsync(cancellationToken);
+        context.Add(wish);
+        await context.SaveChangesAsync(cancellationToken);
         wishList.WishesOrder = wishList.WishesOrder.IsNullOrEmpty()
             ? await context.Wishes.Where(w => w.WishList == wishList).Select(w => w.Id)
                 .ToArrayAsync(cancellationToken)
-            : wishList.WishesOrder.Concat(new[] { wish.Id }).ToArray();
+            : [.. wishList.WishesOrder, wish.Id];
 
-        _ = await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishList.Id);
         return mapper.Map<WishDto>(wish);
     }
@@ -51,12 +51,12 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
 
         var wishListId = await context.GetUserWishListId(request.UserId);
 
-        _ = context.Remove(wish);
-        _ = await context.SaveChangesAsync(cancellationToken);
+        context.Remove(wish);
+        await context.SaveChangesAsync(cancellationToken);
         wish.WishList!.WishesOrder = wish.WishList.WishesOrder.IsNullOrEmpty()
             ? wish.WishList.Wishes.Select(w => w.Id).ToArray()
-            : wish.WishList.WishesOrder.Except(new[] { request.WishId }).ToArray();
-        _ = await context.SaveChangesAsync(cancellationToken);
+            : wish.WishList.WishesOrder.Except([request.WishId]).ToArray();
+        await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishListId);
         return new DeleteWishResponse {
             WishesOrder = wish.WishList.WishesOrder
@@ -85,7 +85,7 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
         }
 
         wishList.WishesOrder = request.WishesOrder;
-        _ = await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishList.Id);
 
     }
@@ -106,7 +106,7 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
             wish.Url = request.Url;
         }
 
-        _ = await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wish.WishListId);
 
     }
@@ -118,7 +118,7 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
         wishList.WishesOrder = wishList.WishesOrder.IsNullOrEmpty()
             ? wishList.Wishes.Select(w => w.Id).ToArray()
             : wishList.WishesOrder.Intersect(request.KeepWishes).ToArray();
-        _ = await context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishList.Id);
 
         var mail = new MailModel {
