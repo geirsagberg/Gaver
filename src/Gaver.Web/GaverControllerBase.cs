@@ -4,6 +4,4 @@ namespace Gaver.Web;
 
 [Route("api/[controller]")]
 [ApiController]
-public abstract class GaverControllerBase : Controller
-{
-}
+public abstract class GaverControllerBase : Controller;

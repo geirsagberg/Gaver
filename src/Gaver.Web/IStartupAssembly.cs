@@ -1,5 +1,3 @@
 namespace Gaver.Web;
 
-public interface IStartupAssembly
-{
-}
+public interface IStartupAssembly;

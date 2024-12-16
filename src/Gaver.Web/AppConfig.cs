@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 namespace Gaver.Web;
 
 public static class AppConfig {
-    public static void SetupStaticFiles(this WebApplication app) {
+    private static void SetupStaticFiles(this WebApplication app) {
         var cachePeriod = (int) (app.Environment.IsDevelopment()
             ? TimeSpan.FromMinutes(10).TotalSeconds
             : TimeSpan.FromDays(365).TotalSeconds);
@@ -69,6 +69,6 @@ public static class AppConfig {
     private static bool IsJsonRequest(HttpContext context) {
         var requestHeaders = context.Request.GetTypedHeaders();
         return requestHeaders.Accept.EmptyIfNull().Any(h => h.MediaType == "application/json") ||
-            requestHeaders.ContentType?.MediaType == "application/json";
+               requestHeaders.ContentType?.MediaType == "application/json";
     }
 }

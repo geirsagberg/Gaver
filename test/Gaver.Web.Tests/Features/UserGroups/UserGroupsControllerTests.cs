@@ -10,6 +10,7 @@ using Gaver.Web.Tests.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
+using static System.Net.Http.Json.HttpClientJsonExtensions;
 
 namespace Gaver.Web.Tests.Features.UserGroups;
 

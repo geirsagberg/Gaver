@@ -19,31 +19,31 @@
     <RazorCompileOnBuild>false</RazorCompileOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Gaver.Common\Gaver.Common.csproj" />
-    <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj" />
+    <ProjectReference Include="..\Gaver.Common\Gaver.Common.csproj"/>
+    <ProjectReference Include="..\Gaver.Data\Gaver.Data.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
-    <PackageReference Include="Flurl.Http" Version="4.0.0" />
-    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1" />
-    <PackageReference Include="HybridModelBinding" Version="0.18.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2"/>
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1"/>
+    <PackageReference Include="Flurl.Http" Version="4.0.2"/>
+    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="6.5.1"/>
+    <PackageReference Include="HybridModelBinding" Version="0.18.0"/>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="9.0.0"/>
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.0.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="3.1.1" />
-    <PackageReference Include="Scrutor" Version="4.2.2" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="MediatR" Version="12.2.0" />
-    <PackageReference Include="Serilog" Version="3.1.1" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="4.0.0"/>
+    <PackageReference Include="Scrutor" Version="5.0.2"/>
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0"/>
+    <PackageReference Include="MediatR" Version="12.4.1"/>
+    <PackageReference Include="Serilog" Version="4.2.0"/>
+    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0"/>
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.json">
@@ -51,21 +51,24 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Watch Include="../../webpack.config.ts" />
+    <Watch Include="../../webpack.config.ts"/>
   </ItemGroup>
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\demo-files\demo.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\demo-files\demo.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\demo.html" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\fonts\icomoon.eot" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\fonts\icomoon.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\fonts\icomoon.ttf" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\fonts\icomoon.woff" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\Read Me.txt" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\selection.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\icomoon\style.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\demo-files\demo.css"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\demo-files\demo.js"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\demo.html"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\fonts\icomoon.eot"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\fonts\icomoon.svg"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\fonts\icomoon.ttf"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\fonts\icomoon.woff"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\Read Me.txt"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\selection.json"/>
+    <_ContentIncludedByDefault Remove="wwwroot\icomoon\style.css"/>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot" />
+    <Folder Include="wwwroot"/>
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Gaver.Web.Tests"/>
   </ItemGroup>
 </Project>

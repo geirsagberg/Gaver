@@ -7,12 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.TestUtils;
 
-public abstract class DbTestBase<TSut> : DbTestBase where TSut : class
-{
+public abstract class DbTestBase<TSut> : DbTestBase where TSut : class {
     private readonly Lazy<TSut> testSubjectLazy;
 
-    protected DbTestBase()
-    {
+    protected DbTestBase() {
         testSubjectLazy = new Lazy<TSut>(() => Container.Create<TSut>());
         Container.RegisterAssembly(typeof(TSut).Assembly, (service, implementation) => service == typeof(Profile));
     }
@@ -20,15 +18,13 @@ public abstract class DbTestBase<TSut> : DbTestBase where TSut : class
     protected TSut TestSubject => testSubjectLazy.Value;
 }
 
-public abstract class DbTestBase : TestBase, IDisposable
-{
+public abstract class DbTestBase : TestBase, IDisposable {
     private readonly DbConnection connection;
 
-    protected DbTestBase()
-    {
+    protected DbTestBase() {
         connection = DbUtils.CreateInMemoryDbConnection();
         var options = new DbContextOptionsBuilder<GaverContext>()
-            .UseSqlite(DbUtils.CreateInMemoryDbConnection())
+            .UseSqlite(connection)
             .Options;
         Container.RegisterInstance(options);
         Container.Register<GaverContext>(new PerContainerLifetime());
@@ -38,8 +34,7 @@ public abstract class DbTestBase : TestBase, IDisposable
 
     protected GaverContext Context => Get<GaverContext>();
 
-    public void Dispose()
-    {
+    public void Dispose() {
         GC.SuppressFinalize(this);
         connection.Dispose();
     }

@@ -2,6 +2,7 @@ using AutoMapper.QueryableExtensions;
 using Flurl;
 using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
+using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
@@ -46,7 +47,7 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
     }
 
     public async Task<DeleteWishResponse> Handle(DeleteWishRequest request, CancellationToken cancellationToken) {
-        var wish = await context.Set<Wish>().Include(w => w.WishList)
+        var wish = await context.Set<Wish>().Include(w => w.WishList).ThenInclude(wishList => wishList!.Wishes)
             .SingleAsync(w => w.Id == request.WishId, cancellationToken);
 
         var wishListId = await context.GetUserWishListId(request.UserId);

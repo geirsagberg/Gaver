@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using AutoMapper;
 using Gaver.Common;
@@ -43,7 +42,7 @@ public static class ServiceConfig {
 
         services.AddCustomMvc();
         services.AddCustomSwagger(config);
-        services.AddCustomDbContext(config);
+        services.AddCustomDbContext(config, environment);
         services.AddCustomHealthChecks(config, environment);
         services.AddFeatureManagement();
         services.AddAzureAppConfiguration();
@@ -65,7 +64,9 @@ public static class ServiceConfig {
 
         ConfigureOptions(services, config);
 
-        if (environment.IsProduction()) services.Configure<HttpsRedirectionOptions>(options => options.HttpsPort = 443);
+        if (environment.IsProduction()) {
+            services.Configure<HttpsRedirectionOptions>(options => options.HttpsPort = 443);
+        }
     }
 
     private static void ConfigureOptions(IServiceCollection services, IConfiguration configuration) {
@@ -76,7 +77,9 @@ public static class ServiceConfig {
         missingOptions.AddRange(ConfigureOptions<MailOptions>(services, configuration, "mail"));
         missingOptions.AddRange(ConfigureOptions<Auth0Settings>(services, configuration, "auth0"));
 
-        if (missingOptions.Any()) throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
+        if (missingOptions.Any()) {
+            throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
+        }
     }
 
     private static IEnumerable<string> ConfigureOptions<T>(IServiceCollection services, IConfiguration configuration, string key, bool snapshot = false) where T : class, new() {
@@ -86,9 +89,11 @@ public static class ServiceConfig {
         services.Configure<T>(configurationSection);
 
         if (snapshot) // Enable injection of updated strongly typed options
+        {
             services.AddScoped(provider => provider.GetRequiredService<IOptionsSnapshot<T>>().Value);
-        else
+        } else {
             services.AddSingleton(provider => provider.GetRequiredService<IOptions<T>>().Value);
+        }
 
         var missing = typeof(T)
             .GetProperties()
@@ -98,7 +103,7 @@ public static class ServiceConfig {
         return missing;
     }
 
-    public static void AddCustomAuth(this IServiceCollection services, IConfiguration configuration) {
+    private static void AddCustomAuth(this IServiceCollection services, IConfiguration configuration) {
         var authSettings = configuration.GetOrDie<Auth0Settings>("auth0");
         services.AddAuthentication(options => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options => {
@@ -117,38 +122,40 @@ public static class ServiceConfig {
 
     private static T GetOrDie<T>(this IConfiguration configuration, string key) {
         var settings = configuration.GetSection(key).Get<T>() ??
-            throw new ConfigurationException(key);
+                       throw new ConfigurationException(key);
         return settings;
     }
 
     private static Task OnMessageReceived(MessageReceivedContext context) {
         var accessToken = context.Request.Query["access_token"].FirstOrDefault();
-        if (context.HttpContext.Request.Path.StartsWithSegments("/hub") && accessToken.IsNotEmpty())
+        if (context.HttpContext.Request.Path.StartsWithSegments("/hub") && accessToken.IsNotEmpty()) {
             context.Token = accessToken;
+        }
 
         return Task.CompletedTask;
     }
 
     private static Task OnTokenValidated(TokenValidatedContext context) {
-        if (context.SecurityToken is JsonWebToken jwtSecurityToken)
+        if (context.SecurityToken is JsonWebToken jwtSecurityToken) {
             context.HttpContext.Items["access_token"] = jwtSecurityToken.EncodedToken;
+        }
 
         return Task.CompletedTask;
     }
 
-    public static void AddCustomMvc(this IServiceCollection services) {
+    private static void AddCustomMvc(this IServiceCollection services) {
         services.AddControllers(o => {
-            var policy = new AuthorizationPolicyBuilder()
-                .AddRequirements(
-                    new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
-                .Build();
-            o.Filters.Add(new AuthorizeFilter(policy));
-            o.Filters.Add(new CustomExceptionFilterAttribute());
-        })
+                var policy = new AuthorizationPolicyBuilder()
+                    .AddRequirements(
+                        new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
+                    .Build();
+                o.Filters.Add(new AuthorizeFilter(policy));
+                o.Filters.Add(new CustomExceptionFilterAttribute());
+            })
             .AddHybridModelBinder();
     }
 
-    public static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration) {
+    private static void AddCustomSwagger(this IServiceCollection services, IConfiguration configuration) {
         var authSettings = configuration.GetOrDie<Auth0Settings>("auth0");
         services.AddSwaggerGen(config => {
             config.SwaggerDoc("v1", new OpenApiInfo {
@@ -173,18 +180,22 @@ public static class ServiceConfig {
         });
     }
 
-    public static void AddCustomDbContext(this IServiceCollection services, IConfiguration configuration) {
+    private static void AddCustomDbContext(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment) {
         var connectionString = configuration.GetConnectionString("GaverContext");
-        if (connectionString.IsNullOrEmpty()) throw new ConfigurationException("ConnectionStrings:GaverContext");
+        if (connectionString.IsNullOrEmpty()) {
+            throw new ConfigurationException("ConnectionStrings:GaverContext");
+        }
 
-        services.AddDbContext<GaverContext>(options => {
-            options.UseNpgsql(connectionString, b => b
-                .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
-                .SetPostgresVersion(11, 0));
-        });
+        if (!environment.IsEnvironment("Test")) {
+            services.AddDbContext<GaverContext>(options => {
+                options.UseNpgsql(connectionString, b => b
+                    .MigrationsAssembly(Assembly.GetExecutingAssembly().FullName)
+                    .SetPostgresVersion(11, 0));
+            });
+        }
     }
 
-    public static void ScanAssemblies(this IServiceCollection services) {
+    private static void ScanAssemblies(this IServiceCollection services) {
         services.Scan(scan => {
             scan.FromAssemblyOf<ICommonAssembly>()
                 .AddServices();
@@ -194,9 +205,9 @@ public static class ServiceConfig {
         });
     }
 
-    private static IImplementationTypeSelector AddMappingProfiles(this IImplementationTypeSelector selector) {
-        return selector.AddClasses(classes => classes.AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
-    }
+    private static IImplementationTypeSelector AddMappingProfiles(this IImplementationTypeSelector selector) =>
+        selector.AddClasses(classes => classes
+            .AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
 
     private static IImplementationTypeSelector AddServices(
         this IImplementationTypeSelector implementationTypeSelector) {
@@ -211,7 +222,7 @@ public static class ServiceConfig {
             .WithSingletonLifetime();
     }
 
-    public static IServiceCollection AddValidationProblemDetails(this IServiceCollection services) {
+    private static IServiceCollection AddValidationProblemDetails(this IServiceCollection services) {
         return services.Configure<ApiBehaviorOptions>(options => {
             // options.InvalidModelStateResponseFactory = context => {
             //     var problemDetails = new ValidationProblemDetails(context.ModelState) {
@@ -227,9 +238,11 @@ public static class ServiceConfig {
         });
     }
 
-    public static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration,
+    private static void AddCustomHealthChecks(this IServiceCollection services, IConfiguration configuration,
         IHostEnvironment hostEnvironment) {
-        if (hostEnvironment.IsEnvironment("Test")) return;
+        if (hostEnvironment.IsEnvironment("Test")) {
+            return;
+        }
 
         services.AddHealthChecks()
             .AddNpgSql(configuration.GetConnectionString("GaverContext") ?? throw new ConfigurationException("ConnectionStrings:GaverContext"));

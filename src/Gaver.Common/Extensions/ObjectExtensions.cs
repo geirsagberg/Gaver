@@ -1,4 +1,4 @@
-namespace Gaver.Data;
+namespace Gaver.Common.Extensions;
 
 public static class ObjectExtensions
 {

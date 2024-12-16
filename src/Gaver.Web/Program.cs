@@ -1,4 +1,5 @@
 using Gaver.Common.Contracts;
+using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Web;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +18,9 @@ try {
         .WriteTo.Console()
         .ReadFrom.Configuration(context.Configuration));
 
-    if (builder.Configuration.GetConnectionString("AppConfig") is { } connectionString && connectionString.IsNotEmpty())
+    if (builder.Configuration.GetConnectionString("AppConfig") is { } connectionString && connectionString.IsNotEmpty()) {
         builder.Configuration.AddAzureAppConfiguration(connectionString);
+    }
 
     builder.ConfigureServices();
 
@@ -26,13 +28,15 @@ try {
 
     app.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
-    using (var scope = app.Services.CreateScope()) {
+    if (!app.Environment.IsEnvironment("Test")) {
+        using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<GaverContext>();
         context.Database.Migrate();
     }
 
-    if (app.Configuration.GetConnectionString("AppConfig").IsNotEmpty())
+    if (app.Configuration.GetConnectionString("AppConfig").IsNotEmpty()) {
         app.UseAzureAppConfiguration();
+    }
 
     app.SetupPipeline();
 

@@ -6,26 +6,26 @@
     <PreserveCompilationReferences>true</PreserveCompilationReferences>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Gaver.Web\Gaver.Web.csproj" />
-    <ProjectReference Include="..\Gaver.TestUtils\Gaver.TestUtils.csproj" />
+    <ProjectReference Include="..\..\src\Gaver.Web\Gaver.Web.csproj"/>
+    <ProjectReference Include="..\Gaver.TestUtils\Gaver.TestUtils.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCore.Testing.Authentication.ClaimInjector" Version="0.2.64" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="Serilog.Sinks.XUnit" Version="3.0.5" />
-    <PackageReference Include="xunit" Version="2.6.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.5">
+    <PackageReference Include="AspNetCore.Testing.Authentication.ClaimInjector" Version="0.2.64"/>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.0"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
+    <PackageReference Include="FluentAssertions" Version="7.0.0"/>
+    <PackageReference Include="Serilog.Sinks.XUnit" Version="3.0.19"/>
+    <PackageReference Include="xunit" Version="2.9.2"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <_ContentIncludedByDefault Remove="Properties\launchSettings.json" />
+    <_ContentIncludedByDefault Remove="Properties\launchSettings.json"/>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\src\Gaver.Web\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
+    <Compile Include="..\..\src\Gaver.Web\GlobalSuppressions.cs" Link="GlobalSuppressions.cs"/>
   </ItemGroup>
 </Project>

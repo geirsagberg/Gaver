@@ -7,17 +7,15 @@ using Xunit;
 
 namespace Gaver.Web.Tests.Features.Chat;
 
-public class AddMessageTests : DbTestBase<AddMessageHandler>
-{
+public class AddMessageTests : DbTestBase<AddMessageHandler> {
     [Fact]
-    public async Task Can_add_chatMessage()
-    {
+    public async Task Can_add_chatMessage() {
         var user = new User {
             Name = "Userman",
             PrimaryIdentityId = "1"
         };
         Context.Add(user);
-        Context.SaveChanges();
+        await Context.SaveChangesAsync();
 
         var result = await TestSubject.Handle(new AddMessageRequest {
             Text = "Hello",
