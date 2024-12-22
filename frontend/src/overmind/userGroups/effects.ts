@@ -1,5 +1,5 @@
-import { CreateUserGroupRequest, UpdateUserGroupRequest, UserGroupsDto, UserGroupDto } from '~/types/data'
-import { getJson, patchJson, postJson, deleteJson } from '~/utils/ajax'
+import { CreateUserGroupRequest, UpdateUserGroupRequest, UserGroupDto, UserGroupsDto } from '~/types/data'
+import { deleteJson, getJson, patchJson, postJson } from '~/utils/jsonFetchers'
 import { normalizeArrays } from '~/utils/normalize'
 import { UserGroup } from './state'
 

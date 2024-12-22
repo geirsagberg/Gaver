@@ -1,4 +1,4 @@
-import * as effects from './effects'
+import * as effects from '../../api'
 
 export default {
   effects,

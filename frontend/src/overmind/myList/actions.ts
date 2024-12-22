@@ -1,7 +1,7 @@
 import { clone } from 'lodash-es'
 import { AddWishRequest, DeleteWishResponse, MyListDto, UpdateWishRequest } from '~/types/data'
 import { tryOrNotify } from '~/utils'
-import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
+import { deleteJson, getJson, patchJson, postJson } from '~/utils/jsonFetchers'
 import { normalizeArrays } from '~/utils/normalize'
 import { showError, showSuccess } from '~/utils/notifications'
 import { isEmailValid } from '~/utils/validation'

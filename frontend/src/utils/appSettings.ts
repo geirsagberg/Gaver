@@ -1,35 +1,12 @@
-import { useEffect, useState } from 'react'
 import { FeatureFlags } from '~/types/data'
-import { tryOrNotify } from '.'
-import { getJson } from './ajax'
+import { tryAjax } from './ajax'
 
-export interface IAppSettings {
+export interface AuthProperties {
   audience: string
   clientId: string
   domain: string
 }
 
-let settings: Promise<IAppSettings> | undefined
+export const authProperties = await tryAjax<AuthProperties>(() => fetch('/api/auth'))
 
-export async function loadSettings() {
-  const success = await tryOrNotify(
-    () => settings ?? (settings = getJson('/api/auth'))
-  )
-  if (!success) {
-    settings = undefined
-  }
-  return await settings
-}
-
-export const useFeatures = () => {
-  const [features, setFeatures] = useState<FeatureFlags>()
-  useEffect(() => {
-    const fetchFeatures = () =>
-      tryOrNotify(async () => {
-        const features = await getJson<FeatureFlags>('/api/features')
-        setFeatures(features)
-      })
-    fetchFeatures()
-  }, [])
-  return features
-}
+export const features = await tryAjax<FeatureFlags>(() => fetch('/api/features'))

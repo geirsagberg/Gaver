@@ -1,5 +1,6 @@
 import { AppBar, Box, Icon, IconButton, Toolbar, Typography } from '@mui/material'
 import { Suspense } from 'react'
+import { useSnapshot } from 'valtio'
 import { Actions } from './Actions'
 import Expander from './components/Expander'
 import Loading from './components/Loading'
@@ -8,8 +9,11 @@ import FeedbackDialog from './FeedbackDialog'
 import { MainMenu } from './MainMenu'
 import { useActions, useAppState } from './overmind'
 import { ShareListDialog } from './ShareListDialog'
+import { authState } from './state/auth'
 
 const Layout = () => {
+  const { isLoggedIn } = useSnapshot(authState)
+
   const {
     auth: { isLoggedIn },
     app: { title },

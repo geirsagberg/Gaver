@@ -1,11 +1,4 @@
-import { map, size } from 'lodash-es'
-import { derived, IContext } from 'overmind'
-import {
-  createActionsHook,
-  createEffectsHook,
-  createStateHook,
-} from 'overmind-react'
-import { merge, namespaced } from 'overmind/config'
+import { map, merge, size } from 'lodash-es'
 import api from './api'
 import app from './app'
 import auth from './auth'
@@ -29,25 +22,19 @@ type SharedState = {
 
 const state: SharedState = {
   currentSharedList: derived((state: RootState) =>
-    state.routing.currentSharedListId &&
-    state.sharedLists.wishLists[state.routing.currentSharedListId]
+    state.routing.currentSharedListId && state.sharedLists.wishLists[state.routing.currentSharedListId]
       ? state.sharedLists.wishLists[state.routing.currentSharedListId]
       : null
   ),
   currentSharedOrderedWishes: derived((state: RootState) =>
     state.currentSharedList && state.currentSharedList.wishesOrder
-      ? map(
-          state.currentSharedList.wishesOrder,
-          (id) => state.currentSharedList!.wishes[id]
-        )
+      ? map(state.currentSharedList.wishesOrder, (id) => state.currentSharedList!.wishes[id])
       : state.currentSharedList && size(state.currentSharedList.wishes) === 0
       ? []
       : null
   ),
   currentSharedListOwner: derived((state: RootState) =>
-    state.currentSharedList
-      ? state.sharedLists.users[state.currentSharedList.ownerUserId]
-      : null
+    state.currentSharedList ? state.sharedLists.users[state.currentSharedList.ownerUserId] : null
   ),
 }
 
@@ -92,14 +79,8 @@ function createNamespaceHook<T extends keyof Context['state']>(
     const effects = useEffects()
     return {
       state: state[key],
-      actions:
-        key in actions
-          ? actions[key as keyof Context['actions']]
-          : (undefined as any),
-      effects:
-        key in effects
-          ? effects[key as keyof Context['effects']]
-          : (undefined as any),
+      actions: key in actions ? actions[key as keyof Context['actions']] : (undefined as any),
+      effects: key in effects ? effects[key as keyof Context['effects']] : (undefined as any),
     }
   }
 }
@@ -120,13 +101,7 @@ export function useNamespace<T extends keyof Context['state']>(
 
   return {
     state: state[key],
-    actions:
-      key in actions
-        ? actions[key as keyof Context['actions']]
-        : (undefined as any),
-    effects:
-      key in effects
-        ? effects[key as keyof Context['effects']]
-        : (undefined as any),
+    actions: key in actions ? actions[key as keyof Context['actions']] : (undefined as any),
+    effects: key in effects ? effects[key as keyof Context['effects']] : (undefined as any),
   }
 }

@@ -1,5 +1,5 @@
 import auth0 from 'auth0-js'
-import { loadSettings } from './appSettings'
+import { authProperties } from './appSettings'
 
 const AccessTokenKey = 'access_token'
 const ExpiresAtKey = 'expires_at'
@@ -11,24 +11,21 @@ export default class AuthService {
     if (this.#auth) {
       return this.#auth
     }
-    const appSettings = await loadSettings()
-    if (appSettings) {
+    if (authProperties) {
       return (this.#auth = new auth0.WebAuth({
-        domain: appSettings.domain,
-        clientID: appSettings.clientId,
+        domain: authProperties.domain,
+        clientID: authProperties.clientId,
         redirectUri: location.origin + '/callback',
         responseType: 'token',
         scope: 'openid email profile',
-        audience: appSettings.audience,
+        audience: authProperties.audience,
       }))
     }
     throw new Error('Could not load auth settings')
   }
 
   static async login() {
-    const returnUrl = location.pathname.includes('callback')
-      ? '/'
-      : location.pathname + location.search + location.hash
+    const returnUrl = location.pathname.includes('callback') ? '/' : location.pathname + location.search + location.hash
     const auth = await this.getAuth()
     auth.authorize({ state: returnUrl, prompt: 'none' })
   }
@@ -41,13 +38,7 @@ export default class AuthService {
   }
 
   static async handleAuthentication(
-    callback: ({
-      returnUrl,
-      error,
-    }: {
-      returnUrl?: string
-      error?: auth0.Auth0ParseHashError
-    }) => void
+    callback: ({ returnUrl, error }: { returnUrl?: string; error?: auth0.Auth0ParseHashError }) => void
   ) {
     const auth = await this.getAuth()
     auth.parseHash((error, hash) => {

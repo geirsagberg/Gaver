@@ -1,6 +1,6 @@
 import { InvitationStatusDto, UserDto } from '~/types/data'
 import { tryOrNotify } from '~/utils'
-import { getJson, postJson } from '~/utils/ajax'
+import { getJson, postJson } from '~/utils/jsonFetchers'
 import { showError } from '~/utils/notifications'
 import { Context } from '..'
 import { RouteCallbackArgs } from '../routing/effects'

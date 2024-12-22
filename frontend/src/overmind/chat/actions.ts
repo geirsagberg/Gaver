@@ -1,5 +1,5 @@
 import { ChatMessageDto } from '~/types/data'
-import { getJson, postJson } from '~/utils/ajax'
+import { getJson, postJson } from '~/utils/jsonFetchers'
 import { Context } from '..'
 
 export const toggleChat = async ({

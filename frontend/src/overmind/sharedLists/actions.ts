@@ -1,7 +1,7 @@
 import { some } from 'lodash-es'
 import { SharedListDto } from '~/types/data'
 import { tryOrNotify } from '~/utils'
-import { getJson, putJson } from '~/utils/ajax'
+import { getJson, putJson } from '~/utils/jsonFetchers'
 import { normalizeArrays } from '~/utils/normalize'
 import { Context } from '..'
 import { RouteCallbackArgs } from '../routing/effects'
@@ -86,7 +86,5 @@ export const setBought = (
     }
     const listId = currentSharedList.id
     await putJson(`/api/SharedLists/${listId}/${wishId}/Bought`, { isBought })
-    currentSharedList.wishes[wishId].boughtByUserId = isBought
-      ? user.id
-      : undefined
+    currentSharedList.wishes[wishId].boughtByUserId = isBought ? user.id : undefined
   })
