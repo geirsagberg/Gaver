@@ -22,8 +22,10 @@ steps:
       verbose: true
 
   - script: bun install
+    displayName: bun install
 
   - script: bun build:frontend
+    displayName: build frontend
 
   - task: UseDotNet@2
     displayName: Use .NET 9.0
