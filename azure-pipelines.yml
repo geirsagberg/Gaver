@@ -14,9 +14,16 @@ variables:
   ASPNETCORE_ENVIRONMENT: Production
 
 steps:
-  - script: yarn install
+  - task: Npm@1
+    displayName: setup bun
+    inputs:
+      command: 'custom'
+      customCommand: 'install -g bun'
+      verbose: true
 
-  - script: yarn build:frontend
+  - script: bun install
+
+  - script: bun build:frontend
 
   - task: UseDotNet@2
     displayName: Use .NET 9.0
