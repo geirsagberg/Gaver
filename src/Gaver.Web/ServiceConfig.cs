@@ -77,7 +77,7 @@ public static class ServiceConfig {
         missingOptions.AddRange(ConfigureOptions<MailOptions>(services, configuration, "mail"));
         missingOptions.AddRange(ConfigureOptions<Auth0Settings>(services, configuration, "auth0"));
 
-        if (missingOptions.Any()) {
+        if (missingOptions.Count != 0) {
             throw new Exception("Missing settings: " + missingOptions.ToJoinedString());
         }
     }
