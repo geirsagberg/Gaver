@@ -35,6 +35,13 @@ const colors = {
 const commonThemeOptions: ThemeOptions = {
   palette,
   components: {
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          flex: 0,
+        },
+      },
+    },
     MuiDialog: {
       styleOverrides: {
         container: {

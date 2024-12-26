@@ -7,6 +7,7 @@ import {
   DialogTitle,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   TextField,
@@ -68,9 +69,8 @@ const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({ group, updateGroup, o
             <ListItemText primary={currentUser.name + ' (meg)'} />
           </ListItem>
           {map(users, (user) => (
-            <ListItem
+            <ListItemButton
               key={user.id}
-              button
               onClick={() => {
                 const userIds = group.userIds.includes(user.id)
                   ? without(group.userIds, user.id)
@@ -81,7 +81,7 @@ const GroupDetailsDialog: FC<GroupDetailsDialogProps> = ({ group, updateGroup, o
                 <Checkbox tabIndex={-1} checked={group.userIds.includes(user.id)} />
               </ListItemIcon>
               <ListItemText primary={user.name} />
-            </ListItem>
+            </ListItemButton>
           ))}
         </List>
       </DialogContent>

@@ -1,4 +1,14 @@
-import { Divider, Icon, Link, List, ListItem, ListItemIcon, ListItemText, SwipeableDrawer } from '@mui/material'
+import {
+  Divider,
+  Icon,
+  Link,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  SwipeableDrawer,
+} from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { map, some } from 'lodash-es'
 import Expander from './components/Expander'
@@ -24,28 +34,27 @@ const SharedListsMenuItem = () => {
       </ListItem>
       <Divider />
       {map(users, (user) => (
-        <ListItem
+        <ListItemButton
           key={user.wishListId}
-          button
           selected={currentSharedListId === user.wishListId}
           onClick={() => {
             showSharedList(user.wishListId)
             hideMenu()
           }}>
           <ListItemText primary={user.name} />
-        </ListItem>
+        </ListItemButton>
       ))}
     </>
   ) : null
 }
 
 const LicensesMenuItem = () => (
-  <ListItem button href="/dist/licenses.txt" component={Link} target="_blank" color="inherit">
+  <ListItemButton href="/dist/licenses.txt" component={Link} target="_blank" color="inherit">
     <ListItemIcon>
       <Icon>copyright</Icon>
     </ListItemIcon>
     <ListItemText primary="Softwarelisenser" />
-  </ListItem>
+  </ListItemButton>
 )
 
 const LogOutMenuItem = () => {
@@ -53,12 +62,12 @@ const LogOutMenuItem = () => {
     auth: { logOut },
   } = useActions()
   return (
-    <ListItem button onClick={logOut}>
+    <ListItemButton onClick={logOut}>
       <ListItemIcon>
         <Icon>logout</Icon>
       </ListItemIcon>
       <ListItemText primary="Logg ut" />
-    </ListItem>
+    </ListItemButton>
   )
 }
 
@@ -68,8 +77,7 @@ const FeedbackMenuItem = () => {
   } = useActions()
 
   return (
-    <ListItem
-      button
+    <ListItemButton
       onClick={() => {
         hideMenu()
         showFeedback()
@@ -79,7 +87,7 @@ const FeedbackMenuItem = () => {
         <Icon>feedback</Icon>
       </ListItemIcon>
       <ListItemText primary="Gi tilbakemelding" />
-    </ListItem>
+    </ListItemButton>
   )
 }
 
@@ -94,8 +102,7 @@ const MyListMenuItem = () => {
     routing: { showMyList },
   } = useEffects()
   return (
-    <ListItem
-      button
+    <ListItemButton
       onClick={() => {
         showMyList()
         hideMenu()
@@ -105,7 +112,7 @@ const MyListMenuItem = () => {
         <Icon>home</Icon>
       </ListItemIcon>
       <ListItemText primary="Min liste" />
-    </ListItem>
+    </ListItemButton>
   )
 }
 
@@ -120,8 +127,7 @@ export const MyGroupsMenuItem = () => {
     routing: { showUserGroups },
   } = useEffects()
   return (
-    <ListItem
-      button
+    <ListItemButton
       onClick={() => {
         showUserGroups()
         hideMenu()
@@ -131,7 +137,7 @@ export const MyGroupsMenuItem = () => {
         <Icon>group</Icon>
       </ListItemIcon>
       <ListItemText primary="Mine grupper" />
-    </ListItem>
+    </ListItemButton>
   )
 }
 

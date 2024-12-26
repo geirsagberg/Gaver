@@ -2,6 +2,5 @@
 
 namespace Gaver.Common.Attributes;
 
-public class ServiceAttribute : Attribute
-{
-}
+[AttributeUsage(AttributeTargets.Class)]
+public class ServiceAttribute : Attribute;

@@ -12,7 +12,7 @@ body {
   box-sizing: border-box;
 }
 
-#react-app {
+#app {
   height: 100%;
   width: 100%;
 }
