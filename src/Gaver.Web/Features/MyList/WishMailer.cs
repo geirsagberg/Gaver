@@ -37,7 +37,6 @@ public class WishMailer(IMailSender mailSender, IHttpContextAccessor httpContext
         await gaverContext.SaveChangesAsync(cancellationToken);
 
         await Task.WhenAll(mailTasks);
-
     }
 
     private static void ValidateEmails(IEnumerable<string> emails) {

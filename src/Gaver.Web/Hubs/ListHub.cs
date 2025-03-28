@@ -10,7 +10,10 @@ using Microsoft.AspNetCore.SignalR;
 namespace Gaver.Web.Hubs;
 
 [Authorize]
-public class ListHub(ILogger<ListHub> logger, GaverContext gaverContext, IMapperService mapper,
+public class ListHub(
+    ILogger<ListHub> logger,
+    GaverContext gaverContext,
+    IMapperService mapper,
     IAccessChecker accessChecker) : Hub<IListHubClient> {
     private static readonly HashSet<UserListConnection> UserListConnections = new();
 

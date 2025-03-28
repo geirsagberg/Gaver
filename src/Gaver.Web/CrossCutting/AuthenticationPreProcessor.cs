@@ -11,11 +11,14 @@ public class AuthenticationPreProcessor<TRequest>(IHttpContextAccessor httpConte
     public async Task Process(TRequest request, CancellationToken cancellationToken) {
         if (request is IAuthenticatedRequest authenticatedRequest) {
             var user = httpContextAccessor.HttpContext?.User;
-            if (user?.Identity?.IsAuthenticated != true)
+            if (user?.Identity?.IsAuthenticated != true) {
                 throw new HttpException(HttpStatusCode.Unauthorized);
+            }
+
             var userId = user.Claims.SingleOrDefault(c => c.Type == GaverClaimTypes.GaverUserId)?.Value;
-            if (userId == null)
+            if (userId == null) {
                 throw new FriendlyException("Ugyldig bruker");
+            }
 
             authenticatedRequest.UserId = int.Parse(userId);
         }

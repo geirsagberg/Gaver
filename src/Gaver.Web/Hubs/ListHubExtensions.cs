@@ -2,8 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Gaver.Web.Hubs;
 
-public static class ListHubExtensions
-{
+public static class ListHubExtensions {
     public static Task RefreshDataAsync(this IHubContext<ListHub, IListHubClient> hub, int listId, int? excludeUserId = null) =>
         excludeUserId != null
             ? hub.Clients

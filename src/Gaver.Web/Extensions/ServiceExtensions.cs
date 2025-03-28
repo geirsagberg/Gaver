@@ -2,10 +2,8 @@ using System.Reflection;
 
 namespace Gaver.Web.Extensions;
 
-public static class ServiceExtensions
-{
-    public static IServiceCollection AddAssembly(this IServiceCollection services, Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Scoped)
-    {
+public static class ServiceExtensions {
+    public static IServiceCollection AddAssembly(this IServiceCollection services, Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Scoped) {
         var descriptors = from type in assembly.ExportedTypes
             let typeInfo = type.GetTypeInfo()
             where !typeInfo.IsAbstract && !typeInfo.IsInterface
@@ -15,6 +13,7 @@ public static class ServiceExtensions
         foreach (var descriptor in descriptors) {
             services.Add(descriptor);
         }
+
         return services;
     }
 

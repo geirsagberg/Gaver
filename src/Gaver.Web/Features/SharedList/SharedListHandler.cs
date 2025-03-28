@@ -22,15 +22,18 @@ public class SharedListHandler(GaverContext context, IMapperService mapper, ICli
         var wishListOwnerId = await context.WishLists.Where(wl => wl.Id == request.WishListId)
             .Select(wl => wl.UserId)
             .SingleOrDefaultAsync(cancellationToken);
-        if (wishListOwnerId == 0)
+        if (wishListOwnerId == 0) {
             throw new EntityNotFoundException<WishList>(request.WishListId);
+        }
 
-        if (wishListOwnerId == request.UserId)
+        if (wishListOwnerId == request.UserId) {
             return ListAccessStatus.Owner;
+        }
 
         if (await context.WishLists.AnyAsync(
-                wl => wl.Id == request.WishListId && wl.User!.Friends.Any(f => f.Id == request.UserId), cancellationToken))
+                wl => wl.Id == request.WishListId && wl.User!.Friends.Any(f => f.Id == request.UserId), cancellationToken)) {
             return ListAccessStatus.Invited;
+        }
 
         return ListAccessStatus.NotInvited;
     }
@@ -61,11 +64,16 @@ public class SharedListHandler(GaverContext context, IMapperService mapper, ICli
     public async Task<SharedWishDto> Handle(SetBoughtRequest message, CancellationToken cancellationToken) {
         var wish = GetWish(message.WishId, message.WishListId);
         var userId = message.UserId;
-        if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId)
+        if (wish.BoughtByUserId != null && wish.BoughtByUserId != userId) {
             throw new FriendlyException("Wish has already been bought by someone else");
+        }
 
-        if (message.IsBought) wish.BoughtByUserId = userId;
-        else wish.BoughtByUserId = null;
+        if (message.IsBought) {
+            wish.BoughtByUserId = userId;
+        } else {
+            wish.BoughtByUserId = null;
+        }
+
         await context.SaveChangesAsync(cancellationToken);
 
         await clientNotifier.RefreshListAsync(message.WishListId, userId);
@@ -74,8 +82,10 @@ public class SharedListHandler(GaverContext context, IMapperService mapper, ICli
 
     private Wish GetWish(int wishId, int wishListId) {
         var wish = context.GetOrDie<Wish>(wishId);
-        if (wish.WishListId != wishListId)
+        if (wish.WishListId != wishListId) {
             throw new FriendlyException($"Wish {wishId} does not belong to list {wishListId}");
+        }
+
         return wish;
     }
 }

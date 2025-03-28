@@ -23,7 +23,5 @@ public class FeedbackHandler(IMailSender mailSender, MailOptions mailOptions, Ga
             Content = content
         };
         await mailSender.SendAsync(mail, cancellationToken);
-
-
     }
 }

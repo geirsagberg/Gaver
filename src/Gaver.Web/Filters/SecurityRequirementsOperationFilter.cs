@@ -14,7 +14,9 @@ public class SecurityRequirementsOperationFilter : IOperationFilter {
         var allowAnonymous = filterPipeline.Select(filterInfo => filterInfo.Filter)
             .Any(filter => filter is IAllowAnonymousFilter);
 
-        if (!requireAuthorization || allowAnonymous) return;
+        if (!requireAuthorization || allowAnonymous) {
+            return;
+        }
 
         operation.Parameters ??= [];
         operation.Security ??= [];

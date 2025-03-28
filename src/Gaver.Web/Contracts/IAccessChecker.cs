@@ -2,8 +2,7 @@ using JetBrains.Annotations;
 
 namespace Gaver.Web.Contracts;
 
-public interface IAccessChecker
-{
+public interface IAccessChecker {
     [AssertionMethod]
     Task CheckWishListAccess(int wishListId, int userId, CancellationToken cancellationToken = default);
 

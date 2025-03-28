@@ -3,10 +3,8 @@ using Gaver.Common.Extensions;
 
 namespace Gaver.Web.Features.Mail;
 
-public class MailMappingProfile : Profile
-{
-    public MailMappingProfile()
-    {
+public class MailMappingProfile : Profile {
+    public MailMappingProfile() {
         CreateMap<MailModel, SendGridMail>()
             .MapMember(m => m.From, m => new SendGridAddress {
                 Email = m.From,

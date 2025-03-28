@@ -1,13 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Gaver.Web.Contracts;
 using HybridModelBinding;
 using MediatR;
-using System.Text.Json.Serialization;
 
 namespace Gaver.Web.Features.Chat;
 
-public class AddMessageRequest : IRequest<ChatMessageDto>, ISharedListRequest
-{
+public class AddMessageRequest : IRequest<ChatMessageDto>, ISharedListRequest {
     [Required]
     [MinLength(1)]
     [MaxLength(500)]
@@ -17,6 +16,5 @@ public class AddMessageRequest : IRequest<ChatMessageDto>, ISharedListRequest
     [HybridBindProperty(Source.Route)]
     public int WishListId { get; set; }
 
-    [JsonIgnore]
-    public int UserId { get; set; }
+    [JsonIgnore] public int UserId { get; set; }
 }

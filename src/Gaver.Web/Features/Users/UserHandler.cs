@@ -9,17 +9,18 @@ using Gaver.Web.Exceptions;
 using Gaver.Web.Options;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using EntityFrameworkQueryableExtensions = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions;
 
 namespace Gaver.Web.Features.Users;
 
-public class UserHandler(GaverContext context, IMapperService mapper, Auth0Settings auth0Settings,
+public class UserHandler(
+    GaverContext context,
+    IMapperService mapper,
+    Auth0Settings auth0Settings,
     IHttpContextAccessor httpContextAccessor) : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
     IRequestHandler<UpdateUserInfoRequest>,
     IRequestHandler<GetOrCreateUserRequest, User> {
     public async Task<User> Handle(GetOrCreateUserRequest request, CancellationToken cancellationToken) {
-        var user = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(context.Set<User>(),
-            u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);
+        var user = await context.Set<User>().SingleOrDefaultAsync(u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);
 
         if (user == null) {
             var userInfo = await GetUserInfo(cancellationToken);
@@ -58,8 +59,6 @@ public class UserHandler(GaverContext context, IMapperService mapper, Auth0Setti
         user.PictureUrl = userInfo.Picture;
 
         await context.SaveChangesAsync(cancellationToken);
-
-
     }
 
     private async Task<UserInfo> GetUserInfo(CancellationToken token) {
@@ -78,7 +77,7 @@ public class UserHandler(GaverContext context, IMapperService mapper, Auth0Setti
     public async Task<int?> GetUserIdOrNullAsync(string providerId) {
         var userId = await context.Users.Where(u => u.PrimaryIdentityId == providerId).Select(u => u.Id)
             .SingleOrDefaultAsync();
-        return userId == 0 ? (int?) null : userId;
+        return userId == 0 ? null : userId;
     }
 
     public class UserInfo {

@@ -7,8 +7,8 @@ using Microsoft.Extensions.Options;
 namespace Gaver.Web.MvcUtils;
 
 public class CustomProblemDetailsFactory(IOptions<ApiBehaviorOptions> options, IOptions<JsonOptions> jsonOptions) : ProblemDetailsFactory {
-    private readonly ApiBehaviorOptions options = options.Value;
     private readonly JsonOptions jsonOptions = jsonOptions.Value;
+    private readonly ApiBehaviorOptions options = options.Value;
 
     public override ProblemDetails CreateProblemDetails(
         HttpContext httpContext,
@@ -24,7 +24,7 @@ public class CustomProblemDetailsFactory(IOptions<ApiBehaviorOptions> options, I
             Title = title,
             Type = type,
             Detail = detail,
-            Instance = instance,
+            Instance = instance
         };
 
         ApplyProblemDetailsDefaults(httpContext, problemDetails, statusCode.Value);
@@ -55,7 +55,7 @@ public class CustomProblemDetailsFactory(IOptions<ApiBehaviorOptions> options, I
             Status = statusCode,
             Type = type,
             Detail = detail,
-            Instance = instance,
+            Instance = instance
         };
 
         if (title != null) {

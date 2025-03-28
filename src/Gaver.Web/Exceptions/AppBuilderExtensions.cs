@@ -2,8 +2,7 @@ using Gaver.Web.Middleware;
 
 namespace Gaver.Web.Exceptions;
 
-public static class AppBuilderExtensions
-{
+public static class AppBuilderExtensions {
     //public static IApplicationBuilder UseJwtAuthentication(this IApplicationBuilder app, Auth0Settings auth0Settings)
     //{
     //    return app.Use(async (context, next) => {
@@ -22,8 +21,5 @@ public static class AppBuilderExtensions
     //    }
     //}
 
-    public static IApplicationBuilder UseHttpException(this IApplicationBuilder application)
-    {
-        return application.UseMiddleware<HttpExceptionMiddleware>();
-    }
+    public static IApplicationBuilder UseHttpException(this IApplicationBuilder application) => application.UseMiddleware<HttpExceptionMiddleware>();
 }

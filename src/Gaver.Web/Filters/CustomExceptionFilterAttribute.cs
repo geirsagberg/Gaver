@@ -7,8 +7,10 @@ namespace Gaver.Web.Filters;
 
 public class CustomExceptionFilterAttribute : ExceptionFilterAttribute {
     public override void OnException(ExceptionContext context) {
-        if (context.Exception is HttpException)
+        if (context.Exception is HttpException) {
             return;
+        }
+
         var loggerFactory = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger("API Error");
         logger.LogError(context.Exception, "Error in {Path}", context.HttpContext.Request.Path);

@@ -7,18 +7,17 @@ using MediatR;
 
 namespace Gaver.Web.Features.MyList;
 
-public class AddWishOptionRequest : IRequest<WishOptionDto>, IMyWishRequest
-{
-    [JsonIgnore]
-    public int UserId { get; set; }
-
-    [HybridBindProperty(Source.Route)]
-    [JsonIgnore]
-    public int WishId { get; set; }
-
+public class AddWishOptionRequest : IRequest<WishOptionDto>, IMyWishRequest {
     [Required]
     [MinLength(1)]
     [MaxLength(64)]
     public string Title { get; set; } = "";
+
     public string? Url { get; set; }
+
+    [JsonIgnore] public int UserId { get; set; }
+
+    [HybridBindProperty(Source.Route)]
+    [JsonIgnore]
+    public int WishId { get; set; }
 }

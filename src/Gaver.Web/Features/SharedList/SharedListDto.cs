@@ -2,8 +2,7 @@
 
 namespace Gaver.Web.Features.SharedList;
 
-public class SharedListDto
-{
+public class SharedListDto {
     public int Id { get; set; }
     public IList<SharedWishDto> Wishes { get; set; } = new List<SharedWishDto>();
     public IList<UserDto> Users { get; set; } = new List<UserDto>();

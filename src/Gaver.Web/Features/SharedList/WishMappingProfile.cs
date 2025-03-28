@@ -6,10 +6,8 @@ using Gaver.Web.Features.Shared.Models;
 
 namespace Gaver.Web.Features.SharedList;
 
-public class WishMappingProfile : Profile
-{
-    public WishMappingProfile()
-    {
+public class WishMappingProfile : Profile {
+    public WishMappingProfile() {
         CreateMap<WishList, SharedListDto>()
             .MapMember(m => m.OwnerUserId, wl => wl.UserId)
             .MapMember(m => m.Users,

@@ -1,11 +1,10 @@
-using Microsoft.IdentityModel.Tokens;
-using Gaver.Common.Extensions;
 using System.Text;
+using Gaver.Common.Extensions;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Gaver.Web.Options;
 
-public class Auth0Settings
-{
+public class Auth0Settings {
     public string ClientId { get; init; }
     public string ClientSecret { get; init; }
     public string Domain { get; init; }

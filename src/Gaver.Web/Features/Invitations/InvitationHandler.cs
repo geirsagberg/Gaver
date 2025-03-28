@@ -22,8 +22,8 @@ public class InvitationHandler(GaverContext context, IMapperService mapperServic
 
         var friendId = wishList.UserId;
         var existingConnections = await context.UserFriendConnections.Where(u =>
-            u.UserId == userId && u.FriendId == friendId ||
-            u.UserId == friendId && u.FriendId == userId).ToListAsync(cancellationToken);
+            (u.UserId == userId && u.FriendId == friendId) ||
+            (u.UserId == friendId && u.FriendId == userId)).ToListAsync(cancellationToken);
 
         if (existingConnections.None(c => c.UserId == userId)) {
             context.Add(new UserFriendConnection {
@@ -59,7 +59,7 @@ public class InvitationHandler(GaverContext context, IMapperService mapperServic
         return new InvitationStatusDto {
             Owner = owner.Name,
             PictureUrl = owner.PictureUrl,
-            OwnerId = owner.Id,
+            OwnerId = owner.Id
         };
     }
 
@@ -67,10 +67,13 @@ public class InvitationHandler(GaverContext context, IMapperService mapperServic
         var invitationToken = await context.Set<InvitationToken>()
             .Include(t => t.WishList)
             .SingleOrDefaultAsync(t => t.Token == token);
-        if (invitationToken == null)
+        if (invitationToken == null) {
             throw new FriendlyException("Denne invitasjonen finnes ikke.");
-        if (invitationToken.WishList!.UserId == userId)
+        }
+
+        if (invitationToken.WishList!.UserId == userId) {
             throw new FriendlyException("Du kan ikke godta en invitasjon til din egen liste.");
+        }
 
         return invitationToken;
     }

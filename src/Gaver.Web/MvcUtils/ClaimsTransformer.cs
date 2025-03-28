@@ -8,7 +8,6 @@ namespace Gaver.Web.MvcUtils;
 
 [Service]
 public class ClaimsTransformer(IMediator mediator) : IClaimsTransformation {
-
     public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal) {
         var providerId = principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (providerId == null) {

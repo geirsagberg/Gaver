@@ -36,11 +36,12 @@ public class UserGroupHandler(GaverContext context, IMapperService mapperService
             await context.UserGroups.SingleOrDefaultAsync(ug => ug.Id == request.UserGroupId && ug.UserGroupConnections.Any(c => c.UserId == request.UserId), cancellationToken) ?? throw new FriendlyException("Finner ikke oppgitt gruppe");
 
 
-        if (userGroup.CreatedByUserId != request.UserId) throw new FriendlyException("Du kan ikke slette grupper du ikke har opprettet");
+        if (userGroup.CreatedByUserId != request.UserId) {
+            throw new FriendlyException("Du kan ikke slette grupper du ikke har opprettet");
+        }
 
         context.Remove(userGroup);
         await context.SaveChangesAsync(cancellationToken);
-
     }
 
     public async Task<UserGroupsDto> Handle(GetMyUserGroupsRequest request, CancellationToken cancellationToken) {
@@ -54,18 +55,22 @@ public class UserGroupHandler(GaverContext context, IMapperService mapperService
 
     public async Task Handle(UpdateUserGroupRequest request, CancellationToken cancellationToken) {
         var userGroup = await context.UserGroups.Include(ug => ug.UserGroupConnections)
-                .SingleOrDefaultAsync(c =>
-                        c.Id == request.UserGroupId &&
-                        c.UserGroupConnections.Any(c2 => c2.UserId == request.UserId),
-                    cancellationToken) ??
-            throw new HttpException(HttpStatusCode.NotFound,
-                "Finner ingen av dine grupper med ID " + request.UserGroupId);
+                            .SingleOrDefaultAsync(c =>
+                                    c.Id == request.UserGroupId &&
+                                    c.UserGroupConnections.Any(c2 => c2.UserId == request.UserId),
+                                cancellationToken) ??
+                        throw new HttpException(HttpStatusCode.NotFound,
+                            "Finner ingen av dine grupper med ID " + request.UserGroupId);
 
-        if (request.Name != null) userGroup.Name = request.Name;
+        if (request.Name != null) {
+            userGroup.Name = request.Name;
+        }
 
         if (request.UserIds != null) {
-            if (request.UserId.NotIn(request.UserIds))
+            if (request.UserId.NotIn(request.UserIds)) {
                 throw new FriendlyException("Du kan ikke fjerne deg selv fra en gruppe!");
+            }
+
             userGroup.UserGroupConnections = request.UserIds.Select(userId => new UserGroupConnection {
                 UserGroupId = request.UserGroupId,
                 UserId = userId
@@ -73,7 +78,5 @@ public class UserGroupHandler(GaverContext context, IMapperService mapperService
         }
 
         await context.SaveChangesAsync(cancellationToken);
-
-
     }
 }

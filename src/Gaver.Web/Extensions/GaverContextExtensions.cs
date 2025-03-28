@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Extensions;
 
-public static class GaverContextExtensions
-{
+public static class GaverContextExtensions {
     //    public static async Task<int> GetUserIdOrDie(this GaverContext gaverContext, ClaimsPrincipal principal)
     //    {
     //        var primaryIdentityId = principal.GetPrimaryIdentityId();
@@ -30,8 +29,5 @@ public static class GaverContextExtensions
 
     //        return user;
     //    }
-    public static async Task<int> GetUserWishListId(this GaverContext context, int userId)
-    {
-        return await context.Set<WishList>().Where(wl => wl.UserId == userId).Select(wl => wl.Id).SingleAsync();
-    }
+    public static async Task<int> GetUserWishListId(this GaverContext context, int userId) => await context.Set<WishList>().Where(wl => wl.UserId == userId).Select(wl => wl.Id).SingleAsync();
 }
