@@ -17,10 +17,6 @@ public class SharedListHandler(GaverContext context, IMapperService mapper, ICli
     IRequestHandler<SetBoughtRequest, SharedWishDto>,
     IRequestHandler<GetSharedListRequest, SharedListDto>,
     IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus> {
-    private readonly IClientNotifier clientNotifier = clientNotifier;
-    private readonly GaverContext context = context;
-    private readonly IMapperService mapper = mapper;
-
     public async Task<ListAccessStatus> Handle(CheckSharedListAccessRequest request,
         CancellationToken cancellationToken = default) {
         var wishListOwnerId = await context.WishLists.Where(wl => wl.Id == request.WishListId)

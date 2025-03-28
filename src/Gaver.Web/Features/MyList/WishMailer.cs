@@ -10,10 +10,6 @@ using MediatR;
 namespace Gaver.Web.Features.MyList;
 
 public class WishMailer(IMailSender mailSender, IHttpContextAccessor httpContextAccessor, GaverContext gaverContext) : IRequestHandler<ShareListRequest> {
-    private readonly IMailSender mailSender = mailSender;
-    private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
-    private readonly GaverContext gaverContext = gaverContext;
-
     public async Task Handle(ShareListRequest message, CancellationToken cancellationToken) {
         ValidateEmails(message.Emails);
         var userName = gaverContext.Users.Where(u => u.Id == message.UserId).Select(u => u.Name).Single();

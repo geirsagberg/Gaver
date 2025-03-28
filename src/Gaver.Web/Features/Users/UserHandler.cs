@@ -17,11 +17,6 @@ public class UserHandler(GaverContext context, IMapperService mapper, Auth0Setti
     IHttpContextAccessor httpContextAccessor) : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
     IRequestHandler<UpdateUserInfoRequest>,
     IRequestHandler<GetOrCreateUserRequest, User> {
-    private readonly Auth0Settings auth0Settings = auth0Settings;
-    private readonly GaverContext context = context;
-    private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
-    private readonly IMapperService mapper = mapper;
-
     public async Task<User> Handle(GetOrCreateUserRequest request, CancellationToken cancellationToken) {
         var user = await EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(context.Set<User>(),
             u => u.PrimaryIdentityId == request.PrimaryIdentityId, cancellationToken);

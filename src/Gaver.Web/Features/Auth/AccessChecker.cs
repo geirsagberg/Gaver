@@ -10,7 +10,6 @@ namespace Gaver.Web.Features.Auth;
 
 [Service]
 public class AccessChecker(GaverContext context) : IAccessChecker {
-    private readonly GaverContext context = context;
 
     public async Task CheckWishListAccess(int wishListId, int userId,
         CancellationToken cancellationToken = default) {

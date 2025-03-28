@@ -12,9 +12,6 @@ namespace Gaver.Web.Features.Invitations;
 
 public class InvitationHandler(GaverContext context, IMapperService mapperService) : IRequestHandler<GetInvitationStatusRequest, InvitationStatusDto>,
     IRequestHandler<AcceptInvitationRequest, UserDto> {
-    private readonly GaverContext context = context;
-    private readonly IMapperService mapperService = mapperService;
-
     public async Task<UserDto> Handle(AcceptInvitationRequest request,
         CancellationToken cancellationToken = default) {
         var userId = request.UserId;

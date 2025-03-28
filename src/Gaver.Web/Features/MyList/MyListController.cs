@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Gaver.Web.Features.MyList;
 
 public class MyListController(IMediator mediator) : GaverControllerBase {
-    private readonly IMediator mediator = mediator;
-
     [HttpGet]
     public Task<MyListDto> GetMyList() => mediator.Send(new GetMyListRequest());
 

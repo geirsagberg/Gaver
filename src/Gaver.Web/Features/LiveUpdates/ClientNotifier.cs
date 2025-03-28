@@ -8,8 +8,6 @@ namespace Gaver.Web.Features.LiveUpdates;
 
 [Service]
 public class ClientNotifier(IHubContext<ListHub, IListHubClient> hub) : IClientNotifier {
-    private readonly IHubContext<ListHub, IListHubClient> hub = hub;
-
     public Task RefreshListAsync(int wishListId, int? excludeUserId = null) {
         return hub.RefreshDataAsync(wishListId, excludeUserId);
     }

@@ -9,7 +9,9 @@ import Layout from './Layout'
 import { config } from './overmind'
 import theme from './theme'
 
-const overmind = createOvermind(config)
+const overmind = createOvermind(config, {
+  devtools: false,
+})
 
 class ErrorBoundary extends React.Component<{ children: ReactNode }, { hasError: boolean }> {
   state = {

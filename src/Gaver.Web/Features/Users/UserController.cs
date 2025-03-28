@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Gaver.Web.Features.Users;
 
 public class UserController(IMediator mediator) : GaverControllerBase {
-    private readonly IMediator mediator = mediator;
-
     [HttpGet]
     public Task<CurrentUserDto> GetUserInfo() => mediator.Send(new GetUserInfoRequest());
 

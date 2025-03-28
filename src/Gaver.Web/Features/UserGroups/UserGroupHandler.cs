@@ -15,9 +15,6 @@ public class UserGroupHandler(GaverContext context, IMapperService mapperService
     IRequestHandler<CreateUserGroupRequest, UserGroupDto>,
     IRequestHandler<UpdateUserGroupRequest>,
     IRequestHandler<DeleteUserGroupRequest> {
-    private readonly GaverContext context = context;
-    private readonly IMapperService mapperService = mapperService;
-
     public async Task<UserGroupDto> Handle(CreateUserGroupRequest request, CancellationToken cancellationToken) {
         var user = await context.GetOrDieAsync<User>(request.UserId);
         var userGroup = new UserGroup {

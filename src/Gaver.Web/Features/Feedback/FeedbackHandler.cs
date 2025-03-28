@@ -8,10 +8,6 @@ using MediatR;
 namespace Gaver.Web.Features.Feedback;
 
 public class FeedbackHandler(IMailSender mailSender, MailOptions mailOptions, GaverContext context) : IRequestHandler<SubmitFeedbackRequest> {
-    private readonly IMailSender mailSender = mailSender;
-    private readonly MailOptions mailOptions = mailOptions;
-    private readonly GaverContext context = context;
-
     public async Task Handle(SubmitFeedbackRequest request, CancellationToken cancellationToken) {
         var content = request.Message;
 

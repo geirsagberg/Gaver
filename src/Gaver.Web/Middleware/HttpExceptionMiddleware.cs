@@ -4,8 +4,6 @@ using Gaver.Web.Exceptions;
 namespace Gaver.Web.Middleware;
 
 internal class HttpExceptionMiddleware(RequestDelegate next) {
-    private readonly RequestDelegate next = next;
-
     public async Task Invoke(HttpContext context) {
         try {
             await next(context);

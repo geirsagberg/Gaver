@@ -21,12 +21,6 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
     IRequestHandler<AddWishRequest, WishDto>,
     IRequestHandler<DeleteWishRequest, DeleteWishResponse>,
     IRequestHandler<ResetListRequest> {
-    private readonly IClientNotifier clientNotifier = clientNotifier;
-    private readonly GaverContext context = context;
-    private readonly IMapperService mapper = mapper;
-    private readonly IMailSender mailSender = mailSender;
-    private readonly IHostUrlAccessor hostUrlAccessor = hostUrlAccessor;
-
     public async Task<WishDto> Handle(AddWishRequest request, CancellationToken cancellationToken) {
         var wishList = context.WishLists.Single(wl => wl.UserId == request.UserId);
         var wish = new Wish {

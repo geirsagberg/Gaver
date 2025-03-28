@@ -13,10 +13,6 @@ namespace Gaver.Web.Hubs;
 public class ListHub(ILogger<ListHub> logger, GaverContext gaverContext, IMapperService mapper,
     IAccessChecker accessChecker) : Hub<IListHubClient> {
     private static readonly HashSet<UserListConnection> UserListConnections = new();
-    private readonly IAccessChecker accessChecker = accessChecker;
-    private readonly GaverContext gaverContext = gaverContext;
-    private readonly ILogger<ListHub> logger = logger;
-    private readonly IMapperService mapper = mapper;
 
     public static string[] GetConnectionIdsForUser(int userId)
         => UserListConnections.Where(ulc => ulc.UserId == userId).Select(ulc => ulc.ConnectionId).ToArray();
