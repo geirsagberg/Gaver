@@ -12,7 +12,8 @@ public class WishMailer(IHostUrlAccessor hostUrlAccessor, GaverContext gaverCont
         
         // Create a new invitation token that can be used by multiple people
         var token = new InvitationToken {
-            WishListId = wishListId
+            WishListId = wishListId,
+            Created = DateTimeOffset.UtcNow
         };
         gaverContext.Set<InvitationToken>().Add(token);
         await gaverContext.SaveChangesAsync(cancellationToken);
