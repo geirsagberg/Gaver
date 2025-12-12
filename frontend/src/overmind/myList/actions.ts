@@ -108,9 +108,11 @@ export const copyShareLink = async ({ state: { myList } }: Context) => {
     return
   }
 
-  const shareUrl = `${window.location.origin}/list/${myList.id}`
-  
   try {
+    // Call backend to create invitation token and get share URL
+    const response = await postJson<{ shareUrl: string }>('/api/MyList/Share', {})
+    const shareUrl = response.shareUrl
+    
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(shareUrl)
     } else {
