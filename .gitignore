@@ -248,3 +248,4 @@ healthchecksdb
 wwwroot/
 
 *.local.json
+package-lock.json
