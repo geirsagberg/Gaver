@@ -113,23 +113,39 @@ export const copyShareLink = async ({ state: { myList } }: Context) => {
     const response = await postJson<{ shareUrl: string }>('/api/MyList/Share', {})
     const shareUrl = response.shareUrl
     
+    // Try modern clipboard API first, fall back to execCommand if it fails
+    let copied = false
+    
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(shareUrl)
-    } else {
-      // Fallback for older browsers
+      try {
+        await navigator.clipboard.writeText(shareUrl)
+        copied = true
+      } catch (clipboardError) {
+        // Clipboard API failed (common in Safari), try fallback
+        console.warn('Clipboard API failed, using fallback:', clipboardError)
+      }
+    }
+    
+    // Fallback for older browsers or when clipboard API fails
+    if (!copied) {
       const textArea = document.createElement('textarea')
       textArea.value = shareUrl
       textArea.style.position = 'fixed'
       textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
       document.body.appendChild(textArea)
       textArea.focus()
       textArea.select()
       try {
-        document.execCommand('copy')
+        const successful = document.execCommand('copy')
+        if (!successful) {
+          throw new Error('execCommand copy failed')
+        }
       } finally {
         document.body.removeChild(textArea)
       }
     }
+    
     showSuccess('Delingslenke kopiert!')
     myList.isSharingList = false
   } catch (error) {
