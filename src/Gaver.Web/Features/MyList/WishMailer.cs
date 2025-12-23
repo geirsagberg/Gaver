@@ -1,48 +1,27 @@
 using Flurl;
-using Gaver.Common.Exceptions;
-using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Data.Entities;
-using Gaver.Web.Contracts;
-using Gaver.Web.Features.Mail;
+using Gaver.Web.Features.Utils;
 using MediatR;
 
 namespace Gaver.Web.Features.MyList;
 
-public class WishMailer(IMailSender mailSender, IHttpContextAccessor httpContextAccessor, GaverContext gaverContext) : IRequestHandler<ShareListRequest> {
-    public async Task Handle(ShareListRequest message, CancellationToken cancellationToken) {
-        ValidateEmails(message.Emails);
-        var userName = gaverContext.Users.Where(u => u.Id == message.UserId).Select(u => u.Name).Single();
+public class WishMailer(IHostUrlAccessor hostUrlAccessor, GaverContext gaverContext) : IRequestHandler<ShareListRequest, ShareListResponse> {
+    public async Task<ShareListResponse> Handle(ShareListRequest message, CancellationToken cancellationToken) {
         var wishListId = gaverContext.WishLists.Where(wl => wl.UserId == message.UserId).Select(wl => wl.Id).Single();
-        var request = httpContextAccessor.HttpContext?.Request ?? throw new DeveloperException("No HttpContext!");
-
-        var mailTasks = new List<Task>();
-        foreach (var email in message.Emails) {
-            var token = new InvitationToken {
-                WishListId = wishListId
-            };
-            gaverContext.Set<InvitationToken>().Add(token);
-
-            var url = Url.Combine(request.Scheme + "://" + request.Host, "invitations", token.Token.ToString());
-            var mail = new MailModel {
-                To = [email],
-                From = "noreply@sagberg.net",
-                Subject = $"{userName} har delt en ønskeliste med deg",
-                Content = $@"<h1>{userName} har delt en ønskeliste med deg!</h1>
-                <p><a href='{url}'>Klikk her for å se listen.</a></p>"
-            };
-            mailTasks.Add(mailSender.SendAsync(mail, cancellationToken));
-        }
-
+        
+        // Create a new invitation token that can be used by multiple people
+        var token = new InvitationToken {
+            WishListId = wishListId,
+            Created = DateTimeOffset.UtcNow
+        };
+        gaverContext.Set<InvitationToken>().Add(token);
         await gaverContext.SaveChangesAsync(cancellationToken);
-
-        await Task.WhenAll(mailTasks);
-    }
-
-    private static void ValidateEmails(IEnumerable<string> emails) {
-        var invalidEmails = emails.Where(e => !e.IsValidEmail()).ToList();
-        if (invalidEmails.Any()) {
-            throw new FriendlyException("Ugyldig e-postformat: " + invalidEmails.ToJoinedString());
-        }
+        
+        var shareUrl = Url.Combine(hostUrlAccessor.GetHostUrl(), "invitations", token.Token.ToString());
+        
+        return new ShareListResponse {
+            ShareUrl = shareUrl
+        };
     }
 }
