@@ -6,8 +6,8 @@ export type Wish = Normalized<WishDto>
 export type MyListState = {
   id?: number
   editingWish?: Wish
-  shareEmails: string[]
   isSharingList: boolean
+  shareUrl?: string
   wishes: Dictionary<Wish>
   newWish?: Wish
   wishesLoaded?: boolean
@@ -24,7 +24,6 @@ export const getEmptyWish = (): Wish => ({
 })
 
 export const state: MyListState = {
-  shareEmails: [],
   wishes: {},
   isSharingList: false,
   wishesOrder: [],

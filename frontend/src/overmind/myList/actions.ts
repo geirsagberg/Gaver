@@ -4,9 +4,8 @@ import { tryOrNotify } from '~/utils'
 import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
 import { normalizeArrays } from '~/utils/normalize'
 import { showError, showSuccess } from '~/utils/notifications'
-import { isEmailValid } from '~/utils/validation'
 import { Context } from '..'
-import { getEmptyWish, Wish } from './state'
+import { getEmptyWish, Wish, MyListState } from './state'
 
 export const handleMyList = async ({ actions }: Context) => {
   actions.routing.setCurrentPage('myList')
@@ -93,7 +92,7 @@ export const loadWishes = ({ state }: Context) =>
 
 export const startSharingList = ({ state: { myList } }: Context) => {
   myList.isSharingList = true
-  myList.shareEmails = []
+  myList.shareUrl = undefined // Reset any previous share URL
 }
 
 export const toggleDeleting = ({ state: { myList } }: Context) => {
@@ -102,25 +101,84 @@ export const toggleDeleting = ({ state: { myList } }: Context) => {
 
 export const cancelSharingList = ({ state: { myList } }: Context) => {
   myList.isSharingList = false
-  myList.shareEmails = []
+  myList.shareUrl = undefined
 }
 
-export const emailsChanged = ({ state: { myList } }: Context, emails: string[]) => {
-  if (emails.every(isEmailValid)) {
-    myList.shareEmails = emails
-    return true
-  } else {
-    showError('Ugyldig e-postadresse')
-    return false
+export const createShareLink = async ({ state: { myList } }: Context) => {
+  if (!myList.id) {
+    showError('Ønskeliste ikke lastet')
+    return
+  }
+
+  try {
+    // Call backend to create invitation token and get share URL
+    const response = await postJson<{ shareUrl: string }>('/api/MyList/Share', {})
+    myList.shareUrl = response.shareUrl
+  } catch (error) {
+    console.error('Failed to create share link:', error)
+    showError('Kunne ikke opprette delingslenke')
   }
 }
 
-export const shareList = ({ state: { myList } }: Context) =>
-  tryOrNotify(async () => {
-    await postJson('/api/MyList/Share', { emails: myList.shareEmails })
-    showSuccess('Ønskeliste delt')
-    myList.isSharingList = false
-  })
+export const copyShareLink = ({ state: { myList } }: Context) => {
+  const shareUrl = myList.shareUrl
+  if (!shareUrl) {
+    showError('Ingen lenke å kopiere')
+    return
+  }
+
+  try {
+    // Try modern clipboard API first
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      // Call clipboard API but don't await - keeps function synchronous for Safari.
+      // Safari requires clipboard operations to be in direct response to user interaction.
+      navigator.clipboard.writeText(shareUrl).then(
+        () => {
+          showSuccess('Delingslenke kopiert!')
+          myList.isSharingList = false
+          myList.shareUrl = undefined
+        },
+        (clipboardError) => {
+          // Clipboard API failed, try fallback
+          console.warn('Clipboard API failed, using fallback:', clipboardError)
+          copyWithFallback(shareUrl, myList)
+        }
+      )
+    } else {
+      // Use fallback for older browsers
+      copyWithFallback(shareUrl, myList)
+    }
+  } catch (error) {
+    console.error('Copy to clipboard failed:', error)
+    showError('Kunne ikke kopiere lenke')
+  }
+}
+
+function copyWithFallback(shareUrl: string, myList: MyListState) {
+  const textArea = document.createElement('textarea')
+  textArea.value = shareUrl
+  textArea.style.position = 'fixed'
+  textArea.style.left = '-999999px'
+  textArea.style.top = '-999999px'
+  document.body.appendChild(textArea)
+  textArea.focus()
+  textArea.select()
+  try {
+    const successful = document.execCommand('copy')
+    if (successful) {
+      showSuccess('Delingslenke kopiert!')
+      myList.isSharingList = false
+      myList.shareUrl = undefined
+    } else {
+      throw new Error('execCommand copy failed')
+    }
+  } catch (error) {
+    console.error('Fallback copy failed:', error)
+    showError('Kunne ikke kopiere lenke')
+  } finally {
+    document.body.removeChild(textArea)
+  }
+}
 
 interface WishOrderChangedParams {
   oldIndex: number
