@@ -149,6 +149,7 @@ export const copyShareLink = async ({ state: { myList } }: Context) => {
     showSuccess('Delingslenke kopiert!')
     myList.isSharingList = false
   } catch (error) {
+    console.error('Copy to clipboard failed:', error)
     showError('Kunne ikke kopiere lenke')
   }
 }
