@@ -5,11 +5,10 @@ using MediatR;
 
 namespace Gaver.Web.Features.MyList;
 
-public class ShareListRequest : IRequest, IAuthenticatedRequest {
-    [Required]
-    [MinLength(1)]
-    [MaxLength(10)]
-    public string[] Emails { get; set; } = Array.Empty<string>();
-
+public class ShareListRequest : IRequest<ShareListResponse>, IAuthenticatedRequest {
     [JsonIgnore] public int UserId { get; set; }
+}
+
+public class ShareListResponse {
+    public required string ShareUrl { get; set; }
 }

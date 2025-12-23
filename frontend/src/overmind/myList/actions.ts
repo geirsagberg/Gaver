@@ -4,7 +4,6 @@ import { tryOrNotify } from '~/utils'
 import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
 import { normalizeArrays } from '~/utils/normalize'
 import { showError, showSuccess } from '~/utils/notifications'
-import { isEmailValid } from '~/utils/validation'
 import { Context } from '..'
 import { getEmptyWish, Wish } from './state'
 
@@ -93,7 +92,6 @@ export const loadWishes = ({ state }: Context) =>
 
 export const startSharingList = ({ state: { myList } }: Context) => {
   myList.isSharingList = true
-  myList.shareEmails = []
 }
 
 export const toggleDeleting = ({ state: { myList } }: Context) => {
@@ -102,25 +100,59 @@ export const toggleDeleting = ({ state: { myList } }: Context) => {
 
 export const cancelSharingList = ({ state: { myList } }: Context) => {
   myList.isSharingList = false
-  myList.shareEmails = []
 }
 
-export const emailsChanged = ({ state: { myList } }: Context, emails: string[]) => {
-  if (emails.every(isEmailValid)) {
-    myList.shareEmails = emails
-    return true
-  } else {
-    showError('Ugyldig e-postadresse')
-    return false
+export const copyShareLink = async ({ state: { myList } }: Context) => {
+  if (!myList.id) {
+    showError('Ønskeliste ikke lastet')
+    return
+  }
+
+  try {
+    // Call backend to create invitation token and get share URL
+    const response = await postJson<{ shareUrl: string }>('/api/MyList/Share', {})
+    const shareUrl = response.shareUrl
+    
+    // Try modern clipboard API first, fall back to execCommand if it fails
+    let copied = false
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(shareUrl)
+        copied = true
+      } catch (clipboardError) {
+        // Clipboard API failed (common in Safari), try fallback
+        console.warn('Clipboard API failed, using fallback:', clipboardError)
+      }
+    }
+    
+    // Fallback for older browsers or when clipboard API fails
+    if (!copied) {
+      const textArea = document.createElement('textarea')
+      textArea.value = shareUrl
+      textArea.style.position = 'fixed'
+      textArea.style.left = '-999999px'
+      textArea.style.top = '-999999px'
+      document.body.appendChild(textArea)
+      textArea.focus()
+      textArea.select()
+      try {
+        const successful = document.execCommand('copy')
+        if (!successful) {
+          throw new Error('execCommand copy failed')
+        }
+      } finally {
+        document.body.removeChild(textArea)
+      }
+    }
+    
+    showSuccess('Delingslenke kopiert!')
+    myList.isSharingList = false
+  } catch (error) {
+    console.error('Copy to clipboard failed:', error)
+    showError('Kunne ikke kopiere lenke')
   }
 }
-
-export const shareList = ({ state: { myList } }: Context) =>
-  tryOrNotify(async () => {
-    await postJson('/api/MyList/Share', { emails: myList.shareEmails })
-    showSuccess('Ønskeliste delt')
-    myList.isSharingList = false
-  })
 
 interface WishOrderChangedParams {
   oldIndex: number

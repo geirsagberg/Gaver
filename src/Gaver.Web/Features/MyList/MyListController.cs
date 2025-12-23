@@ -15,7 +15,7 @@ public class MyListController(IMediator mediator) : GaverControllerBase {
     public Task SetWishesOrder(SetWishesOrderRequest request) => mediator.Send(request);
 
     [HttpPost("Share")]
-    public Task ShareList(ShareListRequest request) => mediator.Send(request);
+    public Task<ShareListResponse> ShareList(ShareListRequest request) => mediator.Send(request);
 
     [HttpPatch("{wishId:int}")]
     public Task UpdateWish(UpdateWishRequest request) => mediator.Send(request);
