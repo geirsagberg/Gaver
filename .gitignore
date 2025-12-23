@@ -249,3 +249,5 @@ wwwroot/
 
 *.local.json
 package-lock.json
+
+.claude

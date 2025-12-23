@@ -28,10 +28,10 @@ steps:
     displayName: build frontend
 
   - task: UseDotNet@2
-    displayName: Use .NET 9.0
+    displayName: Use .NET 10.0
     inputs:
       packageType: 'sdk'
-      version: '9.0.x'
+      version: '10.0.x'
 
   - script: dotnet build --configuration $(buildConfiguration)
     displayName: 'dotnet build $(buildConfiguration)'
