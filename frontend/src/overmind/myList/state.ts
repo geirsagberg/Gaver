@@ -7,6 +7,7 @@ export type MyListState = {
   id?: number
   editingWish?: Wish
   isSharingList: boolean
+  shareUrl?: string
   wishes: Dictionary<Wish>
   newWish?: Wish
   wishesLoaded?: boolean

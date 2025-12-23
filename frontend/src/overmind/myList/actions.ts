@@ -92,6 +92,7 @@ export const loadWishes = ({ state }: Context) =>
 
 export const startSharingList = ({ state: { myList } }: Context) => {
   myList.isSharingList = true
+  myList.shareUrl = undefined // Reset any previous share URL
 }
 
 export const toggleDeleting = ({ state: { myList } }: Context) => {
@@ -100,9 +101,10 @@ export const toggleDeleting = ({ state: { myList } }: Context) => {
 
 export const cancelSharingList = ({ state: { myList } }: Context) => {
   myList.isSharingList = false
+  myList.shareUrl = undefined
 }
 
-export const copyShareLink = async ({ state: { myList } }: Context) => {
+export const createShareLink = async ({ state: { myList } }: Context) => {
   if (!myList.id) {
     showError('Ønskeliste ikke lastet')
     return
@@ -111,46 +113,69 @@ export const copyShareLink = async ({ state: { myList } }: Context) => {
   try {
     // Call backend to create invitation token and get share URL
     const response = await postJson<{ shareUrl: string }>('/api/MyList/Share', {})
-    const shareUrl = response.shareUrl
-    
-    // Try modern clipboard API first, fall back to execCommand if it fails
-    let copied = false
-    
+    myList.shareUrl = response.shareUrl
+  } catch (error) {
+    console.error('Failed to create share link:', error)
+    showError('Kunne ikke opprette delingslenke')
+  }
+}
+
+export const copyShareLink = ({ state: { myList } }: Context) => {
+  const shareUrl = myList.shareUrl
+  if (!shareUrl) {
+    showError('Ingen lenke å kopiere')
+    return
+  }
+
+  try {
+    // Try modern clipboard API first
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      try {
-        await navigator.clipboard.writeText(shareUrl)
-        copied = true
-      } catch (clipboardError) {
-        // Clipboard API failed (common in Safari), try fallback
-        console.warn('Clipboard API failed, using fallback:', clipboardError)
-      }
-    }
-    
-    // Fallback for older browsers or when clipboard API fails
-    if (!copied) {
-      const textArea = document.createElement('textarea')
-      textArea.value = shareUrl
-      textArea.style.position = 'fixed'
-      textArea.style.left = '-999999px'
-      textArea.style.top = '-999999px'
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
-      try {
-        const successful = document.execCommand('copy')
-        if (!successful) {
-          throw new Error('execCommand copy failed')
+      // Use clipboard API synchronously (no await)
+      navigator.clipboard.writeText(shareUrl).then(
+        () => {
+          showSuccess('Delingslenke kopiert!')
+          myList.isSharingList = false
+          myList.shareUrl = undefined
+        },
+        (clipboardError) => {
+          // Clipboard API failed, try fallback
+          console.warn('Clipboard API failed, using fallback:', clipboardError)
+          copyWithFallback(shareUrl, myList)
         }
-      } finally {
-        document.body.removeChild(textArea)
-      }
+      )
+    } else {
+      // Use fallback for older browsers
+      copyWithFallback(shareUrl, myList)
     }
-    
-    showSuccess('Delingslenke kopiert!')
-    myList.isSharingList = false
   } catch (error) {
     console.error('Copy to clipboard failed:', error)
     showError('Kunne ikke kopiere lenke')
+  }
+}
+
+function copyWithFallback(shareUrl: string, myList: any) {
+  const textArea = document.createElement('textarea')
+  textArea.value = shareUrl
+  textArea.style.position = 'fixed'
+  textArea.style.left = '-999999px'
+  textArea.style.top = '-999999px'
+  document.body.appendChild(textArea)
+  textArea.focus()
+  textArea.select()
+  try {
+    const successful = document.execCommand('copy')
+    if (successful) {
+      showSuccess('Delingslenke kopiert!')
+      myList.isSharingList = false
+      myList.shareUrl = undefined
+    } else {
+      throw new Error('execCommand copy failed')
+    }
+  } catch (error) {
+    console.error('Fallback copy failed:', error)
+    showError('Kunne ikke kopiere lenke')
+  } finally {
+    document.body.removeChild(textArea)
   }
 }
 
