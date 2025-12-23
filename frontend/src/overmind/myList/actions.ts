@@ -5,7 +5,7 @@ import { deleteJson, getJson, patchJson, postJson } from '~/utils/ajax'
 import { normalizeArrays } from '~/utils/normalize'
 import { showError, showSuccess } from '~/utils/notifications'
 import { Context } from '..'
-import { getEmptyWish, Wish } from './state'
+import { getEmptyWish, Wish, MyListState } from './state'
 
 export const handleMyList = async ({ actions }: Context) => {
   actions.routing.setCurrentPage('myList')
@@ -130,7 +130,8 @@ export const copyShareLink = ({ state: { myList } }: Context) => {
   try {
     // Try modern clipboard API first
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      // Use clipboard API synchronously (no await)
+      // Call clipboard API but don't await - keeps function synchronous for Safari.
+      // Safari requires clipboard operations to be in direct response to user interaction.
       navigator.clipboard.writeText(shareUrl).then(
         () => {
           showSuccess('Delingslenke kopiert!')
@@ -153,7 +154,7 @@ export const copyShareLink = ({ state: { myList } }: Context) => {
   }
 }
 
-function copyWithFallback(shareUrl: string, myList: any) {
+function copyWithFallback(shareUrl: string, myList: MyListState) {
   const textArea = document.createElement('textarea')
   textArea.value = shareUrl
   textArea.style.position = 'fixed'

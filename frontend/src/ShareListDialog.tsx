@@ -39,8 +39,11 @@ export const ShareListDialog = () => {
                 readOnly: true,
               }}
               onClick={(e) => {
-                const target = e.target as HTMLInputElement
-                target.select()
+                // Use currentTarget to ensure we get the TextField's input element
+                const input = e.currentTarget.querySelector('input')
+                if (input) {
+                  input.select()
+                }
               }}
             />
           </>
