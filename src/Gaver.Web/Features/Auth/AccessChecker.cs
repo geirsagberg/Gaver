@@ -13,11 +13,16 @@ public class AccessChecker(GaverContext context) : IAccessChecker {
     public async Task CheckWishListAccess(int wishListId, int userId,
         CancellationToken cancellationToken = default) {
         // Can see wishlist if friend of owner, or member of any of the same groups as the owner
-        if (!await context.WishLists.AnyAsync(wl => wl.Id == wishListId
-                                                    && (wl.User!.Friends.Any(f => f.Id == userId) || wl.User!.Groups.Any(c =>
-                                                        c.Users.Any(c2 => c2.Id == userId))), cancellationToken)) {
+        if (!await HasWishListAccess(wishListId, userId, cancellationToken)) {
             throw new HttpException(HttpStatusCode.Forbidden, "Du har ikke tilgang til å se denne listen");
         }
+    }
+
+    public async Task<bool> HasWishListAccess(int wishListId, int userId,
+        CancellationToken cancellationToken = default) {
+        return await context.WishLists.AnyAsync(wl => wl.Id == wishListId
+                                                    && (wl.User!.Friends.Any(f => f.Id == userId) || wl.User!.Groups.Any(c =>
+                                                        c.Users.Any(c2 => c2.Id == userId))), cancellationToken);
     }
 
     public async Task CheckNotOwner(int wishListId, int userId, CancellationToken cancellationToken = default) {

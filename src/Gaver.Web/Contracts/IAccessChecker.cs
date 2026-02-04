@@ -14,4 +14,6 @@ public interface IAccessChecker {
 
     [AssertionMethod]
     Task CheckWishOwner(int wishId, int userId, CancellationToken cancellationToken = default);
+
+    Task<bool> HasWishListAccess(int wishListId, int userId, CancellationToken cancellationToken = default);
 }

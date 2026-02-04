@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.SharedList;
 
-public class SharedListHandler(GaverContext context, IMapperService mapper, IClientNotifier clientNotifier) :
+public class SharedListHandler(GaverContext context, IMapperService mapper, IClientNotifier clientNotifier, IAccessChecker accessChecker) :
     IRequestHandler<SetBoughtRequest, SharedWishDto>,
     IRequestHandler<GetSharedListRequest, SharedListDto>,
     IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus> {
@@ -30,8 +30,7 @@ public class SharedListHandler(GaverContext context, IMapperService mapper, ICli
             return ListAccessStatus.Owner;
         }
 
-        if (await context.WishLists.AnyAsync(
-                wl => wl.Id == request.WishListId && wl.User!.Friends.Any(f => f.Id == request.UserId), cancellationToken)) {
+        if (await accessChecker.HasWishListAccess(request.WishListId, request.UserId, cancellationToken)) {
             return ListAccessStatus.Invited;
         }
 
