@@ -2,6 +2,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
+using Gaver.Web.Contracts;
+using Gaver.Web.Features.Auth;
 using Gaver.Web.Features.SharedList;
 using Gaver.Web.Features.SharedList.Requests;
 using Xunit;
@@ -10,6 +12,12 @@ namespace Gaver.Web.Tests.Features.SharedList;
 
 public class SharedListHandlerTests : DbTestBase<SharedListHandler>
 {
+    public SharedListHandlerTests()
+    {
+        // Register real AccessChecker instead of mock so tests can properly check group membership
+        Container.Register<IAccessChecker, AccessChecker>();
+    }
+
     [Fact]
     public async Task Can_read_shared_list()
     {
