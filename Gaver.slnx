@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="NuGet.config" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Gaver.Common/Gaver.Common.csproj" />
+    <Project Path="src/Gaver.Data/Gaver.Data.csproj" />
+    <Project Path="src/Gaver.Web/Gaver.Web.csproj" />
+    <Project Path="src/SharpTypeGen/SharpTypeGen.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Gaver.TestUtils/Gaver.TestUtils.csproj" />
+    <Project Path="test/Gaver.Web.Tests/Gaver.Web.Tests.csproj" />
+  </Folder>
+</Solution>
