@@ -1,4 +1,4 @@
-﻿//MIT License
+//MIT License
 //
 //Copyright (c) 2019 Miron Jakubowski
 //
@@ -30,8 +30,7 @@ using System.Threading.Tasks;
 
 namespace SharpTypeGen;
 
-public sealed class TypeWriter
-{
+public sealed class TypeWriter {
     private static readonly Dictionary<Type, string> Types = new() {
         { typeof(Guid), "string" },
         { typeof(string), "string" },
@@ -56,24 +55,20 @@ public sealed class TypeWriter
 
     private readonly List<Func<PropertyInfo, bool>> filters = new();
 
-    public TypeWriter()
-    {
+    public TypeWriter() {
         duplicatesGuard = new List<string>();
     }
 
-    public TypeWriter FilterProperties(Func<PropertyInfo, bool> predicate)
-    {
+    public TypeWriter FilterProperties(Func<PropertyInfo, bool> predicate) {
         filters.Add(predicate);
         return this;
     }
 
-    public void Write(IEnumerable<Type> types, TextWriter textWriter)
-    {
+    public void Write(IEnumerable<Type> types, TextWriter textWriter) {
         foreach (var type in types) Write(type, textWriter);
     }
 
-    public void Write(Type type, TextWriter textWriter)
-    {
+    public void Write(Type type, TextWriter textWriter) {
         var nestedTypes = new List<Type>();
 
         var classType = GetClassType(type);
@@ -108,8 +103,7 @@ public sealed class TypeWriter
 
     private static bool IsNullable(Type type) => Nullable.GetUnderlyingType(type) != null;
 
-    private static Type? GetClassType(Type? type)
-    {
+    private static Type? GetClassType(Type? type) {
         while (true) {
             if (type == null) return null;
 
@@ -126,8 +120,7 @@ public sealed class TypeWriter
         }
     }
 
-    private static (string symbol, bool nullable) GetTypeSymbol(Type type)
-    {
+    private static (string symbol, bool nullable) GetTypeSymbol(Type type) {
         if (Types.ContainsKey(type))
             return (Types[type], false);
 
@@ -143,8 +136,7 @@ public sealed class TypeWriter
         return IsUserClass(type) ? (type.Name, false) : ("any", true);
     }
 
-    private static bool IsUserClass(Type type)
-    {
+    private static bool IsUserClass(Type type) {
         if (type == typeof(string) || type == typeof(object)) return false;
 
         return !type.IsPrimitive && !type.IsGenericType && type.IsClass;

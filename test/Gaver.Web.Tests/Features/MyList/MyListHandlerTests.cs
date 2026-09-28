@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using FluentAssertions;
-using Gaver.Common.Contracts;
 using Gaver.Data.Entities;
 using Gaver.TestUtils;
 using Gaver.Web.Features.MyList;
@@ -8,13 +7,9 @@ using Xunit;
 
 namespace Gaver.Web.Tests.Features.MyList;
 
-public class MyListHandlerTests : DbTestBase<MyListHandler>
-{
+public class MyListHandlerTests : DbTestBase<MyListHandler> {
     [Fact]
-    public async Task Can_read_my_list()
-    {
-        var mapper = Get<IMapperService>();
-        mapper.Profiles.Should().NotBeEmpty();
+    public async Task Can_read_my_list() {
         var user = new User {
             Name = "Bob",
             WishList =
@@ -33,8 +28,7 @@ public class MyListHandlerTests : DbTestBase<MyListHandler>
     }
 
     [Fact]
-    public async Task MyList_includes_wishes_and_options()
-    {
+    public async Task MyList_includes_wishes_and_options() {
         var user = new User {
             Name = "Bob",
             WishList = new WishList {

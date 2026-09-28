@@ -1,4 +1,4 @@
-﻿namespace Gaver.Web.Features.Mail;
+namespace Gaver.Web.Features.Mail;
 
 public class SendGridContent {
     public string? Type { get; set; }

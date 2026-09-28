@@ -1,4 +1,4 @@
-﻿namespace Gaver.Web.Features.SharedList;
+namespace Gaver.Web.Features.SharedList;
 
 public enum ListAccessStatus {
     Invited = 0,

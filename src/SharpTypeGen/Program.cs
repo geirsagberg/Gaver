@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Gaver.Common.Extensions;
@@ -7,10 +7,8 @@ using Gaver.Web.Attributes;
 
 namespace SharpTypeGen;
 
-internal class Program
-{
-    private static void Main()
-    {
+internal class Program {
+    private static void Main() {
         var types = typeof(AppConfig).Assembly.ExportedTypes.Where(t => !t.IsAbstract && !t.IsInterface &&
             (t.Name.EndsWith("Dto") || t.Name.EndsWith("Response") || t.Name.EndsWith("Request") ||
                 t.HasAttribute<GenerateTypeScriptAttribute>()));

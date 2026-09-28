@@ -1,4 +1,4 @@
-﻿using Gaver.Web.Features.Shared.Models;
+using Gaver.Web.Features.Shared.Models;
 
 namespace Gaver.Web.Features.SharedList;
 

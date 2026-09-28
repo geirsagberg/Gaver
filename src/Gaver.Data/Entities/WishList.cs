@@ -4,8 +4,7 @@ using Gaver.Data.Contracts;
 
 namespace Gaver.Data.Entities;
 
-public class WishList : IEntityWithId
-{
+public class WishList : IEntityWithId {
     public int Id { get; set; }
     public string? Title { get; set; }
     public int UserId { get; set; }

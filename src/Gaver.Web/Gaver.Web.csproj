@@ -71,4 +71,8 @@
   <ItemGroup>
     <InternalsVisibleTo Include="Gaver.Web.Tests"/>
   </ItemGroup>
+  <PropertyGroup>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
 </Project>

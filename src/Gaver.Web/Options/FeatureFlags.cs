@@ -1,4 +1,4 @@
-﻿using Gaver.Web.Attributes;
+using Gaver.Web.Attributes;
 
 namespace Gaver.Web.Options;
 

@@ -1,5 +1,3 @@
-using AutoMapper.QueryableExtensions;
-using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Common.Extensions;
 using Gaver.Data;
@@ -10,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.Invitations;
 
-public class InvitationHandler(GaverContext context, IMapperService mapperService) : IRequestHandler<GetInvitationStatusRequest, InvitationStatusDto>,
+public class InvitationHandler(GaverContext context) : IRequestHandler<GetInvitationStatusRequest, InvitationStatusDto>,
     IRequestHandler<AcceptInvitationRequest, UserDto> {
     public async Task<UserDto> Handle(AcceptInvitationRequest request,
         CancellationToken cancellationToken = default) {
@@ -40,7 +38,10 @@ public class InvitationHandler(GaverContext context, IMapperService mapperServic
         }
 
         await context.SaveChangesAsync(cancellationToken);
-        var friend = await context.Set<User>().Where(u => u.WishList!.Id == invitationToken.WishListId).ProjectTo<UserDto>(mapperService.MapperConfiguration).SingleAsync(cancellationToken);
+        var friend = await context.Set<User>()
+            .Where(user => user.WishList!.Id == invitationToken.WishListId)
+            .Select(UserMappings.UserDtoProjection)
+            .SingleAsync(cancellationToken);
         return friend;
     }
 

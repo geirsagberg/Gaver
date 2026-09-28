@@ -1,4 +1,4 @@
-﻿namespace Gaver.Web.Features.Shared.Models;
+namespace Gaver.Web.Features.Shared.Models;
 
 public class WishOptionDto {
     public int Id { get; set; }

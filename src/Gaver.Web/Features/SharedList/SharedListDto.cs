@@ -1,4 +1,4 @@
-﻿using Gaver.Web.Features.Users;
+using Gaver.Web.Features.Users;
 
 namespace Gaver.Web.Features.SharedList;
 

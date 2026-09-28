@@ -1,4 +1,4 @@
-﻿using Gaver.Web.Contracts;
+using Gaver.Web.Contracts;
 using MediatR;
 
 namespace Gaver.Web.Features.UserGroups;

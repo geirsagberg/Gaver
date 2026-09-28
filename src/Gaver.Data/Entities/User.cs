@@ -4,8 +4,7 @@ using Gaver.Data.Contracts;
 
 namespace Gaver.Data.Entities;
 
-public class User : IEntityWithId
-{
+public class User : IEntityWithId {
     public int Id { get; set; }
 
     [MaxLength(255)]

@@ -4,36 +4,30 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Gaver.Web.Migrations;
 
-public partial class Initial : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class Initial : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.CreateTable(
             name: "Users",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<int>(nullable: false)
                     .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                 Email = table.Column<string>(maxLength: 255, nullable: false),
                 Name = table.Column<string>(maxLength: 40, nullable: false),
                 PrimaryIdentityId = table.Column<string>(maxLength: 255, nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_Users", x => x.Id);
             });
 
         migrationBuilder.CreateTable(
             name: "WishLists",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<int>(nullable: false)
                     .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                 Title = table.Column<string>(nullable: true),
                 UserId = table.Column<int>(nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_WishLists", x => x.Id);
                 table.ForeignKey(
                     name: "FK_WishLists_Users_UserId",
@@ -45,8 +39,7 @@ public partial class Initial : Migration
 
         migrationBuilder.CreateTable(
             name: "ChatMessages",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<int>(nullable: false)
                     .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                 Created = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "NOW()"),
@@ -54,8 +47,7 @@ public partial class Initial : Migration
                 UserId = table.Column<int>(nullable: false),
                 WishListId = table.Column<int>(nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_ChatMessages", x => x.Id);
                 table.ForeignKey(
                     name: "FK_ChatMessages_Users_UserId",
@@ -73,8 +65,7 @@ public partial class Initial : Migration
 
         migrationBuilder.CreateTable(
             name: "Wishes",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<int>(nullable: false)
                     .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                 BoughtByUserId = table.Column<int>(nullable: true),
@@ -83,8 +74,7 @@ public partial class Initial : Migration
                 Url = table.Column<string>(maxLength: 255, nullable: true),
                 WishListId = table.Column<int>(nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_Wishes", x => x.Id);
                 table.ForeignKey(
                     name: "FK_Wishes_Users_BoughtByUserId",
@@ -132,8 +122,7 @@ public partial class Initial : Migration
             column: "UserId");
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropTable(
             name: "ChatMessages");
 

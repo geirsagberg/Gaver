@@ -8,11 +8,9 @@ using Xunit;
 
 namespace Gaver.Web.Tests.Features.Chat;
 
-public class GetMessagesTests : DbTestBase<GetMessagesHandler>
-{
+public class GetMessagesTests : DbTestBase<GetMessagesHandler> {
     [Fact]
-    public async Task Can_get_chatMessages()
-    {
+    public async Task Can_get_chatMessages() {
         var firstWishList = new WishList {
             User = new User {
                 PrimaryIdentityId = "alice"

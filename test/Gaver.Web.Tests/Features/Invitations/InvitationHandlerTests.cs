@@ -11,11 +11,9 @@ using Xunit;
 
 namespace Gaver.Web.Tests.Features.Invitations;
 
-public class InvitationHandlerTests : DbTestBase<InvitationHandler>
-{
+public class InvitationHandlerTests : DbTestBase<InvitationHandler> {
     [Fact]
-    public void Cannot_accept_invitation_to_own_list()
-    {
+    public void Cannot_accept_invitation_to_own_list() {
         var token = Guid.NewGuid();
         var user = SetupUserWithInvitation(token);
 
@@ -29,8 +27,7 @@ public class InvitationHandlerTests : DbTestBase<InvitationHandler>
     }
 
     [Fact]
-    public async Task When_invitation_is_accepted_then_wishListId_and_userName_is_returned()
-    {
+    public async Task When_invitation_is_accepted_then_wishListId_and_userName_is_returned() {
         var token = Guid.NewGuid();
         var user = SetupUserWithInvitation(token);
         var otherUser = new User {
@@ -50,8 +47,7 @@ public class InvitationHandlerTests : DbTestBase<InvitationHandler>
     }
 
     [Fact]
-    public async Task When_invitation_is_accepted_then_UserFriendConnections_are_created_both_ways()
-    {
+    public async Task When_invitation_is_accepted_then_UserFriendConnections_are_created_both_ways() {
         var token = Guid.NewGuid();
         var bob = new User {
             Name = "Bob",
@@ -92,8 +88,7 @@ public class InvitationHandlerTests : DbTestBase<InvitationHandler>
         );
     }
 
-    private User SetupUserWithInvitation(Guid token)
-    {
+    private User SetupUserWithInvitation(Guid token) {
         var user = new User {
             Name = "Geir",
             WishList = new WishList {

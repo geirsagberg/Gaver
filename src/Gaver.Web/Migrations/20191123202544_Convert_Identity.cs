@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Gaver.Web.Migrations;
 
-public partial class Convert_Identity : Migration
-{
+public partial class Convert_Identity : Migration {
 
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.Sql("UPDATE \"WishLists\" SET \"WishesOrder\" = '' WHERE \"WishesOrder\" IS NULL");
         migrationBuilder.AlterColumn<string>(
             name: "WishesOrder",
@@ -17,8 +15,7 @@ public partial class Convert_Identity : Migration
             oldNullable: true);
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.AlterColumn<string>(
             name: "WishesOrder",
             table: "WishLists",

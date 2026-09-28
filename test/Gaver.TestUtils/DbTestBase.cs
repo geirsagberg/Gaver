@@ -1,6 +1,5 @@
 using System;
 using System.Data.Common;
-using AutoMapper;
 using Gaver.Data;
 using LightInject;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,6 @@ public abstract class DbTestBase<TSut> : DbTestBase where TSut : class {
 
     protected DbTestBase() {
         testSubjectLazy = new Lazy<TSut>(() => Container.Create<TSut>());
-        Container.RegisterAssembly(typeof(TSut).Assembly, (service, implementation) => service == typeof(Profile));
     }
 
     protected TSut TestSubject => testSubjectLazy.Value;

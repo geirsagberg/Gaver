@@ -1,4 +1,4 @@
-﻿namespace Gaver.Web.Options;
+namespace Gaver.Web.Options;
 
 public class MailOptions {
     public string? SendGridApiKey { get; set; }

@@ -1,12 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Tests.Extensions;
 
-public static class DbContextExtensions
-{
-    public static void Reset(this DbContext context)
-    {
+public static class DbContextExtensions {
+    public static void Reset(this DbContext context) {
         var entries = context.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged).ToArray();
         foreach (var entry in entries)
             switch (entry.State) {

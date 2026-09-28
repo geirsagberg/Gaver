@@ -4,8 +4,7 @@ using Gaver.Data.Contracts;
 
 namespace Gaver.Data.Entities;
 
-public class ChatMessage : IEntityWithId
-{
+public class ChatMessage : IEntityWithId {
     public int Id { get; set; }
 
     public DateTimeOffset Created { get; set; }

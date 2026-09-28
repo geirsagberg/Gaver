@@ -1,28 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Gaver.Web.Migrations;
 
-public partial class Hide_UserFriendConnections : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class Hide_UserFriendConnections : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropTable(
             name: "Invitations");
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.CreateTable(
             name: "Invitations",
-            columns: table => new
-            {
+            columns: table => new {
                 WishListId = table.Column<int>(type: "integer", nullable: false),
                 UserId = table.Column<int>(type: "integer", nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_Invitations", x => new { x.WishListId, x.UserId });
                 table.ForeignKey(
                     name: "FK_Invitations_Users_UserId",

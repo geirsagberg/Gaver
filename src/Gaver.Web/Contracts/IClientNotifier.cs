@@ -1,4 +1,4 @@
-﻿using Gaver.Web.Features.Chat;
+using Gaver.Web.Features.Chat;
 
 namespace Gaver.Web.Contracts;
 

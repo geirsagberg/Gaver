@@ -1,21 +1,17 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Gaver.Web.Migrations;
 
-public partial class Add_Invitation : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class Add_Invitation : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.CreateTable(
             name: "Invitations",
-            columns: table => new
-            {
+            columns: table => new {
                 WishListId = table.Column<int>(nullable: false),
                 UserId = table.Column<int>(nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_Invitations", x => new { x.WishListId, x.UserId });
                 table.ForeignKey(
                     name: "FK_Invitations_Users_UserId",
@@ -33,15 +29,13 @@ public partial class Add_Invitation : Migration
 
         migrationBuilder.CreateTable(
             name: "InvitationTokens",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<Guid>(nullable: false),
                 Accepted = table.Column<DateTimeOffset>(nullable: true),
                 Created = table.Column<DateTimeOffset>(nullable: false, defaultValueSql: "NOW()"),
                 WishListId = table.Column<int>(nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_InvitationTokens", x => x.Id);
                 table.ForeignKey(
                     name: "FK_InvitationTokens_WishLists_WishListId",
@@ -62,8 +56,7 @@ public partial class Add_Invitation : Migration
             column: "WishListId");
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropTable(
             name: "Invitations");
 

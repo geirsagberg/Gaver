@@ -1,17 +1,14 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Gaver.Web.Migrations;
 
-public partial class Add_InvitationToken : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class Add_InvitationToken : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.CreateTable(
             name: "InvitationTokens",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<int>(nullable: false)
                     .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                 Token = table.Column<Guid>(nullable: false),
@@ -19,8 +16,7 @@ public partial class Add_InvitationToken : Migration
                 WishListId = table.Column<int>(nullable: false),
                 Accepted = table.Column<DateTimeOffset>(nullable: true)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_InvitationTokens", x => x.Id);
                 table.ForeignKey(
                     name: "FK_InvitationTokens_WishLists_WishListId",
@@ -36,8 +32,7 @@ public partial class Add_InvitationToken : Migration
             column: "WishListId");
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropTable(
             name: "InvitationTokens");
     }

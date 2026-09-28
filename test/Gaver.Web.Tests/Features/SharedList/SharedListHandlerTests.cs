@@ -10,17 +10,14 @@ using Xunit;
 
 namespace Gaver.Web.Tests.Features.SharedList;
 
-public class SharedListHandlerTests : DbTestBase<SharedListHandler>
-{
-    public SharedListHandlerTests()
-    {
+public class SharedListHandlerTests : DbTestBase<SharedListHandler> {
+    public SharedListHandlerTests() {
         // Register real AccessChecker instead of mock so tests can properly check group membership
         Container.Register<IAccessChecker, AccessChecker>();
     }
 
     [Fact]
-    public async Task Can_read_shared_list()
-    {
+    public async Task Can_read_shared_list() {
         var bob = new User {
             Name = "Bob",
             PrimaryIdentityId = "Bob"
@@ -42,8 +39,7 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
     }
 
     [Fact]
-    public async Task Group_members_can_see_each_others_wishlists()
-    {
+    public async Task Group_members_can_see_each_others_wishlists() {
         // Arrange
         var alice = new User {
             Name = "Alice",
@@ -57,13 +53,13 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
             Name = "Charlie",
             PrimaryIdentityId = "Charlie"
         };
-        
+
         var familyGroup = new UserGroup {
             Name = "Family",
             CreatedByUser = alice,
             Users = { alice, bob, charlie }
         };
-        
+
         Context.AddRange(alice, bob, charlie);
         Context.Add(familyGroup);
         Context.SaveChanges();
@@ -86,8 +82,7 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
     }
 
     [Fact]
-    public async Task Non_group_members_cannot_see_wishlists()
-    {
+    public async Task Non_group_members_cannot_see_wishlists() {
         // Arrange
         var alice = new User {
             Name = "Alice",
@@ -101,13 +96,13 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
             Name = "Outsider",
             PrimaryIdentityId = "Outsider"
         };
-        
+
         var familyGroup = new UserGroup {
             Name = "Family",
             CreatedByUser = alice,
             Users = { alice, bob }
         };
-        
+
         Context.AddRange(alice, bob, outsider);
         Context.Add(familyGroup);
         Context.SaveChanges();
@@ -123,8 +118,7 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
     }
 
     [Fact]
-    public async Task User_in_multiple_groups_can_see_all_group_members_wishlists()
-    {
+    public async Task User_in_multiple_groups_can_see_all_group_members_wishlists() {
         // Arrange
         var alice = new User {
             Name = "Alice",
@@ -142,19 +136,19 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
             Name = "Dave",
             PrimaryIdentityId = "Dave"
         };
-        
+
         var familyGroup = new UserGroup {
             Name = "Family",
             CreatedByUser = alice,
             Users = { alice, bob }
         };
-        
+
         var friendsGroup = new UserGroup {
             Name = "Friends",
             CreatedByUser = bob,
             Users = { bob, charlie, dave }
         };
-        
+
         Context.AddRange(alice, bob, charlie, dave);
         Context.AddRange(familyGroup, friendsGroup);
         Context.SaveChanges();
@@ -191,8 +185,7 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
     }
 
     [Fact]
-    public async Task Friends_can_still_see_wishlists()
-    {
+    public async Task Friends_can_still_see_wishlists() {
         // Arrange
         var alice = new User {
             Name = "Alice",
@@ -202,10 +195,10 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
             Name = "Bob",
             PrimaryIdentityId = "Bob"
         };
-        
+
         // Set up friendship
         alice.Friends.Add(bob);
-        
+
         Context.AddRange(alice, bob);
         Context.SaveChanges();
 
@@ -220,14 +213,13 @@ public class SharedListHandlerTests : DbTestBase<SharedListHandler>
     }
 
     [Fact]
-    public async Task Owner_gets_owner_status()
-    {
+    public async Task Owner_gets_owner_status() {
         // Arrange
         var alice = new User {
             Name = "Alice",
             PrimaryIdentityId = "Alice"
         };
-        
+
         Context.Add(alice);
         Context.SaveChanges();
 

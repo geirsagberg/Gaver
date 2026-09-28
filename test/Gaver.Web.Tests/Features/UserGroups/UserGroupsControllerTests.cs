@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,14 +14,12 @@ using static System.Net.Http.Json.HttpClientJsonExtensions;
 
 namespace Gaver.Web.Tests.Features.UserGroups;
 
-public class UserGroupsControllerTests : WebTestBase
-{
+public class UserGroupsControllerTests : WebTestBase {
     private readonly User me;
     private readonly User someoneElse;
 
     public UserGroupsControllerTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper)
-        : base(webAppFactory, testOutputHelper)
-    {
+        : base(webAppFactory, testOutputHelper) {
         SetAuthenticatedUser(1);
         me = new User {
             Id = 1,
@@ -37,8 +35,7 @@ public class UserGroupsControllerTests : WebTestBase
         GaverContext.SaveChanges();
     }
 
-    private async Task<UserGroupDto> AddUserGroup()
-    {
+    private async Task<UserGroupDto> AddUserGroup() {
         var createUserGroupRequest = new {
             Name = "Familien"
         };
@@ -48,8 +45,7 @@ public class UserGroupsControllerTests : WebTestBase
     }
 
     [Fact]
-    public async Task Can_create_and_read_userGroups()
-    {
+    public async Task Can_create_and_read_userGroups() {
         var request = new CreateUserGroupRequest {
             Name = "Familien",
             UserIds = { someoneElse.Id }
@@ -71,8 +67,7 @@ public class UserGroupsControllerTests : WebTestBase
     }
 
     [Fact]
-    public async Task Can_update_userGroup_name_and_members_independently()
-    {
+    public async Task Can_update_userGroup_name_and_members_independently() {
         var userGroupDto = await AddUserGroup();
         var updateUserGroupRequest = new {
             Name = "Venner"
@@ -95,8 +90,7 @@ public class UserGroupsControllerTests : WebTestBase
     }
 
     [Fact]
-    public async Task Cannot_remove_oneself_from_group()
-    {
+    public async Task Cannot_remove_oneself_from_group() {
         var userGroupDto = await AddUserGroup();
 
         var result = await Client.PatchAsJsonAsync($"/api/userGroups/{userGroupDto.Id}", new { UserIds = new[] { 2 } });
@@ -105,8 +99,7 @@ public class UserGroupsControllerTests : WebTestBase
     }
 
     [Fact]
-    public async Task Cannot_edit_group_where_not_member()
-    {
+    public async Task Cannot_edit_group_where_not_member() {
         var userGroup = new UserGroup {
             Name = "Familien",
             CreatedByUser = someoneElse,

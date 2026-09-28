@@ -3,10 +3,8 @@ using NSubstitute;
 
 namespace Gaver.Web.Tests;
 
-public class Mocks
-{
-    public static IHttpContextAccessor GetMockHttpContextAccessor()
-    {
+public class Mocks {
+    public static IHttpContextAccessor GetMockHttpContextAccessor() {
         var httpRequest = Substitute.ForPartsOf<HttpRequest>();
         httpRequest.Scheme = "http";
         httpRequest.Host = new HostString("localhost");

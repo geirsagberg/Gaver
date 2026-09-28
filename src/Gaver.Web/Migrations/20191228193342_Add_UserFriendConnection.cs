@@ -1,20 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Gaver.Web.Migrations;
 
-public partial class Add_UserFriendConnection : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class Add_UserFriendConnection : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.CreateTable(
             name: "UserFriendConnections",
-            columns: table => new
-            {
+            columns: table => new {
                 UserId = table.Column<int>(nullable: false),
                 FriendId = table.Column<int>(nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_UserFriendConnections", x => new { x.UserId, x.FriendId });
                 table.ForeignKey(
                     name: "FK_UserFriendConnections_Users_FriendId",
@@ -43,8 +39,7 @@ SELECT wl.""UserId"", i.""UserId"" FROM ""Invitations"" i JOIN ""WishLists"" wl 
 ");
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropTable(
             name: "UserFriendConnections");
     }

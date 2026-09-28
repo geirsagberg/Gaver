@@ -1,4 +1,3 @@
-using Gaver.Common.Contracts;
 using Gaver.Data;
 using Gaver.Data.Entities;
 using Gaver.Web.Contracts;
@@ -6,7 +5,7 @@ using MediatR;
 
 namespace Gaver.Web.Features.Chat;
 
-public class AddMessageHandler(IMapperService mapper, GaverContext context, IClientNotifier clientNotifier) : IRequestHandler<AddMessageRequest, ChatMessageDto> {
+public class AddMessageHandler(GaverContext context, IClientNotifier clientNotifier) : IRequestHandler<AddMessageRequest, ChatMessageDto> {
     public async Task<ChatMessageDto> Handle(AddMessageRequest request, CancellationToken token = default) {
         var userId = request.UserId;
         var chatMessage = new ChatMessage {
@@ -17,7 +16,7 @@ public class AddMessageHandler(IMapperService mapper, GaverContext context, ICli
         context.Add(chatMessage);
         await context.SaveChangesAsync(token);
 
-        var chatMessageModel = mapper.Map<ChatMessageDto>(chatMessage);
+        var chatMessageModel = ChatMappings.ToDto(chatMessage);
         await clientNotifier.MessageAdded(request.WishListId, chatMessageModel);
         return chatMessageModel;
     }

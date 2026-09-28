@@ -1,4 +1,4 @@
-﻿namespace Gaver.Web.Features.MyList;
+namespace Gaver.Web.Features.MyList;
 
 public class MyListDto {
     public int Id { get; set; }

@@ -1,6 +1,4 @@
-using AutoMapper.QueryableExtensions;
 using Flurl;
-using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Common.Extensions;
 using Gaver.Data;
@@ -14,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.MyList;
 
-public class MyListHandler(GaverContext context, IClientNotifier clientNotifier, IMapperService mapper, IMailSender mailSender, IHostUrlAccessor hostUrlAccessor) : IRequestHandler<UpdateWishRequest>,
+public class MyListHandler(GaverContext context, IClientNotifier clientNotifier, IMailSender mailSender, IHostUrlAccessor hostUrlAccessor) : IRequestHandler<UpdateWishRequest>,
     IRequestHandler<GetMyListRequest, MyListDto>,
     IRequestHandler<SetWishesOrderRequest>,
     IRequestHandler<AddWishRequest, WishDto>,
@@ -36,7 +34,7 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
 
         await context.SaveChangesAsync(cancellationToken);
         await clientNotifier.RefreshListAsync(wishList.Id);
-        return mapper.Map<WishDto>(wish);
+        return MyListMappings.ToWishDto(wish);
     }
 
     public async Task<DeleteWishResponse> Handle(DeleteWishRequest request, CancellationToken cancellationToken) {
@@ -60,7 +58,7 @@ public class MyListHandler(GaverContext context, IClientNotifier clientNotifier,
     public async Task<MyListDto> Handle(GetMyListRequest request, CancellationToken cancellationToken = default) {
         var model = await context.Set<WishList>()
             .Where(wl => wl.UserId == request.UserId)
-            .ProjectTo<MyListDto>(mapper.MapperConfiguration)
+            .Select(MyListMappings.MyListDtoProjection)
             .SingleAsync(cancellationToken);
 
         if (model.WishesOrder.Length != model.Wishes.Count) {

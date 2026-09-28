@@ -1,23 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Gaver.Web.Migrations;
 
-public partial class Add_UserGroups : Migration
-{
-    protected override void Up(MigrationBuilder migrationBuilder)
-    {
+public partial class Add_UserGroups : Migration {
+    protected override void Up(MigrationBuilder migrationBuilder) {
         migrationBuilder.CreateTable(
             name: "UserGroups",
-            columns: table => new
-            {
+            columns: table => new {
                 Id = table.Column<int>(nullable: false)
                     .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                 CreatedByUserId = table.Column<int>(nullable: false),
                 Name = table.Column<string>(maxLength: 40, nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_UserGroups", x => x.Id);
                 table.ForeignKey(
                     name: "FK_UserGroups_Users_CreatedByUserId",
@@ -29,13 +25,11 @@ public partial class Add_UserGroups : Migration
 
         migrationBuilder.CreateTable(
             name: "UserGroupConnections",
-            columns: table => new
-            {
+            columns: table => new {
                 UserId = table.Column<int>(nullable: false),
                 UserGroupId = table.Column<int>(nullable: false)
             },
-            constraints: table =>
-            {
+            constraints: table => {
                 table.PrimaryKey("PK_UserGroupConnections", x => new { x.UserGroupId, x.UserId });
                 table.ForeignKey(
                     name: "FK_UserGroupConnections_UserGroups_UserGroupId",
@@ -62,8 +56,7 @@ public partial class Add_UserGroups : Migration
             column: "CreatedByUserId");
     }
 
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
+    protected override void Down(MigrationBuilder migrationBuilder) {
         migrationBuilder.DropTable(
             name: "UserGroupConnections");
 

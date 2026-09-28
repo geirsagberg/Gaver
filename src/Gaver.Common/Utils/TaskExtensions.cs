@@ -2,10 +2,8 @@ using System.Threading.Tasks;
 
 namespace Gaver.Common.Utils;
 
-public static class TaskExtensions
-{
-    public static void Forget(this Task task)
-    {
+public static class TaskExtensions {
+    public static void Forget(this Task task) {
         // note: this code is inspired by a tweet from Ben Adams: https://twitter.com/ben_a_adams/status/1045060828700037125
         // Only care about tasks that may fault (not completed) or are faulted,
         // so fast-path for SuccessfullyCompleted and Canceled tasks.
@@ -17,8 +15,7 @@ public static class TaskExtensions
 
         // Allocate the async/await state machine only when needed for performance reason.
         // More info about the state machine: https://blogs.msdn.microsoft.com/seteplia/2017/11/30/dissecting-the-async-methods-in-c/
-        static async Task ForgetAwaited(Task task)
-        {
+        static async Task ForgetAwaited(Task task) {
             try {
                 // No need to resume on the original SynchronizationContext, so use ConfigureAwait(false)
                 await task.ConfigureAwait(false);

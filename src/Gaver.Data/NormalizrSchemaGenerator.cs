@@ -6,10 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Gaver.Data;
 
-public class NormalizrSchemaGenerator
-{
-    public static string GetSchema(IModel model)
-    {
+public class NormalizrSchemaGenerator {
+    public static string GetSchema(IModel model) {
         var builder = new StringBuilder();
         builder.AppendLine("import { Schema, arrayOf } from 'normalizr'");
 

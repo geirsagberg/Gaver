@@ -1,7 +1,5 @@
 using System.Net;
-using AutoMapper.QueryableExtensions;
 using Flurl.Http;
-using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Data.Entities;
@@ -14,7 +12,6 @@ namespace Gaver.Web.Features.Users;
 
 public class UserHandler(
     GaverContext context,
-    IMapperService mapper,
     Auth0Settings auth0Settings,
     IHttpContextAccessor httpContextAccessor) : IRequestHandler<GetUserInfoRequest, CurrentUserDto>,
     IRequestHandler<UpdateUserInfoRequest>,
@@ -40,7 +37,7 @@ public class UserHandler(
 
     public async Task<CurrentUserDto> Handle(GetUserInfoRequest request, CancellationToken token) {
         var userModel = await context.Users.Where(u => u.Id == request.UserId)
-            .ProjectTo<CurrentUserDto>(mapper.MapperConfiguration).SingleOrDefaultAsync(token);
+            .Select(UserMappings.CurrentUserDtoProjection).SingleOrDefaultAsync(token);
 
         if (userModel == null) {
             throw new FriendlyException("Bruker finnes ikke");

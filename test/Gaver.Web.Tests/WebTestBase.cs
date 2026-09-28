@@ -13,14 +13,12 @@ namespace Gaver.Web.Tests;
 
 [Trait("Category", "WebTest")]
 [Collection("WebTests")]
-public abstract class WebTestBase : IClassFixture<CustomWebApplicationFactory>
-{
+public abstract class WebTestBase : IClassFixture<CustomWebApplicationFactory> {
     private readonly Lazy<HttpClient> clientLazy;
     protected readonly ClaimInjectorHandlerHeaderConfig RoleConfig;
     private readonly IServiceScope serviceScope;
 
-    protected WebTestBase(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper)
-    {
+    protected WebTestBase(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) {
         webAppFactory.TestOutputHelper = testOutputHelper;
         clientLazy = new Lazy<HttpClient>(webAppFactory.CreateClient);
         serviceScope = webAppFactory.Services.CreateScope();
@@ -40,14 +38,12 @@ public abstract class WebTestBase : IClassFixture<CustomWebApplicationFactory>
 
     protected HttpClient Client => clientLazy.Value;
 
-    protected void SetAuthenticatedUser(int userId = 1)
-    {
+    protected void SetAuthenticatedUser(int userId = 1) {
         RoleConfig.Reset();
         RoleConfig.AddClaim(GaverClaimTypes.GaverUserId, userId.ToString());
     }
 
-    protected void SetAuthenticatedUser(User user)
-    {
+    protected void SetAuthenticatedUser(User user) {
         SetAuthenticatedUser(user.Id);
     }
 }

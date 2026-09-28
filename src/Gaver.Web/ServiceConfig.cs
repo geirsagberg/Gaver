@@ -1,10 +1,7 @@
 using System.Reflection;
-using AutoMapper;
 using Gaver.Common;
 using Gaver.Common.Attributes;
-using Gaver.Common.Contracts;
 using Gaver.Common.Extensions;
-using Gaver.Common.Utils;
 using Gaver.Data;
 using Gaver.Web.CrossCutting;
 using Gaver.Web.Exceptions;
@@ -47,7 +44,6 @@ public static class ServiceConfig {
         services.AddFeatureManagement();
         services.AddAzureAppConfiguration();
 
-        services.AddSingleton<IMapperService, MapperService>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddSignalR();
         services.AddMediatR(cfg => {
@@ -145,13 +141,13 @@ public static class ServiceConfig {
 
     private static void AddCustomMvc(this IServiceCollection services) {
         services.AddControllers(o => {
-                var policy = new AuthorizationPolicyBuilder()
-                    .AddRequirements(
-                        new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
-                    .Build();
-                o.Filters.Add(new AuthorizeFilter(policy));
-                o.Filters.Add(new CustomExceptionFilterAttribute());
-            })
+            var policy = new AuthorizationPolicyBuilder()
+                .AddRequirements(
+                    new WhitelistDenyAnonymousAuthorizationRequirement("/serviceworker", "/offline.html"))
+                .Build();
+            o.Filters.Add(new AuthorizeFilter(policy));
+            o.Filters.Add(new CustomExceptionFilterAttribute());
+        })
             .AddHybridModelBinder();
     }
 
@@ -200,14 +196,9 @@ public static class ServiceConfig {
             scan.FromAssemblyOf<ICommonAssembly>()
                 .AddServices();
             scan.FromAssemblyOf<IStartupAssembly>()
-                .AddServices()
-                .AddMappingProfiles();
+                .AddServices();
         });
     }
-
-    private static IImplementationTypeSelector AddMappingProfiles(this IImplementationTypeSelector selector) =>
-        selector.AddClasses(classes => classes
-            .AssignableTo<Profile>()).As<Profile>().WithSingletonLifetime();
 
     private static IImplementationTypeSelector AddServices(
         this IImplementationTypeSelector implementationTypeSelector) {

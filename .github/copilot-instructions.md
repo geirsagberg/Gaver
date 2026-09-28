@@ -105,7 +105,7 @@ bun clean:www          # Clean wwwroot directory
 - Authorization via `[Authorize]` attribute
 - Custom exceptions in `Gaver.Common.Exceptions`
 - Access checking via `IAccessChecker`
-- Mapping via `IMapperService`
+- Explicit mapping methods and EF projection expressions in feature folders
 
 ### Frontend
 - State management via Overmind (avoid local state when possible)

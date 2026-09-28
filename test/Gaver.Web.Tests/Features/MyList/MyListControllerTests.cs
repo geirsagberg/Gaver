@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -10,12 +10,10 @@ using Xunit.Abstractions;
 
 namespace Gaver.Web.Tests.Features.MyList;
 
-public class MyListControllerTests : WebTestBase
-{
+public class MyListControllerTests : WebTestBase {
     private readonly Wish wish;
 
-    public MyListControllerTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) : base(webAppFactory, testOutputHelper)
-    {
+    public MyListControllerTests(CustomWebApplicationFactory webAppFactory, ITestOutputHelper testOutputHelper) : base(webAppFactory, testOutputHelper) {
         wish = new Wish {
             Title = "My wish"
         };
@@ -35,16 +33,14 @@ public class MyListControllerTests : WebTestBase
     }
 
     [Fact]
-    public async Task Can_delete_wish()
-    {
+    public async Task Can_delete_wish() {
         var response = await Client.DeleteAsync($"/api/myList/{wish.Id}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]
-    public async Task Can_update_wish()
-    {
+    public async Task Can_update_wish() {
         var response = await Client.PatchAsJsonAsync($"/api/myList/{wish.Id}", new UpdateWishRequest {
             Url = "google.com"
         });

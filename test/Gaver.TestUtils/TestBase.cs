@@ -1,7 +1,4 @@
 using System;
-using AutoMapper;
-using Gaver.Common.Contracts;
-using Gaver.Common.Utils;
 using LightInject;
 using NSubstitute;
 
@@ -15,7 +12,6 @@ public abstract class TestBase {
             EnableVariance = false,
             EnablePropertyInjection = false
         });
-        Container.Register<IMapperService, MapperService>(new PerContainerLifetime());
         Container.RegisterFallback((type, name) => true, request =>
             Substitute.For([request.ServiceType], null), new PerContainerLifetime());
     }
@@ -30,7 +26,6 @@ public abstract class TestBase<TSut> : TestBase where TSut : class {
 
     protected TestBase() {
         testSubjectLazy = new Lazy<TSut>(() => Container.Create<TSut>());
-        Container.RegisterAssembly(typeof(TSut).Assembly, (service, implementation) => service == typeof(Profile));
     }
 
     protected TSut TestSubject => testSubjectLazy.Value;

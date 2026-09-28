@@ -4,20 +4,16 @@ using System.Reflection;
 
 namespace Gaver.Common.Extensions;
 
-public static class TypeExtensions
-{
-    public static bool Implements<T>(this Type type)
-    {
+public static class TypeExtensions {
+    public static bool Implements<T>(this Type type) {
         return typeof(T).IsAssignableFrom(type);
     }
 
-    public static bool Implements<T>(this TypeInfo typeInfo)
-    {
+    public static bool Implements<T>(this TypeInfo typeInfo) {
         return typeInfo.ImplementedInterfaces.Contains(typeof(T));
     }
 
-    public static bool Implements(this Type type, Type interfaceType)
-    {
+    public static bool Implements(this Type type, Type interfaceType) {
         var interfaceTypeInfo = interfaceType.GetTypeInfo();
         if (!interfaceTypeInfo.IsInterface)
             throw new ArgumentException("Type must be an interface");

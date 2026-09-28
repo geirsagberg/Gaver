@@ -1,5 +1,3 @@
-using AutoMapper.QueryableExtensions;
-using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Common.Extensions;
 using Gaver.Data;
@@ -13,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.SharedList;
 
-public class SharedListHandler(GaverContext context, IMapperService mapper, IClientNotifier clientNotifier, IAccessChecker accessChecker) :
+public class SharedListHandler(GaverContext context, IClientNotifier clientNotifier, IAccessChecker accessChecker) :
     IRequestHandler<SetBoughtRequest, SharedWishDto>,
     IRequestHandler<GetSharedListRequest, SharedListDto>,
     IRequestHandler<CheckSharedListAccessRequest, ListAccessStatus> {
@@ -41,14 +39,14 @@ public class SharedListHandler(GaverContext context, IMapperService mapper, ICli
         CancellationToken cancellationToken = default) {
         var results = await context.Set<WishList>()
             .Where(wl => wl.Id == message.WishListId)
-            .ProjectTo<SharedListDto>(mapper.MapperConfiguration)
+            .Select(SharedListMappings.SharedListDtoProjection)
             .ToListAsync(cancellationToken);
 
         var model = results.SingleOrThrow(new FriendlyException("Listen finnes ikke"));
 
         var owner = await context.Set<User>()
             .Where(u => u.WishList!.Id == message.WishListId)
-            .ProjectTo<UserDto>(mapper.MapperConfiguration)
+            .Select(UserMappings.UserDtoProjection)
             .SingleAsync(cancellationToken);
 
         // var canSeeMyList = await context.Set<Invitation>()
@@ -76,7 +74,7 @@ public class SharedListHandler(GaverContext context, IMapperService mapper, ICli
         await context.SaveChangesAsync(cancellationToken);
 
         await clientNotifier.RefreshListAsync(message.WishListId, userId);
-        return mapper.Map<SharedWishDto>(wish);
+        return SharedListMappings.ToSharedWishDto(wish);
     }
 
     private Wish GetWish(int wishId, int wishListId) {

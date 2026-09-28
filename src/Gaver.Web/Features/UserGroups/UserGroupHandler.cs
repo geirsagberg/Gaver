@@ -1,6 +1,4 @@
-﻿using System.Net;
-using AutoMapper.QueryableExtensions;
-using Gaver.Common.Contracts;
+using System.Net;
 using Gaver.Common.Exceptions;
 using Gaver.Common.Extensions;
 using Gaver.Data;
@@ -11,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gaver.Web.Features.UserGroups;
 
-public class UserGroupHandler(GaverContext context, IMapperService mapperService) : IRequestHandler<GetMyUserGroupsRequest, UserGroupsDto>,
+public class UserGroupHandler(GaverContext context) : IRequestHandler<GetMyUserGroupsRequest, UserGroupsDto>,
     IRequestHandler<CreateUserGroupRequest, UserGroupDto>,
     IRequestHandler<UpdateUserGroupRequest>,
     IRequestHandler<DeleteUserGroupRequest> {
@@ -28,7 +26,7 @@ public class UserGroupHandler(GaverContext context, IMapperService mapperService
         };
         context.Add(userGroup);
         await context.SaveChangesAsync(cancellationToken);
-        return mapperService.Map<UserGroupDto>(userGroup);
+        return UserGroupMappings.ToDto(userGroup);
     }
 
     public async Task Handle(DeleteUserGroupRequest request, CancellationToken cancellationToken) {
@@ -46,8 +44,8 @@ public class UserGroupHandler(GaverContext context, IMapperService mapperService
 
     public async Task<UserGroupsDto> Handle(GetMyUserGroupsRequest request, CancellationToken cancellationToken) {
         var groups = await context.UserGroupConnections.Where(c => c.UserId == request.UserId)
-            .Select(u => u.UserGroup)
-            .ProjectTo<UserGroupDto>(mapperService.MapperConfiguration).ToListAsync(cancellationToken);
+            .Select(u => u.UserGroup!)
+            .Select(UserGroupMappings.UserGroupDtoProjection).ToListAsync(cancellationToken);
         return new UserGroupsDto {
             UserGroups = groups
         };

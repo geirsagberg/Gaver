@@ -10,13 +10,11 @@ using Xunit;
 
 namespace Gaver.Web.Tests.Features.Feedback;
 
-public class FeedbackHandlerTests : DbTestBase<FeedbackHandler>
-{
+public class FeedbackHandlerTests : DbTestBase<FeedbackHandler> {
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public async Task SendFeedback_should_only_include_username_if_not_anonymous(bool anonymous)
-    {
+    public async Task SendFeedback_should_only_include_username_if_not_anonymous(bool anonymous) {
         //Given
         var user = new User {
             Name = "John"

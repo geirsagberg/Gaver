@@ -1,4 +1,4 @@
-﻿namespace Gaver.Web.Features.Chat;
+namespace Gaver.Web.Features.Chat;
 
 public class ChatMessageDto {
     public int Id { get; set; }

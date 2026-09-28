@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Gaver.Web.Exceptions;
 
 namespace Gaver.Web.Middleware;

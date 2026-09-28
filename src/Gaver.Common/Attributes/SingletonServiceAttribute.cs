@@ -1,5 +1,5 @@
-﻿using System;
+using System;
 
 namespace Gaver.Common.Attributes;
 
-public class SingletonServiceAttribute : Attribute {}
+public class SingletonServiceAttribute : Attribute { }

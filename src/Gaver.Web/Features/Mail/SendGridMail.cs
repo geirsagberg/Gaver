@@ -1,4 +1,4 @@
-﻿namespace Gaver.Web.Features.Mail;
+namespace Gaver.Web.Features.Mail;
 
 public class SendGridMail {
     public IList<SendGridPersonalization> Personalizations { get; set; } = new List<SendGridPersonalization>();

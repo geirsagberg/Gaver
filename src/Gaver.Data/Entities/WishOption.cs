@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Gaver.Data.Contracts;
 
 namespace Gaver.Data.Entities;
 
-public class WishOption : IEntityWithId
-{
+public class WishOption : IEntityWithId {
     public int WishId { get; set; }
     public int Id { get; set; }
 

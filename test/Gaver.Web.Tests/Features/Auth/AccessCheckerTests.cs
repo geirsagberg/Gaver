@@ -6,11 +6,9 @@ using Xunit;
 
 namespace Gaver.Web.Tests.Features.Auth;
 
-public class AccessCheckerTests : DbTestBase<AccessChecker>
-{
+public class AccessCheckerTests : DbTestBase<AccessChecker> {
     [Fact]
-    public async Task Can_access_wishList_of_other_member_in_group()
-    {
+    public async Task Can_access_wishList_of_other_member_in_group() {
         var alice = new User {
             Name = "Alice",
             PrimaryIdentityId = "1"

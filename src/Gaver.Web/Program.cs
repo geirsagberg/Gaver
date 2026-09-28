@@ -1,4 +1,3 @@
-using Gaver.Common.Contracts;
 using Gaver.Common.Extensions;
 using Gaver.Data;
 using Gaver.Web;
@@ -25,8 +24,6 @@ try {
     builder.ConfigureServices();
 
     var app = builder.Build();
-
-    app.Services.GetRequiredService<IMapperService>().ValidateMappings();
 
     if (!app.Environment.IsEnvironment("Test")) {
         using var scope = app.Services.CreateScope();

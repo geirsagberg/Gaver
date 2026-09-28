@@ -1,4 +1,3 @@
-using Gaver.Common.Contracts;
 using Gaver.Common.Exceptions;
 using Gaver.Data;
 using Gaver.Web.Contracts;
@@ -13,7 +12,6 @@ namespace Gaver.Web.Hubs;
 public class ListHub(
     ILogger<ListHub> logger,
     GaverContext gaverContext,
-    IMapperService mapper,
     IAccessChecker accessChecker) : Hub<IListHubClient> {
     private static readonly HashSet<UserListConnection> UserListConnections = new();
 
@@ -65,7 +63,7 @@ public class ListHub(
         var connections = UserListConnections.Where(c => c.ListId == listId).ToList();
         var userIds = connections.Select(c => c.UserId).ToList();
         var users = gaverContext.Users.Where(u => userIds.Contains(u.Id));
-        var userModels = mapper.Map<UserDto[]>(users);
+        var userModels = users.Select(UserMappings.UserDtoProjection).ToArray();
         return new SubscriptionStatus {
             CurrentUsers = userModels
         };

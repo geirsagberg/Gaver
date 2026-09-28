@@ -4,8 +4,7 @@ using Gaver.Data.Contracts;
 
 namespace Gaver.Data.Entities;
 
-public class UserGroup : IEntityWithId
-{
+public class UserGroup : IEntityWithId {
     public int Id { get; set; }
 
     public int CreatedByUserId { get; set; }

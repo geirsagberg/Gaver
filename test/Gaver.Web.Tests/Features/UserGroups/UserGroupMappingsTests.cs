@@ -1,22 +1,11 @@
-using System.Collections.Generic;
-using AutoMapper;
 using FluentAssertions;
-using Gaver.Common.Utils;
 using Gaver.Data.Entities;
-using Gaver.TestUtils;
 using Gaver.Web.Features.UserGroups;
-using LightInject;
 using Xunit;
 
 namespace Gaver.Web.Tests.Features.UserGroups;
 
-public class UserGroupMappingProfileTests : TestBase<MapperService> {
-    public UserGroupMappingProfileTests() {
-        Container.Register<IEnumerable<Profile>>(factory => [
-            factory.Create<UserGroupMappingProfile>()
-        ]);
-    }
-
+public class UserGroupMappingsTests {
     [Fact]
     public void UserGroup_is_mapped_correctly() {
         var userGroup = new UserGroup {
@@ -30,7 +19,7 @@ public class UserGroupMappingProfileTests : TestBase<MapperService> {
             }
         };
 
-        var model = TestSubject.Map<UserGroupDto>(userGroup);
+        var model = UserGroupMappings.ToDto(userGroup);
 
         model.Should().BeEquivalentTo(new UserGroupDto {
             Id = 1,
